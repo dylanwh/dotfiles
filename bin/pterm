@@ -6,5 +6,5 @@ if (@ARGV) {
 	exec urxvt => -name => $name,
 	              -e => @ARGV;
 } else {
-	exec urxvt => -name => 'shell';
+	exec urxvt => -name => 'zsh';
 }

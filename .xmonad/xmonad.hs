@@ -55,6 +55,7 @@ myConfig = defaultConfig
 
 myKeys =
     [ ("M-`",            spawn $ XMonad.terminal myConfig)
+    , ("M-S-`",          do viewEmptyWorkspace; spawn $ XMonad.terminal myConfig)
     , ("M-c",            kill)
     , ("M-<Return>",     dwmpromote)
     , ("M-S-<Return>",   windows W.focusMaster)
