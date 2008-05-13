@@ -28,6 +28,7 @@ import XMonad.Prompt.Directory
 import XMonad.Prompt.Shell
 import XMonad.Prompt.Ssh
 import XMonad.Prompt.Window
+import XMonad.Prompt.DirExec
 
 import XMonad.Layout.Grid
 import XMonad.Layout.LayoutHints
@@ -36,13 +37,14 @@ import XMonad.Layout.WorkspaceDir
 import XMonad.Layout.NoBorders
 import XMonad.Util.EZConfig
 
+import System.Environment (getEnv)
 import System.IO (hPutStrLn, hClose, hFlush)
 import Network
 
 main = xmonad $ myConfig `additionalKeysP` myKeys
 
 myConfig = defaultConfig
-    { borderWidth        = 2
+    { borderWidth        = 1
     , terminal           = "pterm"
     , normalBorderColor  = "#333333"
     , focusedBorderColor = "blue"
@@ -68,7 +70,8 @@ myKeys =
     , ("M-<Page_Up>",    osdc "vol up 10")
     , ("M-<Page_Down>",  osdc "vol down 10")
     , ("M-d",            changeDir myXPConfig)
-    , ("M-f g",          promptSearch myXPConfig "firefox" google) ]
+    , ("M-f g",          promptSearch myXPConfig "firefox" google)
+    , ("M-;",          scriptMenu) ]
 
 myXPConfig = defaultXPConfig
     { font              = "-xos4-terminus-bold-r-*-*-*-140-100-100-*-*-iso8859-1"
@@ -139,3 +142,8 @@ osdc s = io $ do
     hPutStrLn h s
     hFlush h
     hClose h
+
+
+scriptMenu = do home <- liftIO $ getEnv "HOME"
+		let dir = home ++ "/.xmonad/scripts"
+		dirExecPromptNamed myXPConfig spawn dir  "script: "
