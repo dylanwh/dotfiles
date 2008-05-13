@@ -68,6 +68,8 @@
 .w3m/history
 .xmonad/history
 .xmonad/xmonad-i386-linux
+.xmonad/xmonad-x86_64-linux
+.xmonad/xmonad
 .xmonad/xmonad.errors
 .xmonad/xmonad.hi
 .xmonad/xmonad.o
