@@ -36,7 +36,7 @@ set grepprg=grep\ -nH\ \ --exclude='*.svn*'\ $*
 set foldopen=tag,search,quickfix,undo,jump,mark,percent
 set viminfo=!,'1000,%,h,f1,n~/.viminfo
 set statusline=%<%f\ %h%m%r%{FF()}%y%=0x%b\ %-14.(%l,%c%V%)\ %P
-set titlestring=%F\ -\ vim
+set titlestring=vim:\ %F
 
 "-- My name for adding chanelog entries.
 let changelog_username = $REALNAME " <".$EMAIL.">"

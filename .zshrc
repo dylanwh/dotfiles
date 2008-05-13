@@ -90,6 +90,7 @@ bindkey -v
 ## }}}
 ## {{{ Functions 
 function have { which $1 &>/dev/null }
+function chpwd { ztitle }
 ## }}}
 ## {{{ Aliases
 alias cp='cp -i'
@@ -127,7 +128,7 @@ unalias run-help
 ## }}}
 
 # Autoload various functions
-autoload sshbegin sshend run-help
+autoload sshbegin sshend run-help ztitle
 autoload compinit promptinit
 
 # initialize advanced tab completion.
@@ -152,3 +153,5 @@ if have dircolors; then
 fi
 
 # vim: set sw=4 ts=4 foldmethod=marker path=.,~/.zsh:
+ztitle
+
