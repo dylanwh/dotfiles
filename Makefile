@@ -6,7 +6,7 @@ fixperms:
 	chmod -Rc go-wrx ~/.netrc ~/tmp ~/.pwsafe.dat ~/pim
 
 schedule:
-	@rem -s
+	@rem -q
 
 .pwsafe.dat:
 	scp lofn.sinedev.org:.pwsafe.dat .
