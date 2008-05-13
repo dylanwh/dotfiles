@@ -1,4 +1,3 @@
-# foo
 help:
 	@echo targets: fixperms, schedule
 
