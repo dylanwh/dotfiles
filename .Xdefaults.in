@@ -1,0 +1,88 @@
+! vim: set ft=xdefaults: 
+
+#if SRVR_njord || SRVR_frey || SRVR_jord || SRVR_eir || SRVR_dagr || SRVR_saga || SRVR_mani
+#	define USING_LCD 1
+#elif SRVR_work
+! 		Left Screen
+#	if SCREEN_NUM == 0
+#		define USING_CRT 1
+! 		Right Screen
+#	elif SCREEN_NUM == 1
+#		define USING_LCD 1
+#	else
+#		define USING_LCD 1
+#	endif
+#endif
+
+#if USING_LCD
+	Fake.Screen.Type: LCD
+#	define MY_COLOR4 #000078
+#	define MY_COLOR7 #A8A8A8
+#elif USING_CRT
+	Fake.Screen.Type: CRT
+#	define MY_COLOR4 #0000A8
+#	define MY_COLOR7 #B8B8B8
+#else
+#	define MY_COLOR4 pink
+#	define MY_COLOR7 pink
+#endif
+
+#ifndef XFONT_BIG
+#	define XFONT_BIG -xos4-terminus-bold-r-*-*-*-140-100-100-*-*-iso8859-1
+#endif
+
+#ifndef XFONT_HUGE
+#	define XFONT_HUGE -xos4-terminus-bold-r-*-*-*-320-*-*-*-*-*-*
+#endif
+
+
+#define change_font(FONT) \033]710;FONT\007\033]711;FONT\007
+
+Rxvt.font: XFONT
+
+Rxvt.color0: #000000
+Rxvt.color1: #A80000
+Rxvt.color2: #00A800
+!Rxvt.color3: #A8A800
+Rxvt.color3: Orange3
+
+Rxvt.color4: MY_COLOR4
+Rxvt.color5: #A800A8
+Rxvt.color6: #00A8A8
+Rxvt.color7: MY_COLOR7
+
+Rxvt.color8:  #646464
+Rxvt.color9:  #FF0054
+Rxvt.color10: #00FF54
+Rxvt.color11: #FFFF54
+
+Rxvt.color12: #0000FF
+Rxvt.color13: #FF00FF
+Rxvt.color14: #00FFFF
+Rxvt.color15: #FFFFFF
+
+Rxvt.foreground: MY_COLOR7
+Rxvt.background: #000000
+Rxvt.cursorColor: MY_COLOR7
+
+Rxvt.reverseVideo: false
+
+Rxvt.geometry: 80x25 
+Rxvt.scrollBar: false
+Rxvt.meta8: false
+Rxvt.modifier: mod1
+URxvt.keysym.S-Insert: builtin:
+!Rxvt.termName: rxvt
+xystray*overrideRedirect: True
+
+URxvt.searchable-scrollback: CM-s
+URxvt.keysym.M-C-1: command:change_font(XFONT)
+URxvt.keysym.M-C-2: command:change_font(XFONT_BIG)
+URxvt.keysym.M-C-3: command:change_font(XFONT_HUGE)
+URxvt.keysym.Mod4-y: perl:mark-and-yank:activate_mark_mode
+URxvt.keysym.Mod4-u: perl:mark-and-yank:activate_mark_url_mode
+URxvt.perl-lib: /home/dylan/.urxvt/
+URxvt.perl-ext: mark-and-yank
+URxvt.urlLauncher: url-handler
+
+

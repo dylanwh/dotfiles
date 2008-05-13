@@ -1,0 +1,35 @@
+# vim: set ft=muttrc:
+# NAME: work
+
+set mbox_type=Maildir
+set folder=~/mail/work
+set spoolfile="+inbox"
+set mbox="+read"
+set record="+sent"
+set postponed="+postponed"
+
+unset from
+set realname="Dylan William Hardison"
+set from="dylan@r-stream.com"
+
+unalternates *
+alternates dhardison@r-?stream\.com \
+           dylan@r-?stream\.com
+
+unsubscribe *
+subscribe support@r-stream\.com
+
+unmy_hdr Reply-By:
+unmy_hdr X-Message-Flag:
+unmy_hdr X-Religion:
+
+set signature="~/.mutt/signature.work"
+
+unmailboxes *
+source "mailboxes '$folder'|"
+# Always check the system mailbox.
+mailboxes /var/spool/mail/$USER
+
+#color index color60 default '~s Error'
+#color index yellow default '~f .*@r-stream.com'
+#color index color42 default '~s SugarCRM.Case'

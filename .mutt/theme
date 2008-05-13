@@ -1,0 +1,31 @@
+# vim: set ft=muttrc: 
+
+color normal     white black
+color attachment blue black
+color hdrdefault cyan black
+color indicator  black white
+color markers    brightred black
+
+# This is similar what vim does when in the mail syntax.
+color quoted     brightblue black
+color quoted1     cyan black
+
+color signature  magenta black
+color status     white blue
+color tilde      blue black
+color tree       red default
+
+color body red black "[\-\.+_a-zA-Z0-9]+@[\-\.a-zA-Z0-9]+"
+color body red black "(https?|ftp)://[\-\.,/%~_:?&=\#a-zA-Z0-9]+"
+
+# highlight TOFU protection:
+color body    brightblack  black    "^\\[---.*"
+color body    green        black    "^#v[-+]"
+
+
+color index magenta default '!~p !~l'
+color index green default '~l'
+#source "awk -f $HOME/.mutt/friendcolor.awk $HOME/.addressbook|"
+color index brightred default '~H spam'
+color index brightyellow default '~T'
+color index brightblack default '~D'

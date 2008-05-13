@@ -1,0 +1,71 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+use Palm::ToDo;
+use YAML 'LoadFile';
+use Getopt::Long;
+
+sub find(&@);
+
+Getopt::Long::Configure('gnu_getopt');
+
+my $infile  = "$ENV{HOME}/.yodo";
+my $outfile = "ToDo.pdb";
+
+GetOptions('infile|i=s', \$infile, 'outfile|o=s', \$outfile);
+
+my $pdb = new Palm::ToDo;
+my @todo = LoadFile($infile);
+my $total = 0;
+makeCategories($pdb, \@todo);
+
+foreach my $todo (@todo) {
+	my $rec = $pdb->new_Record();
+	$rec->{priority} = getPrio( $todo->{priority} );
+	$rec->{description} = $todo->{note};
+
+	if (defined $todo->{category}) {
+		$rec->{category} = find { $_->{name} eq $todo->{category} } @{ $pdb->{appinfo}{categories} };
+	}
+
+	if (defined $todo->{done}) {
+		$rec->{completed} = 1;
+	}
+	$pdb->append_Record($rec);
+	$total++;
+}
+
+$pdb->Write($outfile);
+print "Added $total todo entries.\n";
+
+
+sub makeCategories {
+	my ($pdb, $todo) = @_;
+	my %cats = map { ($_->{category} => 1) } grep { defined $_->{category} } @$todo;
+	foreach my $cat (keys %cats) {
+		$pdb->addCategory($cat);
+	}
+}
+
+sub getPrio {
+	my %prio = (
+		veryhigh => 1,
+		high => 2,
+		medium => 3,
+		low => 4,
+		verylow => 5,
+	);
+	return $prio{ $_[0] }
+}
+
+sub find (&@) {
+	my ($f, @l) = @_;
+	my $idx = 0;
+	foreach (@l) {
+		if ($f->($_, $idx)) {
+			return $idx;
+		}
+		$idx++;
+	}
+	return undef;
+}

@@ -1,0 +1,18 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+use Palm::ToDo;
+use Palm::Datebook;
+use Palm::PDB;
+use YAML 'DumpFile', 'LoadFile';
+use File::Temp;
+
+my $pdb = new Palm::PDB;
+my $infile = shift;
+my $file = tmpnam();
+$pdb->Load($infile);
+
+DumpFile($file, $pdb);
+system('vim', $file);
+$pdb = LoadFile($file);
+$pdb->Write("$infile.new");

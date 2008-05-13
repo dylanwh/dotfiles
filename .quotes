@@ -1,0 +1,192 @@
+--- #YAML:1.0
+- |-
+  Bad men live that they may eat and drink, whereas good men eat and drink
+  that they may live.
+                -- Socrates
+- |-
+  Govern a great nation as you would cook a small fish.  Don't overdo it.
+                -- Lao Tsu
+- |-
+  Great acts are made up of small deeds.
+                -- Lao Tsu
+- |-
+  I'm sure that that could be indented more readably, but I'm scared of
+  the awk parser.
+                -- Larry Wall
+- |-
+  Outside of a dog, a book is a man's best friend.  Inside a dog it's too
+  dark to read.
+                -- Groucho Marx
+- |-
+  If you pick up a starving dog and make him prosperous, he will not bite you.
+  This is the principal difference between a dog and a man.
+                -- Mark Twain, "Pudd'nhead Wilson's Calendar"
+- |-
+  Always do right.  This will gratify some people and astonish the rest.
+                -- Mark Twain
+- |-
+  Thus spake the master programmer:
+          "After three days without programming, life becomes meaningless."
+                -- Geoffrey James, "The Tao of Programming"
+- |-
+  He who knows not and knows that he knows not is ignorant.  Teach him.
+  He who knows not and knows not that he knows not is a fool.  Shun him.
+  He who knows and knows not that he knows is asleep.  Wake him.
+- |-
+  A formal parsing algorithm should not always be used.
+                -- D. Gries
+- |-
+  The three laws of thermodynamics:
+          (1) You can't get anything without working for it.
+          (2) The most you can accomplish by working is to break even.
+          (3) You can only break even at absolute zero.
+- Keep grandma off the streets -- legalize bingo.
+- |-2
+          "Do you think what we're doing is wrong?"
+          "Of course it's wrong!  It's illegal!"
+          "I've never done anything illegal before."
+          "I thought you said you were an accountant!"
+- >-
+  "There are three principal ways to lose money: wine, women, and engineers.
+  
+  While the first two are more pleasant, the third is by far the more
+  certain."
+                -- Baron Rothschild, ca. 1800
+- |-
+  When a camel flies, no one laughs if it doesn't get very far!
+- |-
+  Hearts will never be practical until they can be made unbreakable.
+                -- The Wizard of Oz
+- |-
+  Knowledge, sir, should be free to all!
+                -- Harry Mudd, "I, Mudd", stardate 4513.3
+- |-
+  "What terrible way to die."
+  "There are no good ways."
+                -- Sulu and Kirk, "That Which Survives", stardate unknown
+- |-
+  Our OS who art in CPU, UNIX be thy name. Thy programs run, thy syscalls
+  done, In kernel as it is in user!
+- |-
+  ...the number of UNIX installations has grown to 10, with more expected...
+                -- Dennis Ritchie and Ken Thompson, June 1972
+- |-
+  We're here to give you a computer, not a religion.
+                -- attributed to Bob Pariseau, at the introduction of the Amiga
+- |-
+  Really, I'm not out to destroy Microsoft. That will just be a
+  completely unintentional side effect.
+                -- Linus Torvalds
+- |-
+  "In order to make an apple pie from scratch, you must first create the
+  universe."
+                -- Carl Sagan, Cosmos
+- >-
+  "355/113 -- Not the famous irrational number PI, but an incredible
+  simulation!"
+- |-
+  "Saturday in the morning, and the rain keep falling.
+  Brother didn't get no sleep, now he's really feeling beat.
+  But there is no time to waste, as the devil test his faith.
+  [But] he justs walks away, on a mission to complete."
+                -- David "Ziggy" Marley, "Looking" (song)
+- |-
+  "Looking you will find, find your will to find. Searching for something.
+  Searching for something. Find your will to find."
+                -- David "Ziggy" Marley, "Looking" (song)
+- |-
+  "You could be sad, but I'd rather you not be.
+  Don't dwell on the negative, just the positivity"
+                -- David "Ziggy" Marley, "Beautiful Day" (song)
+- |-
+  "I tell a tale of sailor brave, and his name was Dandy Vernon.
+  He worked as a steward on the old canal, and money he was earning.
+  He knew his way around eve-ry port, he'd wandered near and far.
+  And he took his stand as a drinkin' man, and never said no to a jar."
+                -- Michael Snow, "Dandy Vernon" (song)
+- |-
+  "Rise up this morning, smile with the rising sun.
+  Three little birds, sits by my doorstep. Singing sweet
+  songs, of melodies pure and true."
+                -- Bob Marley, "Three Little Birds" (song)
+- |-
+  "I asked of her, 'What do we celebrate?'
+  She said to me, 'These be the good old days.'"
+                -- David "Ziggy" Marley, "Good Old Days" (song)
+- |-
+  "I remember when, granpaw use to say, 'Grandson, these be the good
+  old days."
+                -- David "Ziggy" Marley, "Good Old Days" (song)
+- |-
+  If A equals success, then the formula is A = X + Y + Z.  X is work.  Y
+  is play.  Z is keep your mouth shut.
+                -- Albert Einstein
+  [For some reason, I doubt that Einstein said that... But it is funny, no?]
+- |-
+  "Regardless of the legal speed limit, your Buick must be operated at
+  speeds faster than 85 MPH (140kph)."
+                -- 1987 Buick Grand National owners manual.
+- |-
+  Colvard's Logical Premises:
+          All probabilities are 50%.
+          Either a thing will happen or it won't.
+  
+  Colvard's Unconscionable Commentary:
+          This is especially true when dealing with someone you're attracted to.
+  
+  Grelb's Commentary:
+          Likelihoods, however, are 90% against you.
+- |-
+  Entropy requires no maintenance.
+                -- Markoff Chaney
+- |-
+  Do, or do not; there is no try.
+- |-
+  I do not believe in the creed professed by the Jewish Church, by the Roman
+  Church, by the Greek Church, by the Turkish Church, by the Protestant Church,
+  nor by any Church that I know of.  My own mind is my own Church.
+                -- Thomas Paine
+- |-
+  My religion consists of a humble admiration of the illimitable superior
+  spirit who reveals himself in the slight details we are able to perceive
+  with our frail and feeble mind.
+                -- Albert Einstein
+- |-
+  "If there is not love in your heart, so sorry,
+   then there will never be hope for you."
+               -- David "Ziggy" Marley, "Tomorrow People" (song)
+- |-
+  Whatever it is, I fear Greeks even when they bring gifts.
+               -- Publius Vergilius Maro (Virgil)
+- |-
+  "I hear and I forget.
+   I see and I remember.
+   I do and I understand." 
+               -- Confucius 
+- |-
+  "Everything that can be invented, has been invented." 
+               -- Charles H. Duell, 1899 
+- |-
+  "Fall seven times, stand up eight." 
+               -- Japanese Proverb 
+- |-
+  "Be true to your work, your word, and your friend." 
+               -- Henry David Thoreau
+- |-
+  "Normality depends on how you look at it. For me you're definitely normal if I
+   exclude the strange interest you have in celebrity steel cage monkey boxing ;-)"
+               -- My friend, talking to me about my normality.
+- |-
+  "A tinker man steped up beside me, and he belted me in my left eye!"
+               -- Clancy Brothers and Tommy Makem, "Red Haired Mary" (song)
+- |-
+  "'S o gairm gaoirm i, is gairim i mo stor
+    Mile ghra le m' ainm i 'si Peigin Leitir Moir"
+               -- Traditional Irish song, "Peggy Lettermore"
+- |-
+  "Oh, there're sober men in plenty, / And drunkards barely twenty,
+   There are men of over ninety / That have never yet kissed a girl."
+               -- Andy Stewart, "Ramblin' Rover" (song)
+- |-
+  "And she sang A-litta-doo-de-litta-doo-da-litta-doo-da-dee 
+   She-hiddle-dum-adee-she-hiddle-dum-a-dee and she-landae"

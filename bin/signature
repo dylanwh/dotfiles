@@ -1,0 +1,20 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+
+my $quote = randquote();
+print <<SIG;
+$quote
+-
+GPG Fingerprint: 412C CCE9 DDA2 4FE9 C34F  754B 0863 0EA6 712E BBE1
+SIG
+
+
+sub randquote {
+	use YAML qw(LoadFile);
+	my $quotes = LoadFile("$ENV{HOME}/.quotes");
+	my $n = @$quotes;
+	my $quote = $quotes->[int(rand($n))];
+	return $quote;
+}
+

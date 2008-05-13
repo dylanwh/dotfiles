@@ -1,0 +1,71 @@
+*caos.txt*	Filetype-Plugin, Syntax-Highlighting, Indentation for CAOS
+
+This is a suite of vim-scripts, which introduce syntax-highlighting,
+indentation and some functions for the CAOS scripting language to Vim.
+
+Currently, there are several functions, which allow you to interact with
+a running Dockinstation/Creatures3-Game. 
+
+Injecting CAOS code and agents into the game	*inject* *chooseinject*
+
+There are two main functions to inject code into the running game:
+(Note: Remember, that you have to install netcat for this to work!)
+
+Inject:
+    This function injects the whole buffer. A remove script is recognized
+    and left out. By default it is mapped to '<F11>'.
+
+ChooseInject:
+    With this function one can inject single CAOS commands. The command,
+    which should be injected, is asked from the user interactively. By
+    default it is mapped to '\c'
+
+Removing agents from the game.			*uninject*
+
+    With the UnInject function, you can "uninject" a script, ie. inject
+    the remove script of the current buffer. It's mapped to '<F12>' by
+    default.
+
+Settings:					*caos-settings*
+
+						*caosusegui*
+    Set "CaosUseGui" to 1 in order to use gui-dialogs, when running gvim.
+    When running in console, this option has no effect.
+
+						*caosusewinstd*
+    Set "CaosUseWinStd" to 0, if you don't want to use the
+    standard keys of the CAOS-Tool from Creature Labs.
+
+						*caosindent*
+    Set "CaosIndent" to the number of columns, you want the indent
+    to be increased for each doif, loop, etc. It may be any integer
+    value, other variable or Vim option, eg. &ts for the value of
+    tabstop. Default: &sw (= shiftwidth)
+
+Key mappings:					*caos-keymappings*
+
+    CaosUseWinStd == 1:
+	<F11>		inject current buffer
+	<F12>		inject remove script of current buffer
+	\c		inject a given command
+	\m		get help about word under cursor
+			(If there is no word, the user is asked for one.)
+	\a		list all command names, which help contains the
+			given text.
+    
+    CaosUseWinStd == 0:
+	\i		inject current buffer
+	\u		inject remove script of current buffer
+    The other maps are the same as above.
+
+    Note: The '\' is the default value of localmapleader. Please,
+    refer to the Vim-Help for changing this.
+
+Example: (part of my .vimrc)			*caos-rc-example*
+
+    augroup caos
+	au!
+
+	let CaosUseGui = 0
+	let CaosWinStd = 0
+    augroup END

@@ -1,0 +1,18 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+
+my $mod = shift;
+my $pkg = shift || $mod;
+
+eval <<PERL;
+use $mod;
+package $pkg;
+use metaclass;
+PERL
+
+print join ("\n", map($_->name,
+		$pkg->meta->compute_all_applicable_attributes())), "\n";
+
+
+

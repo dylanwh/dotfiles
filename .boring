@@ -1,0 +1,87 @@
+# Boring file regexps:
+\.hi$
+\.o$
+\.o\.cmd$
+# *.ko files aren't boring by default because they might
+# be Korean translations rather than kernel modules.
+# \.ko$
+\.ko\.cmd$
+\.mod\.c$
+(^|/)\.tmp_versions($|/)
+(^|/)CVS($|/)
+(^|/)RCS($|/)
+~$
+#(^|/)\.[^/]
+(^|/)_darcs($|/)
+\.bak$
+\.BAK$
+\.orig$
+(^|/)vssver\.scc$
+\.swp$
+error\.log$
+(^|/)MT($|/)
+(^|/)\{arch\}($|/)
+(^|/).arch-ids($|/)
+(^|/),
+\.class$
+\.prof$
+(^|/)\.DS_Store$
+(^|/)BitKeeper($|/)
+(^|/)ChangeSet($|/)
+(^|/)\.svn($|/)
+\.py[co]$
+\.zwc$
+\#
+\.cvsignore$
+(^|/)Thumbs\.db$
+(^|/)autom4te\.cache($|/)
+# My junk
+^(tmp|logs|mail|var|code|repo|work|src|pim|docs)($|/)
+# twinsen
+^public_html($|/)
+# pawns
+^\.(msmtprc|offlineimaprc|irssi/config|imap_remotepass)$
+^\.offlineimap$
+^\.ssh/(authorized_keys|id_[rd]sa|known_hosts)
+^\.mozilla
+^\.adobe
+^\.aptitude
+^\.aptitude/config
+^\.bash
+^\.config
+^\.fontconfig
+^\.kde
+^\.macromedia
+^\.rnd
+^\.serverauth\.
+^\.sqlite_history
+^\.ssh/agent
+^\.viminfo
+^\.w3m/cookie
+^\.w3m/history
+^\.xmonad/history
+^\.xmonad/xmonad-
+^\.xmonad/xmonad$
+^\.xmonad/xmonad.errors
+^\.xmonad_history
+^\.zcompdump
+^\.zhistory
+^\.Xauthority$
+^\.Xdefaults$
+^\.openoffice.org2($|/)
+^\.java($|/)
+^\.subversion($|/)
+^\.purple($|/)
+^\.smb($|/)
+^\.recently-used
+^\.[a-zA-Z0-9_.-]+history
+^\.gnome2(_private)?($|/)
+^\..gimp-2.4($|/)
+^\.cpan($|/)
+^\.gimp-2.4($|/)
+^\.dbus($|/)
+^\.dia($|/)
+^\.qt($|/)
+^\..+/certificates$
+^\.gconfd?($|/)
+^\.newsbeuter/cache.db$

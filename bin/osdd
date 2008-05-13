@@ -1,0 +1,2 @@
+#!/usr/bin/env zsh
+exec python `python -c 'import pyosd.daemon; print pyosd.daemon.__file__'`

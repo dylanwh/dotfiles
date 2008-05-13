@@ -1,0 +1,121 @@
+# FILE:	/etc/DIR_COLORS
+# 
+# Configuration file for the color ls utility.
+# This file goes in the /etc directory, and must be world readable.
+# You can copy this file to .dir_colors in your $HOME directory to override
+# the system defaults.
+
+# COLOR needs one of these arguments:
+#
+#	'tty' 		color output to tty's only
+#	'all' or 'yes'	color output to tty's and pipes
+#	'none' or 'no'	shuts colorization off completely
+#
+COLOR tty
+
+# OPTIONS allows you to specify additional commandline options for
+#	the ls command.  These can be any options (check 'man ls' for details)
+#
+#  	-F  	show '/' for dirs, '*' for executables, etc.
+#  	-T 0 	don't trust tab spacing when formatting ls output.
+#
+OPTIONS -F -T 0
+
+# TERM specifies which terminal types are to be colorized.  There can
+#	be multiple entries.
+#
+TERM linux
+TERM console
+TERM xterm
+TERM vt100
+TERM rxvt
+TERM rxvt-unicode
+TERM screen
+# EIGHTBIT specifies whether to enable display of eight-bit ISO 8859
+#	characters.  This is set to either:
+#
+#	'yes' or '1'	displays eight-bit characters
+#	'no' or '0'	prevents display of eight-bit characters
+#
+EIGHTBIT 1
+
+# Color init strings:
+#
+# These specify how various files are displayed.  A color init string
+# consists of one or more of the following numeric codes:
+#
+# ATTRIBUTE STRINGS:
+# ------------------
+#
+#	00 = none
+#	01 = bold
+#	04 = underscore
+#	05 = blink
+#	07 = reverse
+#	08 = concealed
+#
+# COLOR STRINGS:
+# --------------
+#
+# COLOR		TEXT	BACKGROUND
+#
+# black		30	40
+# red		31	41
+# green		32	42
+# yellow/brown	33	43
+# blue		34	44
+# magenta	35	45
+# cyan		36	46
+# white/gray	37	47
+#
+# Note that the color init strings are a semi-colon delimited series of
+# color codes.  For example, to specify a bright yellow text on blue
+# background the string 01;33;44 would be used.
+#
+# The following entries define the color specifications based upon the
+# file type.
+#
+NORMAL 00	# global default, although everything should be something.
+FILE 00 	# normal file
+DIR 01;34 	# directory
+LINK 01;36 	# symbolic link
+ORPHAN 01;05;31	# orphaned symbolic link - points to non-existent file
+FIFO 40;33	# pipe
+SOCK 01;35	# socket
+BLK 40;33;01	# block device driver
+CHR 40;33;01 	# character device driver
+EXEC 01;32 	# file with executable attribute set
+
+# These entries allow colorization based upon the file extension.  These may
+# either be in the form '.ext' (such as '.gz' or '.tar') or '*ext' (such
+# as '*~' used with emacs backups).  Note that using the asterisk allows you
+# to specify extensions that are not necessarily preceeded by a period.
+#
+.EXE 01;32
+.cmd 01;32
+.exe 01;32
+.com 01;32
+.btm 01;32
+.bat 01;32
+.tar 01;31
+.bz2 01;31
+.tgz 01;31
+.arj 01;31
+.taz 01;31
+.lzh 01;31
+.zip 01;31
+.z   01;31
+.Z   01;31
+.gz  01;31
+.jpg 01;35
+.gif 01;35
+.png 01;35
+.bmp 01;35
+.xbm 01;35
+.xpm 01;35
+.tif 01;35
+.ps  01;35
+.dvi  01;35
+.pdf  01;35
+#.htm 04;37
+#.html 04;37

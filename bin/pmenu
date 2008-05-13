@@ -1,0 +1,38 @@
+#!/usr/bin/env zsh
+
+XTERM=${XTERM:-pterm}
+XFONT=${XFONT:-'fixed'}
+DMENU_NB=${DMENU_NB:-'#333366'}
+DMENU_NF=${DMENU_NF:-'#cccccc'}
+DMENU_SB=${DMENU_SB:-'#666699'}
+DMENU_SF=${DMENU_SF:-'#eeeeee'}
+PROGRAMS=$HOME/tmp/programs
+
+function programs {
+	if [[ -e $PROGRAMS ]]; then
+		< $PROGRAMS
+	else
+		find $path -type f -executable -printf "%f\n" 2> /dev/null | sort -u | tee $PROGRAMS
+	fi
+}
+
+function choose {
+	dmenu -b -fn $XFONT -sf $DMENU_SF -sb $DMENU_SB -nf $DMENU_NF -nb $DMENU_NB $argv
+}
+
+prefix="exec"
+prompt="pmenu"
+while getopts "e" opt; do
+	case $opt in
+		e) prefix=(exec $XTERM -e)
+		   prompt="$prompt -e"
+		;;
+	esac
+done
+
+cmd=($(programs | choose -p $prompt))
+if (( $? != 0 )); then
+	exit $?
+fi
+
+$prefix $cmd

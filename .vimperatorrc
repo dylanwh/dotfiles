@@ -1,0 +1,9 @@
+set hls
+"set guioptions=b
+set showtabline=1
+set ds=
+set maxhints=100
+
+noremap h H
+noremap l L
+map \ :set invum<CR>

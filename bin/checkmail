@@ -1,0 +1,57 @@
+#!/bin/zsh
+# vim:ft=zsh ts=4:
+
+maildirs=($HOME/mail/home $HOME/mail/work)
+folders=(inbox lists/slug spam)
+points=()
+
+local -A names totals
+
+while ! which inotifywait &>/dev/null; do
+	echo "install inotifywait"
+	sleep 60
+done
+
+for dir in $maildirs; do
+	for folder in $folders; do
+		local point="$dir/$folder/new"
+		if [[ -e $point ]]; then
+			points=($points $point/)
+			names[$point/]="${dir:t}/$folder"
+		fi
+	done
+done
+
+function watch {
+	inotifywait -m -e modify -e create -e attrib -e move -e delete --format %w $argv 2>/dev/null
+}
+
+function count {
+	local point=$1
+	totals[$point]=$(ls $point | wc -l)
+}
+
+function display {
+	local displayed="no"
+	for point in $points; do
+		if (( totals[$point] )); then
+			displayed="yes"
+			print -n "[${names[$point]}: ${totals[$point]}] "
+		fi
+	done
+	if [[ $displayed == "no" ]]; then
+		print -n "no new mail"
+	fi
+	echo
+}
+
+for point in $points; do
+	count $point
+done
+display
+
+watch $points | while read point; do
+	count $point
+	print ${names[$point]}: ${totals[$point]}
+	display
+done

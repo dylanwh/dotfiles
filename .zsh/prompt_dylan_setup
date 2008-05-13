@@ -1,0 +1,9 @@
+#!zsh
+local time="$fg[yellow]%D{%H:%M}$reset_color"
+local user="$fg[blue]%n$reset_color"
+local host="$fg[red]%m$reset_color"
+local dir="$fg[green]%0~$reset_color"
+local n="
+"
+prompt="[%{$time $user@$host $dir%}]$n%# "
+prompt_opts=( cr percent )

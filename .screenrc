@@ -1,0 +1,78 @@
+# Dylan William Hardison's .screenrc
+# vim: set ft=screen tw=0:
+
+nethack on          # Let's have fun messages.
+#shell -$SHELL       # What does this do?
+deflogin on         # I'm logged in.
+defutf8 on          # Force screen to act like it was started with -U
+defencoding utf8    # Interprete input/output as utf-8
+nonblock on         # Prevent screen from freezing
+defnonblock on      # Ditto
+vbell off           # annoying audible bell, please
+autodetach on       # detach on hangup
+startup_message off # don't display the copyright page
+defscrollback 1000  # Keep last 1000 lines
+altscreen off       # Do not use alternate screen
+
+# emulate .logout message
+pow_detach_msg "Screen session of \$LOGNAME \$:cr:\$:nl:ended."
+
+# advertise hardstatus support to $TERMCAP
+termcapinfo  * '' 'hs:ts=\E_:fs=\E\\:ds=\E_\E\\'
+
+#idle 60
+#blankerprg worms -d 30 -l 20
+
+bind k    # Don't kill on C-a k
+bind ^k   # or on C-a C-k
+bind .    # Don't poop
+bind ^\   # Or do this/
+bind \\   # or this
+bind ^h   # or this
+bind h    # or even this
+
+bind 'K' kill
+bind 'I' login on
+bind 'O' login off
+bind '}' history
+bind j focus down
+bind k focus up
+
+bind 1 select 0
+bind 2 select 1
+bind 3 select 2
+bind 4 select 3
+bind 5 select 4
+bind 6 select 5
+bind 7 select 6
+bind 8 select 7
+bind 9 select 8
+
+bind _ resize max
+bind = resize =
+bind + resize +1
+bind - resize -1
+
+bind H hardstatus ignore
+bind h hardstatus alwayslastline
+
+# This allows the scrollbar to work
+termcapinfo rxvt-unicode ti@:te@
+
+# xterm-52 tweaks:
+# - uses background color for delete operations
+termcapinfo rxvt-unicode be
+
+# Extend the vt100 desciption by some sequences.
+termcap  vt100* ms:AL=\E[%dL:DL=\E[%dM:UP=\E[%dA:DO=\E[%dB:LE=\E[%dD:RI=\E[%dC
+terminfo vt100* ms:AL=\E[%p1%dL:DL=\E[%p1%dM:UP=\E[%p1%dA:DO=\E[%p1%dB:LE=\E[%p1%dD:RI=\E[%p1%dC
+
+windowlist string "%3n %t%=%f"
+sorendition wB  # cyan/black
+
+backtick 1 40 40 screen-name
+#hardstatus alwayslastline "%{= kB}<%{w}%1`%{B}> %{w}%?%-Lw%?%{B}(%{w}%n* %t%?(%u)%?%{B})%{w}%?%+Lw%?%? %{B}%{g}%=%{B}[ %{.c}%M %d %{y}%0c%{B} ][ %{m}%l%{B} ]"
+
+caption always "%{= kB}<%{w}%1`%{B}> %{w}%?%-Lw%?%{B}(%{w}%n* %t%?(%u)%?%{B})%{w}%?%+Lw%?%? %{B}%{g}%=%{B}[ %{.c}%M %d %{y}%0c%{B} ][ %{m}%l%{B} ]"
+
+hardstatus string "%t"

@@ -1,0 +1,10 @@
+#!/usr/bin/perl
+@ARGV = grep(!/^-e$/, @ARGV);
+
+if (@ARGV) {
+	my ($name) = @ARGV;
+	exec urxvt => -name => $name,
+	              -e => @ARGV;
+} else {
+	exec urxvt => -name => 'shell';
+}

@@ -1,0 +1,4 @@
+#!/bin/zsh
+
+xrdb -DXFONT=$XFONT -merge ~/.Xdefaults.in
+xrdb -DXFONT=$XFONT -merge -n ~/.Xdefaults.in > ~/.Xdefaults

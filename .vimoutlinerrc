@@ -1,0 +1,23 @@
+" vim: set ft=vim:
+"Custom Colors **********************************
+" Uncomment this next line to force using VO on
+" a light background
+" colorscheme vo_light
+" Uncomment this next line to force using VO on
+" a dark background
+colorscheme vo_dark
+highlight Normal guibg=Black guifg=White
+highlight StatusLine cterm=bold ctermbg=darkblue
+highlight StatusLineNC gui=none guibg=darkblue
+highlight StatusLine   gui=bold guibg=darkblue
+highlight StatusLineNC cterm=none ctermbg=darkblue
+highlight VertSplit term=none cterm=none gui=none ctermbg=darkblue guibg=darkblue
+
+
+if !exists("vo_monkey")
+	command FoldDone set foldlevel=1 | g/^\t\[_\]/exec "norm zo" | nohlsearch
+	nmap ,,C :FoldDone<CR>
+	let vo_monkey = 1
+endif
+
+

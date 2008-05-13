@@ -1,0 +1,11 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+use YAML qw(LoadFile);
+
+
+my $i      = shift @ARGV;
+my $quotes = LoadFile("$ENV{HOME}/.quotes");
+my $n      = @$quotes;
+my $quote  = $quotes->[$i || int(rand($n))];
+print $quote,"\n";

@@ -1,0 +1,11 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+
+my $mod = shift or die "usage: vipm module\n";
+eval "require $mod";
+my $file = $mod;
+$file =~ s!::!/!g;
+$file .= ".pm";
+
+system('vim', $INC{$file}, @ARGV);

@@ -1,0 +1,355 @@
+#!/usr/bin/env perl
+#
+# NOTE: This program is distributed under the PERL Artistic License, as
+#       specified in the PERL README file.  Feel free to modify the source,
+#       but please send revisions, bug fixes, suggestions, etc to:
+#
+#                      beleg@isri.unlv.edu
+#
+#
+#  
+# def - Connect to a DICTD server and get word definitions.
+#
+#  This is a very rudimentary DICT client that arose out of my addiction to
+# our beloved Webster serverd (may she rest in peace).  It's simple, and it's
+# a hack, so if you're writing just to tell me that, go away.
+#
+#  Right now the distribution is just a single PERL script.  No man page, etc.
+# The usage semantics are pretty clear from the usage message.
+#
+# Andrew Bagdanov
+# beleg@isri.unlv.edu
+#
+# First release 1.0 - 07/21/1999 (ADB)
+#
+
+
+no warnings;
+
+use Socket;
+use Getopt::Std;
+
+# Global server parameters with defaults.
+my $HOSTNAME   = "dict.trit.org";
+my $PORT       = 2628;
+my $DICTIONARY = "*";
+
+# Try to get a status message from the server.
+sub Get_Status {
+    my $fh = shift;
+    my $line = <$fh>;
+    my $status = "000", $msg = "Error";
+    
+    if ($line =~ /^(\d\d\d) (.*)/) {
+	$status = $1;
+	$msg    = $2;
+    }
+    return ($status, $msg);
+}
+
+# Main function.  Queries the server for a word.
+sub Define_Word {
+    my $fh = shift;
+    my $word = shift;
+    my $ret  = "";
+
+    if ($word eq "") {
+	return "";
+    }
+
+    print $fh "define $DICTIONARY \"$word\"\n";
+    ($status, $msg) = Get_Status($fh);
+
+    if ($status == 552) {
+	$ret = "No match.\n";
+    }
+    elsif ($status == 551) {
+	$ret = "Invalid dictionary.\n";
+    }
+    elsif ($status == 150) {
+	$msg =~ /(\d+) .*/;
+	$numdefs = $1;
+	$ret = "$numdefs definitions retrieved:\n";
+	
+	while ($numdefs--) {
+	    ($status, $msg) = Get_Status($fh);
+	    if ($status == 151) {
+		$msg =~ /^\"(.+)\" (\w+) \"(.+)\"/;
+		$word = $1;
+		$dictname = $2;
+		$dict = $3;
+		$ret = $ret."\nFrom $dict:\n";
+		$line = "";
+		while (!($line =~ /^\./)) {
+		    $line = <$fh>;
+		    chop($line); chop($line);
+		    if (!($line =~ /^\./)) {
+			$ret = $ret."$line\n";
+		    }
+		}
+	    }
+	}
+	# Get the final status message.
+	($status, $msg) = Get_Status($fh);
+    }
+
+    return $ret;
+}
+
+# Do an inexact match on a worf.  Return list of close matched.
+sub Match_Word {
+    my $fh = shift;
+    my $word = shift;
+    my $match = shift;
+    my $ret  = "";
+
+    if ($word eq "") {
+	return "";
+    }
+
+    print $fh "match $DICTIONARY $match \"$word\"\n";
+    ($status, $msg) = Get_Status($fh);
+
+    if ($status == 152) {
+	$line = "";
+	print "Dictionary\tTerm\n";
+	print "----------\t----\n";
+	while (!($line =~ /^\./)) {
+	    $line = <$fh>;
+	    chop($line); chop($line);
+	    if (!($line =~ /^\./)) {
+		$line =~ /(\w+) \"(.*)\"/;
+		$sep = "\t\t";
+		if ((length $1) >=8) {
+		    $sep = "\t";
+		}
+		print "$1$sep$2\n";
+	    }
+	}
+	# Get the final status message.
+	($status, $msg) = Get_Status($fh);
+    }
+    else {
+	print "No match.\n";
+    }
+}
+
+# Get the list of dictionaries available on a server.
+sub Get_DictList {
+    my $fh = shift;
+    my ($line, $status, $msg);
+
+    print $fh "show db\n";
+    ($status, $msg) = Get_Status($fh);
+    print "Dictionary list from $HOSTNAME, port $PORT:\n\n";
+    if ($status == 110) {
+	$line = "";
+	print "Name\t\tFull Name\n";
+	print "----\t\t---------\n";
+	while (!($line =~ /^\./)) {
+	    $line = <$fh>;
+	    chop($line); chop($line);
+	    if (!($line =~ /^\./)) {
+		$line =~ /(\w+) \"(.*)\"/;
+		$sep = "\t\t";
+		if ((length $1) >=8) {
+		    $sep = "\t";
+		}
+		print "$1$sep$2\n";
+	    }
+	}
+	
+	# Get the final status message.
+	($status, $msg) = Get_Status($fh);
+    }
+    else {
+	print "Dictionary list unavailable.\n";
+    }
+    
+}
+
+# Show a list of inexact matching strategies available.
+sub Get_MatchInfo {
+    my $fh = shift;
+    my ($line, $status, $msg);
+
+    print $fh "show strat\n";
+    ($status, $msg) = Get_Status($fh);
+    print "Matching strategy list from $HOSTNAME, port $PORT:\n\n";
+    if ($status == 111) {
+	$line = "";
+	print "Name\t\tDescription\n";
+	print "----\t\t-----------\n";
+	while (!($line =~ /^\./)) {
+	    $line = <$fh>;
+	    chop($line); chop($line);
+	    if (!($line =~ /^\./)) {
+		$line =~ /(\w+) \"(.*)\"/;
+		$sep = "\t\t";
+		if ((length $1) >=8) {
+		    $sep = "\t";
+		}
+		print "$1$sep$2\n";
+	    }
+	}
+	
+	# Get the final status message.
+	($status, $msg) = Get_Status($fh);
+    }
+    else {
+	print "Matching strategy list unavailable.\n";
+    }
+    
+}
+
+# Get info on available dictionary.
+sub Get_DictInfo {
+    my $fh = shift;
+    my $dict = shift;
+    my ($line, $status, $msg, $ret);
+
+    print $fh "show info $dict\n";
+    ($status, $msg) = Get_Status($fh);
+    if ($status == 112) {
+	print "Information for $dict on $HOSTNAME, port $PORT:\n";
+
+	# Skip the first line of dict description.
+	$line = <$fh>;
+	while (!($line =~ /^\./)) {
+	    $line = <$fh>;
+	    chop($line); chop($line);
+	    if (!($line =~ /^\./)) {
+		print "$line\n";
+	    }
+	}
+	# Get the final status message.
+	($status, $msg) = Get_Status($fh);
+	
+    }
+    else {
+	print "Dictionary \"$dict\" not found.\n";
+    }
+    
+}
+
+# Show general info on server.
+sub Get_ServerInfo {
+    my $fh = shift;
+    my ($line, $status, $msg, $ret);
+
+    print $fh "show server\n";
+    ($status, $msg) = Get_Status($fh);
+    if ($status == 114) {
+	$ret = "Information for $HOSTNAME, port $PORT:\n";
+	$line = "";
+	while (!($line =~ /^\./)) {
+	    $line = <$fh>;
+	    chop($line); chop($line);
+	    if (!($line =~ /^\./)) {
+		$ret = $ret.$line."\n";
+	    }
+	}
+	
+	# Get the final status message.
+	($status, $msg) = Get_Status($fh);
+    }
+    else {
+	$ret =  "Dictionary \"$dict\" not found.\n";
+    }
+    
+    return $ret;
+}
+
+# Print out usage message (duh).
+sub Usage {
+    print "Usage: dict [-slh] [-di dict_name] [-H hostname] [-p port] word\n";
+    print "Options:\n";
+    print "  -d dict_name  specify dictionary to search.\n";
+    print "  -i dict_name  display extended information on dictionary.\n";
+    print "  -H hostname   specify hostname of DICT server.\n";
+    print "  -p portname   specify port to connect to.\n";
+    print "  -m strategy   specify matching strategy.\n";
+    print "  -M            display available matching strategies.\n";
+    print "  -s            display server information.\n";
+    print "  -l            display server dictionary list.\n";
+    print "  -h            display this message.\n";
+}
+
+
+# Check for usage request (before arg parsing).
+if (!@ARGV) {
+    Usage();
+    exit(0);
+}
+
+# Process command line options.
+getopt("Hpdim");
+
+# Get the word (if any) to define.
+$word = shift;
+
+# Check for usage request.
+if ($opt_h) {
+    Usage();
+    exit(0);
+}
+
+# Force hostname?
+if ($opt_H) {
+    $HOSTNAME = $opt_H;
+}
+
+# Force port #?
+if ($opt_p) {
+    $PORT = $opt_p;
+}
+
+# Setup socket for communication with DICT server.
+$proto = getprotobyname("tcp");
+$iaddr = inet_aton($HOSTNAME);
+$paddr = sockaddr_in($PORT, $iaddr);
+
+# And now connect to the DICT server.
+socket(DICT, PF_INET, SOCK_STREAM, $proto) or die("socket: $!");
+connect(DICT, $paddr) or die("connect: $!");
+select(DICT); $| = 1; select(STDOUT);
+
+# Get the initial status message from the DICT server.
+($status, $msg) = Get_Status(\*DICT);
+
+# User setting dictionary?
+if ($opt_d) {
+    $DICTIONARY = $opt_d;
+}
+
+# Looking for dictlist.
+if ($opt_l) {
+    Get_DictList(\*DICT);
+}
+elsif ($opt_i) {
+    Get_DictInfo(\*DICT, $opt_i);
+}
+elsif ($opt_M) {
+    Get_MatchInfo(\*DICT);
+}
+elsif ($opt_s) {
+    $info = Get_ServerInfo(\*DICT);
+    print "$info";
+}
+elsif ($word && $opt_m) {
+    Match_Word(\*DICT, $word, $opt_m);
+}
+elsif ($word) {
+    $def = Define_Word(\*DICT, $word);
+    print "$def";
+}
+else {
+    Usage();
+}
+
+# Exit from the DICT server gracefully.
+print DICT "quit\n";
+($status, $msg) = Get_Status(\*DICT);
+
+# And we're outta here.
+close(DICT);

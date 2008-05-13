@@ -1,0 +1,104 @@
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+use File::Find;
+use File::Spec;
+use Getopt::Long qw(:config gnu_getopt);
+my %Option = (
+	'exclude' => [],
+	'symlink' => 1,
+	dot       => 0,
+	here       => '',
+	'exclude-not-here' => 0,
+);
+GetOptions(\%Option,
+	'exclude|X=s@',
+	'symlink|s!',
+	'dot|d',
+	'here|H=s',
+	'exclude-not-here',
+);
+
+if (@ARGV != 2) {
+	print "Usage: [options] fromdir todir\n";
+	exit 1;
+}
+
+my ($From, $To)  =  @ARGV;
+my $AbsFrom      =  File::Spec->rel2abs($From);
+my $FromPattern  =  quotemeta($From);
+my @Exclude      =  map(qr/$_/, @{ $Option{exclude} });
+
+$To =~ s/\/?$//;
+
+find({
+		follow => 0,
+		no_chdir => 1,
+		wanted => \&wanted,
+	}, $From);
+
+sub wanted {
+	return if /\.svn/;
+	return if $_ eq $AbsFrom;
+
+	for my $x (@Exclude) {
+		if ($_ =~ $x) {
+			return;
+		}
+	}
+	
+	s/^$FromPattern\/*//;
+	
+	my $from = $_;
+	my $to   = $from;
+	
+	if ($Option{dot}) {
+		$to = ".$to";
+	}
+
+	if (my $here = $Option{here}) {
+		$here = quotemeta($here);
+		unless ($to =~ s/\@$here//) {
+			if ($Option{'exclude-not-here'} and $to =~ /\@\w+/) {
+				#print "Excluding-not-here: $to\n";
+				return;
+			}
+		}
+	}
+
+
+	if (-d "$From/$from") {
+		unless (-d "$To/$to") {
+			print "mkdir($To/$to)\n";
+			mkdir("$To/$to") or die "mkdir($To/$to): $!";
+		}
+	} elsif (not -e "$To/$to") {
+		if (-l "$To/$to") {
+			if (readlink("$To/$to") ne "$AbsFrom/$from") {
+				warn "Removing stale $to\n";
+				unlink("$To/$to");
+			} else {
+				print "nada\n";
+				return;
+			}
+		}
+		mklink("$AbsFrom/$from", "$To/$to");
+	}
+}
+
+sub mklink {
+	my ($from, $to) = @_;
+	
+	my $phrom = File::Spec->abs2rel($from);
+	print "$phrom -> $to\n";
+	
+	if ($Option{symlink}) {
+		symlink($from, $to) or die "symlink($from, $to): $!";
+	} else {
+		link($from, $to) or die "link($from, $to): $!";
+	}
+}
+
+
+

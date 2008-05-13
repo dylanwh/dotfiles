@@ -1,0 +1,4 @@
+#!/usr/bin/env zsh
+set +e
+chmod -Rc +x ~/bin ~/.xinitrc
+chmod -Rc go-wrx ~/.msmtprc ~/tmp ~/.netrc 

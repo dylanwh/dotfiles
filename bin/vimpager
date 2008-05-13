@@ -1,0 +1,53 @@
+#!/bin/sh
+
+# Script for using ViM as a PAGER.
+# Based on Bram's less.sh.
+# Version 0.3
+
+files=$@
+if [ -z "$files" ]; then files="-"; fi
+
+if uname -s | grep -iq cygwin; then
+	cygwin=1
+else
+	linux=1
+fi
+
+less_vim() {
+	vim -R -c 'let no_plugin_maps = 1' -c 'runtime! macros/less.vim' -c 'set mouse=h' "$@"
+}
+
+do_ps() {
+	ps fuxw
+}
+
+pproc() {
+	if [ $linux ]; then
+		ps -p $1 -o comm=
+	elif [ $cygwin ]; then
+		ps -p $1 | sed -e 's/^I/ /' | grep -v PID
+	fi
+}
+
+ppid() {
+	if [ $linux ]; then
+		ps -p $1 -o ppid=
+	elif [ $cygwin ]; then
+		ps -p $1 | sed -e 's/^I/ /' | grep -v PID | awk '{print $2}'
+	fi
+}
+
+# Check if called from man or perldoc
+if do_ps | grep -q '\(man\|perl\(doc\|$\)\)\>'; then
+	proc=$$
+	while next_parent=`ppid $proc` && [ $next_parent != 1 ]; do
+		if pproc $next_parent | grep -q 'man\>'; then
+			sed -e 's/\[[^m]*m//g' | sed -e 's/.//g' | less_vim -c 'set ft=man' -; exit
+		elif pproc $next_parent | grep -q 'perl\(doc\|$\)\>'; then
+			sed -e 's/.//g' < $files | less_vim -c 'set ft=man' -; exit
+		fi
+		proc=$next_parent
+	done
+fi
+
+less_vim $files

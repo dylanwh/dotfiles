@@ -1,0 +1,191 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+use YAML 'LoadFile';
+use Time::Piece;
+use Time::Seconds;
+use Palm::Datebook;
+
+my $pdb = new Palm::Datebook;
+my $pid = open my $remind, '-|', 'remind', '-s12', '-ipda=1' or die "cannot exec remind: $!";
+my %meta = load_meta("$ENV{HOME}/.remind/pda.yml");
+my %seen;
+my @log;
+my $total = 0;
+#print YAML::Dump(\%meta);
+
+#exit;
+while ($_ = readline $remind) {
+	chomp;
+	my @notes;
+	my ($date, $special, $tag, $duration, $time, $body) = split(/\s+/, $_, 6);
+	my ($year, $month, $day) = split(/\//, $date);
+	$body =~ s/^\d\d?:\d\d?(am|pm) //;
+	my $id = '*';
+
+
+	if ($tag =~ /@([\w.-]+)/) {
+		$id = $1;
+	}
+
+	next if repeats(\%meta, $id) and $seen{$body}++;
+
+	my $record = $pdb->new_Record;
+	$record->{day} = $day;
+	$record->{month} = $month;
+	$record->{year} = $year;
+
+	push @log, [ $id, $body ];
+
+	if ($time ne '*') {
+		my $start = Time::Piece->strptime(
+			"$date " . timefrob($time), "%Y/%m/%d %H:%M"
+		);
+		$record->{start_hour} = $start->hour;
+		$record->{start_minute} = $start->minute;
+		if ($duration eq '*') {
+			$duration = 10;
+		}
+
+		$duration = $duration + 0;
+		my $end = $start + (ONE_MINUTE * $duration);
+		$record->{end_hour} = $end->hour;
+		$record->{end_minute} = $end->minute;
+	}
+
+	delete $record->{alarm};
+	if ($id ne '*') {
+		if (exists $meta{$id}) {
+			if (exists $meta{$id}{alarm}) {
+				$record->{alarm} = $meta{$id}{alarm};
+			}
+			if (exists $meta{$id}{repeat}) {
+				$record->{repeat} = $meta{$id}{repeat};
+			}
+		} else {
+			warn "Undefined id: $id\n";
+		}
+		if (exists $meta{$id}{float} and $meta{$id}{float}) {
+			push @notes, "##f";
+		}
+	}
+
+	$record->{note} = join("\n", @notes);
+	$record->{description} = $body;
+
+	$pdb->append_Record($record);
+	$total++;
+}
+
+my $record = $pdb->new_Record();
+$record->{day} = 1;
+$record->{month} = 1;
+$record->{year} = 2000;
+$record->{description} = "LOG";
+$record->{note} = join("\n", map(join(' ', @$_), @log));
+$pdb->append_Record($record);
+
+$pdb->Write('DatebookDB.pdb');
+close $remind;
+print "Added $total calendar entries.\n";
+
+
+sub read_hash {
+	my ($tag, $ksep, $rsep) = @_;
+	$ksep ||= '=';
+	$rsep ||= ',';
+	return map {
+		my ($key, $val) = split(/=/, $_);
+		($key, defined $val ? $val : 1);
+	} split(/,/, $tag);
+}
+
+
+sub timefrob {
+	my $n = shift;
+	return $n if $n eq '*';
+	int($n / 60) . ":" . ($n % 60);
+}
+
+
+sub load_meta {
+	my $file = shift;
+	my $meta = LoadFile($file);
+
+	map {
+		my $m = $meta->{$_};
+		my %h;
+		if (exists $m->{alarm}) {
+			$h{alarm} = parse_alarm($m->{alarm});
+		}
+		if (exists $m->{repeat}) {
+			$h{repeat} = parse_repeat($m->{repeat});
+		}
+		($_, \%h);
+	} keys %$meta;
+}
+
+sub parse_alarm {
+	my $s = shift;
+	if ($s =~ /(\d+)([dhm])/) {
+		my $advance = $1;
+		my $unit;
+		if ($2 eq 'm') {
+			$unit = 0;
+		} elsif ($2 eq 'h') {
+			$unit = 1;
+		} elsif ($2 eq 'd') {
+			$unit = 2;
+		}
+		return { advance => $advance, unit => $unit };
+	} else {
+		die "Can't parse alarm: $s\n";
+	}
+}
+
+sub repeats {
+	my ($m, $id) = @_;
+	exists $m->{$id} and exists $m->{$id}{repeat};
+}
+
+sub parse_repeat {
+	my $r = shift or return undef;
+	my %days = enum(qw( sun mon tue wed thu fri sat ));
+	my %types = enum(qw( none daily weekly monthly monthly_date yearly ));
+	$r->{freq} ||= 1;
+	my $nr = {
+		frequency => $r->{freq},
+		type => $types{ $r->{type} },
+	};
+
+	die "Bad type: $r->{type}" unless $nr->{type};
+	die "Bad frequence: $r->{freq}" if $r->{freq} < 1;
+
+	if (exists $r->{days}) {
+		my @days = (0, 0, 0, 0, 0, 0, 0);
+		my @marked = map { $days{lc $_} } @{ $r->{days} };
+		foreach (@marked) {
+			$days[$_] = 1;
+		}
+		$nr->{repeat_days} = \@days;
+	}
+	if (exists $r->{week}) {
+		$nr->{weeknum} = $r->{week} eq 'last' ? 4 : $r->{week} - 1;
+	}
+	if (exists $r->{day}) {
+		$nr->{daynum} = $days{ $r->{day} };
+	}
+	if (exists $r->{end}) {
+		($nr->{end_year}, $nr->{end_month}, $nr->{end_day}) = split(/\//, $r->{end});
+	}
+
+	$nr->{start_of_week} = 0;
+	$nr->{unknown} = 128;
+	$nr->{other_flags} = 0;
+	return $nr;
+}
+
+sub enum {
+	my $i = 0;
+	map { ($_, $i++) } @_;
+}

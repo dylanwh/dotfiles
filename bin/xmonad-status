@@ -1,0 +1,30 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+$|++;
+
+
+my $restart = 0;
+$SIG{USR1} = sub {
+	$restart = 1;
+};
+
+while (<>) {
+	chomp;
+	my ($ws, $layout, $title) = split(/\s:\s/, $_, 3);
+	$layout =~ s/Maximize //g;
+	$layout =~ s/Hinted //g;
+	$layout ||= 'layout';
+	$title ||= '';
+
+	$ws     = join('  ', split(/ +/, $ws));
+
+	$ws     =~ s/ ?\[([^\]]+)\] ?/^fg(red)[^fg(yellow)$1^fg(red)]^fg()/g;
+	$layout = ucfirst $layout;
+	my $s = " $ws ^fg(SteelBlue3)($layout)^fg() ^fg(white)$title^fg()\n";
+	$s =~ s/^ +\[//g;
+	print $s;
+	if ($restart) {
+		exec($0);
+	}
+}

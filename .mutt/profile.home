@@ -1,0 +1,55 @@
+# vim: set ft=muttrc:
+# NAME: home
+
+set realname="Dylan William Hardison"
+set from="dylan@hardison.net"
+
+set mbox_type=Maildir
+set folder=~/mail/home
+set spoolfile="+inbox"
+set mbox="+read"
+set record="+sent"
+set postponed="+postponed"
+
+# Recongize messages addressed to me.
+unalternates *
+alternates dylanwh@gmail.com \
+           dylan@haverdev.org \
+           dylan@sinedev.org \
+           dylan@midgetbutton.org \
+           dylan\\+[a-z]+@hardison.net \
+           Hardison.Dylan8811@myspcmail.spcollege.edu
+
+
+# And messages to mailing lists I subscribe to.
+unsubscribe *
+subscribe slug@nks.net \
+          slug-politics@nks.net \
+          haskell-cafe@haskell.org \
+          caml-list@inria.fr \
+          caml-list@yquem.inria.fr \
+          templates@template-toolkit.org \
+          macarthur@genesisfleet.com \
+          module-authors@perl.org \
+          debian-security-announce@lists.debian.org \
+          poe@perl.org \
+          dwm@suckless.org \
+          members@issmacarthur.com \
+          mailall@myspcmail.spcollege.edu \
+		  members@lists.issmacarthur.com \
+		  members@lists.deepspace2.com \
+		  pup@possumism.net \
+		  tbad@tampabad.org
+
+
+send-hook '~t pup@possumism.net' 'set from="Dylan William Hardison <dylan+pup@hardison.net>"'
+
+my_hdr Reply-By: `date --date="-3 days"`
+my_hdr X-Message-Flag: OUTLOOK ERROR: Message in violation of Microsoft Security Policy (MSP).
+my_hdr X-Religion: Optimus Prime
+
+set signature="~/bin/signature --home|"
+
+unmailboxes *
+source "mailboxes '$folder'|"
+mailboxes /var/spool/mail/$USER

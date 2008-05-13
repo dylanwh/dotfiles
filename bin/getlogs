@@ -1,0 +1,2 @@
+#!/usr/bin/env sh
+rsync -vvaz lofn.sinedev.org:logs/irssi/ ~/logs/irssi/

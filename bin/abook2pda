@@ -1,0 +1,150 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+use IO::All;
+use Palm::Address;
+use Getopt::Long;
+
+sub find(&@);
+
+Getopt::Long::Configure('gnu_getopt');
+
+my %Label = (
+	phone => findLabel('Home'),
+	workphone => findLabel('Work'),
+	email     => findLabel('E-mail'),
+	mobile    => findLabel('Mobile'),
+);
+
+my $infile  = "$ENV{HOME}/.abook/addressbook";
+my $outfile = "AddressDB.pdb";
+
+GetOptions('infile|i=s', \$infile, 'outfile|o=s', \$outfile);
+
+my ($entries, $meta) = parse_file(io($infile));
+my $pdb = new Palm::Address;
+$pdb->{appinfo}{fieldLabels}{custom1} = 'URL';
+$pdb->{appinfo}{fieldLabels}{custom2} = 'Nick';
+
+my $total = 0;
+$pdb->addCategory('abook');
+foreach my $entry (@$entries) {
+	my $rec = palmize($pdb, $entry);
+
+	$rec->{category} = find { $_->{name} eq 'abook' } @{ $pdb->{appinfo}{categories} };
+
+	$pdb->append_Record(
+		$rec
+	);
+	$total++;
+}
+$pdb->Write('AddressDB.pdb');
+print "Added $total contacts\n";
+
+
+
+sub palmize {
+	my ($pdb, $entry) = @_;
+	my $record = $pdb->new_Record;
+	my ($firstName, $lastName) = nameSplit($entry->{name});
+
+	$record->{fields}{firstName} = $firstName;
+	$record->{fields}{name} = $lastName;
+	$record->{fields}{city} = $entry->{city};
+	$record->{fields}{state} = $entry->{state};
+	$record->{fields}{country} = $entry->{country};
+	$record->{fields}{zipCode} = $entry->{zip};
+	$record->{fields}{address} = $entry->{address};
+	if (exists $entry->{address2}) {
+		$record->{fields}{address} .= "\n$entry->{address2}";
+	}
+	$record->{fields}{note} = $entry->{notes};
+	$record->{fields}{custom1} = $entry->{url};
+	$record->{fields}{custom2} = $entry->{nick};
+	my (@phone) = contacts($entry);
+	foreach my $n (1 .. 5) {
+		next unless defined $phone[$n - 1];
+		my $p = $phone[$n - 1];
+		$record->{phoneLabel}{"phone$n"} = $Label{ $p->{key} };
+		$record->{fields}{"phone$n"}     = $p->{value};
+	}
+
+	return $record;
+}
+
+sub contacts {
+	my ($entry) = @_;
+	my @contacts;
+	my @keys = qw( phone mobile email workphone );
+	foreach my $key (@keys) {
+		if (exists $entry->{$key}) {
+			foreach my $contact (split(/,/, $entry->{$key})) {
+				push @contacts, {
+					key => $key, 
+					value => $contact,
+				};
+			}
+		}
+	}
+	return @contacts;
+}
+
+sub nameSplit {
+	local $_ = shift;
+	if (/^(\S+) ?(.*)$/) {
+		return ($1, $2);
+	} else {
+		die "Bad: $_\n";
+	}
+}
+
+sub parse_file {
+	my ($file) = shift;
+	my ($i, $meta, @entries, %meta, $key);
+	local $_;
+
+	while ($_ = $file->getline) {
+		# skip lines begining with '#' and empty lines.
+		next if /^#/;
+		next if length() < 1;
+
+		# match [n] where n is a number.
+		if (/^\[(\d+)\]$/) {
+			$i = $1 + 0;
+			$meta = 0;
+		} 
+		# match [n] where n is a name.
+		elsif (/^\[(\w+)\]$/) {
+			$key = $1;
+			$meta = 1;
+		} 
+		# match field=value
+		elsif (/^(\w+)=(.+?)\s*$/) {
+			my ($field, $value) = ($1, $2);
+			if ($meta) {
+				$meta{$key}{$field} = $value;
+			} else {
+				$entries[$i]{$field} = $value;
+			}
+		}
+	}
+
+	return (\@entries, \%meta);
+}
+
+sub findLabel {
+	my ($key) = @_;
+	find { $_ eq $key } @Palm::Address::phoneLabels;
+}
+
+sub find (&@) {
+	my ($f, @l) = @_;
+	my $idx = 0;
+	foreach (@l) {
+		if ($f->($_, $idx)) {
+			return $idx;
+		}
+		$idx++;
+	}
+	return undef;
+}

@@ -1,0 +1,18 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+use XML::LibXML;
+
+my $parser = new XML::LibXML;
+my $doc = $parser->parse_fh(\*STDIN);
+
+foreach my $item ($doc->getElementsByTagName('item')) {
+	my ($desc) = $item->getElementsByTagName('description');
+	my ($title) = $item->getElementsByTagName('title');
+	my $text = $doc->createCDATASection( $title->to_literal );
+	$desc->replaceChild(
+		$text, $desc->firstChild
+	);
+}
+
+$doc->toFH(\*STDOUT);

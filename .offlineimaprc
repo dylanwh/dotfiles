@@ -1,0 +1,80 @@
+# Sample minimal config file.  Copy this to ~/.offlineimaprc and edit to
+# suit to get started fast.
+# vim: set ft=desktop foldmethod=marker cms=#%s:
+
+[general]#{{{
+accounts        = home
+pythonfile      = ~/.offlineimap.py
+maxconnections  = 3
+maxsyncaccounts = 3
+holdconnectionopen = yes
+
+#ui = Noninteractive.Basic, Curses.Blinkenlights
+#}}}
+
+[Account home]#{{{
+localrepository  = local-home
+remoterepository = remote-home
+autorefresh      = 3
+quick            = 3
+socktimeout      = 60
+#}}}
+
+[Repository remote-home]#{{{
+type           = IMAP
+remotehost     = lofn.hardison.net
+remoteuser     = dylan
+#remotepassfile = ~/.imap_homepass
+ssl            = yes
+nametrans      = lambda foldername: re.sub('^INBOX$', 'inbox', foldername)
+folderfilter  = lambda foldername: foldername.find("archive") == -1
+foldersort     = unfair_cmp
+#}}}
+
+[Repository local-home]#{{{
+type         = Maildir
+localfolders = ~/mail/home
+sep          = .
+#}}}
+
+[Account work]#{{{
+localrepository  = local-work
+remoterepository = remote-work
+autorefresh      = 1
+quick            = 1
+socktimeout      = 60
+#}}}
+
+[Repository remote-work]#{{{
+type           = IMAP
+remotehost     = r-stream.com
+remoteuser     = dylan
+#remotepassfile = ~/.imap_workpass
+ssl            = yes
+nametrans      = lambda foldername: re.sub('^INBOX$', 'inbox', re.sub('^INBOX\.', '', foldername))
+folderfilter   = lambda foldername: foldername[0] != '.'
+foldersort     = unfair_cmp
+#}}}
+
+[Repository local-work]#{{{
+type         = Maildir
+localfolders = ~/mail/work
+sep          = /
+#}}}
+
+[mbnames]#{{{
+# offlineimap can record your mailbox names in a format you specify.
+# You can define the header, each mailbox item, the separator,
+# and the footer.  Here is an example for Mutt.
+# If enabled is yes, all six setting must be specified, even if they
+# are just the empty string "".
+#
+# The header, peritem, sep, and footer are all Python expressions passed
+# through eval, so you can (and must) use Python quoting.
+enabled = yes
+filename = ~/mail/mailboxes
+header = ''
+peritem = ~/mail/%(accountname)s/%(foldername)s
+sep = "\n"
+footer = "\n"
+#}}}
