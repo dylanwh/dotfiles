@@ -8,6 +8,7 @@ fixperms:
 schedule:
 	@rem -q
 
+
 .pwsafe.dat:
 	scp lofn.sinedev.org:.pwsafe.dat .
 	make fixperms
