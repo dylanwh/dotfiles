@@ -90,7 +90,10 @@ bindkey -v
 ## }}}
 ## {{{ Functions 
 function have { which $1 &>/dev/null }
-function chpwd { ztitle }
+function chpwd {
+	ztitle
+	todo --timeout --summary 
+}
 ## }}}
 ## {{{ Aliases
 alias cp='cp -i'
@@ -118,11 +121,11 @@ alias help=run-help
 alias pdoc=perldoc
 alias g="sr google"
 alias pd=popd
-alias todo=yodo
-alias tda="todo -a"
-alias tdr="todo -r"
-alias tdd="todo -d"
-alias tde="todo -e"
+#alias todo=yodo
+#alias tda="todo -a"
+#alias tdr="todo -r"
+#alias tdd="todo -d"
+#alias tde="todo -e"
 alias find="noglob find"
 unalias run-help
 ## }}}
@@ -152,6 +155,6 @@ if have dircolors; then
 	eval $(dircolors ~/.dir_colors)
 fi
 
-# vim: set sw=4 ts=4 foldmethod=marker path=.,~/.zsh:
-ztitle
+chpwd
 
+# vim: set sw=4 ts=4 foldmethod=marker path=.,~/.zsh:
