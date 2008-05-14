@@ -26,7 +26,7 @@ export XTERMCMD=pterm
 
 cd $HOME || exit 1
 
-xsetroot -solid '#333'
+xsetroot -solid '#330000'
 xsetroot -cursor_name left_ptr
 
 for image in $images; do
