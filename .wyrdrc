@@ -1,9 +1,9 @@
 # Wyrd run-configuration file
 
 # command for the Remind executable
-set remind_command="cd ~ && remind -iwyrd=1"
+set remind_command="cd `dirname $REMIND_FILE` && remind -iwyrd=1"
 # the default reminder file to display
-set reminders_file="~/.reminders"
+set reminders_file="$REMIND_FILE"
 # command for editing an old appointment, given a line number %line% and filename %file%
 set edit_old_command="$EDITOR +%line% %file%"
 # command for editing a new appointment, given a filename %file%

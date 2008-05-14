@@ -105,6 +105,8 @@ if !exists('autocmds_loaded')
                     \ setl noshiftround noexpandtab ts=8 sw=4
         autocmd BufNewFile,BufRead *.mkd,*.mdwn           
                     \ setl ai formatoptions=tcroqn2 comments=n:>
+        autocmd BufNewFile,BufRead *.rem
+                    \ setl ft=remind
         autocmd BufEnter *.hs,*.lhs       compiler ghc
         autocmd BufEnter *.c,*.C,*.cc,*.h compiler gcc
         autocmd BufNewFile,BufRead *.cos set ft=caos
