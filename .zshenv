@@ -18,6 +18,7 @@ export LESSHISTFILE='-'
 export SSH_AGENT_FILE=$HOME/.ssh/agent
 export LEDGER_FILE=$HOME/pim/ledger
 export REMIND_FILE=$HOME/pim/reminders
+export YABOOK_FILE=$HOME/pim/contacts
 
 case $HOST in
 	mani) EMAIL="dylan@r-stream.com" ;;
