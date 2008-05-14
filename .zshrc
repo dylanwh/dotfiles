@@ -92,7 +92,7 @@ bindkey -v
 function have { which $1 &>/dev/null }
 function chpwd {
 	ztitle
-	todo --timeout --summary 
+	have todo && todo --timeout --summary 
 }
 ## }}}
 ## {{{ Aliases
@@ -155,6 +155,6 @@ if have dircolors; then
 	eval $(dircolors ~/.dir_colors)
 fi
 
-chpwd
+have todo && todo -G
 
 # vim: set sw=4 ts=4 foldmethod=marker path=.,~/.zsh:

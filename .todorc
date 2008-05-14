@@ -1,4 +1,4 @@
 timeout 60
 on add priority default
 
-global-database $HOME/pim/todo.xml
+global-database $TODO_FILE
