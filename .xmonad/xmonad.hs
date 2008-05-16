@@ -46,6 +46,7 @@ main = xmonad $ myConfig `additionalKeysP` myKeys
 myConfig = defaultConfig
     { borderWidth        = 1
     , terminal           = "pterm"
+    , workspaces         = map show [1..9] ++ ["wyrd"]
     , normalBorderColor  = "#333333"
     , focusedBorderColor = "blue"
     , modMask            = mod4Mask
@@ -72,7 +73,8 @@ myKeys =
     , ("M-<Page_Down>",  osdc "vol down 10")
     , ("M-d",            changeDir myXPConfig)
     , ("M-f g",          promptSearch myXPConfig "firefox" google)
-    , ("M-;",          scriptMenu) ]
+    , ("M-;",            scriptMenu)
+    , ("M-w",            windows $ W.greedyView "wyrd")]
 
 myXPConfig = defaultXPConfig
     { font              = "-xos4-terminus-bold-r-*-*-*-140-100-100-*-*-iso8859-1"
@@ -132,6 +134,7 @@ myManageHook = composeAll
     , resource  =? "offlineimap"        --> doF (W.shift "1")
     , resource  =? "irc"                --> doF (W.shift "1")
     , resource  =? "rss"                --> doF (W.shift "1")
+    , resource  =? "wyrd"               --> doF (W.shift "wyrd")
     , resource  =? "desktop_window"     --> doIgnore
     , className =? "WMClock"            --> doIgnore
     , className =? "stalonetray"        --> doIgnore
