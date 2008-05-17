@@ -21,6 +21,12 @@ export REMIND_FILE=$HOME/pim/reminders
 export YABOOK_FILE=$HOME/pim/contacts
 export TODO_FILE=$HOME/pim/todo.xml
 
+declare -gxT PERL5LIB perl5lib
+declare -U path cdpath fpath manpath perl5lib
+
+perl5lib=(~/lib './lib')
+path=(~/bin $path)
+
 case $HOST in
 	mani) EMAIL="dylan@r-stream.com" ;;
 esac
