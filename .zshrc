@@ -155,6 +155,7 @@ if have dircolors; then
 	eval $(dircolors ~/.dir_colors)
 fi
 
+ztitle
 have todo && todo --timeout --summary
 
 # vim: set sw=4 ts=4 foldmethod=marker path=.,~/.zsh:

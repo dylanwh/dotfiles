@@ -127,7 +127,7 @@ myLayoutHook = workspaceDir "~"
 myManageHook = composeAll
     [ className =? "MPlayer"            --> doFloat
     , className =? "Gimp"               --> doFloat
-    , className =? "Zenity"             --> doFloat
+    -- , className =? "Zenity"             --> doFloat
     , className =? "Firefox-bin"        --> doF (W.shift "2")
     , resource  =? "mutt"               --> doF (W.shift "1")
     , resource  =? "mail"               --> doF (W.shift "1")
@@ -139,6 +139,7 @@ myManageHook = composeAll
     , className =? "WMClock"            --> doIgnore
     , className =? "stalonetray"        --> doIgnore
     , resource  =? "kdesktop"           --> doIgnore
+    , className =? "kxdocker"           --> doIgnore
     , resource  =? "kicker"             --> doIgnore ]
 
 osdc s = io $ do

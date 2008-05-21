@@ -35,7 +35,9 @@ done
 
 xrdb -DXFONT=$xfont -merge .Xdefaults.in
 xrdb -DXFONT=$xfont -n .Xdefaults.in > .Xdefaults
-#xmodmap $xmodmap
+xmodmap $xmodmap
+osdd &
+#remind -z -k'gxmessage -title "reminder" %s &' ~/.reminders &
 
 integer width=$(xdpyinfo|awk '/dimensions:/ {print $2}' | head -1 | cut -dx -f1)
 integer irc_width irc_pos mail_width mail_pos bar_width bar_pos

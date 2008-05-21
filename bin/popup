@@ -1,6 +1,4 @@
 #!/usr/bin/env zsh
-TIMEOUT=20
-SHORT_TIMEOUT=5
 GMSG_OPTS=(-fn "terminus bold 14" -fg white -bg black -file - -center -default okay )
 
 if ! which gmessage &> /dev/null; then
@@ -12,14 +10,14 @@ if [ -z $DISPLAY ]; then
 fi
 
 case $1 in
-	(reminders)
-		rem -g -q | gmessage $GMSG_OPTS -timeout $TIMEOUT -title "Reminders"
+	(schedule)
+		rem -g -q | gmessage $GMSG_OPTS -title "Reminders"
 	;;
 	([ty]odo)
 		cd $HOME
-		yodo | gmessage $GMSG_OPTS -timeout $TIMEOUT -title "TODO"
+		yodo | gmessage $GMSG_OPTS -title "TODO"
 	;;
 	(remind)
-		echo $2 | gmessage $GMSG_OPTS -timeout $SHORT_TIMEOUT -title "Reminder"
+		echo $2 | gmessage $GMSG_OPTS -title "Reminder"
 	;;
 esac

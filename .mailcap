@@ -3,3 +3,4 @@ image/jpeg; display %s
 image/png; display %s
 video/*; mplayer %s
 text/*; vim %s; needsterminal; nametemplate=%s
+application/x-zip-compressed; vim %s; needsterminal

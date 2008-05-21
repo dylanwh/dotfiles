@@ -25,7 +25,7 @@ function archive_old(imap, from, to)
 	from:move_messages(to, is_old(from))
 end
 
-local home  = IMAP( netrc["mail.hardison.net"] )
+--local home  = IMAP( netrc["mail.hardison.net"] )
 local work  = IMAP( netrc["r-stream.com"] )
 
 do
@@ -39,6 +39,6 @@ do
 	inbox:move_messages( work['errors'], errors)
 end
 
-archive_old(home, 'inbox', 'archive')
+--archive_old(home, 'inbox', 'archive')
 archive_old(work, 'inbox', 'archive')
-archive_old(home, 'lists.slug', 'lists.slug.archive')
+--archive_old(home, 'lists.slug', 'lists.slug.archive')
