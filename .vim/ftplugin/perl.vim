@@ -17,6 +17,12 @@ let perl_string_as_statement = 1
 "-- enable perl folding
 let perl_fold = 1
 
+setlocal textwidth=100
+
+if $HOST == 'mani'
+	setlocal expandtab
+end
+
 "-- Do not fold package-level things.
 if expand("%:e") == 'pm'
 	setlocal foldlevel=1
@@ -30,7 +36,7 @@ hi link perlStatementNew NONE
 map <silent> z; :silent call TogglePerlFold()<CR>
 map <silent> z/ :silent setlocal foldtext<<CR>
 
-command! -range=% PerlTidy <line1>,<line2>!perltidy -pbp -l=90
+command! -range=% PerlTidy <line1>,<line2>!perltidy -pbp -l=100
 
 function! TogglePerlFold()
 	if &foldtext == "PerlFoldTextNoLines()"
