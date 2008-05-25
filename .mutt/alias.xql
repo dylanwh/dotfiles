@@ -4,7 +4,7 @@ for $contact in doc($file)//contact
 	let $name   := $contact/name
 	let $groups := for $g in $contact/group return concat("-group ", $g)
 	for $email in $contact/email
-		let $nick := if ($email/@category)
-		             then concat($id, ".", $email/@category)
+		let $nick := if ($email/@label)
+		             then concat($id, ".", $email/@label)
 		             else $id
 	    return concat("alias ", string-join($groups, " "), " ", $nick, ' "', $name, '" <', $email, '>')
