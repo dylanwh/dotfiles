@@ -98,7 +98,8 @@ macro pager \cb |urlview\n  "View URLs"
 
 macro index <F2> "c ~/mail/home/inbox\n" "View home"
 macro index <F3> "c ~/mail/work/inbox\n" "View work"
-macro index A    ";tT~N | ~O\n;WN;t"    "mark all as read"
+macro index A    ";tT~N | ~O\n;WN;t"     "mark all as read"
+macro index S    "D~H spam\n"            "delete spam"
 
 folder-hook mail/home source ~/.mutt/profile.home
 folder-hook mail/work source ~/.mutt/profile.work
