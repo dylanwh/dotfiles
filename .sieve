@@ -12,7 +12,7 @@ if header :contains "List-Id" "dwm.suckless.org" {
 	fileinto "lists.dwm";
 }
 
-if header :conains "List-Id" "caml-list.yquem.inria.fr" {
+if header :contains "List-Id" "caml-list.yquem.inria.fr" {
 	fileinto "lists.caml";
 }
 
