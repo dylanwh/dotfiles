@@ -27,7 +27,7 @@ remoteuser     = dylan
 #remotepassfile = ~/.imap_homepass
 ssl            = yes
 nametrans      = lambda foldername: re.sub('^INBOX$', 'inbox', foldername)
-#folderfilter  = lambda foldername: foldername.find("archive") == -1
+folderfilter  = lambda foldername: foldername.find("archive") == -1
 foldersort     = unfair_cmp
 #}}}
 
