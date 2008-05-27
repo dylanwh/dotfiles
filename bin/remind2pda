@@ -17,11 +17,10 @@ while ($_ = readline $remind) {
 	my ($date, $special, $tag, $duration, $time, $body) = split(/\s+/, $_, 6);
 	my ($year, $month, $day) = split(/\//, $date);
 	$body =~ s/^(\d\d?:\d\d(pm|am)?-)?\d\d?:\d\d(am|pm) //;
-	my $id = '*';
-
+	my $key = '';
 
 	if ($tag =~ /@([\w.-]+)/) {
-		$id = $1;
+		$key = $1;
 	}
 
 	my $record = $pdb->new_Record;
@@ -29,7 +28,7 @@ while ($_ = readline $remind) {
 	$record->{month} = $month;
 	$record->{year} = $year;
 
-	push @log, [ $id, $body ];
+	push @log, [ $key, $body ];
 
 	if ($time ne '*') {
 		my $start = Time::Piece->strptime(
