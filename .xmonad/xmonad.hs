@@ -35,6 +35,10 @@ import XMonad.Layout.LayoutHints
 import XMonad.Layout.Maximize
 import XMonad.Layout.WorkspaceDir
 import XMonad.Layout.NoBorders
+import XMonad.Layout.Dishes
+import XMonad.Util.Themes
+
+
 import XMonad.Util.EZConfig
 
 import System.Environment (getEnv)
@@ -100,7 +104,8 @@ myLayoutHook = workspaceDir "~"
     $ avoidStruts 
     $ layoutHints 
     $ maximize 
-    $ tall ||| Mirror tall ||| smartBorders Full ||| Grid
+    $ smartBorders
+    $ tall ||| Mirror tall ||| Grid ||| Dishes 2 (1/5) ||| Full
   where
      -- default tiling algorithm partitions the screen into two panes
      tall   = Tall nmaster delta ratio
@@ -127,6 +132,7 @@ myLayoutHook = workspaceDir "~"
 myManageHook = composeAll
     [ className =? "MPlayer"            --> doFloat
     , className =? "Gimp"               --> doFloat
+    , className =? "Glade-3"            --> doFloat
     -- , className =? "Zenity"             --> doFloat
     , className =? "Firefox-bin"        --> doF (W.shift "2")
     , resource  =? "mutt"               --> doF (W.shift "1")
