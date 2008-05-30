@@ -3,7 +3,6 @@ use strict;
 use warnings;
 $|++;
 
-
 my $restart = 0;
 $SIG{USR1} = sub {
 	$restart = 1;
@@ -18,13 +17,20 @@ while (<>) {
 	$layout ||= 'layout';
 	$title ||= '';
 
-	$ws     = join('  ', split(/ +/, $ws));
+    my @ws;
+	foreach (split(/ +/, $ws)) {
+	    if (/^\[(.+)\]$/) {
+	        push @ws, "^fg(red)[^fg(yellow)$1^fg(red)]^fg()";
+	    } else {
+	        push @ws, " $_ ";
+	    }
+	}
 
-	$ws     =~ s/ ?\[([^\]]+)\] ?/^fg(red)[^fg(yellow)$1^fg(red)]^fg()/g;
+	$ws = join('', @ws);
 	$layout = ucfirst $layout;
-	my $s = " $ws ^fg(SteelBlue3)($layout)^fg() ^fg(white)$title^fg()\n";
-	$s =~ s/^ +\[//g;
-	print $s;
+
+	print "$ws ^fg(SteelBlue3)($layout)^fg() ^fg(white)$title^fg()\n";
+
 	if ($restart) {
 		exec($0);
 	}

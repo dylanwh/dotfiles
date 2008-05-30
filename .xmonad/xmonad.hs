@@ -100,12 +100,13 @@ myXPConfig = defaultXPConfig
 -- The available layouts.  Note that each layout is separated by |||,
 -- which denotes layout choice.
 --
-myLayoutHook = workspaceDir "~" 
-    $ avoidStruts 
+myLayoutHook = --workspaceDir "~" 
+    {-$-} avoidStruts 
     $ layoutHints 
-    $ maximize 
-    $ smartBorders
-    $ tall ||| Mirror tall ||| Grid ||| Dishes 2 (1/5) ||| Full
+    $ maximize
+    $ smartBorders 
+    $ tall ||| Mirror tall ||| Grid ||| Dishes 2 (1/7) ||| Full
+    
   where
      -- default tiling algorithm partitions the screen into two panes
      tall   = Tall nmaster delta ratio
