@@ -105,7 +105,7 @@ myLayoutHook = --workspaceDir "~"
     $ layoutHints 
     $ maximize
     $ smartBorders 
-    $ tall ||| Mirror tall ||| Grid ||| Dishes 2 (1/7) ||| Full
+    $ tall ||| Mirror tall ||| Grid ||| Dishes 2 (1/5) ||| Full
     
   where
      -- default tiling algorithm partitions the screen into two panes

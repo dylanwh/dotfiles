@@ -75,4 +75,4 @@ backtick 1 40 40 screen-name
 
 caption always "%{= kB}<%{w}%1`%{B}> %{w}%?%-Lw%?%{B}(%{w}%n* %t%?(%u)%?%{B})%{w}%?%+Lw%?%? %{B}%{g}%=%{B}[ %{.c}%M %d %{y}%0c%{B} ][ %{m}%l%{B} ]"
 
-hardstatus string "%t"
+hardstatus string "screen: %t"
