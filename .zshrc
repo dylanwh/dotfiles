@@ -94,21 +94,35 @@ function chpwd {
 	ztitle
 	have todo && todo --timeout --summary 
 }
+function mdc { mkdr -p $1 && cd $1 }
+function shuffle {
+	RANDOM=`date +%s`
+	(
+	while IFS= read -r i; do
+	    echo $RANDOM$RANDOM "$i";
+	done
+	) | sort | sed 's/^[0-9]* //'
+}
+
 ## }}}
 ## {{{ Aliases
 alias cp='cp -i'
 alias mv='mv -i'
 alias rm='rm -i'
-alias gvi=gvim
-alias ls='ls --color=auto -F -h'
+alias md="mkdir -p"
+alias rd="rmdir"
+alias df="df -h"
+alias free="free -m"
 alias grep='egrep --color=auto'
 alias ggrep='command grep --color=auto'
 alias egrep='egrep --color=auto'
 alias fgrep='fgrep --color=auto'
-alias l='ls -x -I_darcs'
+alias ls='ls --color=auto -F -h'
 alias la='ls -ax'
 alias ll='ls -l'
+alias lsd='ls -d *(/)'
 alias vi=vim
+alias gvi=gvim
 alias vimrc="$EDITOR ~/.vimrc"
 alias muttrc="$EDITOR ~/.mutt/muttrc"
 alias zrc='vim ~/.zshrc'
@@ -121,16 +135,13 @@ alias help=run-help
 alias pdoc=perldoc
 alias g="sr google"
 alias pd=popd
-#alias todo=yodo
-#alias tda="todo -a"
-#alias tdr="todo -r"
-#alias tdd="todo -d"
-#alias tde="todo -e"
+alias pu=pushd
 alias find="noglob find"
-unalias run-help
+
 ## }}}
 
 # Autoload various functions
+unalias run-help
 autoload sshbegin sshend run-help ztitle
 autoload compinit promptinit
 
