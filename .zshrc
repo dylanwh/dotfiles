@@ -164,6 +164,7 @@ have pinfo && alias info=pinfo
 if have dircolors; then
 	unset LS_COLORS
 	eval $(dircolors ~/.dir_colors)
+	zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
 fi
 
 ztitle

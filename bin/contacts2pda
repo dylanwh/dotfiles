@@ -40,19 +40,21 @@ foreach my $contact ($doc->findnodes("//contact")) {
 	foreach my $phone ($contact->findnodes("./phone")) {
 		my $label = $phone->getAttribute('label');
 		my %phone = (
-			rank  => 5,
+			rank  => $phone->getAttribute('rank') || 5,
 			value => $phone->to_literal,
 		);
-		if (not $label) {
+		if (not $label or ($label and $label eq 'main')) {
 			$phone{rank}  = 1;
 			$phone{label} = find_label('Main');
+		} elsif ($label eq 'home') {
+			$phone{label} = find_label('Home');
 		} elsif ($label eq 'work') {
 			$phone{label} = find_label('Work');
 		} elsif ($label eq 'mobile') {
 			$phone{label} = find_label('Mobile');
-		} elsif ($label eq 'alt' or $label eq 'other') {
+		} else {
 			$phone{label} = find_label('Other');
-		}
+		} 
 		push @phone, \%phone;
 	}
 
@@ -70,7 +72,7 @@ foreach my $contact ($doc->findnodes("//contact")) {
 		push @email, \%email;
 	}
 
-	@phone = sort { $b->{rank} <=> $a->{rank} } @phone;
+	@phone = sort { $a->{rank} <=> $b->{rank} } @phone;
 	@email = sort { $b->{rank} <=> $a->{rank} } @email;
 
 
@@ -91,6 +93,8 @@ foreach my $contact ($doc->findnodes("//contact")) {
 	my @all = (@phone, @email);
 
 	foreach my $n (1 .. 5) {
+		print "phone: $all[$n - 1]{value}\n"
+			if $all[$n - 1];
 		$rec->{phoneLabel}{"phone$n"} = $all[$n - 1]{label};
 		$rec->{fields}{"phone$n"} = $all[$n - 1]{value};
 	}
