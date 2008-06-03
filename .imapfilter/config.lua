@@ -13,7 +13,7 @@ options.subscribe = true
 ----------------
 
 function is_old(box)
-	return box:is_seen() * box:is_older(15)
+	return box:is_seen() * box:is_older(7)
 end
 
 function is_error(box)
