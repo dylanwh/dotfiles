@@ -2,7 +2,7 @@
 # vim:ft=zsh ts=4:
 
 maildirs=($HOME/mail/home $HOME/mail/work)
-folders=(inbox lists/slug spam)
+folders=(inbox lists.slug spam)
 points=()
 
 local -A names totals
