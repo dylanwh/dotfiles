@@ -73,7 +73,7 @@ if exists("perl_fold") && exists("perl_fold_blocks")
   syn match perlConditional		"\<unless\>"
   syn match perlConditional		"\<else\>" nextgroup=perlElseIfError skipwhite skipnl skipempty
 else
-  syn keyword perlConditional		if elsif unless
+  syn keyword perlConditional		if elsif unless given when
   syn keyword perlConditional		else nextgroup=perlElseIfError skipwhite skipnl skipempty
 endif
 syn keyword perlConditional		switch eq ne gt lt ge le cmp not and or xor err
@@ -95,7 +95,7 @@ else
   syn keyword perlControl		BEGIN END CHECK INIT
 endif
 
-syn keyword perlStatementStorage	my local our has subtype type with as where message
+syn keyword perlStatementStorage	my local our 
 syn keyword perlStatementControl	goto return last next redo
 syn keyword perlStatementScalar		chomp chop chr crypt index lc lcfirst length ord pack reverse rindex sprintf substr uc ucfirst
 syn keyword perlStatementRegexp		pos quotemeta split study
@@ -413,7 +413,6 @@ else
   syn sync minlines=0
 endif
 
-
 if version >= 508 || !exists("did_perl_syn_inits")
   if version < 508
     let did_perl_syn_inits = 1
@@ -491,24 +490,24 @@ if version >= 508 || !exists("did_perl_syn_inits")
   HiLink perlStatementSub	perlStatement
   HiLink perlStatementStorage	perlStatement
   HiLink perlStatementControl	perlStatement
-  HiLink perlStatementScalar	perlStatement
-  HiLink perlStatementRegexp	perlStatement
-  HiLink perlStatementNumeric	perlStatement
-  HiLink perlStatementList	perlStatement
-  HiLink perlStatementHash	perlStatement
-  HiLink perlStatementIOfunc	perlStatement
+  HiLink perlStatementScalar	perlFunction
+  HiLink perlStatementRegexp	perlFunction
+  HiLink perlStatementNumeric	perlFunction
+  HiLink perlStatementList	perlFunction
+  HiLink perlStatementHash	perlFunction
+  HiLink perlStatementIOfunc	perlFunction
   HiLink perlStatementFiledesc	perlStatement
   HiLink perlStatementVector	perlStatement
   HiLink perlStatementFiles	perlStatement
   HiLink perlStatementFlow	perlStatement
   HiLink perlStatementScope	perlStatement
-  HiLink perlStatementInclude	perlStatement
-  HiLink perlStatementProc	perlStatement
-  HiLink perlStatementSocket	perlStatement
-  HiLink perlStatementIPC	perlStatement
-  HiLink perlStatementNetwork	perlStatement
-  HiLink perlStatementPword	perlStatement
-  HiLink perlStatementTime	perlStatement
+  HiLink perlStatementInclude	perlInclude
+  HiLink perlStatementProc	perlFunction
+  HiLink perlStatementSocket	perlFunction
+  HiLink perlStatementIPC	perlFunction
+  HiLink perlStatementNetwork	perlFunction
+  HiLink perlStatementPword	perlFunction
+  HiLink perlStatementTime	perlFunction
   HiLink perlStatementMisc	perlStatement
   HiLink perlStatementNew	perlStatement
   HiLink perlFunctionName	perlIdentifier
@@ -523,6 +522,7 @@ if version >= 508 || !exists("did_perl_syn_inits")
   HiLink perlSpecialMatch	perlSpecial
   HiLink perlSpecialBEOM	perlSpecial
   HiLink perlDATA		perlComment
+  HiLink perlMoose              perlSpecial
 
   HiLink perlBrackets		Error
 

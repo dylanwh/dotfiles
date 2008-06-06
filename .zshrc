@@ -2,7 +2,7 @@
 # This script is executed for every interactive shell.
 # See also: ~/.zshenv ~/.zprofile [~/.zshrc] ~/.zlogin ~/.zlogout
 
-## {{{ Variables
+## {{{ VARIABLES
 HISTSIZE=2000
 SAVEHIST=2000
 HISTFILE=~/.zhistory
@@ -14,7 +14,7 @@ cdpath=(~ ~/src)
 fpath=(~/.zsh $fpath)
 
 ## }}}
-## {{{ Options
+## {{{ OPTIONS
 setopt autocd                  # change to dirs without cd
 setopt autopushd               # automatically append dirs to the push/pop list
 setopt pushdignoredups         # and don't duplicate them
@@ -43,7 +43,7 @@ setopt hashcmds                # avoid having to type 'rehash' all the time.
 setopt rm_star_wait            # wait beforing ask if I want to delete all those files...
 setopt multios                 # avoid having to use 'tee'
 ## }}}
-## {{{ Key Bindings
+## {{{ KEY BINDINGS
 bindkey -v
 
 case $TERM in
@@ -88,7 +88,7 @@ bindkey '^P' push-input
 bindkey -v
 
 ## }}}
-## {{{ Functions 
+## {{{ FUNCTIONS 
 function have { which $1 &>/dev/null }
 function chpwd {
 	ztitle
@@ -105,7 +105,7 @@ function shuffle {
 }
 
 ## }}}
-## {{{ Aliases
+## {{{ ALIASES
 alias cp='cp -i'
 alias mv='mv -i'
 alias rm='rm -i'
@@ -137,7 +137,6 @@ alias g="sr google"
 alias pd=popd
 alias pu=pushd
 alias find="noglob find"
-
 ## }}}
 
 # Autoload various functions
@@ -164,6 +163,7 @@ have pinfo && alias info=pinfo
 if have dircolors; then
 	unset LS_COLORS
 	eval $(dircolors ~/.dir_colors)
+	# Colorize completions.
 	zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
 fi
 

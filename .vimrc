@@ -36,7 +36,7 @@ set backspace=eol,start,indent
 set grepprg=grep\ -nH\ \ --exclude='*.svn*'\ $*
 set foldopen=tag,search,quickfix,undo,jump,mark,percent
 set viminfo=!,'1000,%,h,f1,n~/.viminfo
-set statusline=%<%f\ %h%m%r%{FF()}%y%=0x%b\ %-14.(%l,%c%V%)\ %P
+set statusline=%<%f\ %h%m%r%{FF()}%y%=%-10.([%l,%c%V]%)\ %{GitBranchInfoString()}
 set fillchars=fold:\ ,stl:\ ,stlnc:\  
 set tags+=~/.tags,.tags
 
@@ -62,6 +62,13 @@ let g:bluez_transbg = 1
 let is_chicken = 1
 
 let g:haddock_browser = "sensible-browser"
+
+let g:git_branch_status_head_current=1 
+let g:git_branch_status_text="[git"
+let g:git_branch_status_around=":]"
+
+let g:vimwiki_home = "~/docs/wiki/" 
+let g:vimwiki_smartCR = 1
 " }}}
 
 " MAPPINGS {{{

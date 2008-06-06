@@ -17,6 +17,14 @@ let perl_string_as_statement = 1
 "-- enable perl folding
 let perl_fold = 1
 
+if has("perl")
+perl <<PERL
+	my $path = join(',', @INC);
+	$path =~ s/\ /\\ /g;
+	VIM::DoCommand('setlocal path+='.$path);
+PERL
+endif
+
 setlocal textwidth=100
 
 if $HOST == 'mani'
@@ -26,7 +34,6 @@ end
 "-- Do not fold package-level things.
 if expand("%:e") == 'pm'
 	setlocal foldlevel=1
-	let &path = getcwd() . "/lib"
 endif
 
 "-- Do not highlight 'new'!

@@ -1,1 +1,2 @@
 haskellmode-20071105.vba: call delete('/home/dylan/.vim/compiler/ghc.vim')|call delete('/home/dylan/.vim/ftplugin/haskell.vim')|call delete('/home/dylan/.vim/ftplugin/haskell_doc.vim')|call delete('/home/dylan/.vim/ftplugin/haskell_hpaste.vim')|call delete('/home/dylan/.vim/doc/haskellmode.txt')
+vimwiki.vba: call delete('/home/dylan/.vim/plugin/vimwiki.vim')|call delete('/home/dylan/.vim/autoload/vimwiki.vim')|call delete('/home/dylan/.vim/ftplugin/vimwiki.vim')|call delete('/home/dylan/.vim/syntax/vimwiki.vim')
