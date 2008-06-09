@@ -1,6 +1,6 @@
 " Vim color file
 " Maintainer:   Dylan Hardison <dylanwh@gmail.com>
-" Last Change:	06-Jun-2008.
+" Last Change:	08-Jun-2008.
 
 " Load the syntax highlighting defaults, if it's enabled.
 if exists("syntax_on")
@@ -30,12 +30,12 @@ if &t_Co > 16
 	"hi Operator ctermfg=45
 	hi LineNr     ctermfg=73 ctermbg=80
 	hi Identifier cterm=none ctermfg=23
-	hi Function cterm=none ctermfg=6
 	hi Comment    cterm=none ctermfg=81
 	hi Folded     cterm=none ctermfg=73 ctermbg=80
 endif
 
-
-
 hi clear PreProc
 hi link PreProc Special
+
+hi link luaFunction Keyword
+hi link luaFunction Keyword
