@@ -69,6 +69,8 @@ let g:git_branch_status_around=":]"
 
 let g:vimwiki_home = "~/docs/wiki/" 
 let g:vimwiki_smartCR = 1
+
+let autodate_format = "%Y-%m-%d"
 " }}}
 
 " MAPPINGS {{{
