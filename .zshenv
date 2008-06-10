@@ -24,7 +24,7 @@ export TODO_FILE=$HOME/pim/todo.xml
 declare -gxT PERL5LIB perl5lib
 declare -U path cdpath fpath manpath perl5lib
 
-perl5lib=(~/lib './lib')
+perl5lib=(~/lib 'lib')
 path=(~/bin $path)
 
 case $HOST in
