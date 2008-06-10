@@ -1,31 +1,5 @@
-" Vim filetype plugin file
-" Language:	Perl
-" Maintainer:	Dylan William Hardison <dylan@hardison.net>
-" Last Change:  2008-06-09.
-
-
-let b:did_ftplugin = 1
-
 "-- Pretty folding.
 setlocal foldtext=PerlFoldTextNoLines()
-setlocal formatoptions+=crq
-setlocal comments=:#
-setlocal commentstring=#%s
-setlocal include=\\<\\(use\\\|require\\)\\>
-setlocal includeexpr=substitute(substitute(v:fname,'::','/','g'),'$','.pm','')
-setlocal define=[^A-Za-z_]
-setlocal keywordprg=perldoc\ -f
-setlocal textwidth=100
-set isfname+=:
-
-if $HOST == 'mani'
-	setlocal expandtab
-end
-
-"-- Do not fold package-level things.
-if expand("%:e") == 'pm'
-	setlocal foldlevel=1
-endif
 
 "-- matches hash and array subscripts, etc.
 let perl_extended_vars = 1
@@ -43,18 +17,19 @@ let perl_string_as_statement = 1
 "-- enable perl folding
 let perl_fold = 1
 
-" Undo the stuff we changed.
-let b:undo_ftplugin = "setlocal fo< com< cms< inc< inex< def< isf<"
+setlocal textwidth=100
 
-if has("perl")
-perl <<PERL
-	my $path = join(',', @INC);
-	$path =~ s/\.\///g;
-	VIM::DoCommand("let perlpath='$path'");
-	$path =~ s/ /\\ /g;
-	VIM::DoCommand("setlocal path+=$path");
-PERL
+if $HOST == 'mani'
+	setlocal expandtab
+end
+
+"-- Do not fold package-level things.
+if expand("%:e") == 'pm'
+	setlocal foldlevel=1
 endif
+
+"-- Do not highlight 'new'!
+hi link perlStatementNew NONE
 
 "-- toggle displaying numbers at the end.
 map <silent> z; :silent call TogglePerlFold()<CR>
@@ -63,10 +38,10 @@ map <silent> z/ :silent setlocal foldtext<<CR>
 command! -range=% PerlTidy <line1>,<line2>!perltidy -pbp -l=100
 
 function! TogglePerlFold()
-	if &foldtext == "PerlFoldTextNoLines()"
-		let &l:foldtext = "PerlFoldText()"
+	if &l:foldtext == "PerlFoldTextNoLines()"
+		setlocal foldtext=PerlFoldText()
 	else
-		let &l:foldtext = "PerlFoldTextNoLines()"
+		setlocal foldtext=PerlFoldTextNoLines()
 	endif
 endfunction
 
