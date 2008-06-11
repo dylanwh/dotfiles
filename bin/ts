@@ -124,13 +124,13 @@ if ($cmd eq 'start' or $cmd eq 'begin') {
         print "No projects found.\n";
     }
 } elsif ($cmd eq 'average' or $cmd eq 'avg') {
-    my $select = qq(
-        SELECT project,AVG(UNIX_TIMESTAMP(stop) - UNIX_TIMESTAMP(start)) AS average
+    my $select = qq{
+        SELECT project,AVG(stop - start) AS average
         FROM timesheet
         #WHERE#
         GROUP BY project
         ORDER BY id ASC
-    );
+    };
     if (defined $project) {
         my $p = $db->quote($project);
         $select =~ s/#WHERE#\n/WHERE (project = $p)\n/;
