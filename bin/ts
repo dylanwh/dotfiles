@@ -16,64 +16,23 @@ eval {
 
 my ($cmd, $project, $sql, $db, $did_config) = (shift, shift);
 
-while(1) {
-    eval {
-        $sql = require("$ENV{HOME}/.timesheetrc.pl");
-    };
-    if ($@) {
-        write_config_file("$ENV{HOME}/.timesheetrc.pl");
-        $did_config = 1;
-    } else {
-        last;
-    }
-}
+$db = DBI->connect("dbi:SQLite:dbname=$ENV{HOME}/.timesheet.db",
+    { RaiseError => 1, PrintError => 0}
+);
 
-eval {
-    $db = DBI->connect("dbi:mysql:$sql->{db}",
-        $sql->{user},
-        $sql->{pass}, 
-        { RaiseError => 1, PrintError => 0}
-    );
-};
-
-
-if ($@) {
-    warn "Error: " . DBI->errstr . "\n\n";
-    if (DBI->err == 1044) {
-        print <<"PRT";
-    Why this happened:
-You don't have permission to access the database...
-This is because either the database doesn't exist,
-or because you're not allowed to use it.
-
-Create a database named $sql->{db},
-with user $sql->{user} and password $sql->{pass}.
-(You can configure those in by deleting $ENV{HOME}/.timesheetrc.pl
-and re-running this program.)
-
-PRT
-    }
-    exit(255);
-}
-        
-
-
-check_db_table();
 unless (defined $cmd) {
     die "Usage: ts <cmd> [project|project id] [args]\n" if not $did_config;
     exit(0);
 }
-
-
 
 if ($cmd eq 'start' or $cmd eq 'begin') {
     die "Undef project!" unless defined $project;
     
     my $proj = $db->quote($project);
     my $time = time();
-    my $sql = qq{ INSERT INTO $sql->{table}
+    my $sql = qq{ INSERT INTO timesheet
                   (project,start)
-                  VALUES ($proj, FROM_UNIXTIME($time));
+                  VALUES ($proj, $time);
     };
     $db->do($sql);
     print "Started working on $project\n";
@@ -82,17 +41,17 @@ if ($cmd eq 'start' or $cmd eq 'begin') {
     
     my ($select, $update, $result, $id, $start, $pname);
     if ($project =~ /\D/) {
-        $select = qq{ SELECT id,UNIX_TIMESTAMP(start),project FROM $sql->{table}
+        $select = qq{ SELECT id,start,project FROM timesheet
                       WHERE (project = ? AND stop IS NULL);
         };
     } else {
-        $select = qq{ SELECT id,UNIX_TIMESTAMP(start),project FROM $sql->{table}
+        $select = qq{ SELECT id,start,project FROM timesheet
                       WHERE (id = ? AND stop IS NULL);
         };
     }
 
-    $update = qq{ UPDATE $sql->{table}
-                  SET stop = FROM_UNIXTIME(?)
+    $update = qq{ UPDATE timesheet
+                  SET stop = ?
                   WHERE (id = ?)
     };
     $result = $db->prepare($select);
@@ -121,7 +80,7 @@ if ($cmd eq 'start' or $cmd eq 'begin') {
     }
 } elsif ($cmd eq 'active' or $cmd eq 'act') {
     my $select = qq{
-        SELECT project,id FROM $sql->{table}
+        SELECT project,id FROM timesheet
         WHERE stop IS NULL;
     };
     my $result = $db->prepare($select);
@@ -132,7 +91,7 @@ if ($cmd eq 'start' or $cmd eq 'begin') {
     }
 } elsif ($cmd eq 'list' or $cmd eq 'ls') {
     my $select = qq{
-        SELECT DISTINCT project FROM $sql->{table};
+        SELECT DISTINCT project FROM timesheet;
     };
     my $result = $db->prepare($select);
     $result->execute();
@@ -149,7 +108,7 @@ if ($cmd eq 'start' or $cmd eq 'begin') {
     }
 } elsif ($cmd eq 'index') {
     my $select = qq{
-        SELECT id,project FROM $sql->{table};
+        SELECT id, project FROM timesheet;
     };
     my $result = $db->prepare($select);
     $result->execute();
@@ -167,7 +126,7 @@ if ($cmd eq 'start' or $cmd eq 'begin') {
 } elsif ($cmd eq 'average' or $cmd eq 'avg') {
     my $select = qq(
         SELECT project,AVG(UNIX_TIMESTAMP(stop) - UNIX_TIMESTAMP(start)) AS average
-        FROM $sql->{table}
+        FROM timesheet
         #WHERE#
         GROUP BY project
         ORDER BY id ASC
@@ -196,7 +155,7 @@ if ($cmd eq 'start' or $cmd eq 'begin') {
     my $e = prompt("Are you sure you want to purge timesheet?\n(yes/no, default no)");
     if ($e =~ /^y(es?)$/) {
         print "Deleted everything from database.\n";
-        $db->do("DELETE FROM $sql->{table};");
+        $db->do("DELETE FROM timesheet;");
     }
 } elsif ($cmd eq 'delete' or $cmd eq 'del') {
     die "Undef project!" unless defined $project;
@@ -206,14 +165,14 @@ if ($cmd eq 'start' or $cmd eq 'begin') {
     if ($project =~ /\D/) {
         # $project is project name.
         $delete = qq(
-            DELETE FROM $sql->{table} WHERE project = ?
+            DELETE FROM timesheet WHERE project = ?
         );
         $name = $project;
     } else {
         # $project is project id.
         $name = id_to_project($project); # get name of project id.
         $delete = qq{
-            DELETE FROM $sql->{table} WHERE id = ?
+            DELETE FROM timesheet WHERE id = ?
         };
     }
     my $result = $db->prepare($delete);
@@ -230,7 +189,7 @@ if ($cmd eq 'start' or $cmd eq 'begin') {
 	    unless defined $name;
 	
 	my $update = qq{
-		UPDATE $sql->{table}
+		UPDATE timesheet
 		SET project = ?
 		WHERE project = ?
 	};
@@ -251,8 +210,8 @@ END {
 sub show_total {
     my ($project) = @_;
     my $select = qq{
-        SELECT sum(UNIX_TIMESTAMP(stop) - UNIX_TIMESTAMP(start)) AS diff_sum
-        FROM $sql->{table}
+        SELECT sum(stop - start) AS diff_sum
+        FROM timesheet
         WHERE (project = ? AND start IS NOT NULL AND stop IS NOT NULL)
         GROUP BY project;
     };
@@ -272,8 +231,8 @@ sub show_total {
 sub show_total_all {
     my ($project) = @_;
     my $select = qq{
-        SELECT project,sum(UNIX_TIMESTAMP(stop) - UNIX_TIMESTAMP(start)) AS diff_sum
-        FROM $sql->{table}
+        SELECT project,sum(stop - start) AS diff_sum
+        FROM timesheet
         WHERE (start IS NOT NULL AND stop IS NOT NULL)
         GROUP BY project
         ORDER BY diff_sum DESC
@@ -295,12 +254,11 @@ sub show_total_all {
     #print "All-total: ", duration($all_total, 5), "\n";
 }
 
-
 sub id_to_project {
     my ($id) = @_;
     my $select = qq{
         SELECT project
-        FROM $sql->{table}
+        FROM timesheet
         WHERE id = $id;
     };
     my $result = $db->prepare($select);
@@ -308,61 +266,6 @@ sub id_to_project {
     my ($name) = $result->fetchrow_array;
 
     return $name;
-}
-
-sub write_config_file {
-    my ($file) = @_;
-    my $cfg = <<CONFIG;
-#!/usr/bin/env perl
-
-{
-    table => "timesheet", # Table name. DO NOT CHANGE!
-    db => "DBNAME",       # Database name. Change.
-    user => "USER",       # Username. Change.
-    pass => "PASSWORD",   # Password. Change.
-};
-CONFIG
-
-    if (not -f $file) {
-        while (1) {
-            my $in = prompt(
-                "Config file doesn't exist. Do you want to create it now?\n"
-                ."(yes/no)"
-            );
-            if ($in =~ /^y(es)?$/) {
-                my ($dbname, $user, $password);
-                print "\nOkay, I'm going to ask you some questions about ",
-                "your mysql database account,\n",
-                "I need this information to function.\n";
-                $user     = prompt("User name");
-                $password = prompt("Password");
-                $dbname   = prompt("Name of database", $user);
-                $cfg =~ s/DBNAME/$dbname/g;
-                $cfg =~ s/USER/$user/g;
-                $cfg =~ s/PASSWORD/$password/g;
-                write_str_to_file($cfg, $file);
-                my $edit = prompt("Edit config file? (yes/no, default: no)");
-                if ($edit =~ /^y(es)?$/) {
-                    edit_file($file);
-                }
-                print "Thanks!\n";
-                last;
-            } elsif ($in =~ /^no?$/) {
-                last;
-            } else {
-                print "I don't understand that.\n";
-                next;
-            }
-        }
-    }
-}
-
-sub write_str_to_file {
-    my ($s, $file) = @_;
-    open my $fh, ">$file" or die "Can't open $file for writting: $!";
-    print $fh $s;
-    close $fh;
-    chmod 0600, $file;
 }
 
 sub prompt {
@@ -399,38 +302,3 @@ sub have {
 
     return exists $INC{$file};
 }
-
-sub check_db_table {
-    eval {
-        $db->do("SELECT id FROM $sql->{table} LIMIT 1");
-    };
-    if ($@) {
-        if ($db->errstr =~ /Table '$sql->{db}\.$sql->{table}' doesn't exist/i) {
-            configure_db_table();
-        }
-    }
-}
-
-sub configure_db_table {
-    print "Configuring database table automagically.\n";
-    local $/ = undef;
-    my $s = readline DATA;
-    $s =~ s/#TABLE#/$sql->{table}/g;
-    $db->do($s);
-
-}
-
-sub edit_file {
-    my ($file) = @_;
-    system($ENV{VISUAL} || $ENV{EDITOR} || "vi", $file);
-}
-
-__DATA__
-
-CREATE TABLE #TABLE# (
-    id INTEGER NOT NULL AUTO_INCREMENT,
-    project VARCHAR(80),
-    start DATETIME,
-    stop DATETIME,
-    PRIMARY KEY (id)
-);
