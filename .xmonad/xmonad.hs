@@ -100,8 +100,9 @@ myXPConfig = defaultXPConfig
 -- The available layouts.  Note that each layout is separated by |||,
 -- which denotes layout choice.
 --
-myLayoutHook = --workspaceDir "~" 
-    {-$-} avoidStruts 
+myLayoutHook 
+    = workspaceDir "~" 
+    $ avoidStruts 
     $ layoutHints 
     $ maximize
     $ smartBorders 
