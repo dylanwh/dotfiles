@@ -15,6 +15,7 @@ set smarttab           " Insert shiftwidth or tabstop as appropriate.
 set ignorecase         " Ignore case
 set smartcase          " Unless I use upper-case letters.
 set showmatch          " Show matching brackets.
+set showcmd            " show (partial) command in last line.
 set nobackup           " Do not keep backups.
 set hlsearch           " Highlight searches.
 set incsearch          " Incremental search; highlight as you type.
@@ -101,7 +102,7 @@ imap <Down>  <C-o>gj
 
 " ABBREVS {{{
 iab  dwh Dylan William Hardison
-if $EMAIL
+if exists($EMAIL)
     exec "iab dmail " . $EMAIL
 endif
 iab  teh the

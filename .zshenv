@@ -7,7 +7,7 @@ export EMAIL="dylan@hardison.net"
 export EDITOR="vim"
 export VISUAL=$EDITOR
 export BROWSER="w3m"
-export MANPAGER=$HOME/bin/vimpager
+export MANPAGER=less
 
 export TEMPDIR=~/tmp
 export TMPDIR=~/tmp
@@ -20,6 +20,7 @@ export LEDGER_FILE=$HOME/pim/ledger
 export REMIND_FILE=$HOME/pim/reminders
 export YABOOK_FILE=$HOME/pim/contacts
 export TODO_FILE=$HOME/pim/todo.xml
+export PERL_USE_MOOSE=1
 
 declare -gxT PERL5LIB perl5lib
 declare -U path cdpath fpath manpath perl5lib
