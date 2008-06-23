@@ -18,14 +18,14 @@ use strict;
 use warnings;
 .
 endfunction
-
 let s:ext = expand("%:e")
 if s:ext == 'pm'
 	let s:name = substitute(expand("%:p:r"), '.*/lib/', "", "")
 	if match(s:name, "^/") == 0
-		let s:name = substitute(s:name, '[^A-Z]*/\([A-Z]\)', "\\1", "")
+		let s:name = substitute(s:name, '.\{-\}\([A-Z]\)\C', '\1', '')
 	end
-	call append(0, "package " . substitute(s:name, "/", "::", "g") . ";")
+	let s:name = substitute(s:name, '/', '::', 'g')
+	call append(0, "package " . s:name . ";")
 	if $PERL_USE_MOOSE || exists('perl_use_moose')
 		call append(1, "use Moose;")
 	else
