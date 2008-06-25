@@ -20,9 +20,9 @@ use warnings;
 endfunction
 let s:ext = expand("%:e")
 if s:ext == 'pm'
-	let s:name = substitute(expand("%:p:r"), '.*/lib/', "", "")
-	if match(s:name, "^/") == 0
-		let s:name = substitute(s:name, '.\{-\}\([A-Z]\)\C', '\1', '')
+	let s:name = substitute(expand("%:p:r"), '.*lib/', "fred", "")
+	if match(s:name, "^/") == 0 || s:name == expand("%:r")
+		let s:name = substitute(s:name, '.\{-\}/\([A-Z]\)\C', '\1', '')
 	end
 	let s:name = substitute(s:name, '/', '::', 'g')
 	call append(0, "package " . s:name . ";")
