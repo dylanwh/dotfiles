@@ -75,7 +75,6 @@ let autodate_format = "%Y-%m-%d"
 " }}}
 
 " MAPPINGS {{{
-
 map <F1> <C-o>:tab help<CR>
 map <F2> <C-o>:nohlsearch<CR>
 map <F3> <C-o>:set nu!<BAR>set nu?<CR>
@@ -102,12 +101,15 @@ imap <Down>  <C-o>gj
 
 " ABBREVS {{{
 iab  dwh Dylan William Hardison
-if exists($EMAIL)
-    exec "iab dmail " . $EMAIL
-endif
+iab <expr> dmail $EMAIL
 iab  teh the
 iab  hte the
 iab  nad and
+iab  btw by the way
+" }}}
+
+" COMMANDS {{{
+command MakePath silent call mkdir(expand("%:p:h"), "p") 
 " }}}
 
 " AUTO BOTS, TRANSFORM AND ROLL OUT {{{
@@ -147,3 +149,5 @@ function FF()
         return ""
     endif
 endfunction
+
+    
