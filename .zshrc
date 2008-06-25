@@ -19,15 +19,13 @@ setopt autocd                  # change to dirs without cd
 setopt autopushd               # automatically append dirs to the push/pop list
 setopt pushdignoredups         # and don't duplicate them
 setopt nocdablevars            # the need for an explicit $
-setopt checkjobs               # warn me about bg processes when exiting
-setopt nohup                   # and don't kill them, either
 setopt listpacked              # compact completion lists
 setopt nolisttypes             # show types in completion
 setopt extended_glob           # weird & wacky pattern matching - yay zsh!
 setopt alwaystoend             # when complete from middle, move cursor
 setopt completeinword          # not just at the end
 setopt glob_complete           # complete globs with a menu.
-setopt nocorrect               # spelling correction
+setopt nocorrect               # no spelling correction
 setopt promptcr                # add \n which overwrites cmds with no \n
 setopt histverify              # when using ! cmds, confirm first
 setopt interactivecomments     # escape commands so i can use them later
@@ -42,6 +40,10 @@ setopt noflow_control          # disable control-q/control-s
 setopt hashcmds                # avoid having to type 'rehash' all the time.
 setopt rm_star_wait            # wait beforing ask if I want to delete all those files...
 setopt multios                 # avoid having to use 'tee'
+setopt checkjobs               # warn me about bg processes when exiting
+setopt nohup                   # and don't kill them, either
+setopt auto_continue           # automatically continue disowned jobs.
+setopt auto_resume             # automatically resume jobs from commands
 ## }}}
 ## {{{ KEY BINDINGS
 bindkey -v
@@ -83,9 +85,10 @@ esac
 
 bindkey -a q quote-line
 bindkey -a Q quote-region
-bindkey -v "^_" copy-prev-shell-word
+bindkey -a 'H' run-help
+bindkey "^_" copy-prev-shell-word
 bindkey '^P' push-input
-bindkey -v
+bindkey '^[h' run-help
 
 ## }}}
 ## {{{ FUNCTIONS 

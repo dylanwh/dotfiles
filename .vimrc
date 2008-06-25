@@ -37,7 +37,7 @@ set backspace=eol,start,indent
 set grepprg=grep\ -nH\ \ --exclude='*.svn*'\ $*
 set foldopen=tag,search,quickfix,undo,jump,mark,percent
 set viminfo=!,'1000,%,h,f1,n~/.viminfo
-set statusline=%<%f\ %h%m%r%{FF()}%y%=%-10.([%l,%c%V]%)\ %{GitBranchInfoString()}
+set statusline=%<%f\ %h%m%r%{FF()}%y%=0x%b\ %-14.(%l,%c%V%)\ %P
 set fillchars=fold:\ ,stl:\ ,stlnc:\  
 set tags+=~/.tags,.tags
 
