@@ -20,7 +20,7 @@ use warnings;
 endfunction
 let s:ext = expand("%:e")
 if s:ext == 'pm'
-	let s:name = substitute(expand("%:p:r"), '.*lib/', "fred", "")
+	let s:name = substitute(expand("%:p:r"), '.*lib/', "", "")
 	if match(s:name, "^/") == 0 || s:name == expand("%:r")
 		let s:name = substitute(s:name, '.\{-\}/\([A-Z]\)\C', '\1', '')
 	end
