@@ -129,6 +129,9 @@ if !exists('autocmds_loaded')
         autocmd BufEnter *.hs,*.lhs       compiler ghc
         autocmd BufEnter *.c,*.C,*.cc,*.h compiler gcc
         autocmd BufNewFile,BufRead *.cos set ft=caos
+        autocmd BufNewFile,BufRead *.lua set foldmethod=marker |
+                    \ set comments=sO:-\ -,mO:-\ \ ,exO:]],s1:--[[,mb:-,ex:]],:-- |
+                    \ set commentstring=--%s
     augroup END
     autocmd BufReadPost *
                 \ if line("'\"") > 0 && line("'\"") <= line("$") |
