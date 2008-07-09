@@ -3,7 +3,7 @@
 # See also: [~/.zshenv] ~/.zprofile ~/.zshrc ~/.zlogin ~/.zlogout
 
 export REALNAME="Dylan William Hardison"
-export EMAIL="dylan@hardison.net"
+export EMAIL
 export EDITOR="vim"
 export VISUAL=$EDITOR
 export BROWSER="w3m"
@@ -28,9 +28,12 @@ declare -U path cdpath fpath manpath perl5lib
 perl5lib=(~/lib 'lib')
 path=(~/bin $path)
 
-case $HOST in
-	mani) EMAIL="dylan@r-stream.com" ;;
-esac
+if [[ -z EMAIL ]]; then
+	case $HOST in
+		mani) EMAIL="dylan@r-stream.com" ;;
+		*)    EMAIL="dylan@hardison.net" ;;
+	esac
+fi
 
 # Do not load any config files from /etc.
 setopt noglobalrcs

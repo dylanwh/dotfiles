@@ -1,28 +1,9 @@
 #!/usr/bin/env zsh
-#Ensure that this script is evaluated by zsh
+# Dylan William Hardison's .xinitrc file.
+# Ensure that this script is evaluated by zsh
 [[ -z $ZSH_NAME ]] && exec zsh $0
 
-source ~/.zprofile
 source $SSH_AGENT_FILE
-
-xfont="-xos4-terminus-bold-r-*-*-*-120-100-100-*-*-iso8859-1"
-xmodmap=$HOME/.xmodmap
-images=('/srv/common/images/backgrounds/Crab_Nebula_1440x900.jpg')
-
-case $(uname -s) in
-	Darwin)
-		xfont='-*-terminus-bold-*-*-*-13-*-*-*-*-*-iso8859-1'
-		xmodmap=$HOME/.xmodmap.osx
-		for dir in /usr/lib/X11/fonts/*; do
-			xset +fp $dir
-		done
-		xset fp rehash
-		quartz-wm --only-proxy &
-	;;
-esac
-
-export XFONT=$xfont
-export XTERMCMD=pterm
 
 cd $HOME || exit 1
 
@@ -33,9 +14,9 @@ for image in $images; do
 	[[ -f $image ]] && feh --bg-center $image
 done
 
-xrdb -DXFONT=$xfont -merge .Xdefaults.in
-xrdb -DXFONT=$xfont -n .Xdefaults.in > .Xdefaults
-xmodmap $xmodmap
+xrdb -merge $HOME/.Xdefaults.in
+xrdb -n $HOME/.Xdefaults.in > .Xdefaults
+xmodmap $HOME/.xmodmap
 osdd &
 #remind -z -k'gxmessage -title "reminder" %s &' ~/.reminders &
 

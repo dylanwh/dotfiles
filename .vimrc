@@ -78,6 +78,7 @@ let autodate_format = "%Y-%m-%d"
 map <F1> <C-o>:tab help<CR>
 map <F2> <C-o>:nohlsearch<CR>
 map <F3> <C-o>:set nu!<BAR>set nu?<CR>
+map <F4> <C-o>:edit ~/.menu<CR>
 map gn <C-o>:tab new<CR>
 map K \K
 
