@@ -140,6 +140,7 @@ alias g="sr google"
 alias pd=popd
 alias pu=pushd
 alias find="noglob find"
+alias menu="vim ~/.menu"
 ## }}}
 
 # Autoload various functions
