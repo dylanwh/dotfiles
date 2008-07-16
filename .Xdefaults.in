@@ -55,8 +55,9 @@ URxvt.keysym.Mod4-u: perl:mark-and-yank:activate_mark_url_mode
 URxvt.perl-lib: /home/dylan/.urxvt/
 URxvt.perl-ext: mark-and-yank
 URxvt.urlLauncher: url-handler
+! }}}
 
-! Borrowed from Possum: 
+! {{{ Fading, borrowed from Possum.
 ! this makes unfocused windows fade out to very dark blue.
 URxvt.fading: 60
 URxvt.fadeColor: #000015
