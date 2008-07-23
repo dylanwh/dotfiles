@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/usr/bin/env zsh
 
 if (( $# == 1 )); then
 	view=$1

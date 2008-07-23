@@ -164,14 +164,28 @@ mesg   yes           # Allow messages
 ttyctl -f            # Freeze terminal properties.
 
 have pinfo && alias info=pinfo
-if have dircolors; then
+
+for dircolors in dircolors gdircolors; do
+if have $dircolors; then
 	unset LS_COLORS
-	eval $(dircolors ~/.dir_colors)
+	eval $($dircolors ~/.dir_colors)
 	# Colorize completions.
 	zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
+	break
+fi
+done
+
+if have gls; then
+	alias ls="gls --color=auto -Fh"
 fi
 
 ztitle
 have todo && todo --timeout --summary
+
+case $HOST in
+	odin*)
+		setopt nosharehistory
+	;;
+esac
 
 # vim: set sw=4 ts=4 foldmethod=marker path=.,~/.zsh:

@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/usr/bin/env zsh
 # vim:ft=zsh ts=4:
 
 maildirs=($HOME/mail/home $HOME/mail/work)
