@@ -28,7 +28,7 @@ declare -U path cdpath fpath manpath perl5lib
 perl5lib=(~/lib 'lib')
 path=(~/bin $path)
 
-if [[ -z EMAIL ]]; then
+if [[ -z $EMAIL ]]; then
 	case $HOST in
 		mani) EMAIL="dylan@r-stream.com" ;;
 		*)    EMAIL="dylan@hardison.net" ;;
