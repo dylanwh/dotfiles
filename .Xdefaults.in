@@ -5,6 +5,7 @@
 #define XFONT      -xos4-terminus-bold-r-*-*-*-120-100-100-*-*-iso8859-1
 #define XFONT_BIG  -xos4-terminus-bold-r-*-*-*-140-100-100-*-*-iso8859-1
 #define XFONT_HUGE -xos4-terminus-bold-r-*-*-*-320-*-*-*-*-*-*
+#define XFONT_FOO  -xos4-terminus-bold-r-normal--14-140-72-72-c-80-iso8859-1
 
 ! {{{ Fonts and Colors
 Rxvt.font: XFONT
@@ -46,6 +47,7 @@ Rxvt.modifier: mod1
 URxvt.keysym.M-C-1: command:change_font(XFONT)
 URxvt.keysym.M-C-2: command:change_font(XFONT_BIG)
 URxvt.keysym.M-C-3: command:change_font(XFONT_HUGE)
+URxvt.keysym.M-C-4: command:change_font(XFONT_FOO)
 URxvt.keysym.S-Insert: builtin:
 URxvt.searchable-scrollback: CM-s
 
