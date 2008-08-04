@@ -17,11 +17,11 @@ import XMonad.Actions.DwmPromote
 import XMonad.Actions.FindEmptyWorkspace
 import XMonad.Actions.FocusNth
 import XMonad.Actions.Submap
-import XMonad.Actions.Search
+import XMonad.Actions.CycleWS
 
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.DynamicLog
-import XMonad.Hooks.EwmhDesktops
+-- import XMonad.Hooks.EwmhDesktops
 
 import XMonad.Prompt
 import XMonad.Prompt.Directory
@@ -54,31 +54,34 @@ myConfig = defaultConfig
     , normalBorderColor  = "#333333"
     , focusedBorderColor = "blue"
     , modMask            = mod4Mask
-    , layoutHook         = ewmhDesktopsLayout myLayoutHook
+    , layoutHook         = {-ewmhDesktopsLayout-} myLayoutHook
     , manageHook         = myManageHook <+> manageDocks
-    , logHook            = ewmhDesktopsLogHook >> dynamicLog }
+    , logHook            = {-ewmhDesktopsLogHook >>-} dynamicLog }
 
 myKeys =
-    [ ("M-`",            spawn $ XMonad.terminal myConfig)
-    , ("M-S-`",          do viewEmptyWorkspace; spawn $ XMonad.terminal myConfig)
-    , ("M-c",            kill)
-    , ("M-<Return>",     dwmpromote)
-    , ("M-S-<Return>",   windows W.focusMaster)
-    , ("M-S-b",          sendMessage ToggleStruts)
-    , ("M-n",            viewEmptyWorkspace)
-    , ("M-S-n",          tagToEmptyWorkspace)
-    , ("M-p",            shellPrompt myXPConfig)
-    , ("M-s",            sshPrompt myXPConfig)
-    , ("M-m",            withFocused (sendMessage . maximizeRestore))
-    , ("M-g",            windowPromptGoto myXPConfig)
-    , ("M-b",            windowPromptBring myXPConfig)
-    , ("M-<Pause>",      osdc "vol mute")
-    , ("M-<Page_Up>",    osdc "vol up 10")
-    , ("M-<Page_Down>",  osdc "vol down 10")
-    , ("M-d",            changeDir myXPConfig)
-    , ("M-f g",          promptSearch myXPConfig "firefox" google)
-    , ("M-;",            scriptMenu)
-    , ("M-w",            windows $ W.greedyView "wyrd")]
+    [ ("M-`",              spawn $ XMonad.terminal myConfig)
+    , ("M-S-`",            do viewEmptyWorkspace; spawn $ XMonad.terminal myConfig)
+    , ("M-c",              kill)
+    , ("M-<Return>",       dwmpromote)
+    , ("M-S-<Return>",     windows W.focusMaster)
+    , ("M-S-b",            sendMessage ToggleStruts)
+    , ("M-n",              viewEmptyWorkspace)
+    , ("M-S-n",            tagToEmptyWorkspace)
+    , ("M-[",  prevWS)
+    , ("M-]", nextWS)
+    , ("M-p",              scriptMenu)
+    , ("M-s",              sshPrompt myXPConfig)
+    , ("M-S-p",            shellPrompt myXPConfig)
+    , ("M-m",              withFocused (sendMessage . maximizeRestore))
+    , ("M-g",              windowPromptGoto myXPConfig)
+    , ("M-b",              windowPromptBring myXPConfig)
+    , ("M-<Pause>",        osdc "vol mute")
+    , ("M-<Page_Up>",      osdc "vol up 10")
+    , ("M-<Page_Down>",    osdc "vol down 10")
+    , ("M-d",              changeDir myXPConfig)
+    , ("M-S-C-s",          spawn "super shutdown -h now")
+    , ("M-<F12>",          spawn "xlock")
+    , ("M-w",              windows $ W.greedyView "wyrd")]
 
 myXPConfig = defaultXPConfig
     { font              = "-xos4-terminus-bold-r-*-*-*-140-100-100-*-*-iso8859-1"
@@ -135,8 +138,8 @@ myManageHook = composeAll
     [ className =? "MPlayer"            --> doFloat
     , className =? "Gimp"               --> doFloat
     , className =? "Glade-3"            --> doFloat
-    -- , className =? "Zenity"             --> doFloat
     , className =? "Firefox-bin"        --> doF (W.shift "2")
+    , className =? "Iceweasel"          --> doF (W.shift "2")
     , resource  =? "mutt"               --> doF (W.shift "1")
     , resource  =? "mail"               --> doF (W.shift "1")
     , resource  =? "offlineimap"        --> doF (W.shift "1")
