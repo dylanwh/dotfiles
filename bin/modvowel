@@ -1,0 +1,25 @@
+#!/usr/bin/perl
+
+my ($vowel) = @ARGV;
+
+my @codes = (
+    [38 => ['a', 'A']],
+    [26 => ['e', 'E']],
+    [31 => ['i', 'I']],
+    [32 => ['o', 'O']],
+    [30 => ['u', 'U']],
+);
+
+if ($vowel) {
+    foreach (@codes) {
+        $_->[1][0] = lc $vowel;
+        $_->[1][1] = uc $vowel;
+    }
+}
+
+system('xmodmap', map(keycode(@$_), @codes));
+
+sub keycode {
+    my ($code, $pair) = @_;
+    return ('-e', "keycode $code = @$pair");
+}
