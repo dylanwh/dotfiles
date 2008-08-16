@@ -20,4 +20,5 @@ xmodmap $HOME/.xmodmap
 osdd &
 #remind -z -k'gxmessage -title "reminder" %s &' ~/.reminders &
 
-xmonad | socat -b 2048 STDIN PIPE:$HOME/.xmonad/pipe
+eval $(dbus-launch --sh-syntax --exit-with-session)
+xmonad | socat -b 2048 STDIN PIPE:$HOME/.xmonad/status

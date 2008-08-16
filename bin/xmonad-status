@@ -3,11 +3,6 @@ use strict;
 use warnings;
 $|++;
 
-my $restart = 0;
-$SIG{USR1} = sub {
-	$restart = 1;
-};
-
 while (<>) {
 	chomp;
 	my ($ws, $layout, $title) = split(/\s:\s/, $_, 3);
@@ -30,8 +25,4 @@ while (<>) {
 	$layout = ucfirst $layout;
 
 	print "$ws <fc=SteelBlue3>($layout)</fc> <fc=white>$title</fc>\n";
-
-	if ($restart) {
-		exec($0);
-	}
 }
