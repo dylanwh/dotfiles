@@ -2,7 +2,7 @@
 # vim:ft=zsh ts=4:
 
 maildirs=($HOME/mail/home $HOME/mail/work)
-folders=(inbox lists.slug spam)
+folders=(inbox lists.slug spam )
 points=()
 
 local -A names totals
@@ -23,7 +23,7 @@ for dir in $maildirs; do
 done
 
 function watch {
-	inotifywait -m -e modify -e create -e attrib -e move -e delete --format %w $argv 2>/dev/null
+	exec inotifywait -m -e modify -e create -e attrib -e move -e delete --format %w $argv 2>/dev/null
 }
 
 function count {
@@ -36,7 +36,7 @@ function display {
 	for point in $points; do
 		if (( totals[$point] )); then
 			displayed="yes"
-			print -n "[${names[$point]}: ${totals[$point]}] "
+			print -n "[${names[$point]}: <fc=yellow>${totals[$point]}</fc>] "
 		fi
 	done
 	if [[ $displayed == "no" ]]; then
@@ -52,6 +52,6 @@ display
 
 watch $points | while read point; do
 	count $point
-	print ${names[$point]}: ${totals[$point]}
+	#print ${names[$point]}: ${totals[$point]}
 	display
 done

@@ -3,11 +3,6 @@ use strict;
 use warnings;
 $|++;
 
-my $restart = 0;
-$SIG{USR1} = sub {
-	$restart = 1;
-};
-
 while (<>) {
 	chomp;
 	my ($ws, $layout, $title) = split(/\s:\s/, $_, 3);
@@ -20,7 +15,7 @@ while (<>) {
     my @ws;
 	foreach (split(/ +/, $ws)) {
 	    if (/^\[(.+)\]$/) {
-	        push @ws, "^fg(red)[^fg(yellow)$1^fg(red)]^fg()";
+	        push @ws, "<fc=red>[</fc><fc=yellow>$1</fc><fc=red>]</fc>";
 	    } else {
 	        push @ws, " $_ ";
 	    }
@@ -29,9 +24,5 @@ while (<>) {
 	$ws = join('', @ws);
 	$layout = ucfirst $layout;
 
-	print "$ws ^fg(SteelBlue3)($layout)^fg() ^fg(white)$title^fg()\n";
-
-	if ($restart) {
-		exec($0);
-	}
+	print "$ws <fc=SteelBlue3>($layout)</fc> <fc=white>$title</fc>\n";
 }

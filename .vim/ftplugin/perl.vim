@@ -18,6 +18,7 @@ let perl_string_as_statement = 1
 let perl_fold = 1
 
 setlocal textwidth=100
+setlocal equalprg=perltidy\ -pbp\ -l=100
 
 if $HOST == 'mani'
 	setlocal expandtab

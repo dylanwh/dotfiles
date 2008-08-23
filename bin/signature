@@ -6,7 +6,7 @@ my $quote = randquote();
 print <<SIG;
 $quote
 -
-GPG Fingerprint: 412C CCE9 DDA2 4FE9 C34F  754B 0863 0EA6 712E BBE1
+GPG Fingerprint: 1AD8 69DD F56A E7AB 421C  7D8A C66D 87D9 82CD 4AE4.
 SIG
 
 
