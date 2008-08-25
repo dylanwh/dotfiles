@@ -38,4 +38,6 @@ fi
 # Do not load any config files from /etc.
 setopt noglobalrcs
 
+function have { which $1 &>/dev/null }
+
 # vim: set sw=4 ts=4 foldmethod=marker path=.,~/.zsh:

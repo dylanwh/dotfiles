@@ -1,2 +1,2 @@
 #!/bin/sh
-exec firefox
+exec nice -n 18 firefox

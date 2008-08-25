@@ -1,0 +1,14 @@
+#!zsh
+
+local today=$(date +%Y-%m-%d)
+local cmd=${1:-help}
+[[ -n $1 ]] && shift
+
+if [[ $(readlink $TASKDIR/today) != $today ]]; then
+	mkdir -p $TASKDIR/$today
+	rm $TASKDIR/today
+	ln -s $TASKDIR/$today $TASKDIR/today
+fi
+
+cd $TASKDIR
+task-$cmd $argv

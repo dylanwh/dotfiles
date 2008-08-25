@@ -92,7 +92,6 @@ bindkey '^[h' run-help
 
 ## }}}
 ## {{{ FUNCTIONS 
-function have { which $1 &>/dev/null }
 function chpwd {
 	ztitle
 	have todo && todo --timeout --summary 
@@ -106,7 +105,10 @@ function shuffle {
 	done
 	) | sort | sed 's/^[0-9]* //'
 }
-
+function namedir {
+	declare -g $1=$2
+	: ~$1
+}
 ## }}}
 ## {{{ ALIASES
 alias cp='cp -i'
@@ -146,7 +148,7 @@ alias menu="vim ~/.menu"
 # Autoload various functions
 unalias run-help
 autoload sshbegin sshend run-help ztitle
-autoload compinit promptinit
+autoload compinit promptinit taskinit
 
 # initialize advanced tab completion.
 compinit -d ~/.zcompdump
@@ -158,6 +160,8 @@ zstyle ':completion:*:sudo:*' command-path /usr/local/sbin /usr/local/bin \
 promptinit           # Setup prompt theming 
 prompt dylan         # Set the prompt.
 
+taskinit
+
 umask  022           # Create files that are read-only by group.
 stty -ixon           # Disable the freeze-the-terminal-on-control-s thing.
 mesg   yes           # Allow messages
@@ -166,18 +170,20 @@ ttyctl -f            # Freeze terminal properties.
 have pinfo && alias info=pinfo
 
 for dircolors in dircolors gdircolors; do
-if have $dircolors; then
-	unset LS_COLORS
-	eval $($dircolors ~/.dir_colors)
-	# Colorize completions.
-	zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
-	break
-fi
+	if have $dircolors; then
+		unset LS_COLORS
+		eval $($dircolors ~/.dir_colors)
+		# Colorize completions.
+		zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
+		break
+	fi
 done
 
 if have gls; then
 	alias ls="gls --color=auto -Fh"
 fi
+
+namedir taskdir ~/task/today
 
 ztitle
 have todo && todo --timeout --summary
@@ -186,6 +192,8 @@ case $HOST in
 	odin*)
 		setopt nosharehistory
 	;;
+	mani*)
+		cdpath=($cdpath ~/src/r-stream)
 esac
 
 # vim: set sw=4 ts=4 foldmethod=marker path=.,~/.zsh:

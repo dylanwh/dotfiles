@@ -1,0 +1,9 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+use Pod::Strip;
+
+my $p = new Pod::Strip;
+$p->output_fh(\*STDOUT);
+$p->parse_file(\*ARGV);
+

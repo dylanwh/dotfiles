@@ -13,4 +13,4 @@ sleep 5
 echo "xstatus started (checkmail: $pid)"
 
 cd $HOME
-xmonad-status $HOME/.xmonad/status | xmobar
+xmonad-status | xmobar

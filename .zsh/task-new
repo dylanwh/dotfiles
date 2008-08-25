@@ -1,0 +1,8 @@
+#!zsh
+local task=${1// /-}
+if [[ -z $task ]]; then
+	echo "task new 'task name'" >&2
+	exit 1
+fi
+mkdir $TASKDIR/today/$task
+cd $TASKDIR/today/$task
