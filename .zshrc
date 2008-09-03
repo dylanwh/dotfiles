@@ -10,7 +10,7 @@ READNULLCMD=${PAGER:-/usr/bin/pager}
 LOGCHECK=30
 watch=(all)
 fignore=(.o .hi .pyc)
-cdpath=(~ ~/src)
+cdpath=(~ ~/code)
 fpath=(~/.zsh $fpath)
 
 ## }}}
@@ -193,7 +193,8 @@ case $HOST in
 		setopt nosharehistory
 	;;
 	mani*)
-		cdpath=($cdpath ~/src/r-stream)
+		cdpath=($cdpath ~/code/work)
+	;;
 esac
 
 # vim: set sw=4 ts=4 foldmethod=marker path=.,~/.zsh:
