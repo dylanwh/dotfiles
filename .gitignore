@@ -75,5 +75,7 @@ _darcs
 /mail
 /pim
 /src
-tmp
-var
+/code
+/tmp
+/task
+/var
