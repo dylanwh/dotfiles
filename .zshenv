@@ -12,6 +12,7 @@ export MANPAGER=less
 export TEMPDIR=~/tmp
 export TMPDIR=~/tmp
 export HOST=$HOST
+export LANG=en_US.UTF-8
 export LC_COLLATE=POSIX
 
 export LESSHISTFILE='-'
