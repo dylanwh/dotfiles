@@ -1,6 +1,6 @@
 " Vim color file
 " Maintainer:   Dylan Hardison <dylanwh@gmail.com>
-" Last Change:	08-Jun-2008.
+" Last Change:	2008-09-24.
 
 " Load the syntax highlighting defaults, if it's enabled.
 if exists("syntax_on")
@@ -37,5 +37,5 @@ endif
 hi clear PreProc
 hi link PreProc Special
 
-hi link luaFunction Keyword
-hi link luaFunction Keyword
+"hi link luaFunction Keyword
+"hi link luaFunction Keyword

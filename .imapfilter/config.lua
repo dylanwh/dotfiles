@@ -29,6 +29,7 @@ do
 	local junk = inbox:contain_subject("batch check data")
 		+ inbox:contain_subject("SugarCRM Case - RETURN PENDING")
 		+ inbox:contain_subject("YouSendIt File Sent Notification")
+		+ inbox:contain_subject("Portal data check for the week ending")
 	local errors = inbox:contain_subject("DB Error") + inbox:contain_subject("System Error")
 
 	inbox:delete_messages( junk )

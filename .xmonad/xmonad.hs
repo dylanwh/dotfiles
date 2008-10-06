@@ -159,7 +159,6 @@ osdc s = io $ do
     hFlush h
     hClose h
 
-
 scriptMenu = do home <- liftIO $ getEnv "HOME"
 		let dir = home ++ "/.xmonad/scripts"
 		dirExecPromptNamed myXPConfig spawn dir  "script: "

@@ -31,7 +31,11 @@ if s:ext == 'pm'
 	else
 		call s:UseStrict()
 	endif
-	call append(line("$"), "our $VERSION = '0.01';")
+	call append(line("$")-1, "use namespace::clean -except => ['meta'];")
+	call append(line("$"), "")
+	call append(line("$")-1, "our $VERSION = '0.01';")
+	call append(line("$"), "")
+	call append(line("$"), "")
 	call append(line("$"), "")
 	call append(line("$"), '1;')
 else

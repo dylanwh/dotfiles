@@ -1,2 +1,0 @@
-#!/usr/bin/env zsh
-while true; do date +%H:%M; sleep 30; done

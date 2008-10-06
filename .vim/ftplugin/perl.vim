@@ -67,3 +67,13 @@ function! PerlFoldTextNoLines()
 	let txt = PerlFoldText()
 	return substitute(txt, " \\+\\d\\+ lines$", "", "")
 endfunction
+
+function! s:RunShellCommand(cmdline)
+	botright lwindow
+	lexpr system(escape(a:cmdline,'%#'))
+	lopen
+	1
+endfunction
+
+command! -complete=file -nargs=+ Test call s:RunShellCommand('prove -v '.<q-args> )
+

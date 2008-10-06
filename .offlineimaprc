@@ -34,7 +34,7 @@ foldersort     = unfair_cmp
 [Repository local-home]#{{{
 type         = Maildir
 localfolders = ~/mail/home
-sep          = .
+sep          = /
 #}}}
 
 [Account work]#{{{
