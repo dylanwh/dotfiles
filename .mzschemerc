@@ -1,0 +1,3 @@
+; vim: set ft=scheme:
+(require (lib "rep.ss" "readline"))
+(require (lib "errortrace.ss" "errortrace"))

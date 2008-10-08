@@ -1,0 +1,6 @@
+#!/bin/zsh
+
+infile=$1
+outfile=${infile/-*.flv/}.mp3
+
+ffmpeg -i $infile $outfile
