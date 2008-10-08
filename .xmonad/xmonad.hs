@@ -36,6 +36,7 @@ import XMonad.Layout.Maximize
 import XMonad.Layout.WorkspaceDir
 import XMonad.Layout.NoBorders
 import XMonad.Layout.Dishes
+import XMonad.Layout.Tabbed
 import XMonad.Util.Themes
 
 
@@ -47,16 +48,20 @@ import Network
 
 main = xmonad $ myConfig `additionalKeysP` myKeys
 
+myFont = "-xos4-terminus-bold-r-*-*-*-140-100-100-*-*-iso8859-1"
+
 myConfig = defaultConfig
     { borderWidth        = 1
     , terminal           = "pterm"
-    , workspaces         = map show [1..9] ++ ["wyrd"]
+    , workspaces         = map show [1..9]
     , normalBorderColor  = "#333333"
     , focusedBorderColor = "blue"
     , modMask            = mod4Mask
     , layoutHook         = {-ewmhDesktopsLayout-} myLayoutHook
     , manageHook         = myManageHook <+> manageDocks
     , logHook            = {-ewmhDesktopsLogHook >>-} dynamicLog }
+
+myTheme = defaultTheme { fontName = myFont }
 
 myKeys =
     [ ("M-`",              spawn $ XMonad.terminal myConfig)
@@ -80,18 +85,17 @@ myKeys =
     , ("M-<Page_Down>",    osdc "vol down 10")
     , ("M-d",              changeDir myXPConfig)
     , ("M-S-C-s",          spawn "super shutdown -h now")
-    , ("M-<F12>",          spawn "xlock")
-    , ("M-w",              windows $ W.greedyView "wyrd")]
+    , ("M-<F12>",          spawn "xlock") ]
 
 myXPConfig = defaultXPConfig
-    { font              = "-xos4-terminus-bold-r-*-*-*-140-100-100-*-*-iso8859-1"
-    , height            = 24 {-
-    , promptBorderWidth = myBorderWidth
+    { font              = myFont
+    , height            = 24
+    -- , promptBorderWidth = myBorderWidth
     , bgColor           = "black"
-    , fgColor           = "white"
+    , fgColor           = "#A8A8A8"
     , borderColor       = "blue"
-    , bgHLight          = "blue"
-    , fgHLight          = "white" -}
+    , bgHLight          = "black"
+    , fgHLight          = "white"
     }
 
 -- Layouts:
@@ -109,7 +113,7 @@ myLayoutHook
     $ layoutHints 
     $ maximize
     $ smartBorders 
-    $ tall ||| Mirror tall ||| Grid ||| Dishes 2 (1/5) ||| Full
+    $ tall ||| Mirror tall ||| Grid ||| tabbed shrinkText myTheme ||| Full
     
   where
      -- default tiling algorithm partitions the screen into two panes
@@ -138,14 +142,13 @@ myManageHook = composeAll
     [ className =? "MPlayer"            --> doFloat
     , className =? "Gimp"               --> doFloat
     , className =? "Glade-3"            --> doFloat
-    , className =? "Firefox-bin"        --> doF (W.shift "2")
-    , className =? "Iceweasel"          --> doF (W.shift "2")
+    , className =? "Firefox-bin"        --> doF (W.shift "9")
+    , className =? "Iceweasel"          --> doF (W.shift "9")
     , resource  =? "mutt"               --> doF (W.shift "1")
     , resource  =? "mail"               --> doF (W.shift "1")
     , resource  =? "offlineimap"        --> doF (W.shift "1")
     , resource  =? "irc"                --> doF (W.shift "1")
     , resource  =? "rss"                --> doF (W.shift "1")
-    , resource  =? "wyrd"               --> doF (W.shift "wyrd")
     , resource  =? "desktop_window"     --> doIgnore
     , className =? "WMClock"            --> doIgnore
     , className =? "stalonetray"        --> doIgnore

@@ -1,0 +1,9 @@
+#!/usr/bin/perl
+no strict;
+use warnings;
+use YAML::Syck;
+
+local $/ = undef;
+my $s = <STDIN>;
+my $ref = eval $s or die $@;
+print Dump($ref);

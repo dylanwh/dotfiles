@@ -72,6 +72,9 @@ let g:vimwiki_home = "~/docs/wiki/"
 let g:vimwiki_smartCR = 1
 
 let autodate_format = "%Y-%m-%d"
+
+let g:persistentBehaviour = 0
+let g:defaultExplorer = 0
 " }}}
 
 " MAPPINGS {{{
@@ -81,6 +84,9 @@ map <F3> <C-o>:set nu!<BAR>set nu?<CR>
 map <F4> <C-o>:edit ~/.menu<CR>
 map gn <C-o>:tab new<CR>
 map K \K
+map <c-w><c-t> :WMToggle<cr>
+map <c-w><c-f> :FirstExplorerWindow<cr>
+map <c-w><c-b> :BottomExplorerWindow<cr>
 
 noremap <Space> <PageDown>
 noremap -       <PageUp>

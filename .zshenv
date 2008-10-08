@@ -12,8 +12,8 @@ export MANPAGER=less
 export TEMPDIR=~/tmp
 export TMPDIR=~/tmp
 export HOST=$HOST
-export LANG=en_US.UTF-8
-export LC_COLLATE=POSIX
+export LANG=en_US.UTF-8 # to enable UTF-8.
+export LC_COLLATE=POSIX # sort in POSIX order.
 
 export LESSHISTFILE='-'
 export SSH_AGENT_FILE=$HOME/.ssh/agent
