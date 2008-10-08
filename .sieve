@@ -4,7 +4,10 @@ require "fileinto";
 #  	fileinto "pants";
 #} 
 
-if header :contains "List-Id" "haskell-cafe.haskell.org" {
+if address :domain :is "to" "r-stream.com" {
+	fileinto "work";
+}
+elsif header :contains "List-Id" "haskell-cafe.haskell.org" {
     fileinto "lists.haskell-cafe";
 }
 elsif header :contains "List-Id" "dwm.suckless.org" {
