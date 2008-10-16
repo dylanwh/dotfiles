@@ -194,7 +194,7 @@ case $HOST in
 		setopt nosharehistory
 	;;
 	mani*)
-		cdpath=($cdpath ~/code/work)
+		cdpath=($cdpath ~/work)
 	;;
 esac
 

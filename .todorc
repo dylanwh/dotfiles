@@ -2,3 +2,4 @@ timeout 60
 on add priority default
 
 global-database $TODO_FILE
+filter +children

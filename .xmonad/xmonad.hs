@@ -165,9 +165,12 @@ osdc s = io $ do
     hFlush h
     hClose h
 
-scriptMenu = do home <- liftIO $ getEnv "HOME"
-                let dir = home ++ "/.xmonad/scripts"
+scriptMenu = do dir <- io $ home "/.xmonad/scripts"
                 dirExecPromptNamed myXPConfig spawn dir  "script: "
+
+home :: String -> IO String
+home path = do dir <- io $ getEnv "HOME" `catch` const (return "/")
+               return (dir ++ '/' : path) 
 
 data Bookmark = Bookmark
 
@@ -177,24 +180,21 @@ instance XPrompt Bookmark where
 
 bookmarkPrompt :: XPConfig -> X ()
 bookmarkPrompt c = do
-    marks <- io $ getBookmarks
+    file  <- io $ getEnv "BOOKMARKS" `catch` const (home "pim/bookmarks")
+    marks <- io $ getBookmarks file
     mkXPrompt Bookmark c (mkComplFunFromList' (map fst marks)) (gotoBookmark marks)
-
 
 gotoBookmark :: [(String, String)] -> String -> X ()
 gotoBookmark marks name =
     case lookup name marks of
-         Just url -> browse url
+         Just url -> spawn ("firefox " ++ url)
          Nothing  -> return ()
 
-getBookmarks :: IO [(String, String)]
-getBookmarks = do
-    file <- getEnv "BOOKMARKS" `catch` const (return "/home/dylan/pim/bookmarks")
+getBookmarks :: String -> IO [(String, String)]
+getBookmarks file = do
     text <- readFile file
     return (map pair (lines text))
 
 pair :: String -> (String, String)
 pair = break isSpace >>> second (dropWhile isSpace)
 
-browse :: String -> X ()
-browse url = spawn $ "firefox " ++ url 

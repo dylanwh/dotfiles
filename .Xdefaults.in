@@ -51,8 +51,8 @@ URxvt.keysym.S-Insert: builtin:
 URxvt.searchable-scrollback: CM-s
 
 ! Keyboard yanking stuff:
-URxvt.keysym.M-y: perl:mark-and-yank:activate_mark_mode
-URxvt.keysym.M-u: perl:mark-and-yank:activate_mark_url_mode
+URxvt.keysym.M-C-y: perl:mark-and-yank:activate_mark_mode
+URxvt.keysym.M-C-u: perl:mark-and-yank:activate_mark_url_mode
 URxvt.perl-lib: /home/dylan/.urxvt/
 URxvt.perl-ext: mark-and-yank
 URxvt.urlLauncher: url-handler
