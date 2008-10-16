@@ -28,10 +28,10 @@ if s:ext == 'pm'
 	call append(0, "package " . s:name . ";")
 	if $PERL_USE_MOOSE || exists('perl_use_moose')
 		call append(1, "use Moose;")
+		call append(2, "use namespace::clean -except => 'meta';")
 	else
 		call s:UseStrict()
 	endif
-	call append(line("$")-1, "use namespace::clean -except => ['meta'];")
 	call append(line("$"), "")
 	call append(line("$")-1, "our $VERSION = '0.01';")
 	call append(line("$"), "")

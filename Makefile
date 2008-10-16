@@ -1,6 +1,9 @@
 help:
 	@echo targets: fixperms, schedule
 
+info:
+	echo $(XFONT)
+
 fixperms:
 	chmod -Rc +x ~/bin ~/.xinitrc
 	chmod -Rc go-wrx ~/.netrc ~/tmp ~/.pwsafe.dat ~/pim

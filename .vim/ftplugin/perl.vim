@@ -35,6 +35,12 @@ hi link perlStatementNew NONE
 "-- toggle displaying numbers at the end.
 map <silent> z; :silent call TogglePerlFold()<CR>
 map <silent> z/ :silent setlocal foldtext<<CR>
+iab mx MooseX
+iab $s $self
+
+"inoremap { { }<C-o>3h
+"inoremap [ [ ]<C-o>3h
+
 
 command! -range=% PerlTidy <line1>,<line2>!perltidy -pbp -l=100
 
@@ -76,4 +82,5 @@ function! s:RunShellCommand(cmdline)
 endfunction
 
 command! -complete=file -nargs=+ Test call s:RunShellCommand('prove -v '.<q-args> )
+
 

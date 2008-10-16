@@ -557,6 +557,9 @@ syn sync match perlSyncPOD	grouphere perlPOD "^=head"
 syn sync match perlSyncPOD	grouphere perlPOD "^=item"
 syn sync match perlSyncPOD	grouphere NONE "^=cut"
 
+syn region perlMooseAttribute start="^\z\s*\<has\>.*(\s*$" end="^\z\s*);\s*$" transparent fold keepend
+syn region perlMooseModifiers start="^\z(\s*\)\<augment\|around\|before\|after\>.*[^};]$" end="^\z1};\s*\(#.*\)\=$" transparent fold keepend 
+
 let b:current_syntax = "perl"
 
 " vim: ts=8

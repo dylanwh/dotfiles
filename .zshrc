@@ -143,6 +143,7 @@ alias pd=popd
 alias pu=pushd
 alias find="noglob find"
 alias menu="vim ~/.menu"
+alias x2=xmms2
 ## }}}
 
 # Autoload various functions

@@ -72,9 +72,6 @@ let g:vimwiki_home = "~/docs/wiki/"
 let g:vimwiki_smartCR = 1
 
 let autodate_format = "%Y-%m-%d"
-
-let g:persistentBehaviour = 0
-let g:defaultExplorer = 0
 " }}}
 
 " MAPPINGS {{{

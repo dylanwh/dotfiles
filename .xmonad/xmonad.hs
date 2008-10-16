@@ -1,4 +1,4 @@
---
+-- vim: set et ts=4 sw=4:
 -- xmonad example config file.
 --
 -- A template showing all available configuration hooks,
@@ -18,10 +18,11 @@ import XMonad.Actions.FindEmptyWorkspace
 import XMonad.Actions.FocusNth
 import XMonad.Actions.Submap
 import XMonad.Actions.CycleWS
+import XMonad.Actions.MouseGestures
 
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.DynamicLog
--- import XMonad.Hooks.EwmhDesktops
+import XMonad.Hooks.EwmhDesktops
 
 import XMonad.Prompt
 import XMonad.Prompt.Directory
@@ -29,6 +30,7 @@ import XMonad.Prompt.Shell
 import XMonad.Prompt.Ssh
 import XMonad.Prompt.Window
 import XMonad.Prompt.DirExec
+import XMonad.Prompt.XMonad
 
 import XMonad.Layout.Grid
 import XMonad.Layout.LayoutHints
@@ -39,16 +41,18 @@ import XMonad.Layout.Dishes
 import XMonad.Layout.Tabbed
 import XMonad.Util.Themes
 
-
 import XMonad.Util.EZConfig
 
 import System.Environment (getEnv)
 import System.IO (hPutStrLn, hClose, hFlush)
 import Network
+import Control.Arrow ((>>>), second)
+import Data.Char
 
 main = xmonad $ myConfig `additionalKeysP` myKeys
 
 myFont = "-xos4-terminus-bold-r-*-*-*-140-100-100-*-*-iso8859-1"
+myTheme = defaultTheme { fontName = myFont }
 
 myConfig = defaultConfig
     { borderWidth        = 1
@@ -60,8 +64,6 @@ myConfig = defaultConfig
     , layoutHook         = {-ewmhDesktopsLayout-} myLayoutHook
     , manageHook         = myManageHook <+> manageDocks
     , logHook            = {-ewmhDesktopsLogHook >>-} dynamicLog }
-
-myTheme = defaultTheme { fontName = myFont }
 
 myKeys =
     [ ("M-`",              spawn $ XMonad.terminal myConfig)
@@ -77,6 +79,8 @@ myKeys =
     , ("M-p",              scriptMenu)
     , ("M-s",              sshPrompt myXPConfig)
     , ("M-S-p",            shellPrompt myXPConfig)
+    , ("M-x",              xmonadPrompt myXPConfig)
+    , ("M-f",              bookmarkPrompt myXPConfig)
     , ("M-m",              withFocused (sendMessage . maximizeRestore))
     , ("M-g",              windowPromptGoto myXPConfig)
     , ("M-b",              windowPromptBring myXPConfig)
@@ -88,9 +92,8 @@ myKeys =
     , ("M-<F12>",          spawn "xlock") ]
 
 myXPConfig = defaultXPConfig
-    { font              = myFont
+    { font              = fontName myTheme
     , height            = 24
-    -- , promptBorderWidth = myBorderWidth
     , bgColor           = "black"
     , fgColor           = "#A8A8A8"
     , borderColor       = "blue"
@@ -163,5 +166,35 @@ osdc s = io $ do
     hClose h
 
 scriptMenu = do home <- liftIO $ getEnv "HOME"
-		let dir = home ++ "/.xmonad/scripts"
-		dirExecPromptNamed myXPConfig spawn dir  "script: "
+                let dir = home ++ "/.xmonad/scripts"
+                dirExecPromptNamed myXPConfig spawn dir  "script: "
+
+data Bookmark = Bookmark
+
+instance XPrompt Bookmark where
+    showXPrompt Bookmark = "Bookmark: "
+    completionToCommand _ = id
+
+bookmarkPrompt :: XPConfig -> X ()
+bookmarkPrompt c = do
+    marks <- io $ getBookmarks
+    mkXPrompt Bookmark c (mkComplFunFromList' (map fst marks)) (gotoBookmark marks)
+
+
+gotoBookmark :: [(String, String)] -> String -> X ()
+gotoBookmark marks name =
+    case lookup name marks of
+         Just url -> browse url
+         Nothing  -> return ()
+
+getBookmarks :: IO [(String, String)]
+getBookmarks = do
+    file <- getEnv "BOOKMARKS" `catch` const (return "/home/dylan/pim/bookmarks")
+    text <- readFile file
+    return (map pair (lines text))
+
+pair :: String -> (String, String)
+pair = break isSpace >>> second (dropWhile isSpace)
+
+browse :: String -> X ()
+browse url = spawn $ "firefox " ++ url 
