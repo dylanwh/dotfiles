@@ -30,6 +30,7 @@ fi
 
 case $HOST in
 	mani) EMAIL="dylan@r-stream.com" ;;
+	lofn) export LANG=en_US.UTF-8 ;;
 esac
 
 # Do not load any config files from /etc.
