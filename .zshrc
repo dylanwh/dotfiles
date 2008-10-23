@@ -183,7 +183,7 @@ done
 case $OS_NAME in
 	OpenBSD)
 		unalias grep egrep fgrep ggrep
-		alias ls="ls -F"
+		alias ls="ls -Fh"
 	;;
 esac
 
