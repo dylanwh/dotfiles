@@ -20,4 +20,13 @@ if !exists("vo_monkey")
 	let vo_monkey = 1
 endif
 
+function RemoveStupid()
+	iunmap <buffer> ,,H
+	iunmap <buffer> ,,h
+	iunmap <buffer> ,,w
+	iunmap <buffer> ,,-
+	iunmap <buffer> ,,f
+	iunmap <buffer> ,,t
+	iunmap <buffer> ,,d
+endfunction
 

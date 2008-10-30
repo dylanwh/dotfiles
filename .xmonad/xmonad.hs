@@ -37,7 +37,6 @@ import XMonad.Layout.LayoutHints
 import XMonad.Layout.Maximize
 import XMonad.Layout.WorkspaceDir
 import XMonad.Layout.NoBorders
-import XMonad.Layout.Dishes
 import XMonad.Layout.Tabbed
 import XMonad.Util.Themes
 
@@ -74,22 +73,24 @@ myKeys =
     , ("M-S-b",            sendMessage ToggleStruts)
     , ("M-n",              viewEmptyWorkspace)
     , ("M-S-n",            tagToEmptyWorkspace)
-    , ("M-[",  prevWS)
-    , ("M-]", nextWS)
-    , ("M-p",              scriptMenu)
+    , ("M-[",              prevWS)
+    , ("M-]",              nextWS)
     , ("M-s",              sshPrompt myXPConfig)
+    , ("M-p",              scriptPrompt myXPConfig)
     , ("M-S-p",            shellPrompt myXPConfig)
     , ("M-x",              xmonadPrompt myXPConfig)
-    , ("M-f",              bookmarkPrompt myXPConfig)
+    , ("M-o",              bookmarkPrompt myXPConfig)
+    , ("M-d",              changeDir myXPConfig)
     , ("M-m",              withFocused (sendMessage . maximizeRestore))
     , ("M-g",              windowPromptGoto myXPConfig)
     , ("M-b",              windowPromptBring myXPConfig)
     , ("M-<Pause>",        osdc "vol mute")
     , ("M-<Page_Up>",      osdc "vol up 10")
     , ("M-<Page_Down>",    osdc "vol down 10")
-    , ("M-d",              changeDir myXPConfig)
-    , ("M-S-C-s",          spawn "super shutdown -h now")
-    , ("M-<F12>",          spawn "xlock") ]
+    , ("M-<F12>",          spawn "xlock")
+    , ("M1-<F2>",          shellPrompt myXPConfig)
+    , ("M1-C-l",           spawn "xlock")
+    , ("M-M1-C-s",         spawn "super shutdown -h now") ]
 
 myXPConfig = defaultXPConfig
     { font              = fontName myTheme
@@ -165,8 +166,9 @@ osdc s = io $ do
     hFlush h
     hClose h
 
-scriptMenu = do dir <- io $ home "/.xmonad/scripts"
-                dirExecPromptNamed myXPConfig spawn dir  "script: "
+scriptPrompt conf = do
+    dir <- io $ home "/.xmonad/scripts"
+    dirExecPromptNamed myXPConfig spawn dir  "Script: "
 
 home :: String -> IO String
 home path = do dir <- io $ getEnv "HOME" `catch` const (return "/")
