@@ -17,6 +17,7 @@ let perl_string_as_statement = 1
 "-- enable perl folding
 let perl_fold = 1
 
+setlocal syn=perl
 setlocal textwidth=100
 setlocal equalprg=perltidy\ -pbp\ -l=100
 
