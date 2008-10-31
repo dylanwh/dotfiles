@@ -180,12 +180,9 @@ for dircolors in dircolors gdircolors; do
 	fi
 done
 
-case $OS_NAME in
-	OpenBSD)
-		unalias grep egrep fgrep ggrep
-		alias ls="ls -F"
-	;;
-esac
+if have gls; then
+	alias ls="gls --color=auto -Fh"
+fi
 
 namedir taskdir ~/task/today
 
@@ -193,6 +190,9 @@ ztitle
 have todo && todo --timeout --summary
 
 case $HOST in
+	odin*)
+		setopt nosharehistory
+	;;
 	mani*)
 		cdpath=($cdpath ~/work)
 	;;
