@@ -41,6 +41,7 @@ declare -U path cdpath fpath manpath perl5lib
 
 perl5lib=(~/lib 'lib')
 path=(~/bin $path)
+path=($path /usr/local/sbin)
 
 function have { which $1 &>/dev/null }
 
