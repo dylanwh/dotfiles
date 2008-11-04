@@ -16,7 +16,7 @@ export LANG=en_US.UTF-8 # to enable UTF-8.
 export LC_COLLATE=POSIX # sort in POSIX order.
 
 export LESSHISTFILE='-'
-export SSH_AGENT_FILE=$HOME/.ssh/agent
+export SSH_AGENT_FILE=$HOME/.ssh/agent@$HOST
 export LEDGER_FILE=$HOME/pim/ledger
 export REMIND_FILE=$HOME/pim/reminders
 export YABOOK_FILE=$HOME/pim/contacts

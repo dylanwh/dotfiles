@@ -12,5 +12,11 @@ trap 'echo freedom; kill -INT $pid; rm $pipe; exit' ZERR INT HUP KILL TERM
 sleep 5
 echo "xstatus started (checkmail: $pid)"
 
+if [[ -f $HOME/.xmobarrc@$HOST ]]; then
+	file=$HOME/.xmobarrc@$HOST
+else
+	file=$HOME/.xmobarrc
+fi
+
 cd $HOME
-xmonad-status | xmobar
+xmonad-status | xmobar $file
