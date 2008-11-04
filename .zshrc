@@ -193,6 +193,9 @@ ztitle
 have todo && todo --timeout --summary
 
 case $HOST in
+	odin*)
+		setopt nosharehistory
+	;;
 	mani*)
 		cdpath=($cdpath ~/work)
 	;;
