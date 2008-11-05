@@ -180,8 +180,8 @@ for dircolors in dircolors gdircolors; do
 	fi
 done
 
-case $OS_NAME in
-	OpenBSD)
+case $OSTYPE in
+	*bsd*)
 		unalias grep egrep fgrep ggrep
 		alias ls="ls -Fh"
 	;;
@@ -193,9 +193,6 @@ ztitle
 have todo && todo --timeout --summary
 
 case $HOST in
-	odin*)
-		setopt nosharehistory
-	;;
 	mani*)
 		cdpath=($cdpath ~/work)
 	;;
