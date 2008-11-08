@@ -91,7 +91,8 @@ bindkey '^P' push-input
 bindkey '^[h' run-help
 
 ## }}}
-## {{{ FUNCTIONS 
+## {{{ FUNCTIONS
+function have { which $1 &>/dev/null }
 function chpwd {
 	ztitle
 	have todo && todo --timeout --summary 
@@ -135,7 +136,7 @@ alias zenv='vim ~/.zshenv'
 alias xrc='vim ~/.xinitrc'
 alias xmrc='vim ~/.xmonad/xmonad.hs'
 alias xs=cd
-alias zreload='exec $SHELL'
+alias zreload='exec env SHLVL=0 $SHELL'
 alias help=run-help
 alias pdoc=perldoc
 alias g="sr google"
