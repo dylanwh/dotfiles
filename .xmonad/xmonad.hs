@@ -15,10 +15,10 @@ import qualified Data.Map        as M
 
 import XMonad.Actions.DwmPromote
 import XMonad.Actions.FindEmptyWorkspace
-import XMonad.Actions.FocusNth
-import XMonad.Actions.Submap
+-- import XMonad.Actions.FocusNth
 import XMonad.Actions.CycleWS
-import XMonad.Actions.MouseGestures
+import XMonad.Actions.UpdatePointer
+
 
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.DynamicLog
@@ -38,8 +38,10 @@ import XMonad.Layout.Maximize
 import XMonad.Layout.WorkspaceDir
 import XMonad.Layout.NoBorders
 import XMonad.Layout.Tabbed
-import XMonad.Util.Themes
+import XMonad.Layout.Magnifier
+import XMonad.Layout.WindowNavigation
 
+import XMonad.Util.Themes
 import XMonad.Util.EZConfig
 
 import System.Environment (getEnv)
@@ -60,9 +62,12 @@ myConfig = defaultConfig
     , normalBorderColor  = "#333333"
     , focusedBorderColor = "blue"
     , modMask            = mod4Mask
-    , layoutHook         = {-ewmhDesktopsLayout-} myLayoutHook
+    , layoutHook         = ewmhDesktopsLayout myLayoutHook
     , manageHook         = myManageHook <+> manageDocks
-    , logHook            = {-ewmhDesktopsLogHook >>-} dynamicLog }
+    , logHook            = do ewmhDesktopsLogHook
+                              updatePointer (Relative 0.5 0.5)
+                              dynamicLog
+    }
 
 myKeys =
     [ ("M-`",              spawn $ XMonad.terminal myConfig)
@@ -75,6 +80,14 @@ myKeys =
     , ("M-S-n",            tagToEmptyWorkspace)
     , ("M-[",              prevWS)
     , ("M-]",              nextWS)
+    , ("M-<Left>",         sendMessage $ Go L)
+    , ("M-<Right>",        sendMessage $ Go R)
+    , ("M-<Down>",         sendMessage $ Go D)
+    , ("M-<Up>",           sendMessage $ Go U)
+    , ("M-S-<Left>",       sendMessage $ Swap L)
+    , ("M-S-<Right>",      sendMessage $ Swap R)
+    , ("M-S-<Down>",       sendMessage $ Swap D)
+    , ("M-S-<Up>",         sendMessage $ Swap U)
     , ("M-s",              sshPrompt myXPConfig)
     , ("M-p",              scriptPrompt myXPConfig)
     , ("M-S-p",            shellPrompt myXPConfig)
@@ -82,6 +95,7 @@ myKeys =
     , ("M-o",              bookmarkPrompt myXPConfig)
     , ("M-d",              changeDir myXPConfig)
     , ("M-m",              withFocused (sendMessage . maximizeRestore))
+    , ("M-S-m",            sendMessage Toggle)
     , ("M-g",              windowPromptGoto myXPConfig)
     , ("M-b",              windowPromptBring myXPConfig)
     , ("M-<Pause>",        osdc "vol mute")
@@ -113,15 +127,16 @@ myXPConfig = defaultXPConfig
 --
 myLayoutHook 
     = workspaceDir "~" 
+    $ windowNavigation
     $ avoidStruts 
     $ layoutHints 
     $ maximize
     $ smartBorders 
-    $ tall ||| Mirror tall ||| Grid ||| tabbed shrinkText myTheme ||| Full
+    $ tall ||| Mirror tall ||| magnifier Grid ||| tabbed shrinkText myTheme ||| Full
     
   where
      -- default tiling algorithm partitions the screen into two panes
-     tall   = Tall nmaster delta ratio
+     tall   =  magnifier' (Tall nmaster delta ratio)
 
      -- The default number of windows in the master pane
      nmaster = 1
@@ -195,7 +210,7 @@ gotoBookmark marks name =
 getBookmarks :: String -> IO [(String, String)]
 getBookmarks file = do
     text <- readFile file
-    return (map pair (lines text))
+    return (map pair (filter (not.null) (lines text)))
 
 pair :: String -> (String, String)
 pair = break isSpace >>> second (dropWhile isSpace)

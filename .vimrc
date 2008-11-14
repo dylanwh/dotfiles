@@ -41,8 +41,8 @@ set statusline=%<%f\ %h%m%r%{FF()}%y%=0x%b\ %-14.(%l,%c%V%)\ %P
 set fillchars=fold:\ ,stl:\ ,stlnc:\  
 set tags+=~/.tags,.tags
 
-let mapleader = "\\"
-let maplocalleader = ",,"
+"let mapleader = "\\"
+"let maplocalleader = ",,"
 
 "-- My name for adding chanelog entries.
 let changelog_username = $REALNAME " <".$EMAIL.">"
