@@ -13,23 +13,37 @@ xrdb -merge $HOME/.Xdefaults.in
 xrdb -n $HOME/.Xdefaults.in > .Xdefaults
 xmodmap $HOME/.xmodmap
 
-if [[ -z $DBUS_SESSION_BUS_ADDRESS ]]; then
+function have { which $1 &>/dev/null }
+
+if [[ -z $DBUS_SESSION_BUS_ADDRESS ]]
+then
 	if have dbus-launch; then
 		exec dbus-launch --exit-with-session zsh $0
 	fi
 fi
 
-urxvt -e x-sshbegin
-source $SSH_AGENT_FILE
-
-if have xmms2-launcher; then
-	xmms2-launcher
+if ! ( [[ -n $SSH_AGENT_PID ]] && kill -0 $SSH_AGENT_PID &> /dev/null )
+then
+	have ssh-agent && exec ssh-agent zsh $0
 fi
 
-xbindkeys
+have ssh-askpass    && SSH_ASKPASS=ssh-askpass ssh-add < /dev/null
+have xmms2-launcher && xmms2-launcher
+have xbindkeys      && xbindkeys
+have remind         && rem -z -k'popup remind %s &' &
 osdd &
-rem -z -k'popup remind %s &' &
 
-while true; do
-	xmonad | xstatus
-done
+if have xmonad; then
+	while true; do
+		xmonad | xstatus
+	done
+else
+	WM='xterm'
+	for wm in wmaker openbox urxvt rxvt; do
+		if have wm; then
+			WM=$wm
+			break
+		fi
+	done
+	exec $WM
+fi

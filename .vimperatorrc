@@ -2,7 +2,6 @@ set hls
 "set guioptions=b
 set showtabline=1
 set ds=
-set maxhints=100
 set editor=pterm vim
 
 noremap h H
