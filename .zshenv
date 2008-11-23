@@ -5,7 +5,7 @@
 declare -gxT PERL5LIB perl5lib # declare array
 declare -U path perl5lib       # remove duplicates
 setopt noglobalrcs             # Do not load any config files from /etc.
-(( SHLVL == 1 )) || return 0   # Stop here if subshell.
+(( SHLVL > 1 )) && return 0    # Stop here if subshell.
 
 export REALNAME="Dylan William Hardison"
 export EMAIL="dylan@hardison.net"
