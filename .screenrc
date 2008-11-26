@@ -2,8 +2,7 @@
 # vim: set ft=screen tw=0:
 
 nethack on          # Let's have fun messages.
-#shell -$SHELL       # What does this do?
-deflogin on         # I'm logged in.
+deflogin on         # Pants.
 defutf8 on          # Force screen to act like it was started with -U
 defencoding utf8    # Interprete input/output as utf-8
 nonblock on         # Prevent screen from freezing
@@ -70,9 +69,8 @@ terminfo vt100* ms:AL=\E[%p1%dL:DL=\E[%p1%dM:UP=\E[%p1%dA:DO=\E[%p1%dB:LE=\E[%p1
 windowlist string "%3n %t%=%f"
 sorendition wB  # cyan/black
 
-backtick 1 40 40 screen-name
+#backtick 1 40 40 screen-name
 #hardstatus alwayslastline "%{= kB}<%{w}%1`%{B}> %{w}%?%-Lw%?%{B}(%{w}%n* %t%?(%u)%?%{B})%{w}%?%+Lw%?%? %{B}%{g}%=%{B}[ %{.c}%M %d %{y}%0c%{B} ][ %{m}%l%{B} ]"
+#caption always "%{= kB}<%{w}%1`%{B}> %{w}%?%-Lw%?%{B}(%{w}%n* %t%?(%u)%?%{B})%{w}%?%+Lw%?%? %{B}%{g}%=%{B}[ %{.c}%M %d %{y}%0c%{B} ][ %{m}%l%{B} ]"
 
-caption always "%{= kB}<%{w}%1`%{B}> %{w}%?%-Lw%?%{B}(%{w}%n* %t%?(%u)%?%{B})%{w}%?%+Lw%?%? %{B}%{g}%=%{B}[ %{.c}%M %d %{y}%0c%{B} ][ %{m}%l%{B} ]"
-
-hardstatus string "screen: %t"
+hardstatus string "%t"

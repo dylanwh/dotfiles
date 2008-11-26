@@ -12,7 +12,7 @@ options.subscribe = true
 --  Accounts  --
 ----------------
 function is_old(box)
-	return box:is_seen() * box:is_older(7)
+	return box:is_seen() * box:is_older(3)
 end
 
 function archive_old(imap, from, to)
@@ -38,7 +38,10 @@ do
 	inbox:delete_messages( junk )
 	inbox:move_messages( work['errors'], errors)
 	inbox:move_messages(work.salestenders, sts(inbox))
-	work.archive:move_messages(work.salestenders, sts(work.archive))
+	-- work.archive:move_messages(work.salestenders, sts(work.archive))
+
+	print "cleaning lists.haskell..."
+	home['lists.haskell-cafe']:delete_messages(is_old(home['lists.haskell-cafe']))
 end
 
 archive_old(work, 'inbox', 'archive')

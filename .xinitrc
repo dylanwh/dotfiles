@@ -1,7 +1,7 @@
 #!/usr/bin/env zsh
 # Dylan William Hardison's .xinitrc file.
 # Ensure that this script is evaluated by zsh
-[ "x$ZSH_NAME" == "x" ] && exec zsh $0
+[ "x$ZSH_NAME" = "x" ] && exec zsh $0
 
 BGCOLOR='#330000'
 
@@ -33,17 +33,5 @@ have xbindkeys      && xbindkeys
 have remind         && rem -z -k'popup remind %s &' &
 osdd &
 
-if have xmonad; then
-	while true; do
-		xmonad | xstatus
-	done
-else
-	WM='xterm'
-	for wm in wmaker openbox urxvt rxvt; do
-		if have wm; then
-			WM=$wm
-			break
-		fi
-	done
-	exec $WM
-fi
+echo "starting xmonad"
+exec xmonad | xstatus

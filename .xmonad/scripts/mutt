@@ -1,2 +1,3 @@
 #!/bin/sh
-exec pterm mutt
+#exec pterm screen -S mutt -DRRUA mutt
+exec pterm dtach -A /tmp/$USER-mutt.dtach -r winch -Ez mutt

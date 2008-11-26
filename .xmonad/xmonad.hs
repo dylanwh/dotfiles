@@ -64,8 +64,8 @@ myConfig = defaultConfig
     , modMask            = mod4Mask
     , layoutHook         = ewmhDesktopsLayout myLayoutHook
     , manageHook         = myManageHook <+> manageDocks
-    , logHook            = do ewmhDesktopsLogHook
-                              updatePointer (Relative 0.5 0.5)
+    , logHook            = do -- ewmhDesktopsLogHook
+                              -- updatePointer (Relative 0.5 0.5)
                               dynamicLog
     }
 

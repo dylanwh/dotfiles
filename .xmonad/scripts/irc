@@ -1,2 +1,2 @@
 #!/bin/sh
-exec urxvt -title irc -e attach irc
+exec urxvt -title irc -e attach irc 

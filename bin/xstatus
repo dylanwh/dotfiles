@@ -19,4 +19,4 @@ else
 fi
 
 cd $HOME
-xmonad-status | xmobar $file
+exec xmonad-status | xmobar $file

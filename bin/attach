@@ -1,21 +1,7 @@
 #!/usr/bin/env zsh
 
-if (( $# == 1 )); then
-	view=$1
-	case $view in
-		mail) host=njord.hardison.net ;;
-		pf)   host=odin.hardison.net  ;;
-		*)    host=lofn.hardison.net  ;;
-	esac
-else
-	case $1 in
-		ccdevnet) host=ccdevnet.org ;;
-		*)
-			host=$1.hardison.net
-			view=$2
-		;;
-	esac
-	shift
-fi
+view=$1
+host=lofn.hardison.net
 
-exec ssh $host -t screen -U -x -p $view
+
+exec ssh $host -t screen -U -A -x -p $view

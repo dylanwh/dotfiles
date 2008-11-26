@@ -93,6 +93,16 @@ bind  index zc collapse-thread
 bind  index G  last-entry
 bind  index gg first-entry
 
+bind index <Esc>[A previous-undeleted
+bind index <Esc>[B next-undeleted
+bind index <Esc>[C next-page
+bind index <Esc>[D previous-page
+
+bind index <Esc>0A previous-undeleted
+bind index <Esc>0B next-undeleted
+bind index <Esc>0C next-page
+bind index <Esc>0D previous-page
+
 macro index \cb |urlview\n  "View URLs"
 macro pager \cb |urlview\n  "View URLs"
 
