@@ -9,7 +9,7 @@ maxconnections  = 3
 maxsyncaccounts = 3
 holdconnectionopen = yes
 
-#ui = Noninteractive.Basic, Curses.Blinkenlights
+ui = Curses.Blinkenlights
 #}}}
 
 [Account home]#{{{

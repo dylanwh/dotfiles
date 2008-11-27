@@ -1,2 +1,2 @@
 #!/bin/sh
-exec pterm attach rss
+exec pterm ssh -t lofn dtach -A /tmp/$USER-rss -E -z newsbeuter
