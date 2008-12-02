@@ -51,7 +51,6 @@ set xterm_title="mutt"
 # Poop reduction
 set certificate_file=~/mail/certificates
 
-set tmpdir="~/tmp"
 set reverse_alias=yes
 set reverse_name=yes
 set hdrs=yes
