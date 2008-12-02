@@ -89,6 +89,7 @@ bindkey -a 'H' run-help
 bindkey "^_" copy-prev-shell-word
 bindkey '^P' push-input
 bindkey '^[h' run-help
+bindkey '^r' vi-history-search-backward
 
 ## }}}
 ## {{{ FUNCTIONS

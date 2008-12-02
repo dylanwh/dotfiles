@@ -6,6 +6,7 @@ use YAML::Syck qw( LoadFile DumpFile );
 use Getopt::Long qw( :config gnu_getopt );
 use List::Util 'sum';
 use DateTime;
+use Time::Duration 'duration';
 
 my $file = "$ENV{HOME}/.timesheet";
 my ($start, $stop, $total, $active);
@@ -42,7 +43,7 @@ if ($total) {
 	}
 
 	foreach my $name ( @tasks ) {
-		say "$name: ", total($ts, $name), ' seconds';
+		say "$name: ", duration(total($ts, $name), 9);
 	}
 }
 
@@ -71,7 +72,7 @@ sub stop {
 
 sub total {
 	my ( $ts, $name ) = @_;
-	sum(map { $_->{stop} - $_->{start} } @{ $ts->{$name} });
+	sum(map { $_->{stop} - $_->{start} } grep { $_->{stop} } @{ $ts->{$name} });
 }
 
 sub active {
@@ -85,6 +86,5 @@ sub active {
 			}
 		}
 	}
-
 	return sort keys %seen;
 }

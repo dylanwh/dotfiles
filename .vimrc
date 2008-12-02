@@ -75,6 +75,25 @@ let g:vimwiki_home = "~/docs/wiki/"
 let g:vimwiki_smartCR = 1
 
 let autodate_format = "%Y-%m-%d"
+
+"-- matches hash and array subscripts, etc.
+let perl_extended_vars = 1
+
+"-- Shows package part of var names in green
+let perl_want_scope_in_variables = 1 
+
+"-- Highlight POD with perl files.
+let perl_include_pod = 1
+
+"-- Highlight quotes as a statement (orange),
+"-- different from string contents.
+let perl_string_as_statement = 1
+
+"-- enable perl folding
+let perl_fold = 1
+
+
+
 " }}}
 
 " MAPPINGS {{{
