@@ -1,0 +1,90 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+use feature 'switch', 'say';
+use YAML::Syck qw( LoadFile DumpFile );
+use Getopt::Long qw( :config gnu_getopt );
+use List::Util 'sum';
+use DateTime;
+
+my $file = "$ENV{HOME}/.timesheet";
+my ($start, $stop, $total, $active);
+
+GetOptions(
+	'start|s' => \$start,
+	'stop|S'  => \$stop,
+	'total|t' => \$total,
+	'active|a' => \$active,
+) or exit 1;
+
+my $ts    = eval { LoadFile($file) } // {};
+my @tasks = @ARGV;
+
+die "You're insane\n" if $start and $stop;
+
+if ($start) {
+	foreach my $name ( @tasks ) {
+		say "start work on $name.";
+		start($ts, $name);
+    }
+}
+
+if ($stop) {
+	foreach my $name ( @tasks ) {
+		say "stop work on $name.";
+		stop($ts, $name);
+	}
+}
+
+if ($total) {
+	if ( @tasks == 0 ) {
+		@tasks = sort keys %{ $ts };
+	}
+
+	foreach my $name ( @tasks ) {
+		say "$name: ", total($ts, $name), ' seconds';
+	}
+}
+
+if ($active) {
+	foreach my $name (active($ts)) {
+		say $name;
+	}
+}
+
+DumpFile($file, $ts);
+
+sub start {
+	my ( $ts, $name ) = @_;
+	push @{ $ts->{$name} }, { start => time };
+}
+
+sub stop {
+	my ( $ts, $name ) = @_;
+	foreach my $entry ( @{ $ts->{$name} } ) {
+		if (not defined $entry->{stop}) {
+			$entry->{stop} = time;
+			last;
+		}
+	}
+}
+
+sub total {
+	my ( $ts, $name ) = @_;
+	sum(map { $_->{stop} - $_->{start} } @{ $ts->{$name} });
+}
+
+sub active {
+	my ( $ts ) = @_;
+	my %seen;
+
+	foreach my $name ( keys %{ $ts } ) {
+		foreach my $entry ( @{ $ts->{$name} } ) {
+			if (not defined $entry->{stop}) {
+				$seen{$name}++;
+			}
+		}
+	}
+
+	return sort keys %seen;
+}
