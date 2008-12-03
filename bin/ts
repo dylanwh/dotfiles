@@ -1,304 +1,53 @@
-#!/usr/bin/env perl
-use strict;
-use warnings;
-use DBI;
-use File::Temp qw( tempfile );
+#!/usr/bin/python
+# vim: set et:
+import sys, os
+from ConfigParser import ConfigParser
+from datetime import datetime
 
+from couchdb        import Server
+from couchdb.schema import Document, TextField, DateTimeField, ListField
 
-# This program is under the GPL.
-# Copyright (C) 2003 by Dylan William Hardison.
+def main():
+    config     = get_config()
+    cmd, args  = get_options()
 
-eval {
-    require Time::Duration;
-    1;
-};
+    server = Server(config.get('couch', 'server'))
+    ts     = server[config.get('couch', 'database')]
 
+    if cmd in ('start', 's', '-s'):
+        for task in tasks:
+            print "start work on %s" % task
+            entry = Timesheet(name = task)
+            entry.store(ts)
+    elif cmd in ('active', 'act', 'a', '-a'):
+        for row in Timesheet.view(ts, 'ts/active').rows:
+            print "active: %s" % row.key
+    elif cmd in ('stop', 'S', '-S'):
+        for task in tasks:
+            print "stop work on %s" % task
+            for row in Timesheet.view(ts, 'ts/active').rows:
+                entry = Timesheet.load(ts, row.value)
+                entry.done = datetime.now()
+                entry.store(ts)
+    elif cmd in ('total', 't', '-t'):
+        print "totals: "
+        for row in Timesheet.view(ts, 'ts/total', group = True).rows:
+            print "%s: %d" % (row.key, row.value)
 
-my ($cmd, $project, $sql, $db, $did_config) = (shift, shift);
+def get_config():
+    cfg = ConfigParser()
+    cfg.read("%s/.timesheetrc" % os.getenv('HOME'))
+    return cfg
 
-$db = DBI->connect("dbi:SQLite:dbname=$ENV{HOME}/.timesheet.db",
-    { RaiseError => 1, PrintError => 0}
-);
+def get_options():
+    try:
+        return (sys.argv[1], sys.argv[2:])
+    except:
+        return ('', [])
 
-unless (defined $cmd) {
-    die "Usage: ts <cmd> [project|project id] [args]\n" if not $did_config;
-    exit(0);
-}
+class Timesheet(Document):
+    name = TextField()
+    time = DateTimeField(default=datetime.now)
+    done = DateTimeField(default=None)
 
-if ($cmd eq 'start' or $cmd eq 'begin') {
-    die "Undef project!" unless defined $project;
-    
-    my $proj = $db->quote($project);
-    my $time = time();
-    my $sql = qq{ INSERT INTO timesheet
-                  (project,start)
-                  VALUES ($proj, $time);
-    };
-    $db->do($sql);
-    print "Started working on $project\n";
-} elsif ($cmd eq 'stop' or $cmd eq 'end') {
-    die "Undef project!" unless defined $project;
-    
-    my ($select, $update, $result, $id, $start, $pname);
-    if ($project =~ /\D/) {
-        $select = qq{ SELECT id,start,project FROM timesheet
-                      WHERE (project = ? AND stop IS NULL);
-        };
-    } else {
-        $select = qq{ SELECT id,start,project FROM timesheet
-                      WHERE (id = ? AND stop IS NULL);
-        };
-    }
-
-    $update = qq{ UPDATE timesheet
-                  SET stop = ?
-                  WHERE (id = ?)
-    };
-    $result = $db->prepare($select);
-    $result->execute($project);
-    
-    ($id, $start, $pname) = $result->fetchrow_array;
-    if (defined $id) {
-        my $stop = time();
-        my $diff = $stop - $start;
-    
-        print "Worked on $pname for ", duration($diff, 5) ,"\n";
-        $result = $db->prepare($update);
-        $result->execute($stop, $id);
-    } else {
-        if ($project =~ /\D/) {
-            print "But, we haven't ever started $project!\n";
-        } else {
-            print "We already stopped working on $pname!\n";
-        }
-    }
-} elsif ($cmd eq 'total') {
-    if (defined $project) {
-        show_total($project);
-    } else {
-        show_total_all();
-    }
-} elsif ($cmd eq 'active' or $cmd eq 'act') {
-    my $select = qq{
-        SELECT project,id FROM timesheet
-        WHERE stop IS NULL;
-    };
-    my $result = $db->prepare($select);
-    $result->execute();
-    my ($p, $id);
-    while (($p,$id) = $result->fetchrow_array) {
-        print "Active: $p ($id)\n";
-    }
-} elsif ($cmd eq 'list' or $cmd eq 'ls') {
-    my $select = qq{
-        SELECT DISTINCT project FROM timesheet;
-    };
-    my $result = $db->prepare($select);
-    $result->execute();
-    my $list = $result->fetchall_arrayref;
-    my $count = @$list;
-
-    unless ($count == 0) {
-        print "Found $count projects:\n";
-        foreach my $item (@$list) {
-            print "\t- $item->[0]\n";
-        }
-    } else {
-        print "No projects found.\n";
-    }
-} elsif ($cmd eq 'index') {
-    my $select = qq{
-        SELECT id, project FROM timesheet;
-    };
-    my $result = $db->prepare($select);
-    $result->execute();
-    my $list = $result->fetchall_arrayref;
-    my $count = @$list;
-
-    unless ($count == 0) {
-        print "Index of Projects:\n";
-        foreach my $item (@$list) {
-            print "\t- $item->[1] ($item->[0])\n";
-        }
-    } else {
-        print "No projects found.\n";
-    }
-} elsif ($cmd eq 'average' or $cmd eq 'avg') {
-    my $select = qq{
-        SELECT project,AVG(stop - start) AS average
-        FROM timesheet
-        #WHERE#
-        GROUP BY project
-        ORDER BY id ASC
-    };
-    if (defined $project) {
-        my $p = $db->quote($project);
-        $select =~ s/#WHERE#\n/WHERE (project = $p)\n/;
-    } else {
-        $select =~ s/#WHERE#\n//;
-    }
-
-    my $result = $db->prepare($select);
-    $result->execute();
-    my $item;
-
-    my $did_loop = 0;
-    while ($item = $result->fetchrow_hashref) {
-        $did_loop++;
-        print "$item->{project}: Average time was ", duration($item->{average}, 5), "\n";
-    }
-
-    unless ($did_loop) {
-        print "No average time...\n";
-    }
-} elsif ($cmd eq 'purge') {
-    my $e = prompt("Are you sure you want to purge timesheet?\n(yes/no, default no)");
-    if ($e =~ /^y(es?)$/) {
-        print "Deleted everything from database.\n";
-        $db->do("DELETE FROM timesheet;");
-    }
-} elsif ($cmd eq 'delete' or $cmd eq 'del') {
-    die "Undef project!" unless defined $project;
-    my $delete;
-    my $name;
-
-    if ($project =~ /\D/) {
-        # $project is project name.
-        $delete = qq(
-            DELETE FROM timesheet WHERE project = ?
-        );
-        $name = $project;
-    } else {
-        # $project is project id.
-        $name = id_to_project($project); # get name of project id.
-        $delete = qq{
-            DELETE FROM timesheet WHERE id = ?
-        };
-    }
-    my $result = $db->prepare($delete);
-    $result->execute($project);
-	if ($name ne $project) {
-		print "Delted $name #$project from database\n";
-	} else {
-	    print "Deleted $name from database.\n";
-	}
-} elsif ($cmd eq 'rename' or $cmd eq 'ren') {
-	my $name = shift @ARGV;
-    die "Undef project!" unless defined $project;
-	die "What do you want to rename the project to?\n"
-	    unless defined $name;
-	
-	my $update = qq{
-		UPDATE timesheet
-		SET project = ?
-		WHERE project = ?
-	};
-	my $result = $db->prepare($update);
-	$result->execute($name, $project);
-	print "Renamed $project to $name\n";
-} else {
-	print "Unknown command: $cmd\n";
-}
-    
-
-END {
-    if ($db) {
-        $db->disconnect;
-    }
-}
-
-sub show_total {
-    my ($project) = @_;
-    my $select = qq{
-        SELECT sum(stop - start) AS diff_sum
-        FROM timesheet
-        WHERE (project = ? AND start IS NOT NULL AND stop IS NOT NULL)
-        GROUP BY project;
-    };
-    my ($total, $entry, $result);
-    $total = 0;
-    $result = $db->prepare($select);
-    $result->execute($project);
-    ($total) = $result->fetchrow_array() || 0;
-
-    if ($total > 0) {
-        print $project, ": Worked on for ", duration($total, 5),"\n";
-    } else {
-        print "Haven't ever worked on $project...\n";
-    }
-}
-
-sub show_total_all {
-    my ($project) = @_;
-    my $select = qq{
-        SELECT project,sum(stop - start) AS diff_sum
-        FROM timesheet
-        WHERE (start IS NOT NULL AND stop IS NOT NULL)
-        GROUP BY project
-        ORDER BY diff_sum DESC
-    };
-    my ($total, $result, $name);
-    $total = 0;
-    $result = $db->prepare($select);
-    $result->execute();
-    my $all_total;
-    
-    while (($name, $total) = $result->fetchrow_array) {
-        if ($total > 0) {
-        	$all_total += $total;
-            print $name, ": Worked on for ", duration($total, 5),"\n";
-        } else {
-            print "Haven't ever worked on $name...\n";
-        }
-    }
-    #print "All-total: ", duration($all_total, 5), "\n";
-}
-
-sub id_to_project {
-    my ($id) = @_;
-    my $select = qq{
-        SELECT project
-        FROM timesheet
-        WHERE id = $id;
-    };
-    my $result = $db->prepare($select);
-    $result->execute();
-    my ($name) = $result->fetchrow_array;
-
-    return $name;
-}
-
-sub prompt {
-    my ($prompt, $default) = @_;
-    my $value;
-
-    if (have("Term::ReadLine")) {
-        
-    } else {
-        if (defined $default) {
-            print "$prompt (default: $default): ";
-        } else {
-            print $prompt, ": ";
-        }
-        $value = readline STDIN;
-        chomp $value;
-        return $value || $default || '';
-    }
-}
-
-sub duration {
-    if (have("Time::Duration")) {
-        goto &Time::Duration::duration;
-    } else {
-        $_[0] += 0;
-        return "$_[0] seconds";
-    }
-}
-
-sub have {
-    my ($file) = @_;
-    $file =~ s!::!/!;
-    $file .= ".pm";
-
-    return exists $INC{$file};
-}
+main()
