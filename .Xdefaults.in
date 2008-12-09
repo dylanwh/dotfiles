@@ -39,6 +39,35 @@ Rxvt.geometry: 80x25
 Rxvt.scrollBar: false
 Rxvt.meta8: false
 Rxvt.modifier: mod1
+
+XTerm*font: XFONT
+
+XTerm*color0: #000000
+XTerm*color1: #A80000
+XTerm*color2: #00A800
+!XTerm.color3: #A8A800
+XTerm*color3: Orange3
+
+XTerm*color4: BLUE
+XTerm*color5: #A800A8
+XTerm*color6: #00A8A8
+XTerm*color7: WHITE
+
+XTerm*color8:  #646464
+XTerm*color9:  #FF0054
+XTerm*color10: #00FF54
+XTerm*color11: #FFFF54
+
+XTerm*color12: #0000FF
+XTerm*color13: #FF00FF
+XTerm*color14: #00FFFF
+XTerm*color15: #FFFFFF
+
+XTerm*foreground: WHITE
+XTerm*background: #000000
+XTerm*cursorColor: WHITE
+XTerm*reverseVideo: false
+
 ! }}}
 
 ! {{{ Keyboard bindings

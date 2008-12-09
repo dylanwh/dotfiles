@@ -1,90 +1,53 @@
-#!/usr/bin/perl
-use strict;
-use warnings;
-use feature 'switch', 'say';
-use YAML::Syck qw( LoadFile DumpFile );
-use Getopt::Long qw( :config gnu_getopt );
-use List::Util 'sum';
-use DateTime;
-use Time::Duration 'duration';
+#!/usr/bin/python
+# vim: set et:
+import sys, os
+from ConfigParser import ConfigParser
+from datetime import datetime
 
-my $file = "$ENV{HOME}/.timesheet";
-my ($start, $stop, $total, $active);
+from couchdb        import Server
+from couchdb.schema import Document, TextField, DateTimeField, ListField
 
-GetOptions(
-	'start|s' => \$start,
-	'stop|S'  => \$stop,
-	'total|t' => \$total,
-	'active|a' => \$active,
-) or exit 1;
+def main():
+    config     = get_config()
+    cmd, tasks = get_options()
 
-my $ts    = eval { LoadFile($file) } // {};
-my @tasks = @ARGV;
+    server = Server(config.get('couch', 'server'))
+    ts     = server[config.get('couch', 'database')]
 
-die "You're insane\n" if $start and $stop;
+    if cmd in ('start', 's', '-s'):
+        for task in tasks:
+            print "start work on %s" % task
+            entry = Timesheet(name = task)
+            entry.store(ts)
+    elif cmd in ('active', 'act', 'a', '-a'):
+        for row in Timesheet.view(ts, 'ts/active').rows:
+            print "active: %s" % row.key
+    elif cmd in ('stop', 'S', '-S'):
+        for task in tasks:
+            print "stop work on %s" % task
+            for row in Timesheet.view(ts, 'ts/active', key = task).rows:
+                entry = Timesheet.load(ts, row.value)
+                entry.done = datetime.now()
+                entry.store(ts)
+    elif cmd in ('total', 't', '-t'):
+        for row in Timesheet.view(ts, 'ts/total', group = True).rows:
+            print "%s: %d" % (row.key, row.value)
 
-if ($start) {
-	foreach my $name ( @tasks ) {
-		say "start work on $name.";
-		start($ts, $name);
-    }
-}
+def get_config():
+    cfg = ConfigParser()
+    cfg.read("%s/.yetirc" % os.getenv('HOME'))
+    return cfg
 
-if ($stop) {
-	foreach my $name ( @tasks ) {
-		say "stop work on $name.";
-		stop($ts, $name);
-	}
-}
+def get_options():
+    try:
+        return (sys.argv[1], sys.argv[2:])
+    except:
+        return ('', [])
 
-if ($total) {
-	if ( @tasks == 0 ) {
-		@tasks = sort keys %{ $ts };
-	}
+class Timesheet(Document):
+    name = TextField()
+    time = DateTimeField(default=datetime.now)
+    done = DateTimeField(default=None)
+    type = TextField(default="task")
 
-	foreach my $name ( @tasks ) {
-		say "$name: ", duration(total($ts, $name), 9);
-	}
-}
-
-if ($active) {
-	foreach my $name (active($ts)) {
-		say $name;
-	}
-}
-
-DumpFile($file, $ts);
-
-sub start {
-	my ( $ts, $name ) = @_;
-	push @{ $ts->{$name} }, { start => time };
-}
-
-sub stop {
-	my ( $ts, $name ) = @_;
-	foreach my $entry ( @{ $ts->{$name} } ) {
-		if (not defined $entry->{stop}) {
-			$entry->{stop} = time;
-			last;
-		}
-	}
-}
-
-sub total {
-	my ( $ts, $name ) = @_;
-	sum(map { $_->{stop} - $_->{start} } grep { $_->{stop} } @{ $ts->{$name} });
-}
-
-sub active {
-	my ( $ts ) = @_;
-	my %seen;
-
-	foreach my $name ( keys %{ $ts } ) {
-		foreach my $entry ( @{ $ts->{$name} } ) {
-			if (not defined $entry->{stop}) {
-				$seen{$name}++;
-			}
-		}
-	}
-	return sort keys %seen;
-}
+main()

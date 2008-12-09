@@ -3,7 +3,7 @@
 
 if (@ARGV) {
 	my ($name) = @ARGV;
-	exec urxvtcd => -name => $name, -e => @dtach, @ARGV;
+	exec urxvt => -name => $name, -e => @dtach, @ARGV;
 } else {
-	exec urxvtcd => -name => 'zsh';
+	exec urxvt => -name => 'zsh';
 }

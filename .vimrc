@@ -40,6 +40,8 @@ set viminfo=!,'1000,%,h,f1,n~/.viminfo
 set statusline=%<%f\ %h%m%r%{FF()}%y%=0x%b\ %-14.(%l,%c%V%)\ %P
 set fillchars=fold:\ ,stl:\ ,stlnc:\  
 set tags+=~/.tags,.tags
+"set listchars=trail:-,tab:>.
+"set list
 
 "let mapleader = "\\"
 "let maplocalleader = ",,"
@@ -167,7 +169,7 @@ if !exists('autocmds_loaded')
 endif
 " }}}
 
-runtime ftplugin/man.vim
+runtime! ftplugin/man.vim
 colorscheme dylan2
 
 function FF()
