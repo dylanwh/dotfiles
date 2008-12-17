@@ -2,41 +2,21 @@
 use strict;
 use warnings;
 use YAML::Syck;
-use IO::File;
-my $file = "$ENV{HOME}/pim/contacts";
 
-local $/ = undef;
-my $fh = new IO::File($file) or die "Cannot read $file: $!";
-my @book = Load($fh->getline);
-my @alias;
+my $file = shift or die "usage: $0 contacts.yml\n";
+my $contacts = LoadFile($file);
 
-foreach my $entry (@book) {
-	my $email = $entry->{email} or next;
-	my $nick  = $entry->{nick}  or next;
-	my $name  = $entry->{name}  or next;
-	my $group = $entry->{group} || [];
+foreach my $key (sort keys %{ $contacts }) {
+    my $contact = $contacts->{$key};
+    my @tags    = exists $contact->{tags} ? @{ $contact->{tags} } : ();
+    my %email   = exists $contact->{email} ? %{ $contact->{email} } : ();
+    my $groups  = join(" ", map { "-group $_" } @tags);
+    my @labels  = keys %email;
 
-	next unless $entry->{nick};
-	next unless $entry->{name};
+    next if @labels == 0;
 
-	unless (ref $email) {
-		$email = { primary => $email };
-	}
-	unless (ref $group) {
-		$group = [$group];
-	}
-
-	foreach my $key (keys %$email) {
-		my $nick = $key eq 'primary' ? $entry->{nick} : "$entry->{nick}.$key";
-		push @alias, {
-			nick => $nick,
-			name => $name,
-			email => $email->{$key},
-			groups => join(' ', map("-group $_", @$group)),
-		};
-	}
+    foreach my $label (@labels) {
+        my $alias = $label eq 'default' ? $key : "$key.$label";
+        printf("alias %s %s \"%s\" <%s>\n", $groups, $alias, $contact->{name}, $email{$label},);
+    }
 }
-
-print qq{alias $_->{groups} $_->{nick} "$_->{name}" <$_->{email}>\n} foreach @alias;
-
-

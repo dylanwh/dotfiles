@@ -25,7 +25,7 @@ export LESSHISTFILE='-'
 export SSH_AGENT_FILE=$HOME/.ssh/agent@$HOST
 export LEDGER_FILE=$HOME/pim/ledger
 export REMIND_FILE=$HOME/pim/reminders
-export YABOOK_FILE=$HOME/pim/contacts
+export YABOOK_FILE=$HOME/pim/contacts.yml
 export TODO_FILE=$HOME/pim/todo.xml
 
 perl5lib=(~/lib 'lib')

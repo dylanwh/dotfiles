@@ -114,7 +114,7 @@ folder-hook mail/home source ~/.mutt/profile.home
 folder-hook mail/work source ~/.mutt/profile.work
 
 source ~/.mutt/t-prot
-source "xqilla -v file $HOME/pim/contacts.xml $HOME/.mutt/alias.xql |"
+source 'perl $HOME/.mutt/alias.pl ${YABOOK_FILE:-"$HOME/.yabook"} |'
 source ~/.mutt/gnupg
 source ~/.mutt/theme
 source ~/.mutt/profile.active
