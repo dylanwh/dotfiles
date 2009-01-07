@@ -1,7 +1,8 @@
 [user]
 	email = dylan@hardison.net
 	name = Dylan William Hardison
+
 [alias]
 	co=checkout
 	ci=commit
-	record=commit
+	record = !git add -p && git commit
