@@ -9,6 +9,7 @@
 
 import XMonad
 import System.Exit
+import Data.Ratio ((%))
 
 import qualified XMonad.StackSet as W
 import qualified Data.Map        as M
@@ -40,6 +41,8 @@ import XMonad.Layout.NoBorders
 import XMonad.Layout.Tabbed
 import XMonad.Layout.Magnifier
 import XMonad.Layout.WindowNavigation
+import XMonad.Layout.IM
+import XMonad.Layout.Reflect (reflectHoriz)
 
 import XMonad.Util.Themes
 import XMonad.Util.EZConfig
@@ -125,18 +128,25 @@ myXPConfig = defaultXPConfig
 -- The available layouts.  Note that each layout is separated by |||,
 -- which denotes layout choice.
 --
-myLayoutHook 
-    = workspaceDir "~" 
-    $ windowNavigation
-    $ avoidStruts 
-    $ layoutHints 
-    $ maximize
-    $ smartBorders 
-    $ tall ||| Mirror tall ||| magnifier Grid ||| tabbed shrinkText myTheme ||| Full
+myLayoutHook = modify ( tall ||| Mirror tall ||| grid ||| im ||| Full )
     
   where
      -- default tiling algorithm partitions the screen into two panes
-     tall   =  magnifier' (Tall nmaster delta ratio)
+     tall = magnifiercz' 1.2 (Tall nmaster delta ratio)
+
+     -- default grid
+     grid = magnifiercz 1.1 Grid 
+
+     -- im layout
+     im = reflectHoriz $ withIM (1%6) (Title "Buddy List") Grid
+
+     -- my collection of global layout modifiers
+     modify = workspaceDir "~" 
+            . windowNavigation 
+            . avoidStruts 
+            . layoutHints 
+            . maximize 
+            . smartBorders 
 
      -- The default number of windows in the master pane
      nmaster = 1
