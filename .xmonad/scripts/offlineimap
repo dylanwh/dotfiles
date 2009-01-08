@@ -1,9 +1,2 @@
 #!/bin/zsh
-#exec pterm screen -S offlineimap -DRRUA offlineimap -a work,home
-
-case $HOST in
-	mani*) accounts="work" ;;
-	*) accounts="home" ;;
-esac
-
-exec pterm dtach -A /tmp/$USER-offlineimap.dtach -r winch -Ez offlineimap -a $accounts
+exec pterm -name offlineimap -e dtach -A /tmp/$USER-offlineimap.dtach -r winch -Ez offlineimap -a home

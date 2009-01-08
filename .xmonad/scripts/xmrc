@@ -1,2 +1,2 @@
 #!/bin/sh
-exec pterm vim ~/.xmonad/xmonad.hs
+exec pterm -e vim ~/.xmonad/xmonad.hs

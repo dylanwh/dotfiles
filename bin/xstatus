@@ -1,16 +1,6 @@
 #!/usr/bin/env zsh
 
-pipe="$HOME/.xmonad/mail"
-
-[[ -e $pipe ]] && rm $pipe
-mkfifo $pipe
-checkmail > $pipe &
-pid=$!
-
 trap 'echo freedom; kill -INT $pid; rm $pipe; exit' ZERR INT HUP KILL TERM
-
-sleep 5
-echo "xstatus started (checkmail: $pid)"
 
 if [[ -f $HOME/.xmobarrc@$HOST ]]; then
 	file=$HOME/.xmobarrc@$HOST
@@ -19,4 +9,4 @@ else
 fi
 
 cd $HOME
-exec xmonad-status | xmobar $file
+exec xmobar $file

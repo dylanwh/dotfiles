@@ -8,10 +8,9 @@ Config { font = "-xos4-terminus-bold-r-*-*-*-120-100-100-*-*-iso8859-1"
                     , Run Memory ["-t","Mem: <usedratio>%"] 10
                     , Run Swap [] 10
     		        , Run Date "%a %H:%M" "date" 10
-    		        , Run PipeReader ".xmonad/mail" "mail"
     		        , Run StdinReader
                     ]
        , sepChar = "%"
        , alignSep = "}{"
-       , template = "%StdinReader% }{ %cpu% | %memory% | %eth0% | %mail% | <fc=#ee9a00>%date%</fc> "
+       , template = "%StdinReader% }{ %cpu% | %memory% | %eth0% | <fc=#ee9a00>%date%</fc> "
        }

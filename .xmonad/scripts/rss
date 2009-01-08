@@ -1,2 +1,2 @@
 #!/bin/sh
-exec pterm ssh -t lofn dtach -A /tmp/$USER-rss -E -z newsbeuter
+exec pterm -name rss -e ssh -t lofn dtach -A /tmp/$USER-rss -E -z newsbeuter

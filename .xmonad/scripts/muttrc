@@ -1,2 +1,2 @@
 #!/bin/sh
-exec pterm vim ~/.mutt/muttrc
+exec pterm -e vim ~/.mutt/muttrc

@@ -2,11 +2,8 @@
 use strict;
 use warnings;
 
-@ARGV = grep(!/^-e$/, @ARGV);
-
 if (@ARGV) {
-	my ($name) = @ARGV;
-	exec urxvt   => -name => $name, -e => @ARGV;
+	exec urxvt   => @ARGV;
 } else {
 	exec urxvtcd => -name => 'zsh';
 }

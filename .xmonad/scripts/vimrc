@@ -1,2 +1,2 @@
 #!/bin/sh
-exec pterm vim ~/.vimrc
+exec pterm -e vim ~/.vimrc
