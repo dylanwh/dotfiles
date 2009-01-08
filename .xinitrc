@@ -9,8 +9,8 @@ cd $HOME || exit 1
 
 xsetroot -solid $BGCOLOR
 xsetroot -cursor_name left_ptr
-xrdb -merge $HOME/.Xdefaults.in
-xrdb -n $HOME/.Xdefaults.in > .Xdefaults
+xrdb -DHOME=$HOME -merge $HOME/.Xdefaults.in
+xrdb -DHOME=$HOME -n $HOME/.Xdefaults.in > .Xdefaults
 xmodmap $HOME/.xmodmap
 
 function have { which $1 &>/dev/null }
