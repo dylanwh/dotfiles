@@ -183,8 +183,12 @@ myManageHook = composeAll
 -- }}}
 
 -- {{{ log hook
-myLogHook = dynamicLogWithPP $ xmobarPP { ppTitle = xmobarColor "white" "" . shorten 50
+myLogHook = dynamicLogWithPP $ xmobarPP { ppTitle  = xmobarColor "white" "" . shorten 50
                                         , ppLayout = xmobarColor "SteelBlue3" ""
+                                        , ppHidden = \x -> " " ++ x ++ " "
+                                        , ppWsSep  = ""
+                                        , ppSep    = " | "
+                                        , ppOutput = \x -> putStrLn $ unwords (words x)
                                         }
 -- }}}
 
