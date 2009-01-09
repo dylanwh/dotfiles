@@ -2,57 +2,55 @@
 -- {{{ Imports 
 import XMonad
 import System.Exit
-import Data.Ratio ((%))
 
 import qualified XMonad.StackSet as W
 import qualified Data.Map        as M
 
 import XMonad.Actions.DwmPromote
 import XMonad.Actions.FindEmptyWorkspace
--- import XMonad.Actions.FocusNth
-import XMonad.Actions.CycleWS
 import XMonad.Actions.UpdatePointer
 
-import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.EwmhDesktops
+import XMonad.Hooks.ManageDocks
 
 import XMonad.Prompt
+import XMonad.Prompt.DirExec
 import XMonad.Prompt.Directory
 import XMonad.Prompt.Shell
 import XMonad.Prompt.Ssh
-import XMonad.Prompt.Window
-import XMonad.Prompt.DirExec
 import XMonad.Prompt.XMonad
 
 import XMonad.Layout.Grid
-import XMonad.Layout.LayoutHints
-import XMonad.Layout.Maximize
-import XMonad.Layout.WorkspaceDir
-import XMonad.Layout.NoBorders
-import XMonad.Layout.Tabbed
-import XMonad.Layout.Magnifier
-import XMonad.Layout.WindowNavigation
 import XMonad.Layout.IM
-import XMonad.Layout.Reflect (reflectHoriz)
+import XMonad.Layout.LayoutHints
+import XMonad.Layout.Magnifier
+import XMonad.Layout.Maximize
 import XMonad.Layout.Named
+import XMonad.Layout.NoBorders
 import XMonad.Layout.PerWorkspace
+import XMonad.Layout.Reflect (reflectHoriz)
+import XMonad.Layout.Tabbed
+import XMonad.Layout.WindowNavigation
+import XMonad.Layout.WorkspaceDir
 
-import XMonad.Util.Themes
 import XMonad.Util.EZConfig
 import XMonad.Util.Run(spawnPipe)
+import XMonad.Util.Themes
 
-import System.Environment (getEnv)
-import System.IO (hPutStrLn, hClose, hFlush)
-import Network
 import Control.Arrow ((>>>), second)
 import Data.Char
+import Data.List (isPrefixOf)
+import Data.Ratio ((%))
+import Network
+import System.Environment (getEnv)
+import System.IO (hPutStrLn, hClose, hFlush)
+
 -- }}}
 
 -- {{{ constants
 myFont       = "-xos4-terminus-bold-r-*-*-*-140-100-100-*-*-iso8859-1"
 myTheme      = defaultTheme { fontName = myFont }
-myWorkspaces = [ "main", "2", "3", "4", "5", "6", "pdf", "im", "web" ]
 myXPConfig   = defaultXPConfig
     { font              = fontName myTheme
     , height            = 24
@@ -112,27 +110,59 @@ myKeys =
     , ("M-z",              spawn "xlock") ]
 -- }}}
 
+myWorkspaces = [ "1", "2", "3", "4", "5", "6", "7", "8", "9" ]
+
+-- {{{ manage hook:
+-- Execute arbitrary actions and WindowSet manipulations when managing
+-- a new window. You can use this to, for example, always float a
+-- particular program, or have a client always appear on a particular
+-- workspace.
+--
+-- To find the property name associated with a program, use
+-- > xprop | grep WM_CLASS
+-- and click on the client you're interested in.
+myManageHook = composeAll
+    [ className =? "MPlayer"            --> doFloat
+    , className =? "Gimp"               --> doFloat
+    , className =? "Glade-3"            --> doFloat
+    , className =? "Firefox-bin"        --> doF (W.shift "9")
+    , className =? "Iceweasel"          --> doF (W.shift "9")
+    , resource  =? "mutt"               --> doF (W.shift "1")
+    , resource  =? "mail"               --> doF (W.shift "1")
+    , resource  =? "offlineimap"        --> doF (W.shift "1")
+    , resource  =? "irc"                --> doF (W.shift "1")
+    , resource  =? "rss"                --> doF (W.shift "1")
+    , title     =? "Factor workspace"   --> doFloat
+    , resource  =? "desktop_window"     --> doIgnore
+    , className =? "WMClock"            --> doIgnore
+    , className =? "stalonetray"        --> doIgnore
+    , className =? "kxdocker"           --> doIgnore
+    , resource  =? "kdesktop"           --> doIgnore
+    , resource  =? "kicker"             --> doIgnore ]
+-- }}}
+
 -- {{{ layout hook:
 myLayoutHook = workspaceDir "~" 
              $ windowNavigation 
              $ smartBorders
              $ avoidStruts 
-             $ onWorkspace "im" im
-             $ onWorkspace "web" full
+             $ onWorkspace "1" grid
+             $ onWorkspace "8" im
+             $ onWorkspace "9" full
              $ tall ||| Mirror tall ||| grid ||| full
   where
      -- default tiling algorithm partitions the screen into two panes
-     tall = named "Tall" 
+     tall = magnifiercz' 1.2 
+          $ named "Tall" 
           $ layoutHints
           $ maximize
-          $ magnifiercz' 1.2 
           $ Tall nmaster delta ratio
 
      -- default grid
-     grid = named "Grid" 
+     grid = magnifiercz 1.1
+          $ named "Grid" 
           $ layoutHints
           $ maximize
-          $ magnifiercz 1.1
           $ Grid
 
      -- im layout
@@ -154,42 +184,19 @@ myLayoutHook = workspaceDir "~"
      delta   = 3/100
 -- }}}
 
--- {{{ manage hook:
--- Execute arbitrary actions and WindowSet manipulations when managing
--- a new window. You can use this to, for example, always float a
--- particular program, or have a client always appear on a particular
--- workspace.
---
--- To find the property name associated with a program, use
--- > xprop | grep WM_CLASS
--- and click on the client you're interested in.
-myManageHook = composeAll
-    [ className =? "MPlayer"            --> doFloat
-    , className =? "Gimp"               --> doFloat
-    , className =? "Glade-3"            --> doFloat
-    , className =? "Firefox-bin"        --> doF (W.shift "web")
-    , className =? "Iceweasel"          --> doF (W.shift "web")
-    , resource  =? "mutt"               --> doF (W.shift "main")
-    , resource  =? "mail"               --> doF (W.shift "main")
-    , resource  =? "offlineimap"        --> doF (W.shift "main")
-    , resource  =? "irc"                --> doF (W.shift "main")
-    , resource  =? "rss"                --> doF (W.shift "main")
-    , resource  =? "desktop_window"     --> doIgnore
-    , className =? "WMClock"            --> doIgnore
-    , className =? "stalonetray"        --> doIgnore
-    , resource  =? "kdesktop"           --> doIgnore
-    , className =? "kxdocker"           --> doIgnore
-    , resource  =? "kicker"             --> doIgnore ]
--- }}}
-
 -- {{{ log hook
-myLogHook = dynamicLogWithPP $ xmobarPP { ppTitle  = xmobarColor "white" "" . shorten 50
-                                        , ppLayout = xmobarColor "SteelBlue3" ""
-                                        , ppHidden = \x -> " " ++ x ++ " "
-                                        , ppWsSep  = ""
-                                        , ppSep    = " | "
-                                        , ppOutput = \x -> putStrLn $ unwords (words x)
+myLogHook = dynamicLogWithPP $ xmobarPP { ppTitle   = xmobarColor "white" "" . shorten 50
+                                        , ppLayout  = layout 
+                                        , ppCurrent = current
+                                        , ppHidden  = \x -> " " ++ x ++ " "
+                                        , ppWsSep   = ""
+                                        , ppSep     = " "
+                                        , ppOutput  = \x -> putStrLn x
                                         }
+    where current x = "<fc=red>[</fc><fc=yellow>" ++ x ++ "</fc><fc=red>]</fc>"
+          layout  x = xmobarColor "SteelBlue3" "" $ "(" ++ clean x ++ ")"
+          clean = replace "Magnifier (off) " ""
+
 -- }}}
 
 osdc s = io $ do-- {{{
@@ -207,6 +214,13 @@ scriptPrompt conf = do-- {{{
 home :: String -> IO String-- {{{
 home path = do dir <- io $ getEnv "HOME" `catch` const (return "/")
                return (dir ++ '/' : path) -- }}}
+
+replace :: (Eq a) => [a] -> [a] -> [a] -> [a]-- {{{
+replace from to [] = []
+replace from to str@(x:xs)
+    | from `isPrefixOf` str = to ++ replace from to (drop (length from) str)
+    | otherwise             = x : replace from to xs
+
 
 data Bookmark = Bookmark-- {{{
 
