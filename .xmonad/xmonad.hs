@@ -45,72 +45,68 @@ import Data.Ratio ((%))
 import Network
 import System.Environment (getEnv)
 import System.IO (hPutStrLn, hClose, hFlush)
-
--- }}}
-
--- {{{ constants
-myFont       = "-xos4-terminus-bold-r-*-*-*-140-100-100-*-*-iso8859-1"
-myTheme      = defaultTheme { fontName = myFont }
-myXPConfig   = defaultXPConfig
-    { font              = fontName myTheme
-    , height            = 24
-    , bgColor           = "black"
-    , fgColor           = "#A8A8A8"
-    , borderColor       = "blue"
-    , bgHLight          = "black"
-    , fgHLight          = "white"
-    }
 -- }}}
 
 -- {{{ main
 main = do
-    -- xstatus <- spawnPipe "xstatus"
-    xmonad $ defaultConfig 
-        { borderWidth        = 1
-        , terminal           = "pterm"
-        , workspaces         = myWorkspaces
-        , normalBorderColor  = "#333333"
-        , focusedBorderColor = "blue"
-        , modMask            = mod4Mask
-        , layoutHook         = ewmhDesktopsLayout myLayoutHook
-        , manageHook         = myManageHook <+> manageDocks
-        , logHook            = myLogHook 
-        } `additionalKeysP` myKeys
--- }}}
+    let myFont       = "-xos4-terminus-bold-r-*-*-*-140-100-100-*-*-iso8859-1"
+    let myWorkspaces = [ "1", "2", "3", "4", "5", "6", "7", "8", "9" ]
 
--- {{{ keys
-myKeys =
-    [ ("M-`",              spawn "pterm")
-    , ("M-S-`",            do viewEmptyWorkspace; spawn $ "pterm")
-    , ("M-c",              kill)
-    , ("M-<Return>",       dwmpromote)
-    , ("M-S-<Return>",     windows W.focusMaster)
-    , ("M-S-b",            sendMessage ToggleStruts)
-    , ("M-n",              viewEmptyWorkspace)
-    , ("M-S-n",            tagToEmptyWorkspace)
-    , ("M-<Left>",         sendMessage $ Go L)
-    , ("M-<Right>",        sendMessage $ Go R)
-    , ("M-<Down>",         sendMessage $ Go D)
-    , ("M-<Up>",           sendMessage $ Go U)
-    , ("M-S-<Left>",       sendMessage $ Swap L)
-    , ("M-S-<Right>",      sendMessage $ Swap R)
-    , ("M-S-<Down>",       sendMessage $ Swap D)
-    , ("M-S-<Up>",         sendMessage $ Swap U)
-    , ("M-s",              sshPrompt      myXPConfig)
-    , ("M-p",              scriptPrompt   myXPConfig)
-    , ("M-S-p",            shellPrompt    myXPConfig)
-    , ("M-x",              xmonadPrompt   myXPConfig)
-    , ("M-b",              bookmarkPrompt myXPConfig)
-    , ("M-d",              changeDir      myXPConfig)
-    , ("M-m",              withFocused (sendMessage . maximizeRestore))
-    , ("M-S-m",            sendMessage Toggle)
-    , ("M-<Pause>",        osdc "vol mute")
-    , ("M-<Page_Up>",      osdc "vol up 10")
-    , ("M-<Page_Down>",    osdc "vol down 10")
-    , ("M-z",              spawn "xlock") ]
--- }}}
+    let myXPConfig = defaultXPConfig 
+            { font        = myFont
+            , height      = 24
+            , bgColor     = "black"
+            , fgColor     = "#A8A8A8"
+            , borderColor = "blue"
+            , bgHLight    = "black"
+            , fgHLight    = "white"
+            }
 
-myWorkspaces = [ "1", "2", "3", "4", "5", "6", "7", "8", "9" ]
+    let myConfig = defaultConfig
+            { borderWidth        = 1
+            , terminal           = "pterm"
+            , normalBorderColor  = "#333333"
+            , focusedBorderColor = "blue"
+            , workspaces         = myWorkspaces
+            , modMask            = mod4Mask
+            , layoutHook         = ewmhDesktopsLayout myLayoutHook
+            , manageHook         = myManageHook <+> manageDocks
+            , logHook            = myLogHook
+            }
+
+    let myKeys = 
+            [ ("M-`",              spawn $ terminal myConfig)
+            , ("M-S-`",            do viewEmptyWorkspace; spawn $ terminal myConfig)
+            , ("M-c",              kill)
+            , ("M-<Return>",       dwmpromote)
+            , ("M-S-<Return>",     windows W.focusMaster)
+            , ("M-S-b",            sendMessage ToggleStruts)
+            , ("M-n",              viewEmptyWorkspace)
+            , ("M-S-n",            tagToEmptyWorkspace)
+            , ("M-<Left>",         sendMessage $ Go L)
+            , ("M-<Right>",        sendMessage $ Go R)
+            , ("M-<Down>",         sendMessage $ Go D)
+            , ("M-<Up>",           sendMessage $ Go U)
+            , ("M-S-<Left>",       sendMessage $ Swap L)
+            , ("M-S-<Right>",      sendMessage $ Swap R)
+            , ("M-S-<Down>",       sendMessage $ Swap D)
+            , ("M-S-<Up>",         sendMessage $ Swap U)
+            , ("M-s",              sshPrompt      myXPConfig)
+            , ("M-p",              scriptPrompt   myXPConfig)
+            , ("M-S-p",            shellPrompt    myXPConfig)
+            , ("M-x",              xmonadPrompt   myXPConfig)
+            , ("M-b",              bookmarkPrompt myXPConfig)
+            , ("M-d",              changeDir      myXPConfig)
+            , ("M-m",              withFocused (sendMessage . maximizeRestore))
+            , ("M-S-m",            sendMessage Toggle)
+            , ("M-<Pause>",        osdc "vol mute")
+            , ("M-<Page_Up>",      osdc "vol up 10")
+            , ("M-<Page_Down>",    osdc "vol down 10")
+            , ("M-z",              spawn "xlock")
+            ]
+
+    xmonad $ myConfig `additionalKeysP` myKeys
+-- }}}
 
 -- {{{ manage hook:
 -- Execute arbitrary actions and WindowSet manipulations when managing
@@ -185,14 +181,15 @@ myLayoutHook = workspaceDir "~"
 -- }}}
 
 -- {{{ log hook
-myLogHook = dynamicLogWithPP $ xmobarPP { ppTitle   = xmobarColor "white" "" . shorten 50
-                                        , ppLayout  = layout 
-                                        , ppCurrent = current
-                                        , ppHidden  = \x -> " " ++ x ++ " "
-                                        , ppWsSep   = ""
-                                        , ppSep     = " "
-                                        , ppOutput  = \x -> putStrLn x
-                                        }
+myLogHook = dynamicLogWithPP 
+          $ xmobarPP { ppTitle   = xmobarColor "white" "" . shorten 50
+                     , ppLayout  = layout 
+                     , ppCurrent = current
+                     , ppHidden  = \x -> " " ++ x ++ " "
+                     , ppWsSep   = ""
+                     , ppSep     = " "
+                     , ppOutput  = \x -> putStrLn x
+                     }
     where current x = "<fc=red>[</fc><fc=yellow>" ++ x ++ "</fc><fc=red>]</fc>"
           layout  x = xmobarColor "SteelBlue3" "" $ "(" ++ clean x ++ ")"
           clean = replace "Magnifier (off) " ""
@@ -208,7 +205,7 @@ osdc s = io $ do-- {{{
 
 scriptPrompt conf = do-- {{{
     dir <- io $ home "/.xmonad/scripts"
-    dirExecPromptNamed myXPConfig spawn dir  "Script: "
+    dirExecPromptNamed conf spawn dir  "Script: "
 -- }}}
 
 home :: String -> IO String-- {{{

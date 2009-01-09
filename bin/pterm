@@ -3,6 +3,9 @@ use strict;
 use warnings;
 
 if (@ARGV) {
+	if ($ARGV[0] eq 'ssh') {
+		unshift @ARGV, -t => 'JESUS';
+	}
 	exec urxvt   => @ARGV;
 } else {
 	exec urxvtcd => -name => 'zsh';
