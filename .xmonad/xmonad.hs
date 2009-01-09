@@ -9,6 +9,7 @@ import qualified Data.Map        as M
 import XMonad.Actions.DwmPromote
 import XMonad.Actions.FindEmptyWorkspace
 import XMonad.Actions.UpdatePointer
+import XMonad.Actions.SinkAll
 
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.EwmhDesktops
@@ -50,7 +51,7 @@ import System.IO (hPutStrLn, hClose, hFlush)
 -- {{{ main
 main = do
     let myFont       = "-xos4-terminus-bold-r-*-*-*-140-100-100-*-*-iso8859-1"
-    let myWorkspaces = [ "1", "2", "3", "4", "5", "6", "7", "8", "9" ]
+    let myWorkspaces = map show [1..9]
 
     let myXPConfig = defaultXPConfig 
             { font        = myFont
@@ -81,8 +82,6 @@ main = do
             , ("M-<Return>",       dwmpromote)
             , ("M-S-<Return>",     windows W.focusMaster)
             , ("M-S-b",            sendMessage ToggleStruts)
-            , ("M-n",              viewEmptyWorkspace)
-            , ("M-S-n",            tagToEmptyWorkspace)
             , ("M-<Left>",         sendMessage $ Go L)
             , ("M-<Right>",        sendMessage $ Go R)
             , ("M-<Down>",         sendMessage $ Go D)
@@ -94,7 +93,6 @@ main = do
             , ("M-s",              sshPrompt      myXPConfig)
             , ("M-p",              scriptPrompt   myXPConfig)
             , ("M-S-p",            shellPrompt    myXPConfig)
-            , ("M-x",              xmonadPrompt   myXPConfig)
             , ("M-b",              bookmarkPrompt myXPConfig)
             , ("M-d",              changeDir      myXPConfig)
             , ("M-m",              withFocused (sendMessage . maximizeRestore))
@@ -103,9 +101,13 @@ main = do
             , ("M-<Page_Up>",      osdc "vol up 10")
             , ("M-<Page_Down>",    osdc "vol down 10")
             , ("M-z",              spawn "xlock")
+            , ("M-0",              viewEmptyWorkspace)
+            , ("M-S-0",            tagToEmptyWorkspace)
+            , ("M-S-t",            sinkAll)
             ]
+    let mediaKeys = []
 
-    xmonad $ myConfig `additionalKeysP` myKeys
+    xmonad $ myConfig `additionalKeysP` myKeys `additionalKeys` mediaKeys
 -- }}}
 
 -- {{{ manage hook:
@@ -123,8 +125,8 @@ myManageHook = composeAll
     , className =? "Glade-3"            --> doFloat
     , className =? "Firefox-bin"        --> doF (W.shift "9")
     , className =? "Iceweasel"          --> doF (W.shift "9")
+    , className =? "Navigator"          --> doF (W.shift "9")
     , resource  =? "mutt"               --> doF (W.shift "1")
-    , resource  =? "mail"               --> doF (W.shift "1")
     , resource  =? "offlineimap"        --> doF (W.shift "1")
     , resource  =? "irc"                --> doF (W.shift "1")
     , resource  =? "rss"                --> doF (W.shift "1")
@@ -142,9 +144,8 @@ myLayoutHook = workspaceDir "~"
              $ windowNavigation 
              $ smartBorders
              $ avoidStruts 
-             $ onWorkspace "1" grid
-             $ onWorkspace "8" im
-             $ onWorkspace "9" full
+             $ onWorkspace "main" grid
+             $ onWorkspace "web"  full
              $ tall ||| Mirror tall ||| grid ||| full
   where
      -- default tiling algorithm partitions the screen into two panes
@@ -174,7 +175,7 @@ myLayoutHook = workspaceDir "~"
      nmaster = 1
 
      -- Default proportion of screen occupied by master pane
-     ratio   = 1/2
+     ratio   = 1/3
 
      -- Percent of screen to increment by when resizing panes
      delta   = 3/100
@@ -182,17 +183,19 @@ myLayoutHook = workspaceDir "~"
 
 -- {{{ log hook
 myLogHook = dynamicLogWithPP 
-          $ xmobarPP { ppTitle   = xmobarColor "white" "" . shorten 50
+          $ xmobarPP { ppTitle   = xmobarColor "white" "" . shorten 100
                      , ppLayout  = layout 
-                     , ppCurrent = current
-                     , ppHidden  = \x -> " " ++ x ++ " "
-                     , ppWsSep   = ""
-                     , ppSep     = " "
-                     , ppOutput  = \x -> putStrLn x
+                     , ppCurrent = xmobarColor "yellow" ""
+                     , ppHidden  = xmobarColor "LightSlateBlue" ""
+                     , ppHiddenNoWindows = xmobarColor "DarkSlateBlue" "" -- . wrap " " " "
+                     , ppWsSep   = " "
+                     , ppSep     = " | "
+                     , ppOutput  = \x -> putStrLn $ ' ' : x
                      }
-    where current x = "<fc=red>[</fc><fc=yellow>" ++ x ++ "</fc><fc=red>]</fc>"
-          layout  x = xmobarColor "SteelBlue3" "" $ "(" ++ clean x ++ ")"
-          clean = replace "Magnifier (off) " ""
+    where layout = xmobarColor "SteelBlue3" "" . clean 
+          clean  = replace "Magnifier (off) " ""
+          wrap b e x = b ++ x ++ e
+          crap color b e = wrap (color b) (color e)
 
 -- }}}
 

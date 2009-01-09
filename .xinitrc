@@ -33,5 +33,4 @@ have xbindkeys      && xbindkeys
 have remind         && rem -z -k'popup remind %s &' &
 osdd &
 
-echo "starting xmonad"
 exec xmonad | xstatus

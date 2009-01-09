@@ -47,7 +47,7 @@ socktimeout      = 60
 
 [Repository remote-work]#{{{
 type           = IMAP
-remotehost     = r-stream.com
+remotehost     = mail.r-stream.com
 remoteuser     = dylan
 #remotepassfile = ~/.imap_workpass
 ssl            = yes
@@ -59,7 +59,7 @@ foldersort     = unfair_cmp
 [Repository local-work]#{{{
 type         = Maildir
 localfolders = ~/mail/work
-sep          = /
+sep          = .
 #}}}
 
 [mbnames]#{{{
