@@ -2,11 +2,11 @@
 use strict;
 use warnings;
 
-@ARGV = grep(!/^-e$/, @ARGV);
-
 if (@ARGV) {
-	my ($name) = @ARGV;
-	exec urxvt   => -name => $name, -e => @ARGV;
+	if ($ARGV[0] eq 'ssh') {
+		unshift @ARGV, -t => 'JESUS';
+	}
+	exec urxvt   => @ARGV;
 } else {
 	exec urxvtcd => -name => 'zsh';
 }

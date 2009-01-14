@@ -1,2 +1,2 @@
 #!/bin/sh
-exec pterm vim ~/.zshrc
+exec pterm -e vim ~/.zshrc

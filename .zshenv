@@ -23,6 +23,7 @@ export LC_COLLATE=POSIX # sort in POSIX order.
 
 export LESSHISTFILE='-'
 export SSH_AGENT_FILE=$HOME/.ssh/agent@$HOST
+export RXVT_SOCKET="$TEMPDIR/dylan-rxvt-unicode"
 export LEDGER_FILE=$HOME/pim/ledger
 export REMIND_FILE=$HOME/pim/reminders
 export YABOOK_FILE=$HOME/pim/contacts.yml
