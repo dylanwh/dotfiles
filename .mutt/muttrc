@@ -49,7 +49,7 @@ set xterm_set_titles=yes
 set xterm_title="mutt"
 
 # Poop reduction
-set certificate_file=~/mail/certificates
+set certificate_file=~/.mutt/certificates
 
 set reverse_alias=yes
 set reverse_name=yes
