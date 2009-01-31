@@ -1,9 +1,3 @@
 #!/usr/bin/env zsh
 
-if [[ -e ~/.ssh/agent ]]; then
-	source ~/.ssh/agent &>/dev/null
-	rsync -az lofn:logs/ ~/logs/
-else
-	echo "cannot access lofn: no ssh agent running."
-	exit 1
-fi
+rsync -az lofn:logs/ ~/logs/
