@@ -65,7 +65,7 @@ main = do
 
     let myConfig = defaultConfig
             { borderWidth        = 1
-            , terminal           = "pterm"
+            , terminal           = "exec pterm"
             , normalBorderColor  = "#333333"
             , focusedBorderColor = "blue"
             , workspaces         = myWorkspaces
@@ -100,7 +100,7 @@ main = do
             , ("M-<Pause>",        osdc "vol mute")
             , ("M-<Page_Up>",      osdc "vol up 10")
             , ("M-<Page_Down>",    osdc "vol down 10")
-            , ("M-z",              spawn "xlock")
+            , ("M-z",              spawn "exec xlock")
             , ("M-0",              viewEmptyWorkspace)
             , ("M-S-0",            tagToEmptyWorkspace)
             , ("M-S-t",            sinkAll)
@@ -144,8 +144,8 @@ myLayoutHook = workspaceDir "~"
              $ windowNavigation 
              $ smartBorders
              $ avoidStruts 
-             $ onWorkspace "main" grid
-             $ onWorkspace "web"  full
+             $ onWorkspace "1" grid
+             $ onWorkspace "9"  full
              $ tall ||| Mirror tall ||| grid ||| full
   where
      -- default tiling algorithm partitions the screen into two panes
