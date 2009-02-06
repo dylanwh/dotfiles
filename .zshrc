@@ -191,7 +191,7 @@ esac
 
 namedir taskdir ~/task/today
 
-#ztitle
+ztitle
 have todo && todo --timeout --summary
 
 case $HOST in
