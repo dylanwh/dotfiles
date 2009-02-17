@@ -9,4 +9,13 @@ else
 fi
 
 cd $HOME
+#trayer --edge top \
+#	   --align right \
+#	   --SetDockType true \
+#	   --SetPartialStrut true \
+#	   --expand true \
+#	   --width 4 \
+#	   --tint 0x100000 \
+#	   --transparent true \
+#	   --height 20 &
 exec xmobar $file

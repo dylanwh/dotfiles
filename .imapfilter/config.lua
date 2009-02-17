@@ -15,34 +15,11 @@ function is_old(box)
 	return box:is_seen() * box:is_older(3)
 end
 
-function archive_old(imap, from, to)
-	from = imap[ from or 'inbox' ]
-	to   = imap[ to   or 'archive']
-	from:move_messages(to, is_old(from))
+function delete_old(imap, from)
+	from = imap[ from or 'INBOX' ]
+	from:delete_messages(is_old(from))
 end
 
+local home  = IMAP( netrc["smtp.gmail.com"] )
 
-local home  = IMAP( netrc["lofn.hardison.net"] )
-local work  = IMAP( netrc["r-stream.com"] )
-
-do
-	local inbox = work['inbox']
-	local junk = inbox:contain_subject("batch check data")
-		+ inbox:contain_subject("SugarCRM Case - RETURN PENDING")
-		+ inbox:contain_subject("YouSendIt File Sent Notification")
-		+ inbox:contain_subject("Portal data check for the week ending")
-	local errors = inbox:contain_subject("DB Error") + inbox:contain_subject("System Error")
-	local function sts(box) return box:contain_subject("salestenders Discrepancy wingstop") end
-
-
-	inbox:delete_messages( junk )
-	inbox:move_messages( work['errors'], errors)
-	inbox:move_messages(work.salestenders, sts(inbox))
-	-- work.archive:move_messages(work.salestenders, sts(work.archive))
-
-	print "cleaning lists.haskell..."
-	home['lists.haskell-cafe']:delete_messages(is_old(home['lists.haskell-cafe']))
-end
-
-archive_old(work, 'inbox', 'archive')
-archive_old(home, 'inbox', 'archive')
+delete_old(home, 'inbox')

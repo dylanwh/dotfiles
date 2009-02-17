@@ -72,7 +72,7 @@ main = do
             , modMask            = mod4Mask
             , layoutHook         = ewmhDesktopsLayout myLayoutHook
             , manageHook         = myManageHook <+> manageDocks
-            , logHook            = myLogHook
+            , logHook            = ewmhDesktopsLogHook >> myLogHook
             }
 
     let myKeys = 
@@ -149,15 +149,13 @@ myLayoutHook = workspaceDir "~"
              $ tall ||| Mirror tall ||| grid ||| full
   where
      -- default tiling algorithm partitions the screen into two panes
-     tall = magnifiercz' 1.2 
-          $ named "Tall" 
+     tall = named "Tall" 
           $ layoutHints
           $ maximize
           $ Tall nmaster delta ratio
 
      -- default grid
-     grid = magnifiercz 1.1
-          $ named "Grid" 
+     grid = named "Grid" 
           $ layoutHints
           $ maximize
           $ Grid
@@ -192,10 +190,9 @@ myLogHook = dynamicLogWithPP
                      , ppSep     = " | "
                      , ppOutput  = \x -> putStrLn $ ' ' : x
                      }
-    where layout = xmobarColor "SteelBlue3" "" . clean 
-          clean  = replace "Magnifier (off) " ""
+    where layout = xmobarColor "SteelBlue3" ""
           wrap b e x = b ++ x ++ e
-          crap color b e = wrap (color b) (color e)
+          -- crap color b e = wrap (color b) (color e)
 
 -- }}}
 

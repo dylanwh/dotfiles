@@ -29,6 +29,8 @@ export REMIND_FILE=$HOME/pim/reminders
 export YABOOK_FILE=$HOME/pim/contacts.yml
 export TODO_FILE=$HOME/pim/todo.xml
 
+export PERL_USE_MOOSE=1
+
 perl5lib=(~/lib 'lib')
 path=(~/bin $path)
 

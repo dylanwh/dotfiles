@@ -21,45 +21,19 @@ socktimeout      = 60
 #}}}
 
 [Repository remote-home]#{{{
-type           = IMAP
-remotehost     = lofn.hardison.net
-remoteuser     = dylan
-#remotepassfile = ~/.imap_homepass
-ssl            = yes
-nametrans      = lambda foldername: re.sub('^INBOX$', 'inbox', foldername)
-#folderfilter  = lambda foldername: foldername.find("archive") == -1
-foldersort     = unfair_cmp
+type         = IMAP
+remotehost   = imap.gmail.com
+remoteuser   = dylan@hardison.net
+ssl          = yes
+nametrans    = lambda foldername: re.sub('^INBOX$', 'inbox', foldername)
+folderfilter = lambda foldername: foldername.find("[Gmail]") == -1
+foldersort   = unfair_cmp
 #}}}
 
 [Repository local-home]#{{{
 type         = Maildir
-localfolders = ~/mail/home
+localfolders = ~/mail
 sep          = /
-#}}}
-
-[Account work]#{{{
-localrepository  = local-work
-remoterepository = remote-work
-autorefresh      = 1
-quick            = 1
-socktimeout      = 60
-#}}}
-
-[Repository remote-work]#{{{
-type           = IMAP
-remotehost     = mail.r-stream.com
-remoteuser     = dylan
-#remotepassfile = ~/.imap_workpass
-ssl            = yes
-nametrans      = lambda foldername: re.sub('^INBOX$', 'inbox', re.sub('^INBOX\.', '', foldername))
-folderfilter   = lambda foldername: foldername[0] != '.'
-foldersort     = unfair_cmp
-#}}}
-
-[Repository local-work]#{{{
-type         = Maildir
-localfolders = ~/mail/work
-sep          = .
 #}}}
 
 [mbnames]#{{{
@@ -74,7 +48,7 @@ sep          = .
 enabled = yes
 filename = ~/mail/mailboxes
 header = ''
-peritem = ~/mail/%(accountname)s/%(foldername)s
+peritem = ~/mail/%(foldername)s
 sep = "\n"
 footer = "\n"
 #}}}

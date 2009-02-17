@@ -26,17 +26,12 @@ if s:ext == 'pm'
 	end
 	let s:name = substitute(s:name, '/', '::', 'g')
 	call append(0, "package " . s:name . ";")
-	if $PERL_USE_MOOSE || exists('perl_use_moose')
-		call append(1, "use Moose;")
-		call append(2, "use namespace::clean -except => 'meta';")
-	else
-		call s:UseStrict()
-	endif
-	call append(line("$"), "")
-	call append(line("$")-1, "our $VERSION = '0.01';")
-	call append(line("$"), "")
-	call append(line("$"), "")
-	call append(line("$"), "")
+	call append(1, "use Moose;")
+	call append(2, "")
+	call append(3, "our $VERSION = '0.01';")
+	call append(4, "our $AUTHORITY = 'cpan:DHARDISON';")
+	call append(5, "")
+	call append(6, "use namespace::clean -except => 'meta';")
 	call append(line("$"), '1;')
 else
 	call append(0, '#!/usr/bin/perl')

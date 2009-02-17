@@ -1,22 +1,16 @@
-set use_from=yes
-set envelope_from=yes
+set use_from
+set envelope_from
+set mbox_type=Maildir
 set to_chars=" =TCFL"
-set sendmail="/usr/bin/env msmtp --tls-certcheck=off"
-set attribution="Spake %n on %d:"
 set date_format="!%A, %B %d, %Y at %I:%M%p %Z"
 set forward_format="Fwd: %s"
-# %?M?<%2M>&%4c?
-# This index_format checks whether a thread is collapsed. If it is, and at
-# least one message is hidden from view, it will expand to <%2M> — the
-# number of hidden messages. Otherwise, it expands to %4c, the message size.
-# set index_format="%4C%?M?/%-2M&   ? %Z %{%b %d}  %-15.15n (%4c) %?y?(%.20Y) ?%s"
-# set index_format="%4C %Z  %-15.15v %?y?(%.20Y) ?%s"
 set index_format="%?M?+%4C& %4C? %Z %{%b %d}  %-20.20n  %?y?(%.20Y) ?%s"
-
 set folder_format="%2C %t %f %> %d"
 
+set noimap_passive
+
 # ignore reply-to for mailing lists.
-set ignore_list_reply_to=yes
+set ignore_list_reply_to
 
 # Mutt will scan for new mail in all of your mailboxes every mail_check seconds.
 # The default is 5 seconds, which will make mutt feel very sluggish if you have more than a
@@ -33,31 +27,38 @@ set pager_stop
 # set pager_index_lines=7
 
 # I do not want to move read mail to my read mail directory.
-set move=no
+set nomove
 
 # Don't ask me to add messages to existing mailbox.
-set confirmappend=no
+set noconfirmappend
 
 # Don't ask me if I want to delete something
-set delete=yes
+set delete
 
 # Don't ask me questions when I reply to a message
-set fast_reply=yes
+set fast_reply
+
+# Always use reply-to
+set reply_to
+
+# don't ask me for additional commands.
+set noprompt_after
 
 # Display titles in the terminal
-set xterm_set_titles=yes
+set xterm_set_titles
 set xterm_title="mutt"
 
 # Poop reduction
 set certificate_file=~/.mutt/certificates
 
-set reverse_alias=yes
-set reverse_name=yes
-set hdrs=yes
-set strict_threads=no
+# Map email addresses back to aliases.
+set reverse_alias
+
+# Reply as the target of the email
+set reverse_name
 
 # always include messages in replies.
-set include=yes
+set include
 
 # Use the date received rather than the date sent
 # to thread messages by subject.
@@ -69,20 +70,15 @@ set sort_aux=date-received
 set tilde
 
 # Don't show the help menu at the top
-set help=no
-
-# Always use reply-to
-set reply_to=yes
+set nohelp
 
 folder-hook . push "\eV" # By default, collapse all threads
 set nocollapse_unread    # Except those with new messages.
 
 ignore *
 unhdr_order *
-unignore from  From: To: Cc: Bcc: Date: Subject:
-hdr_order from From: To: Cc: Bcc: Date: Subject: 
-
-my_hdr X-Uptime: `uptime`
+unignore From: Reply-To: To: Cc: Bcc: Date: Subject:
+hdr_order From: Reply-To: To: Cc: Bcc: Date: Subject: 
 
 spam "X-Spam-Status: Yes" "spam"
 
@@ -91,6 +87,8 @@ bind  index zo collapse-thread
 bind  index zc collapse-thread
 bind  index G  last-entry
 bind  index gg first-entry
+macro index gI "c +INBOX\n"           'view inbox'
+macro index gF "c +[Gmail]/Starred\n" 'view important messages'
 
 bind index <Esc>[A previous-undeleted
 bind index <Esc>[B next-undeleted
@@ -102,16 +100,8 @@ bind index <Esc>0B next-undeleted
 bind index <Esc>0C next-page
 bind index <Esc>0D previous-page
 
-macro index \cb |urlview\n  "View URLs"
-macro pager \cb |urlview\n  "View URLs"
-
-macro index <F2> "c ~/mail/home/inbox\n" "View home"
-macro index <F3> "c ~/mail/work/inbox\n" "View work"
 macro index A    ";tT~N | ~O\n;WN;t"     "mark all as read"
-macro index S    "D~H spam\n"            "delete spam"
-
-folder-hook mail/home source ~/.mutt/profile.home
-folder-hook mail/work source ~/.mutt/profile.work
+macro index S    "s [Gmail]/Spam\n"            "report spam"
 
 source ~/.mutt/t-prot
 source 'perl $HOME/.mutt/alias.pl ${YABOOK_FILE:-"$HOME/.yabook"} |'

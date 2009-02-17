@@ -1,35 +1,28 @@
 # vim: set ft=muttrc:
 # NAME: work
 
-set mbox_type=Maildir
-set folder=~/mail/work
-set spoolfile="+inbox"
-set mbox="+read"
-set record="+sent"
-set postponed="+postponed"
-
-unset from
 set realname="Dylan William Hardison"
-set from="dylan@r-stream.com"
+set from="dylan.hardison@iinteractive.com"
 
+reset attribution
+
+set folder=imaps://imap.gmail.com
+set imap_user=$from
+set spoolfile="+INBOX"
+set mbox="+[Gmail]/All Mail"
+#set record="+sent"
+set postponed="+[Gmail]/Drafts"
+
+# Recongize messages addressed to me.
 unalternates *
-alternates dhardison@r-?stream\.com \
-           dylan@r-?stream\.com
 
+# And messages to mailing lists I subscribe to.
 unsubscribe *
-subscribe support@r-stream\.com
+subscribe all@iinteractive.com \
+          dev@iinteractive.com
 
 unmy_hdr Reply-By:
 unmy_hdr X-Message-Flag:
-unmy_hdr X-Religion:
-
-set signature="~/.mutt/signature.work"
 
 unmailboxes *
-source "mailboxes '$folder'|"
-# Always check the system mailbox.
 mailboxes /var/spool/mail/$USER
-
-#color index color60 default '~s Error'
-#color index yellow default '~f .*@r-stream.com'
-#color index color42 default '~s SugarCRM.Case'
