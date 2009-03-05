@@ -151,7 +151,7 @@ alias x2=xmms2
 # Autoload various functions
 unalias run-help
 autoload sshbegin sshend run-help ztitle
-autoload compinit promptinit taskinit
+autoload compinit promptinit 
 
 # initialize advanced tab completion.
 compinit -d ~/.zcompdump
@@ -162,8 +162,6 @@ zstyle ':completion:*:sudo:*' command-path /usr/local/sbin /usr/local/bin \
 
 promptinit           # Setup prompt theming 
 prompt dylan         # Set the prompt.
-
-taskinit
 
 umask  022           # Create files that are read-only by group.
 stty -ixon           # Disable the freeze-the-terminal-on-control-s thing.
@@ -189,15 +187,9 @@ case $OSTYPE in
 	;;
 esac
 
-namedir taskdir ~/task/today
-
 ztitle
 have todo && todo --timeout --summary
 
-case $HOST in
-	mani*)
-		cdpath=($cdpath ~/work)
-	;;
-esac
+[[ -d $HOME/tmp ]] || mkdir -m 700 $HOME/tmp
 
 # vim: set sw=4 ts=4 foldmethod=marker path=.,~/.zsh:
