@@ -1,2 +1,2 @@
 #!/bin/sh
-exec pterm -name mutt -e dtach -A /tmp/$USER-mutt.dtach -r winch -Ez mutt
+exec pterm -name mutt -e dtach -A $TEMPDIR/mutt.dtach -r winch -Ez mutt

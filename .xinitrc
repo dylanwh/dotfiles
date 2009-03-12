@@ -6,6 +6,7 @@
 BGCOLOR='#330000'
 
 cd $HOME || exit 1
+[[ -d $HOME/tmp ]] || mkdir -m 700 $HOME/tmp
 
 xsetroot -solid $BGCOLOR
 xsetroot -cursor_name left_ptr

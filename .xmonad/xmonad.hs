@@ -32,7 +32,6 @@ import XMonad.Layout.NoBorders
 import XMonad.Layout.PerWorkspace
 import XMonad.Layout.Reflect (reflectHoriz)
 import XMonad.Layout.Tabbed
-import XMonad.Layout.WindowNavigation
 import XMonad.Layout.WorkspaceDir
 
 import XMonad.Util.EZConfig
@@ -64,10 +63,10 @@ main = do
             }
 
     let myConfig = defaultConfig
-            { borderWidth        = 1
+            { borderWidth        = 2
             , terminal           = "exec pterm"
-            , normalBorderColor  = "#333333"
-            , focusedBorderColor = "blue"
+            , normalBorderColor  = "#000033"
+            , focusedBorderColor = "red"
             , workspaces         = myWorkspaces
             , modMask            = mod4Mask
             , layoutHook         = ewmhDesktopsLayout myLayoutHook
@@ -82,14 +81,6 @@ main = do
             , ("M-<Return>",       dwmpromote)
             , ("M-S-<Return>",     windows W.focusMaster)
             , ("M-S-b",            sendMessage ToggleStruts)
-            , ("M-<Left>",         sendMessage $ Go L)
-            , ("M-<Right>",        sendMessage $ Go R)
-            , ("M-<Down>",         sendMessage $ Go D)
-            , ("M-<Up>",           sendMessage $ Go U)
-            , ("M-S-<Left>",       sendMessage $ Swap L)
-            , ("M-S-<Right>",      sendMessage $ Swap R)
-            , ("M-S-<Down>",       sendMessage $ Swap D)
-            , ("M-S-<Up>",         sendMessage $ Swap U)
             , ("M-s",              sshPrompt      myXPConfig)
             , ("M-p",              scriptPrompt   myXPConfig)
             , ("M-S-p",            shellPrompt    myXPConfig)
@@ -141,11 +132,11 @@ myManageHook = composeAll
 
 -- {{{ layout hook:
 myLayoutHook = workspaceDir "~" 
-             $ windowNavigation 
              $ smartBorders
              $ avoidStruts 
              $ onWorkspace "1" grid
-             $ onWorkspace "9"  full
+             $ onWorkspace "8" im
+             $ onWorkspace "9" full
              $ tall ||| Mirror tall ||| grid ||| full
   where
      -- default tiling algorithm partitions the screen into two panes
