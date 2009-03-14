@@ -17,13 +17,12 @@ export MANPAGER=less
 export HOST=${HOST/.*/}
 export OSTYPE=$OSTYPE
 
-export TEMPDIR=$HOME/tmp
 export TMPDIR=$HOME/tmp
 export LC_COLLATE=POSIX # sort in POSIX order.
 
 export LESSHISTFILE='-'
 export SSH_AGENT_FILE=$HOME/.ssh/agent@$HOST
-export RXVT_SOCKET="$TEMPDIR/rxvt-unicode"
+export RXVT_SOCKET="$TMPDIR/rxvt-unicode"
 export LEDGER_FILE=$HOME/pim/ledger
 export REMIND_FILE=$HOME/pim/reminders
 export YABOOK_FILE=$HOME/pim/contacts.yml
