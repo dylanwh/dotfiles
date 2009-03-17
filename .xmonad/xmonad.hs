@@ -95,7 +95,8 @@ main = do
             , ("M-0",              viewEmptyWorkspace)
             , ("M-S-0",            tagToEmptyWorkspace)
             , ("M-S-t",            sinkAll)
-            ]
+            ] 
+            ++ [ ("M-" ++ [key], windows . W.view $ tag) | (key,tag) <- zip "123456789" myWorkspaces ]
     let mediaKeys = []
 
     xmonad $ myConfig `additionalKeysP` myKeys `additionalKeys` mediaKeys
