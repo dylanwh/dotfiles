@@ -13,7 +13,7 @@ set imap_pass=`netrc -m imap.gmail.com -p`
 set imap_keepalive=300
 
 set spoolfile="+INBOX"
-set record="+[Gmail]/Sent Mail"
+unset record
 set mbox="+[Gmail]/All Mail"
 set postponed="+[Gmail]/Drafts"
 
@@ -27,7 +27,7 @@ unalternates *
 alternates dylanwh@gmail.com \
            dylan@haverdev.org \
            dylan@sinedev.org \
-           dylan@midgetbutton.org \
+           dylan@midgetbutton.com \
            dylan\\+[a-z]+@hardison.net \
            dylanwh\\+[a-z]+@gmail.com \
            dylanwh@tampabay.rr.com \
