@@ -136,7 +136,7 @@ myLayoutHook = workspaceDir "~"
              $ smartBorders
              $ avoidStruts 
              $ onWorkspace "1" grid
-             $ onWorkspace "8" im
+             -- $ onWorkspace "8" im
              $ onWorkspace "9" full
              $ tall ||| Mirror tall ||| grid ||| full
   where
