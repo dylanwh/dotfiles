@@ -6,7 +6,7 @@ info:
 
 fixperms:
 	chmod -Rc +x ~/bin ~/.xinitrc
-	chmod -Rc go-wrx ~/.netrc ~/.pwsafe.dat ~/pim
+	chmod -Rc go-wrx ~/.netrc ~/.pwsafe.dat ~/pim ~/.msmtprc
 
 schedule:
 	@rem -q

@@ -95,7 +95,8 @@ main = do
             , ("M-0",              viewEmptyWorkspace)
             , ("M-S-0",            tagToEmptyWorkspace)
             , ("M-S-t",            sinkAll)
-            ]
+            ] 
+            ++ [ ("M-" ++ [key], windows . W.view $ tag) | (key,tag) <- zip "123456789" myWorkspaces ]
     let mediaKeys = []
 
     xmonad $ myConfig `additionalKeysP` myKeys `additionalKeys` mediaKeys
@@ -135,7 +136,7 @@ myLayoutHook = workspaceDir "~"
              $ smartBorders
              $ avoidStruts 
              $ onWorkspace "1" grid
-             $ onWorkspace "8" im
+             -- $ onWorkspace "8" im
              $ onWorkspace "9" full
              $ tall ||| Mirror tall ||| grid ||| full
   where
