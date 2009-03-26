@@ -1,4 +1,4 @@
-keycode 0x75 =  Super_L
+keycode 0x75 =  Multi_key
 keycode 66 = Control_L
 
 keycode  93 = XF86Launch1

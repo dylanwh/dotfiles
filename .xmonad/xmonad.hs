@@ -12,7 +12,7 @@ import XMonad.Actions.UpdatePointer
 import XMonad.Actions.SinkAll
 
 import XMonad.Hooks.DynamicLog
-import XMonad.Hooks.EwmhDesktops
+-- import XMonad.Hooks.EwmhDesktops
 import XMonad.Hooks.ManageDocks
 
 import XMonad.Prompt
@@ -69,9 +69,9 @@ main = do
             , focusedBorderColor = "red"
             , workspaces         = myWorkspaces
             , modMask            = mod4Mask
-            , layoutHook         = ewmhDesktopsLayout myLayoutHook
+            , layoutHook         = {- ewmhDesktopsLayout -} myLayoutHook
             , manageHook         = myManageHook <+> manageDocks
-            , logHook            = ewmhDesktopsLogHook >> myLogHook
+            , logHook            = {- ewmhDesktopsLogHook >> -} myLogHook
             }
 
     let myKeys = 
