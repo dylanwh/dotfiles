@@ -5,6 +5,8 @@
 
 BGCOLOR='#330000'
 
+function have { which $1 &>/dev/null }
+
 cd $HOME || exit 1
 [[ -d $HOME/tmp ]] || mkdir -m 700 $HOME/tmp
 
@@ -13,8 +15,6 @@ xsetroot -cursor_name left_ptr
 xrdb -DHOME=$HOME -merge $HOME/.Xdefaults.in
 xrdb -DHOME=$HOME -n $HOME/.Xdefaults.in > .Xdefaults
 xmodmap $HOME/.xmodmap
-
-function have { which $1 &>/dev/null }
 
 if [[ -z $DBUS_SESSION_BUS_ADDRESS ]]
 then
@@ -29,9 +29,10 @@ then
 fi
 
 have ssh-askpass    && SSH_ASKPASS=ssh-askpass ssh-add < /dev/null
-have xmms2-launcher && xmms2-launcher
-have xbindkeys      && xbindkeys
-have remind         && rem -z -k'popup remind %s &' &
-osdd &
+#have xmms2-launcher && xmms2-launcher
+#have xbindkeys      && xbindkeys
+#have remind         && rem -z -k'popup remind %s &' &
+#osdd &
 
-exec xmonad | xstatus
+exec xmonad
+# | xstatus

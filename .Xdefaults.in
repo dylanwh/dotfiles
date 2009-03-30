@@ -9,6 +9,7 @@
 ! {{{ Fonts and Colors
 Rxvt.font: XFONT
 
+#ifndef DEFAULT_COLORS
 Rxvt.color0: #000000
 Rxvt.color1: #A80000
 Rxvt.color2: #00A800
@@ -34,11 +35,6 @@ Rxvt.foreground: WHITE
 Rxvt.background: #000000
 Rxvt.cursorColor: WHITE
 Rxvt.reverseVideo: false
-
-Rxvt.geometry: 80x25 
-Rxvt.scrollBar: false
-Rxvt.meta8: false
-Rxvt.modifier: mod1
 
 XTerm*font: XFONT
 
@@ -67,8 +63,13 @@ XTerm*foreground: WHITE
 XTerm*background: #000000
 XTerm*cursorColor: WHITE
 XTerm*reverseVideo: false
-
+#endif
 ! }}}
+
+Rxvt.geometry: 80x25 
+Rxvt.scrollBar: false
+Rxvt.meta8: false
+Rxvt.modifier: mod1
 
 ! {{{ Keyboard bindings
 #define change_font(FONT) \033]710;FONT\007\033]711;FONT\007

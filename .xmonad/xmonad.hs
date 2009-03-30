@@ -71,7 +71,7 @@ main = do
             , modMask            = mod4Mask
             , layoutHook         = {- ewmhDesktopsLayout -} myLayoutHook
             , manageHook         = myManageHook <+> manageDocks
-            , logHook            = {- ewmhDesktopsLogHook >> -} myLogHook
+            -- , logHook            = {- ewmhDesktopsLogHook >> -} myLogHook
             }
 
     let myKeys = 
@@ -133,10 +133,8 @@ myManageHook = composeAll
 
 -- {{{ layout hook:
 myLayoutHook = workspaceDir "~" 
-             $ smartBorders
              $ avoidStruts 
              $ onWorkspace "1" grid
-             -- $ onWorkspace "8" im
              $ onWorkspace "9" full
              $ tall ||| Mirror tall ||| grid ||| full
   where
