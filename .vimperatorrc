@@ -7,3 +7,5 @@ set editor=urxvt -name vim -e vim
 noremap h H
 noremap l L
 map \ :set invum<CR>
+
+set! general.warnOnAboutConfig=false
