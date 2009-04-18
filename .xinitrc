@@ -14,13 +14,18 @@ xsetroot -solid $BGCOLOR
 xsetroot -cursor_name left_ptr
 xrdb -DHOME=$HOME -merge $HOME/.Xdefaults.in
 xrdb -DHOME=$HOME -n $HOME/.Xdefaults.in > .Xdefaults
+setxkbmap -option ctrl:nocaps
 xmodmap $HOME/.xmodmap
+
+export LAPTOP
+case $HOST in
+	nott) LAPTOP=yes ;;
+	*) LAPTOP=no ;;
+esac
 
 if [[ -z $DBUS_SESSION_BUS_ADDRESS ]]
 then
-	if have dbus-launch; then
-		exec dbus-launch --exit-with-session zsh $0
-	fi
+	have dbus-launch && exec dbus-launch --exit-with-session zsh $0
 fi
 
 if ! ( [[ -n $SSH_AGENT_PID ]] && kill -0 $SSH_AGENT_PID &> /dev/null )
@@ -29,10 +34,10 @@ then
 fi
 
 have ssh-askpass    && SSH_ASKPASS=ssh-askpass ssh-add < /dev/null
-#have xmms2-launcher && xmms2-launcher
-#have xbindkeys      && xbindkeys
-#have remind         && rem -z -k'popup remind %s &' &
-#osdd &
+have xmms2-launcher && xmms2-launcher
 
-exec xmonad
-# | xstatus
+if [[ $LAPTOP == "yes" ]]; then
+	exec xmonad
+else
+	xmonad | xstatus
+fi

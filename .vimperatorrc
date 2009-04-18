@@ -9,3 +9,5 @@ noremap l L
 map \ :set invum<CR>
 
 set! general.warnOnAboutConfig=false
+set! browser.tabs.loadDivertedInBackground=false
+set! browser.download.manager.useWindow=false

@@ -7,12 +7,12 @@ import qualified XMonad.StackSet as W
 import qualified Data.Map        as M
 
 import XMonad.Actions.DwmPromote
-import XMonad.Actions.FindEmptyWorkspace
+-- import XMonad.Actions.DynamicWorkspaces
 import XMonad.Actions.UpdatePointer
 import XMonad.Actions.SinkAll
 
 import XMonad.Hooks.DynamicLog
--- import XMonad.Hooks.EwmhDesktops
+import XMonad.Hooks.EwmhDesktops
 import XMonad.Hooks.ManageDocks
 
 import XMonad.Prompt
@@ -35,14 +35,11 @@ import XMonad.Layout.Tabbed
 import XMonad.Layout.WorkspaceDir
 
 import XMonad.Util.EZConfig
-import XMonad.Util.Run(spawnPipe)
-import XMonad.Util.Themes
 
 import Control.Arrow ((>>>), second)
 import Data.Char
 import Data.List (isPrefixOf)
 import Data.Ratio ((%))
-import Network
 import System.Environment (getEnv)
 import System.IO (hPutStrLn, hClose, hFlush)
 -- }}}
@@ -50,7 +47,19 @@ import System.IO (hPutStrLn, hClose, hFlush)
 -- {{{ main
 main = do
     let myFont       = "-xos4-terminus-bold-r-*-*-*-140-100-100-*-*-iso8859-1"
-    let myWorkspaces = map show [1..9]
+    let myWorkspaces = [ "home"
+                       , "code"
+                       , "doc"
+                       , "misc"
+                       , "oo"
+                       , "vm"
+                       , "gimp"
+                       , "pdf"
+                       , "web"
+                       ]
+    laptop <- getEnv "LAPTOP" `catch` const (return "none")
+    let isLaptop = laptop == "yes"
+
 
     let myXPConfig = defaultXPConfig 
             { font        = myFont
@@ -69,14 +78,13 @@ main = do
             , focusedBorderColor = "red"
             , workspaces         = myWorkspaces
             , modMask            = mod4Mask
-            , layoutHook         = {- ewmhDesktopsLayout -} myLayoutHook
+            , layoutHook         = ewmhDesktopsLayout myLayoutHook
             , manageHook         = myManageHook <+> manageDocks
-            -- , logHook            = {- ewmhDesktopsLogHook >> -} myLogHook
+            , logHook            = ewmhDesktopsLogHook >> if not isLaptop then myLogHook else return ()
             }
 
     let myKeys = 
             [ ("M-`",              spawn $ terminal myConfig)
-            , ("M-S-`",            do viewEmptyWorkspace; spawn $ terminal myConfig)
             , ("M-c",              kill)
             , ("M-<Return>",       dwmpromote)
             , ("M-S-<Return>",     windows W.focusMaster)
@@ -84,19 +92,17 @@ main = do
             , ("M-s",              sshPrompt      myXPConfig)
             , ("M-p",              scriptPrompt   myXPConfig)
             , ("M-S-p",            shellPrompt    myXPConfig)
-            , ("M-b",              bookmarkPrompt myXPConfig)
+            , ("M-o",              bookmarkPrompt myXPConfig)
             , ("M-d",              changeDir      myXPConfig)
             , ("M-m",              withFocused (sendMessage . maximizeRestore))
             , ("M-S-m",            sendMessage Toggle)
-            , ("M-<Pause>",        osdc "vol mute")
-            , ("M-<Page_Up>",      osdc "vol up 10")
-            , ("M-<Page_Down>",    osdc "vol down 10")
             , ("M-z",              spawn "exec xlock")
-            , ("M-0",              viewEmptyWorkspace)
-            , ("M-S-0",            tagToEmptyWorkspace)
             , ("M-S-t",            sinkAll)
             ] 
-            ++ [ ("M-" ++ [key], windows . W.view $ tag) | (key,tag) <- zip "123456789" myWorkspaces ]
+            {-
+            ++ [ ("M-" ++ [key], windows . W.view tag) 
+                | (key,tag) <- zip "123456789" [0..8] ]
+            -}
     let mediaKeys = []
 
     xmonad $ myConfig `additionalKeysP` myKeys `additionalKeys` mediaKeys
@@ -113,15 +119,19 @@ main = do
 -- and click on the client you're interested in.
 myManageHook = composeAll
     [ className =? "MPlayer"            --> doFloat
-    , className =? "Gimp"               --> doFloat
+    , className =? "Gimp"               --> doF (W.shift "gimp")
     , className =? "Glade-3"            --> doFloat
-    , className =? "Firefox-bin"        --> doF (W.shift "9")
-    , className =? "Iceweasel"          --> doF (W.shift "9")
-    , className =? "Navigator"          --> doF (W.shift "9")
-    , resource  =? "mutt"               --> doF (W.shift "1")
-    , resource  =? "offlineimap"        --> doF (W.shift "1")
-    , resource  =? "irc"                --> doF (W.shift "1")
-    , resource  =? "rss"                --> doF (W.shift "1")
+    , className =? "Firefox-bin"        --> doF (W.shift "web")
+    , className =? "Iceweasel"          --> doF (W.shift "web")
+    , className =? "Navigator"          --> doF (W.shift "web")
+    , className =? "VirtualBox"         --> doF (W.shift "vm")
+    , resource  =? "mutt"               --> doF (W.shift "home")
+    , resource  =? "offlineimap"        --> doF (W.shift "home")
+    , resource  =? "irc"                --> doF (W.shift "home")
+    , resource  =? "rss"                --> doF (W.shift "home")
+    , className =? "Xpdf"               --> doF (W.shift "pdf")
+    , className =? "OpenOffice.org 2.4" --> doF (W.shift "oo")
+    , resource  =? "OpenOffice.org"     --> doF (W.shift "oo")
     , title     =? "Factor workspace"   --> doFloat
     , resource  =? "desktop_window"     --> doIgnore
     , className =? "WMClock"            --> doIgnore
@@ -134,8 +144,12 @@ myManageHook = composeAll
 -- {{{ layout hook:
 myLayoutHook = workspaceDir "~" 
              $ avoidStruts 
-             $ onWorkspace "1" grid
-             $ onWorkspace "9" full
+             $ onWorkspace "home" grid
+             $ onWorkspace "web"  full
+             $ onWorkspace "vm"   full
+             $ onWorkspace "gimp" gimp
+             $ onWorkspace "oo"   (tall ||| full ||| grid)
+             $ onWorkspace "pdf"  (full ||| tall)
              $ tall ||| Mirror tall ||| grid ||| full
   where
      -- default tiling algorithm partitions the screen into two panes
@@ -155,6 +169,12 @@ myLayoutHook = workspaceDir "~"
           $ reflectHoriz 
           $ withIM (1%6) (Title "Buddy List") 
           $ Grid
+
+     gimp = named "Gimp"
+          $ withIM (0.13) (Role "gimp-toolbox")
+          $ reflectHoriz 
+          $ withIM (0.20) (Role "gimp-dock")
+          $ Full
 
      -- full layout, renamed.
      full = named "Full" $ layoutHints Full
@@ -184,13 +204,6 @@ myLogHook = dynamicLogWithPP
           wrap b e x = b ++ x ++ e
           -- crap color b e = wrap (color b) (color e)
 
--- }}}
-
-osdc s = io $ do-- {{{
-    h <- connectTo "localhost" (PortNumber 8007)
-    hPutStrLn h s
-    hFlush h
-    hClose h
 -- }}}
 
 scriptPrompt conf = do-- {{{
