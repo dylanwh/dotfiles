@@ -29,10 +29,16 @@ fi
 
 if ! ( [[ -n $SSH_AGENT_PID ]] && kill -0 $SSH_AGENT_PID &> /dev/null )
 then
-	have ssh-agent && exec ssh-agent zsh $0
+	exec ssh-agent zsh $0
 fi
 
-have ssh-askpass    && SSH_ASKPASS=ssh-askpass ssh-add < /dev/null
+# for arch linux.
+if [[ -n $SSH_ASKPASS ]]; then
+	ssh-add < /dev/null
+elif have ssh-askpass; then
+	SSH_ASKPASS=$prog ssh-add < /dev/null
+fi
+
 have xmms2-launcher && xmms2-launcher
 
 if [[ $LAPTOP == "yes" ]]; then
