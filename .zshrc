@@ -1,4 +1,4 @@
-# Dylan William Hardison's .zshrc file.
+# Dylan William Hardison's .zshrc file. #'
 # This script is executed for every interactive shell.
 # See also: ~/.zshenv ~/.zprofile [~/.zshrc] ~/.zlogin ~/.zlogout
 
@@ -17,7 +17,7 @@ fpath=(~/.zsh $fpath)
 ## {{{ OPTIONS
 setopt autocd                  # change to dirs without cd
 setopt autopushd               # automatically append dirs to the push/pop list
-setopt pushdignoredups         # and don't duplicate them
+setopt pushdignoredups         # and do not duplicate them
 setopt nocdablevars            # the need for an explicit $
 setopt listpacked              # compact completion lists
 setopt nolisttypes             # show types in completion
@@ -29,11 +29,11 @@ setopt nocorrect               # no spelling correction
 setopt promptcr                # add \n which overwrites cmds with no \n
 setopt histverify              # when using ! cmds, confirm first
 setopt interactivecomments     # escape commands so i can use them later
-setopt printexitvalue          # alert me if something's failed
+setopt printexitvalue          # alert me if something has failed
 setopt hist_ignore_dups        # ignore same commands run twice+
-setopt appendhistory           # don't overwrite history 
+setopt appendhistory           # do not overwrite history 
 setopt nomatch                 # #fooo!
-setopt noclobber               # don't overwrite files with >
+setopt noclobber               # do not overwrite files with >
 setopt sharehistory            # share history between all running instances.
 setopt hist_find_no_dups       # ignore dups in history search.
 setopt noflow_control          # disable control-q/control-s
@@ -41,7 +41,7 @@ setopt hashcmds                # avoid having to type 'rehash' all the time.
 setopt rm_star_wait            # wait beforing ask if I want to delete all those files...
 setopt multios                 # avoid having to use 'tee'
 setopt checkjobs               # warn me about bg processes when exiting
-setopt nohup                   # and don't kill them, either
+setopt nohup                   # and do not kill them, either
 setopt auto_continue           # automatically continue disowned jobs.
 setopt auto_resume             # automatically resume jobs from commands
 ## }}}
@@ -156,18 +156,18 @@ autoload compinit promptinit colors
 # initialize advanced tab completion.
 compinit -d ~/.zcompdump
 
-# Add sbin directories for sudo's tab completion.
+colors
+promptinit   # Setup prompt theming 
+prompt dylan # Set the prompt.
+
+umask  022   # Create files that are read-only by group.
+stty -ixon   # Disable the freeze-the-terminal-on-control-s thing.
+mesg   yes   # Allow messages
+ttyctl -f    # Freeze terminal properties.
+
+# Add sbin directories for sudo tab completion.
 zstyle ':completion:*:sudo:*' command-path /usr/local/sbin /usr/local/bin \
 	/usr/sbin /usr/bin /sbin /bin /usr/X11R6/bin
-
-colors
-promptinit           # Setup prompt theming 
-prompt dylan         # Set the prompt.
-
-umask  022           # Create files that are read-only by group.
-stty -ixon           # Disable the freeze-the-terminal-on-control-s thing.
-mesg   yes           # Allow messages
-ttyctl -f            # Freeze terminal properties.
 
 have pinfo && alias info=pinfo
 
