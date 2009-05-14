@@ -14,6 +14,37 @@ cdpath=(~ ~/code)
 fpath=(~/.zsh $fpath)
 
 ## }}}
+## {{{ OPTIONS
+setopt autocd                  # change to dirs without cd
+setopt autopushd               # automatically append dirs to the push/pop list
+setopt pushdignoredups         # and don't duplicate them
+setopt nocdablevars            # the need for an explicit $
+setopt listpacked              # compact completion lists
+setopt nolisttypes             # show types in completion
+setopt extended_glob           # weird & wacky pattern matching - yay zsh!
+setopt alwaystoend             # when complete from middle, move cursor
+setopt completeinword          # not just at the end
+setopt glob_complete           # complete globs with a menu.
+setopt nocorrect               # no spelling correction
+setopt promptcr                # add \n which overwrites cmds with no \n
+setopt histverify              # when using ! cmds, confirm first
+setopt interactivecomments     # escape commands so i can use them later
+setopt printexitvalue          # alert me if something's failed
+setopt hist_ignore_dups        # ignore same commands run twice+
+setopt appendhistory           # don't overwrite history 
+setopt nomatch                 # #fooo!
+setopt noclobber               # don't overwrite files with >
+setopt sharehistory            # share history between all running instances.
+setopt hist_find_no_dups       # ignore dups in history search.
+setopt noflow_control          # disable control-q/control-s
+setopt hashcmds                # avoid having to type 'rehash' all the time.
+setopt rm_star_wait            # wait beforing ask if I want to delete all those files...
+setopt multios                 # avoid having to use 'tee'
+setopt checkjobs               # warn me about bg processes when exiting
+setopt nohup                   # and don't kill them, either
+setopt auto_continue           # automatically continue disowned jobs.
+setopt auto_resume             # automatically resume jobs from commands
+## }}}
 ## {{{ KEY BINDINGS
 bindkey -v
 
