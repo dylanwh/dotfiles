@@ -149,7 +149,6 @@ alias x2=xmms2
 ## }}}
 
 # Autoload various functions
-unalias run-help
 autoload sshbegin sshend run-help ztitle
 autoload compinit promptinit colors
 
