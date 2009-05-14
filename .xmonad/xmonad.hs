@@ -97,6 +97,8 @@ main = do
             , ("M-m",              withFocused (sendMessage . maximizeRestore))
             , ("M-S-m",            sendMessage Toggle)
             , ("M-z",              spawn "exec xlock")
+            , ("M-<F4>",           spawn "sudo pm-suspend")
+            , ("M-<F12>",          spawn "sudo pm-hibernate")
             , ("M-S-t",            sinkAll)
             ] 
             {-

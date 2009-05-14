@@ -15,7 +15,6 @@ xsetroot -cursor_name left_ptr
 xrdb -DHOME=$HOME -merge $HOME/.Xdefaults.in
 xrdb -DHOME=$HOME -n $HOME/.Xdefaults.in > .Xdefaults
 setxkbmap -option ctrl:nocaps
-xmodmap $HOME/.xmodmap
 
 export LAPTOP
 case $HOST in
