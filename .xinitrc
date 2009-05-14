@@ -1,14 +1,34 @@
 #!/usr/bin/env zsh
 # Dylan William Hardison's .xinitrc file.
-# Ensure that this script is evaluated by zsh
-[ "x$ZSH_NAME" = "x" ] && exec zsh $0
+
+# First re-exec:
+# Ensure that this script is evaluated by zsh (as a login shell)
+[ "x$ZSH_NAME" = "x" ] && exec zsh -l $0
+
+# Second re-exec: ensure wrappers (ssh-agent and dbus) are running.
+if [[ -z $DID_WRAPPERS ]]
+then
+	cmd=(zsh $0)
+
+	# have is ~/bin/have
+	if have dbus-launch && [[ -z $DBUS_SESSION_BUS_ADDRESS ]]
+	then
+		cmd=(dbus-launch --exit-with-session $cmd)
+	fi
+
+	if have ssh-agent
+	then
+		if ! ( [[ -n $SSH_AGENT_PID ]] && kill -0 $SSH_AGENT_PID &> /dev/null )
+		then
+			cmd=(ssh-agent $cmd)
+		fi
+	fi
+	export DID_WRAPPERS=yes
+	exec $cmd
+fi
+unset cmd DID_WRAPPERS
 
 BGCOLOR='#330000'
-
-function have { which $1 &>/dev/null }
-
-cd $HOME || exit 1
-[[ -d $HOME/tmp ]] || mkdir -m 700 $HOME/tmp
 
 xsetroot -solid $BGCOLOR
 xsetroot -cursor_name left_ptr
@@ -22,26 +42,20 @@ case $HOST in
 	*) LAPTOP=no ;;
 esac
 
-if [[ -z $DBUS_SESSION_BUS_ADDRESS ]]
+if [[ -n $SSH_ASKPASS ]]
 then
-	have dbus-launch && exec dbus-launch --exit-with-session zsh $0
-fi
-
-if ! ( [[ -n $SSH_AGENT_PID ]] && kill -0 $SSH_AGENT_PID &> /dev/null )
-then
-	exec ssh-agent zsh $0
-fi
-
-# for arch linux.
-if [[ -n $SSH_ASKPASS ]]; then
+	# for arch linux.
 	ssh-add < /dev/null
-elif have ssh-askpass; then
-	SSH_ASKPASS=$prog ssh-add < /dev/null
+elif have ssh-askpass
+then
+	# for debian
+	SSH_ASKPASS=ssh-askpass ssh-add < /dev/null
 fi
 
 have xmms2-launcher && xmms2-launcher
 
-if [[ $LAPTOP == "yes" ]]; then
+if [[ $LAPTOP == "yes" ]]
+then
 	exec xmonad
 else
 	xmonad | xstatus

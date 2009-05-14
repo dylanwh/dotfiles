@@ -93,7 +93,6 @@ bindkey '^r' vi-history-search-backward
 
 ## }}}
 ## {{{ FUNCTIONS
-function have { which $1 &>/dev/null }
 function chpwd {
 	ztitle
 	have todo && todo --timeout --summary 
