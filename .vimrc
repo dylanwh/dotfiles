@@ -40,6 +40,8 @@ set viminfo=!,'1000,%,h,f1,n~/.viminfo
 set statusline=%<%f\ %h%m%r%{FF()}%y%=0x%b\ %-14.(%l,%c%V%)\ %P
 set fillchars=fold:\ ,stl:\ ,stlnc:\  
 set tags+=~/.tags,.tags
+set mouse=
+
 "set listchars=trail:-,tab:>.
 "set list
 
