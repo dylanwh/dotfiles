@@ -1,0 +1,16 @@
+Config { font = "-xos4-terminus-bold-r-*-*-*-120-100-100-*-*-iso8859-1"
+       , bgColor = "black"
+       , fgColor = "grey"
+       , position = Top
+       , lowerOnStart = True
+       , commands = [ Run Cpu ["-L","3","-H","50","--normal","green","--high","red"] 10
+                    , Run Network "eth0" ["-L","0","-H","32","--normal","green","--high","red"] 10
+                    , Run Memory ["-t","Mem: <usedratio>%"] 10
+                    , Run Swap [] 10
+    		        , Run Date "%a %H:%M" "date" 10
+    		        , Run StdinReader
+                    ]
+       , sepChar = "%"
+       , alignSep = "}{"
+       , template = "%StdinReader% }{ %cpu% | %memory% | %eth0% | <fc=#ee9a00>%date%</fc> "
+       }
