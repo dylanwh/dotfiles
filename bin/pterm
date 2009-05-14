@@ -9,4 +9,5 @@ if (@ARGV) {
 	exec urxvt   => @ARGV;
 } else {
 	exec urxvtcd => -name => 'zsh';
+	exec urxvt => -name => 'zsh';
 }
