@@ -6,7 +6,7 @@ info:
 
 fixperms:
 	chmod -Rc +x ~/bin ~/.xinitrc
-	chmod -Rc go-wrx ~/.netrc ~/.pwsafe.dat ~/pim ~/.msmtprc
+	chmod -Rc go-wrx ~/.netrc ~/.pwsafe.dat ~/pim ~/.msmtprc ~/.getmail
 
 schedule:
 	@rem -q
@@ -18,7 +18,11 @@ pwsafe-merge:
 	scp .pwsafe.dat lofn:
 
 .pwsafe.dat:
-	scp lofn.sinedev.org:.pwsafe.dat .
+	scp lofn:.pwsafe.dat .
+	make fixperms
+
+.netrc:
+	scp lofn:.netrc
 	make fixperms
 
 .Xdefaults: .Xdefaults.tt 
