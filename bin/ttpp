@@ -1,0 +1,34 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+use Template;
+
+my @pre_process;
+my @wrapper;
+my @include;
+my %define = (
+    HOME   => $ENV{HOME},
+    LAPTOP => $ENV{LAPTOP},
+);
+
+# manually parse the arguments for cpp compatibility
+while (my $opt = shift @ARGV) {
+	if ($opt =~ /^-D(\w+)(?:=(.+?))?$/) { $define{$1} = $2 || 1; }
+	elsif ($opt =~ /^-U(\w+)$/)         { delete $define{$1} }
+	elsif ($opt =~ /^-I(.+?)$/)         { push @include, $1 }
+	elsif ($opt =~ /^-P(.+?)$/)         { push @pre_process, $1 }
+	elsif ($opt =~ /^-W(.+?)$/)         { push @wrapper, $1 }
+	elsif ($opt eq '--')                { last }
+	elsif ($opt =~ /^-/)                { die "Unknown option: $opt\n" }
+	else                                { push @ARGV, $opt; last }
+}
+
+my $template = new Template {
+    INCLUDE_PATH => \@include,     # or list ref
+    PRE_PROCESS  => \@pre_process, # prefix each template
+    WRAPPER      => \@wrapper,     # wrappers
+    TRIM         => 1,             # more
+    EVAL_PERL    => 1,             # evaluate Perl code blocks
+};
+
+$template->process(\*ARGV, \%define);

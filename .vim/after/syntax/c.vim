@@ -487,7 +487,7 @@ syn keyword	gStructure GAllocator
 
 syn keyword gType GFunc AQFunc lua_State luaL_reg luaL_Buffer LuaState LuaLReg
 
-syn keyword gType GOptionContext
+syn keyword gType GOptionContext GSequence GSequenceIter
 	
 
 

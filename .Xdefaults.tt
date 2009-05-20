@@ -1,0 +1,77 @@
+[%# vim: set ft=template: %]
+[% DEFAULT
+mode        = "default"
+xfont       = "-xos4-terminus-bold-r-*-*-*-120-100-100-*-*-iso8859-1"
+xfont_big   = "-xos4-terminus-bold-r-*-*-*-140-100-100-*-*-iso8859-1"
+xfont_huge  = "-xos4-terminus-bold-r-*-*-*-320-*-*-*-*-*-*"
+xfont_other = "-xos4-terminus-bold-r-normal--14-140-72-72-c-80-iso8859-1"
+
+%]
+System.Mode: [% mode %]
+
+[%- SWITCH mode -%]
+[% CASE 'outside' %]Rxvt.font: [% xfont_huge %]
+[% CASE           %]Rxvt.font: [% xfont %]
+[%- END -%]
+
+[% FOREACH term IN [ "Rxvt", "XTerm" ] -%]
+[% term %].geometry: 80x25 
+[% term %].scrollBar: false
+[% term %].meta8: false
+[% term %].modifier: mod1
+[% term %].reverseVideo: false
+
+[% IF mode != 'outside' -%]
+[% term %].color0: #000000
+[% term %].color1: #A80000
+[% term %].color2: #00A800
+[% term %].color3: Orange3
+
+[% term %].color4: #000078
+[% term %].color5: #A800A8
+[% term %].color6: #00A8A8
+[% term %].color7: #A8A8A8
+
+[% term %].color8:  #646464
+[% term %].color9:  #FF0054
+[% term %].color10: #00FF54
+[% term %].color11: #FFFF54
+
+[% term %].color12: #0000FF
+[% term %].color13: #FF00FF
+[% term %].color14: #00FFFF
+[% term %].color15: #FFFFFF
+[% END -%]
+
+[% term %].foreground: #A8A8A8
+[% term %].background: #000000
+[% term %].cursorColor: #A8A8A8
+[% END -%]
+
+[%-
+MACRO change_font(font) BLOCK;
+	"\\033]710;$font\\007\\033]711;$font\\007";
+END;
+-%]
+
+[%# Keyboard bindings %]
+URxvt.keysym.M-C-1: command:[% change_font(xfont) %]
+URxvt.keysym.M-C-2: command:[% change_font(xfont_big) %]
+URxvt.keysym.M-C-3: command:[% change_font(xfont_huge) %]
+URxvt.keysym.M-C-4: command:[% change_font(xfont_other) %]
+URxvt.keysym.S-Insert: builtin:
+URxvt.searchable-scrollback: CM-s
+
+[%# mark-and-yank support. %]
+[%- IF HOME -%]
+URxvt.keysym.M-C-y: perl:mark-and-yank:activate_mark_mode
+URxvt.keysym.M-C-u: perl:mark-and-yank:activate_mark_url_mode
+URxvt.perl-lib: [% HOME %]/.urxvt/
+URxvt.perl-ext: mark-and-yank
+URxvt.urlLauncher: url-handler
+[%- END -%]
+
+[%# Fading, borrowed from Possum.
+  # this makes unfocused windows fade out to very dark blue. %]
+URxvt.fading: 60
+URxvt.fadeColor: #000015
