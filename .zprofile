@@ -13,6 +13,7 @@ export HOST=${HOST/.*/}
 export OSTYPE=$OSTYPE
 
 export TMPDIR=$HOME/tmp
+export TEMPDIR=$TMPDIR
 export LC_COLLATE=POSIX # sort in POSIX order.
 
 export LESSHISTFILE='-'
@@ -25,6 +26,8 @@ export TODO_FILE=$HOME/pim/todo.xml
 
 export PERL_USE_MOOSE=1
 
+declare -U path perl5lib
+declare -gxT PERL5LIB perl5lib
 perl5lib=(~/lib 'lib')
 path=(~/bin $path)
 

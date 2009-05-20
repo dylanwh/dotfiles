@@ -21,4 +21,8 @@ pwsafe-merge:
 	scp lofn.sinedev.org:.pwsafe.dat .
 	make fixperms
 
+.Xdefaults: .Xdefaults.tt 
+	xrdb -cpp ttpp -n $< > $@
+	xrdb -load $@
+
 .PHONY: schedule fixperms help

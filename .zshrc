@@ -164,10 +164,10 @@ mesg   yes   # Allow messages
 ttyctl -f    # Freeze terminal properties.
 
 # Add sbin directories for sudo tab completion.
-zstyle ':completion:*:sudo:*' command-path /usr/local/sbin /usr/local/bin \
-	/usr/sbin /usr/bin /sbin /bin /usr/X11R6/bin
+zstyle ':completion:*:sudo:*' command-path $path /usr/sbin /sbin
 
 have pinfo && alias info=pinfo
+have ack-grep && alias ack=ack-grep
 
 for dircolors in dircolors gdircolors; do
 	if have $dircolors; then
