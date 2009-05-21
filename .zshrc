@@ -3,8 +3,8 @@
 # See also: ~/.zshenv ~/.zprofile [~/.zshrc] ~/.zlogin ~/.zlogout
 
 ## {{{ VARIABLES
-HISTSIZE=2000
-SAVEHIST=2000
+HISTSIZE=20000
+SAVEHIST=20000
 HISTFILE=~/.zhistory
 READNULLCMD=${PAGER:-/usr/bin/pager}
 LOGCHECK=30
