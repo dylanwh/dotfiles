@@ -1,9 +1,25 @@
 #!zsh
-local time="$fg[yellow]%D{%H:%M}$reset_color"
-local user="$fg[blue]%n$reset_color"
-local host="$fg[red]%m$reset_color"
-local dir="$fg[green]%0~$reset_color"
-local n="
-"
-prompt="[%{$time $user@$host $dir%}]$n%# "
-prompt_opts=( cr percent )
+
+local RESET="%{$reset_color%}"
+local YELLOW="%{${fg[yellow]}%}"
+local GREEN="%{${fg[green]}%}"
+local RED="%{${fg[red]}%}"
+
+PR_TIME="%D{%H:%M}"
+PR_DIR="$GREEN%~$RESET"
+PR_HOST="$RED%m$RESET"
+PR_NAME="%{${fg_bold[blue]}%}%n$RESET"
+PR_JOBS="%2(j. ($YELLOW%j jobs$RESET).%1(j. ($YELLOW%j job$RESET).))"
+
+function PR_BRANCH {
+	local branch=$(git branch 2>/dev/null | sed -n 's/^* \(.\+\)/\1/p')
+	if [[ -n $branch ]]; then
+		echo -n " [%{${fg[magenta]}%}$branch%{$reset_color%}]"
+	fi
+}
+
+# %1(j.%j jobs.)
+prompt='<$PR_NAME@$PR_HOST>$(PR_BRANCH) $PR_DIR$PR_JOBS
+%# '
+
+prompt_opts=( cr percent subst )
