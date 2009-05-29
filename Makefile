@@ -22,7 +22,7 @@ pwsafe-merge:
 	make fixperms
 
 .netrc:
-	scp lofn:.netrc
+	scp lofn:.netrc .
 	make fixperms
 
 .Xdefaults: .Xdefaults.tt 
