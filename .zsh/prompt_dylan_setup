@@ -20,7 +20,7 @@ PR_JOBS="%2(j.($MAGENTA%j jobs$RESET) .%1(j.($MAGENTA%j job$RESET) .))"
 function PR_BRANCH {
 	local COLOR="%{${fg[green]}%}"
 	local RESET="%{$reset_color%}"
-	local branch=$(git branch 2>/dev/null | sed -n 's/^* \(.\+\)/\1/p')
+	local branch=$(git branch 2>/dev/null | sed -n 's/^\* \(.*\)/\1/p')
 	if [[ -n $branch ]]; then
 		echo -n " ($COLOR$branch$RESET)"
 	fi
