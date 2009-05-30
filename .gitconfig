@@ -8,6 +8,7 @@
 [alias]
 	co=checkout
 	ci=commit
+	br=branch
 	record = !git add -p && git commit
 
 [color]

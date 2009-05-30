@@ -10,25 +10,27 @@ local GREY="%{${fg_bold[grey]}%}"
 local BLUE="%{${fg[blue]}%}"
 local BOLD_BLUE="%{${fg_bold[blue]}%}"
 
-PR_TIME="$YELLOW%D{%H:%M}$RESET"
-PR_DATE="$YELLOW%D{%b-%d}$RESET"
-PR_DIR="$BOLD_BLUE%~$RESET"
-PR_NAME="$BOLD_GREEN%n"
-PR_HOST="%m$RESET"
-PR_JOBS="%2(j.($MAGENTA%j jobs$RESET) .%1(j.($MAGENTA%j job$RESET) .))"
+local PR_TIME="$YELLOW%D{%H:%M}$RESET"
+local PR_DATE="$YELLOW%D{%b-%d}$RESET"
+local PR_DIR="$BOLD_BLUE%~$RESET"
+local PR_NAME="$BOLD_GREEN%n"
+local PR_HOST="%m$RESET"
+local PR_JOBS="%2(j.($MAGENTA%j jobs$RESET) .%1(j.($MAGENTA%j job$RESET) .))"
+local PR_BRANCH="%1(V. ($GREEN%1v$RESET).)"
 
-function PR_BRANCH {
+function prompt_dylan_chpwd {
 	local COLOR="%{${fg[green]}%}"
 	local RESET="%{$reset_color%}"
 	local branch=$(git branch 2>/dev/null | sed -n 's/^\* \(.*\)/\1/p')
-	if [[ -n $branch ]]; then
-		echo -n " ($COLOR$branch$RESET)"
-	fi
+	psvar[1]=$branch
 }
 
-PROMPT='$PR_NAME@$PR_HOST:$PR_DIR$(PR_BRANCH)%# '
-RPROMPT='$PR_JOBS$PR_TIME $PR_DATE'
+prompt_dylan_chpwd 
+chpwd_functions=( prompt_dylan_chpwd )
+
+PROMPT="$PR_NAME@$PR_HOST:$PR_DIR$PR_BRANCH%# "
+RPROMPT="$PR_JOBS$PR_TIME $PR_DATE"
 PS2='%_: '
 RPS2=''
 
-prompt_opts=( cr percent subst )
+prompt_opts=( cr percent )
