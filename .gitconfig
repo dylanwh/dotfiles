@@ -9,3 +9,6 @@
 	co=checkout
 	ci=commit
 	record = !git add -p && git commit
+
+[color]
+ui = auto
