@@ -27,9 +27,7 @@ function prompt_dylan_chpwd {
 	fi
 }
 
-echo "pants"
 prompt_dylan_chpwd 
-echo "nopants"
 chpwd_functions=( prompt_dylan_chpwd )
 
 PROMPT="$PR_NAME@$PR_HOST:$PR_DIR$PR_BRANCH%# "
