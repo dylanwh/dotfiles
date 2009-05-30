@@ -16,11 +16,15 @@ local PR_DIR="$BOLD_BLUE%~$RESET"
 local PR_NAME="$BOLD_GREEN%n"
 local PR_HOST="%m$RESET"
 local PR_JOBS="%2(j.($MAGENTA%j jobs$RESET) .%1(j.($MAGENTA%j job$RESET) .))"
-local PR_BRANCH="%1(V. ($GREEN%1v$RESET).)"
+local PR_BRANCH="%1(v. ($GREEN%1v$RESET).)"
 
 function prompt_dylan_chpwd {
 	local branch=$(git branch 2>/dev/null | sed -n 's/^\* \(.*\)/\1/p')
-	psvar[1]=$branch
+	if [[ -n $branch ]]; then
+		psvar[1]=$branch
+	else
+		psvar=()
+	fi
 }
 
 echo "pants"
