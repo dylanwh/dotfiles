@@ -23,7 +23,7 @@ import XMonad.Prompt.Ssh
 import XMonad.Prompt.XMonad
 
 import XMonad.Layout.Grid
-import XMonad.Layout.IM
+--import XMonad.Layout.IM
 import XMonad.Layout.LayoutHints
 import XMonad.Layout.Magnifier
 import XMonad.Layout.Maximize
@@ -146,12 +146,12 @@ myManageHook = composeAll
 -- }}}
 
 -- {{{ layout hook:
+--             $ onWorkspace "gimp" gimp
 myLayoutHook = workspaceDir "~" 
              $ avoidStruts 
              $ onWorkspace "home" grid
              $ onWorkspace "web"  full
              $ onWorkspace "vm"   full
-             $ onWorkspace "gimp" gimp
              $ onWorkspace "oo"   (tall ||| full ||| grid)
              $ onWorkspace "pdf"  (full ||| tall)
              $ tall ||| Mirror tall ||| grid ||| full
@@ -169,16 +169,16 @@ myLayoutHook = workspaceDir "~"
           $ Grid
 
      -- im layout
-     im   = named "IM" 
+     {-im   = named "IM" 
           $ reflectHoriz 
           $ withIM (1%6) (Title "Buddy List") 
-          $ Grid
+          $ Grid-}
 
-     gimp = named "Gimp"
+     {-gimp = named "Gimp"
           $ withIM (0.13) (Role "gimp-toolbox")
           $ reflectHoriz 
           $ withIM (0.20) (Role "gimp-dock")
-          $ Full
+          $ Full-}
 
      -- full layout, renamed.
      full = named "Full" $ layoutHints Full
