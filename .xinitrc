@@ -1,5 +1,5 @@
 #!/usr/bin/env zsh
-# Dylan William Hardison's .xinitrc file.
+# Dylan William Hardison\'s .xinitrc file.
 
 # First re-exec:
 # Ensure that this script is evaluated by zsh
@@ -37,12 +37,17 @@ BGCOLOR='#330000'
 
 xsetroot -solid $BGCOLOR
 xsetroot -cursor_name left_ptr
-make .Xdefaults
+xset r rate 250 30
+
+# 01:16 <jcristau> setxkbmap -option terminate:ctrl_alt_bksp might help
+# 01:16 <jcristau> dontzap was turned off again by default in the server, and terminate was made an option in xkeyboard-config
+setxkbmap -option terminate:ctrl_alt_bksp
 setxkbmap -option ctrl:nocaps
+make .Xdefaults
 
 export LAPTOP
 case $HOST in
-	nott) LAPTOP=yes ;;
+#	nott) LAPTOP=yes ;;
 	*) LAPTOP=no ;;
 esac
 
@@ -58,9 +63,4 @@ fi
 
 have xmms2-launcher && xmms2-launcher
 
-if [[ $LAPTOP == "yes" ]]
-then
-	exec xmonad
-else
-	xmonad | xstatus
-fi
+xmonad | xstatus

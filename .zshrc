@@ -160,7 +160,6 @@ prompt dylan # Set the prompt.
 
 umask  022   # Create files that are read-only by group.
 stty -ixon   # Disable the freeze-the-terminal-on-control-s thing.
-mesg   yes   # Allow messages
 ttyctl -f    # Freeze terminal properties.
 
 # Add sbin directories for sudo tab completion.
