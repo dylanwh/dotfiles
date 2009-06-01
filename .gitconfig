@@ -9,6 +9,7 @@
 	co=checkout
 	ci=commit
 	br=branch
+	st=status
 	record = !git add -p && git commit
 
 [color]
