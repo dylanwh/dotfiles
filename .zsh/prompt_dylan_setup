@@ -18,7 +18,7 @@ PR_HOST="%m$RESET"
 PR_JOBS="%2(j.($MAGENTA%j jobs$RESET).%1(j.($MAGENTA%j job$RESET).))"
 PR_BRANCH="%1(v. ($GREEN%1v$RESET).)"
 
-function prompt_dylan_chpwd {
+function prompt_dylan_precmd {
 	local branch=$(git branch 2>/dev/null | sed -n 's/^\* \(.*\)/\1/p')
 	if [[ -n $branch ]]; then
 		psvar[1]=$branch
@@ -31,8 +31,8 @@ function notime {
 	RPROMPT="$PR_JOBS"
 }
 
-prompt_dylan_chpwd 
-chpwd_functions=( prompt_dylan_chpwd )
+prompt_dylan_precmd 
+precmd_functions=( prompt_dylan_precmd )
 
 PROMPT="$PR_NAME@$PR_HOST:$PR_DIR$PR_BRANCH%# "
 RPROMPT="$PR_JOBS $PR_TIME $PR_DATE"
