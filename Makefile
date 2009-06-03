@@ -27,6 +27,6 @@ pwsafe-merge:
 
 .Xdefaults: .Xdefaults.tt 
 	xrdb -cpp ttpp -n $< > $@
-	xrdb -load $@
+	xrdb -cpp ttpp -load $@
 
 .PHONY: schedule fixperms help
