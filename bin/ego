@@ -10,7 +10,10 @@ my @SHELL     = ('zsh', '-l');   # default name/title
 my $DTACH     = 'dtach';
 my $DTACH_DIR = $ENV{TEMPDIR} || "/tmp";
 
-my %option = ();
+my %option = (opt_r => 'winch');
+
+@ARGV = fix(@ARGV);
+my @input = @ARGV;
 
 GetOptions(
 	\%option,
@@ -22,7 +25,6 @@ GetOptions(
     'dtach|d',   # use dtach
     'opt_z|z',   # passed to dtach
     'opt_E|E',   # passed to dtach
-    'opt_e|e=s', # passed to dtach
     'opt_r|r=s', # passed to dtach
 );
 
@@ -45,7 +47,6 @@ if ($option{dtach}) {
 
 	push @dtach, '-z'                 if $option{opt_z};
 	push @dtach, '-E'                 if $option{opt_E};
-	push @dtach, '-e', $option{opt_e} if $option{opt_e};
 	push @dtach, '-r', $option{opt_r} if $option{opt_r};
 	if (not @cmd) {
 		@cmd = (@dtach, @SHELL);
@@ -71,8 +72,30 @@ if ($option{term}) {
 	}
 }
 
+if (open my $history, ">>$ENV{HOME}/.ego-history") {
+	print $history "@input\n";
+	print $history "@cmd\n";
+	close $history;
+}
 if ($option{test}) {
 	print "@cmd\n";
 } else {
 	exec(@cmd);
+}
+
+sub fix {
+	my @args;
+	for (my $i = 0; $i < @_; $i++) {
+		if ($_[$i] eq '-e' and $_[$i+1] eq 'ssh') {
+			push @args, "--ssh";
+			$i++; # skip 'ssh';
+		}
+		elsif ($_[$i] eq '-e') {
+			# skip
+		}
+		else {
+			push @args, $_[$i];
+		}
+	}
+	return @args;
 }

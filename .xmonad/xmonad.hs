@@ -73,7 +73,7 @@ main = do
 
     let myConfig = defaultConfig
             { borderWidth        = 2
-            , terminal           = "exec zterm"
+            , terminal           = "exec ego -t"
             , normalBorderColor  = "#000033"
             , focusedBorderColor = "red"
             , workspaces         = myWorkspaces
