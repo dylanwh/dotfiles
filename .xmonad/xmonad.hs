@@ -73,7 +73,7 @@ main = do
 
     let myConfig = defaultConfig
             { borderWidth        = 2
-            , terminal           = "exec pterm"
+            , terminal           = "exec zterm"
             , normalBorderColor  = "#000033"
             , focusedBorderColor = "red"
             , workspaces         = myWorkspaces

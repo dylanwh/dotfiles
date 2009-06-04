@@ -1,0 +1,17 @@
+#!/bin/zsh
+
+function have { which $1 &> /dev/null }
+
+if (( $#argv > 0 )); then
+	if have urxvt; then
+		exec urxvt $argv
+	else
+		exec xterm $argv
+	fi
+else
+	if have urxvtcd; then
+		exec urxvtcd -name zsh
+	else
+		exec urxvt -name zsh
+	fi
+fi
