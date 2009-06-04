@@ -1,2 +1,2 @@
 #!/bin/sh
-exec pterm -e vim ~/.Xdefaults.in
+exec zterm -e vim ~/.Xdefaults.in

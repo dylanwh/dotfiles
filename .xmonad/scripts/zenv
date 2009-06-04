@@ -1,2 +1,2 @@
 #!/bin/sh
-exec pterm -e vim ~/.zshenv
+exec zterm -e vim ~/.zshenv

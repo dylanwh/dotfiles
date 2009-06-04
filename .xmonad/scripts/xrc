@@ -1,2 +1,2 @@
 #!/bin/sh
-exec pterm -e vim ~/.xinitrc
+exec zterm -e vim ~/.xinitrc

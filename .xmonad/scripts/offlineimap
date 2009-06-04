@@ -1,2 +1,2 @@
 #!/bin/zsh
-exec pterm -name offlineimap -e dtach -A $TMPDIR/offlineimap.dtach -r winch -Ez offlineimap -a home
+exec zterm -name offlineimap -e dtach -A $TMPDIR/offlineimap.dtach -r winch -Ez offlineimap -a home
