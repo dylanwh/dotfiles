@@ -46,10 +46,11 @@ setxkbmap -option ctrl:nocaps
 make .Xdefaults
 
 export LAPTOP
-case $HOST in
-#	nott) LAPTOP=yes ;;
-	*) LAPTOP=no ;;
-esac
+if have xmobar; then
+	LAPTOP=no
+else
+	LAPTOP=yes
+fi
 
 if [[ -n $SSH_ASKPASS ]]
 then
