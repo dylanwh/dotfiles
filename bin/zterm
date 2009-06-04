@@ -1,17 +1,19 @@
-#!/bin/zsh
+#!/usr/bin/perl
+use strict;
+use warnings;
+use Getopt::Long qw(:config gnu_getopt);
 
-function have { which $1 &> /dev/null }
+my $name  = '';
+my $exec  = '';
+my $ssh   = '';
+my $dtach = 0;
 
-if (( $#argv > 0 )); then
-	if have urxvt; then
-		exec urxvt $argv
-	else
-		exec xterm $argv
-	fi
-else
-	if have urxvtcd; then
-		exec urxvtcd -name zsh
-	else
-		exec urxvt -name zsh
-	fi
-fi
+exec 'urxvt' => @ARGV;
+GetOptions(
+    'name|n=s'  => \$name,
+    'exec|e=s'  => \$exec,
+    'ssh|s=s'   => \$ssh,
+    'dtach|d' => \$dtach,
+);
+
+

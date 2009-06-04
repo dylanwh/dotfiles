@@ -1,2 +1,2 @@
 #!/bin/sh
-exec zterm -name mutt -e dtach -A $TMPDIR/mutt.dtach -r winch -Ez mutt
+exec ego -t -d -r winch mutt

@@ -1,2 +1,2 @@
 #!/bin/sh
-exec zterm -e vim ~/.zshenv
+exec ego -t vim ~/.zshenv

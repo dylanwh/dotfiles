@@ -103,7 +103,7 @@ bind index <Esc>0D previous-page
 macro index A    ";tT~N | ~O\n;WN;t"     "mark all as read"
 macro index S    "s [Gmail]/Spam\n"            "report spam"
 
-source ~/.mutt/t-prot
+#source ~/.mutt/t-prot
 source 'perl $HOME/.mutt/alias.pl ${YABOOK_FILE:-"$HOME/.yabook"} |'
 source ~/.mutt/gnupg
 source ~/.mutt/theme

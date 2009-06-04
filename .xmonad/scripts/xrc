@@ -1,2 +1,2 @@
 #!/bin/sh
-exec zterm -e vim ~/.xinitrc
+exec ego -t vim ~/.xinitrc

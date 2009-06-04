@@ -19,8 +19,8 @@ set postponed="+[Gmail]/Drafts"
 
 set sendmail="/usr/bin/env msmtp --tls-certcheck=off"
 
-folder-hook . set trash=+[Gmail]/Trash
-folder-hook '\[Gmail\]/Spam' 'unset trash'
+#folder-hook . set trash=+[Gmail]/Trash
+#folder-hook '\[Gmail\]/Spam' 'unset trash'
 
 # Recongize messages addressed to me.
 unalternates *
@@ -66,5 +66,5 @@ my_hdr X-Message-Flag: OUTLOOK ERROR: Message in violation of Microsoft Security
 my_hdr X-Religion: Optimus Prime
 my_hdr X-Uptime: `uptime` 
 
-bind index a purge-message
-bind pager a purge-message
+#bind index a purge-message
+#bind pager a purge-message

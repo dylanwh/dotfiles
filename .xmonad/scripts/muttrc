@@ -1,2 +1,2 @@
 #!/bin/sh
-exec zterm -e vim ~/.mutt/muttrc
+exec ego -t vim ~/.mutt/muttrc

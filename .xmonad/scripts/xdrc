@@ -1,2 +1,2 @@
 #!/bin/sh
-exec zterm -e vim ~/.Xdefaults.in
+exec ego -t vim ~/.Xdefaults.tt

@@ -1,0 +1,78 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+use File::Spec;
+use Getopt::Long qw(:config gnu_getopt);
+
+my $TERM      = 'urxvt'; # terminal to use
+my $TERM_NAME = 1;       # supports -name
+my @SHELL     = ('zsh', '-l');   # default name/title
+my $DTACH     = 'dtach';
+my $DTACH_DIR = $ENV{TEMPDIR} || "/tmp";
+
+my %option = ();
+
+GetOptions(
+	\%option,
+	'test',      # print command instead of executing
+    'name|n=s',  # name of session
+    'ssh|s=s',   # ssh hostname
+    'autossh|A', # use autossh
+    'term|t',    # use terminal emulator
+    'dtach|d',   # use dtach
+    'opt_z|z',   # passed to dtach
+    'opt_E|E',   # passed to dtach
+    'opt_e|e=s', # passed to dtach
+    'opt_r|r=s', # passed to dtach
+);
+
+my @cmd = @ARGV;
+$option{name} ||= $cmd[0] || $SHELL[0];
+
+if ($option{term}) {
+	$option{opt_E} = 1;
+	$option{opt_z} = 1;
+	$option{opt_e} = undef;
+}
+if ($option{ssh}) {
+	$option{opt_z} = 1;
+}
+
+if ($option{dtach}) {
+	if ($option{ssh}) { $DTACH_DIR =~ s/^\Q$ENV{HOME}/~/ }
+	my $socket = File::Spec->catfile($DTACH_DIR, $option{name} . '.dtach');
+	my @dtach = ($DTACH, '-A', $socket);
+
+	push @dtach, '-z'                 if $option{opt_z};
+	push @dtach, '-E'                 if $option{opt_E};
+	push @dtach, '-e', $option{opt_e} if $option{opt_e};
+	push @dtach, '-r', $option{opt_r} if $option{opt_r};
+	if (not @cmd) {
+		@cmd = (@dtach, @SHELL);
+	}
+	else {
+		unshift @cmd, @dtach;
+	}
+}
+
+if ($option{ssh}) {
+	my @ssh = ('ssh', $option{ssh});
+	push @ssh, '-t', '--' if @cmd;
+	unshift @cmd, @ssh;
+}
+
+if ($option{term}) {
+	my @term = ($TERM, -title => $option{name});
+	push @term, -name => $option{name} if $TERM_NAME;
+	if (not @cmd) {
+		@cmd = @term;
+	} else {
+		unshift @cmd, @term, '-e';
+	}
+}
+
+if ($option{test}) {
+	print "@cmd\n";
+} else {
+	exec(@cmd);
+}

@@ -1,2 +1,3 @@
 #!/bin/sh
-exec urxvt -title irc -e ssh -t lofn dtach -A '~/tmp/irc.dtach' -Ez irssi --noconnect 
+#exec urxvt -title irc -e ssh -t lofn dtach -A '~/tmp/irc.dtach' -Ez irssi --noconnect 
+exec ego -t -d -r winch -s lofn -n irc -- irssi --noconnect
