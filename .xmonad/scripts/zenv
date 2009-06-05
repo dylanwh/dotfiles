@@ -1,2 +1,2 @@
 #!/bin/sh
-exec ego -t vim ~/.zshenv
+exec robo -t vim ~/.zshenv

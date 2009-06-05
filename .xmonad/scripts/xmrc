@@ -1,2 +1,2 @@
 #!/bin/sh
-exec ego -t vim ~/.xmonad/xmonad.hs
+exec robo -t vim ~/.xmonad/xmonad.hs

@@ -1,2 +1,2 @@
 #!/bin/sh
-exec ego -t vim ~/.zshrc
+exec robo -t vim ~/.zshrc

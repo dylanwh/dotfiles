@@ -1,2 +1,2 @@
 #!/bin/sh
-exec ego -t -d -r ctrl_l -s lofn -n rss newsbeuter
+exec robo -t -d -r ctrl_l -s lofn -n rss newsbeuter

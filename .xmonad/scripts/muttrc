@@ -1,2 +1,2 @@
 #!/bin/sh
-exec ego -t vim ~/.mutt/muttrc
+exec robo -t vim ~/.mutt/muttrc

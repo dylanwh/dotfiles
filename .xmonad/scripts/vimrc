@@ -1,2 +1,2 @@
 #!/bin/sh
-exec ego -t vim ~/.vimrc
+exec robo -t vim ~/.vimrc
