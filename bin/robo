@@ -4,106 +4,78 @@ use warnings;
 use File::Spec;
 use Getopt::Long qw(:config gnu_getopt);
 
-my $TERM      = 'urxvt'; # terminal to use
-my $TERM_NAME = 1;       # supports -name
-my @SHELL     = ('zsh', '-l');   # default name/title
-my $DTACH     = 'dtach';
+my $TERM      = 'urxvt';       # terminal to use. should support -title, -name, and -e.
+my @SHELL     = ('zsh', '-l'); # default name/title
 my $DTACH_DIR = $ENV{TEMPDIR} || "/tmp";
+my %option    = (opt_r => 'winch');
 
-my %option = (opt_r => 'winch');
+BEGIN {
+	my $e = 0;
+	for (my $i = 0; $i < @ARGV; $i++) {
+		if ($ARGV[$i] eq '-e' and $ARGV[$i+1] =~ /ssh$/) {
+			$ARGV[$i]   = '-s';
+			$ARGV[$i+1] = $ARGV[$i+2] || '';
+			$ARGV[$i+2] = '--';
+			$i += 2;
+			$e = 1;
+		}
+		elsif ($ARGV[$i] eq '-e') {
+			$ARGV[$i] = '--';
+			$e = 1;
+		}
+	}
 
-@ARGV = fix(@ARGV);
+	if ($e or not @ARGV) {
+		unshift @ARGV, '-t';
+	}
+}
 
 GetOptions(
 	\%option,
 	'test',       # print command instead of executing
-    'name|n=s',   # name of session
+    'name|n=s',   # name of session.
     'ssh|s=s',    # ssh hostname
     'autossh|A',  # use autossh
     'term|t',     # use terminal emulator
     'dtach|d',    # use dtach
-    'socket|S=s', # dtach socket name.
     'opt_z|z',    # passed to dtach
     'opt_E|E',    # passed to dtach
     'opt_r|r=s',  # passed to dtach
 );
 
 my @cmd = @ARGV;
-if ($option{name}) {
-	$option{socket} ||= $option{name};
-}
-else {
-	$option{name} = $cmd[0] || $SHELL[0];
-
-	if (@cmd) {
-		$option{socket} = "@cmd";
-	}
-	else {
-		$option{socket} = $SHELL[0];
-	}
-}
+$option{name} ||= @cmd ? "@cmd" : $SHELL[0];
+$option{name} =~ s/\W+/_/g;
 
 if ($option{term}) {
 	$option{opt_E} = 1;
 	$option{opt_z} = 1;
-	$option{opt_e} = undef;
 }
-if ($option{ssh}) {
-	$option{opt_z} = 1;
-}
+
+$option{opt_z} = $option{ssh} ? 1 : 0;
 
 if ($option{dtach}) {
 	if ($option{ssh}) { $DTACH_DIR =~ s/^\Q$ENV{HOME}/~/ }
-	my $socket = File::Spec->catfile($DTACH_DIR, $option{socket} . '.dtach');
-	my @dtach = ($DTACH, '-A', $socket);
+	my $socket = File::Spec->catfile($DTACH_DIR, $option{name} . '.dtach');
+	my @dtach = ('dtach', '-A', $socket);
 
 	push @dtach, '-z'                 if $option{opt_z};
 	push @dtach, '-E'                 if $option{opt_E};
 	push @dtach, '-r', $option{opt_r} if $option{opt_r};
-	if (not @cmd) {
-		@cmd = (@dtach, @SHELL);
-	}
-	else {
-		unshift @cmd, @dtach;
-	}
+	@cmd = @cmd ? (@dtach, @cmd) : (@dtach, @SHELL);
 }
 
 if ($option{ssh}) {
 	my @ssh = ('ssh', $option{ssh});
-	push @ssh, '-t', '--' if @cmd;
-	unshift @cmd, @ssh;
+	@cmd = @cmd ? (@ssh, '-t', '--', @cmd) : @ssh;
 }
 
 if ($option{term}) {
-	my @term = ($TERM, -title => $option{name});
-	push @term, -name => $option{name} if $TERM_NAME;
-	if (not @cmd) {
-		@cmd = @term;
-	} else {
-		unshift @cmd, @term, '-e';
-	}
+	my $title = $option{name};
+	$title =~ s/_/ /g;
+	my @term = ($TERM, -title => $title, -name => $option{name});
+	@cmd = (@term, @cmd ? ('-e', @cmd) : ());
 }
 
-if ($option{test}) {
-	print "@cmd\n";
-} else {
-	exec(@cmd);
-}
-
-sub fix {
-	my @args;
-	for (my $i = 0; $i < @_; $i++) {
-		if ($_[$i] eq '-e' and $_[$i+1] eq 'ssh') {
-			push @args, "--ssh";
-			$i++; # skip 'ssh';
-		}
-		elsif ($_[$i] eq '-e') {
-			# skip
-		}
-		else {
-			push @args, $_[$i];
-		}
-	}
-	return @args;
-}
-
+if ($option{test}) { print "@cmd\n" }
+else               { exec(@cmd)     }

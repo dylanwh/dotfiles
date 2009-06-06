@@ -9,19 +9,16 @@ xfont_other = "-xos4-terminus-bold-r-normal--14-140-72-72-c-80-iso8859-1"
 %]
 System.Mode: [% mode %]
 
-[%- SWITCH mode -%]
-[% CASE 'outside' %]Rxvt.font: [% xfont_huge %]
-[% CASE           %]Rxvt.font: [% xfont %]
-[%- END -%]
+[% SET term = 'Rxvt' %]
 
-[% FOREACH term IN [ "Rxvt", "XTerm" ] -%]
+[% term %].font: [% xfont %]
+
 [% term %].geometry: 80x25 
 [% term %].scrollBar: false
 [% term %].meta8: false
 [% term %].modifier: mod1
 [% term %].reverseVideo: false
 
-[% IF mode != 'outside' -%]
 [% term %].color0: #000000
 [% term %].color1: #A80000
 [% term %].color2: #00A800
@@ -41,12 +38,45 @@ System.Mode: [% mode %]
 [% term %].color13: #FF00FF
 [% term %].color14: #00FFFF
 [% term %].color15: #FFFFFF
-[% END -%]
 
 [% term %].foreground: #A8A8A8
 [% term %].background: #000000
 [% term %].cursorColor: #A8A8A8
-[% END -%]
+
+!Theme Fourteen
+outside.background: #ffffff
+outside.foreground: #000000
+
+! 0: black
+outside.color0:  #242424
+outside.color8:  #242424
+! 1: red
+outside.color1:  #af6767
+outside.color9:  #ff6767
+! 2: green
+outside.color2:  #729c48
+outside.color10: #10cc10
+! 3: yellow
+outside.color3:  #e9c000
+outside.color11: #d0e200
+! 4: blue
+outside.color4:  #9aaaa3
+outside.color12: #9aacf3
+! 5: magenta
+outside.color5:  #bb77a4
+outside.color13: #bb77a4
+! 6: cyan
+outside.color6:  #77bbb5
+outside.color14: #77bbb5
+! 7: white
+outside.color7:  #777777
+outside.color15: #777777
+
+outside.fadeColor:  #151515
+outside.cursorColor: black
+outside.termName: rxvt-unicode-outside
+
+pwsafe.foreground: #00FF54
 
 [%-
 MACRO change_font(font) BLOCK;

@@ -73,7 +73,7 @@ main = do
 
     let myConfig = defaultConfig
             { borderWidth        = 2
-            , terminal           = "exec robo -t"
+            , terminal           = "exec robo"
             , normalBorderColor  = "#000033"
             , focusedBorderColor = "red"
             , workspaces         = myWorkspaces
@@ -133,6 +133,7 @@ myManageHook = composeAll
     , resource  =? "offlineimap"        --> doF (W.shift "home")
     , resource  =? "irc"                --> doF (W.shift "home")
     , resource  =? "rss"                --> doF (W.shift "home")
+    , resource  =? "pwsafe"             --> doFloat
     , className =? "Xpdf"               --> doF (W.shift "pdf")
     , className =? "OpenOffice.org 2.4" --> doF (W.shift "oo")
     , resource  =? "OpenOffice.org"     --> doF (W.shift "oo")

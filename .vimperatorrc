@@ -2,7 +2,7 @@ set hls
 "set guioptions=b
 set showtabline=1
 set ds=
-set editor=urxvt -name vim -e vim
+set editor=robo\ -t\ vim
 
 noremap h H
 noremap l L

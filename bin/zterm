@@ -1,19 +1,8 @@
-#!/usr/bin/perl
-use strict;
-use warnings;
-use Getopt::Long qw(:config gnu_getopt);
+#!/bin/zsh
 
-my $name  = '';
-my $exec  = '';
-my $ssh   = '';
-my $dtach = 0;
+integer i
+for (( i=1; i <= $#argv; i++ )); do
+	echo $argv[$i]
+done
 
-exec 'urxvt' => @ARGV;
-GetOptions(
-    'name|n=s'  => \$name,
-    'exec|e=s'  => \$exec,
-    'ssh|s=s'   => \$ssh,
-    'dtach|d' => \$dtach,
-);
-
-
+#exec urxvt -title $NAME -name $NAME $argv
