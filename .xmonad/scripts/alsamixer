@@ -1,2 +1,2 @@
 #!/bin/sh
-exec ego -t alsamixer
+exec robo -t alsamixer

@@ -73,7 +73,7 @@ main = do
 
     let myConfig = defaultConfig
             { borderWidth        = 2
-            , terminal           = "exec ego -t"
+            , terminal           = "exec robo -t"
             , normalBorderColor  = "#000033"
             , focusedBorderColor = "red"
             , workspaces         = myWorkspaces
@@ -181,7 +181,7 @@ myLayoutHook = workspaceDir "~"
           $ Full-}
 
      -- full layout, renamed.
-     full = named "Full" $ layoutHints Full
+     full = named "Full" $ smartBorders $ layoutHints Full
 
      -- The default number of windows in the master pane
      nmaster = 1

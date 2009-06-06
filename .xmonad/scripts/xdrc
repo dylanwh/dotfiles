@@ -1,2 +1,2 @@
 #!/bin/sh
-exec ego -t vim ~/.Xdefaults.tt
+exec robo -t vim ~/.Xdefaults.tt

@@ -1,2 +1,2 @@
 #!/bin/sh
-exec ego -t -d -r winch -s lofn -n irc -- irssi --noconnect
+exec robo -t -d -r winch -s lofn -n irc -- irssi --noconnect
