@@ -4,6 +4,22 @@ use warnings;
 use Devel::REPL;
 
 my $repl = Devel::REPL->new;
-$repl->load_plugin($_) for qw(History LexEnv);
+$repl->load_plugin($_) for qw(
+	History
+	LexEnv
+	Completion
+	CompletionDriver::Globals
+	CompletionDriver::INC
+	CompletionDriver::Keywords
+	CompletionDriver::LexEnv
+	CompletionDriver::Methods
+	MultiLine::PPI
+	FancyPrompt
+	Colors
+	History
+	DDS
+	ShowClass
+	Interrupt
+);
 $repl->run
 

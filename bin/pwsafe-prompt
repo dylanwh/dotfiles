@@ -1,0 +1,5 @@
+#!/bin/zsh
+
+account=''
+vared -p 'account: ' account 
+pwsafe -p $account

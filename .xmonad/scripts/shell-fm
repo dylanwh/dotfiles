@@ -1,0 +1,3 @@
+#!/bin/sh
+
+exec robo -td shell-fm
