@@ -1,0 +1,2 @@
+#!/bin/dash
+exec urxvt -title pwsafe -name pwsafe -e pwsafe-prompt

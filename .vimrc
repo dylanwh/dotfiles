@@ -172,7 +172,12 @@ endif
 " }}}
 
 runtime! ftplugin/man.vim
-colorscheme dylan2
+if $TERM == 'rxvt-unicode-outside'
+    set bg=light
+    colorscheme default
+else
+    colorscheme dylan2
+endif
 
 function FF()
     let val = "[" . &ff . "]"

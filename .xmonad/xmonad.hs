@@ -53,7 +53,7 @@ main = do
                        , "misc"
                        , "oo"
                        , "vm"
-                       , "gimp"
+                       , "music"
                        , "pdf"
                        , "web"
                        ]
@@ -97,8 +97,6 @@ main = do
             , ("M-m",              withFocused (sendMessage . maximizeRestore))
             , ("M-S-m",            sendMessage Toggle)
             , ("M-z",              spawn "exec xlock")
-            , ("M-<F4>",           spawn "sudo pm-suspend")
-            , ("M-<F12>",          spawn "sudo pm-hibernate")
             , ("M-S-t",            sinkAll)
             ] 
             {-
@@ -121,7 +119,7 @@ main = do
 -- and click on the client you're interested in.
 myManageHook = composeAll
     [ className =? "MPlayer"            --> doFloat
-    , className =? "Gimp"               --> doF (W.shift "gimp")
+    , className =? "Gimp"               --> doF (W.shift "misc")
     , className =? "Glade-3"            --> doFloat
     , className =? "Firefox-bin"        --> doF (W.shift "web")
     , className =? "Firefox"            --> doF (W.shift "web")
@@ -133,6 +131,7 @@ myManageHook = composeAll
     , resource  =? "offlineimap"        --> doF (W.shift "home")
     , resource  =? "irc"                --> doF (W.shift "home")
     , resource  =? "rss"                --> doF (W.shift "home")
+    , resource  =? "shell_fm"           --> doF (W.shift "music")
     , resource  =? "pwsafe"             --> doFloat
     , className =? "Xpdf"               --> doF (W.shift "pdf")
     , className =? "OpenOffice.org 2.4" --> doF (W.shift "oo")
