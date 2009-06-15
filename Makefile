@@ -1,8 +1,18 @@
 help:
-	@echo targets: fixperms, schedule
+	@echo targets: fixperms, schedule, pwsafe-merge
 
-info:
-	echo $(XFONT)
+.pwsafe.dat:
+	scp lofn:.pwsafe.dat .
+	make fixperms
+
+.netrc:
+	scp lofn:.netrc .
+	make fixperms
+
+.Xdefaults: .Xdefaults.tt 
+	xrdb -cpp ttpp -n $< > $@
+	xrdb -cpp ttpp -load $@
+
 
 fixperms:
 	chmod -Rc +x ~/bin ~/.xinitrc
@@ -17,16 +27,4 @@ pwsafe-merge:
 	rm pwsafe
 	scp .pwsafe.dat lofn:
 
-.pwsafe.dat:
-	scp lofn:.pwsafe.dat .
-	make fixperms
-
-.netrc:
-	scp lofn:.netrc .
-	make fixperms
-
-.Xdefaults: .Xdefaults.tt 
-	xrdb -cpp ttpp -n $< > $@
-	xrdb -cpp ttpp -load $@
-
-.PHONY: schedule fixperms help
+.PHONY: schedule fixperms help pwsafe-merge
