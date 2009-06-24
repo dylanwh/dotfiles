@@ -146,7 +146,7 @@ command MakePath silent call mkdir(expand("%:p:h"), "p")
 if !exists('autocmds_loaded')
     let autocmds_loaded=1
     augroup filetypedetect
-        autocmd BufNewFile,BufReadPost *.tt,*.ttml,*.html
+        autocmd BufNewFile,BufReadPost *.tt,*.ttml,*.html,*.tt2
                     \ setl ft=html syn=template
         autocmd BufNewFile,BufReadPost *.ttex
                     \ setl syn=template-tex
@@ -158,10 +158,12 @@ if !exists('autocmds_loaded')
                     \ setl ft=remind
         autocmd BufEnter *.hs,*.lhs       compiler ghc
         autocmd BufEnter *.c,*.C,*.cc,*.h compiler gcc
-        autocmd BufNewFile,BufRead *.cos set ft=caos
-        autocmd BufNewFile,BufRead *.lua set foldmethod=marker |
-                    \ set comments=sO:-\ -,mO:-\ \ ,exO:]],s1:--[[,mb:-,ex:]],:-- |
-                    \ set commentstring=--%s
+
+        autocmd BufNewFile,BufRead *.cos setl ft=caos
+        autocmd BufNewFile,BufRead *.t setl ft=perl
+        autocmd BufNewFile,BufRead *.lua setl foldmethod=marker |
+                    \ setl comments=sO:-\ -,mO:-\ \ ,exO:]],s1:--[[,mb:-,ex:]],:-- |
+                    \ setl commentstring=--%s
     augroup END
     autocmd BufReadPost *
                 \ if line("'\"") > 0 && line("'\"") <= line("$") |
