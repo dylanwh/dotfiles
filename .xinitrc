@@ -64,4 +64,7 @@ fi
 
 have xmms2-launcher && xmms2-launcher
 
+#xfce4-panel &
+#xfdesktop &
+#exec fusion-icon
 xmonad | xstatus
