@@ -18,6 +18,7 @@ use strict;
 use warnings;
 .
 endfunction
+
 let s:ext = expand("%:e")
 if s:ext == 'pm'
 	let s:name = substitute(expand("%:p:r"), '.*lib/', "", "")
@@ -27,11 +28,11 @@ if s:ext == 'pm'
 	let s:name = substitute(s:name, '/', '::', 'g')
 	call append(0, "package " . s:name . ";")
 	call append(1, "use Moose;")
-	call append(2, "")
-	call append(3, "our $VERSION = '0.01';")
-	call append(4, "our $AUTHORITY = 'cpan:DHARDISON';")
-	call append(5, "")
-	call append(6, "use namespace::clean -except => 'meta';")
+	call append(2, "use namespace::autoclean;")
+	call append(3, "")
+	call append(4, "our $VERSION = '0.01';")
+	call append(5, "our $AUTHORITY = 'cpan:DHARDISON';")
+	call append(6, "")
 	call append(line("$"), '1;')
 else
 	call append(0, '#!/usr/bin/perl')
