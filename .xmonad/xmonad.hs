@@ -141,8 +141,8 @@ myManageHook = composeAll
 myLayoutHook = workspaceDir "~" 
              $ avoidStruts 
              $ onWorkspace "1"  grid
-             $ onWorkspace "2"  grid
-             $ onWorkspace "3"  grid
+             $ onWorkspace "2"  (grid ||| tall ||| full)
+             $ onWorkspace "3"  (grid ||| tall ||| full)
              $ onWorkspace "8"  (full ||| tall ||| Mirror tall ||| grid)
              $ onWorkspace "9"  full
              $ tall ||| Mirror tall ||| grid ||| full
