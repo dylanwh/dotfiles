@@ -15,6 +15,7 @@ export OSTYPE=$OSTYPE
 export TMPDIR=$HOME/tmp
 export TEMPDIR=$TMPDIR
 export LC_COLLATE=POSIX # sort in POSIX order.
+export TZ=US/Eastern
 
 export LESSHISTFILE='-'
 export SSH_AGENT_FILE=$HOME/.ssh/agent@$HOST
