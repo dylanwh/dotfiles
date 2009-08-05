@@ -11,3 +11,5 @@ map \ :set invum<CR>
 set! general.warnOnAboutConfig=false
 set! browser.tabs.loadDivertedInBackground=false
 set! browser.download.manager.useWindow=false
+set! browser.download.lastDir=/home/dylan/var/download
+

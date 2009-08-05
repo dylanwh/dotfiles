@@ -101,10 +101,10 @@ let perl_fold = 1
 " }}}
 
 " MAPPINGS {{{
-map <F1> <C-o>:tab help<CR>
-map <F2> <C-o>:nohlsearch<CR>
-map <F3> <C-o>:set nu!<BAR>set nu?<CR>
-map <F4> <C-o>:edit ~/.menu<CR>
+map <F1> :tab help<CR>
+map <F2> :nohlsearch<CR>
+map <F3> :set nu!<BAR>set nu?<CR>
+
 map gn <C-o>:tab new<CR>
 map K \K
 map <c-w><c-t> :WMToggle<cr>

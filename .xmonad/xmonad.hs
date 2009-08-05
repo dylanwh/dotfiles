@@ -47,16 +47,7 @@ import System.IO (hPutStrLn, hClose, hFlush)
 -- {{{ main
 main = do
     let myFont       = "-xos4-terminus-bold-r-*-*-*-140-100-100-*-*-iso8859-1"
-    let myWorkspaces = [ "home"
-                       , "code"
-                       , "doc"
-                       , "misc"
-                       , "oo"
-                       , "vm"
-                       , "music"
-                       , "pdf"
-                       , "web"
-                       ]
+    let myWorkspaces = map show [ 1 .. 9 ]
     laptop <- getEnv "LAPTOP" `catch` const (return "none")
     let isLaptop = laptop == "yes"
 
@@ -119,24 +110,24 @@ main = do
 -- and click on the client you're interested in.
 myManageHook = composeAll
     [ className =? "MPlayer"            --> doFloat
-    , className =? "Gimp"               --> doF (W.shift "misc")
-    , className =? "Glade-3"            --> doFloat
-    , className =? "Firefox-bin"        --> doF (W.shift "web")
-    , className =? "Firefox"            --> doF (W.shift "web")
-    , className =? "Iceweasel"          --> doF (W.shift "web")
-    , className =? "Navigator"          --> doF (W.shift "web")
-    , className =? "Gran Paradiso"      --> doF (W.shift "web")
-    , className =? "VirtualBox"         --> doF (W.shift "vm")
-    , resource  =? "mutt"               --> doF (W.shift "home")
-    , resource  =? "offlineimap"        --> doF (W.shift "home")
-    , resource  =? "irc"                --> doF (W.shift "home")
-    , resource  =? "rss"                --> doF (W.shift "home")
-    , resource  =? "shell_fm"           --> doF (W.shift "music")
     , resource  =? "pwsafe"             --> doFloat
-    , className =? "Xpdf"               --> doF (W.shift "pdf")
-    , className =? "OpenOffice.org 2.4" --> doF (W.shift "oo")
-    , resource  =? "OpenOffice.org"     --> doF (W.shift "oo")
+    , className =? "Glade-3"            --> doFloat
     , title     =? "Factor workspace"   --> doFloat
+    , className =? "VirtualBox"         --> doF (W.shift "1")
+    , resource  =? "mutt"               --> doF (W.shift "1")
+    , resource  =? "offlineimap"        --> doF (W.shift "1")
+    , resource  =? "irc"                --> doF (W.shift "1")
+    , resource  =? "rss"                --> doF (W.shift "1")
+    , className =? "Gimp"               --> doF (W.shift "5")
+    , resource  =? "shell_fm"           --> doF (W.shift "7")
+    , className =? "Xpdf"               --> doF (W.shift "8")
+    , className =? "OpenOffice.org 2.4" --> doF (W.shift "8")
+    , resource  =? "OpenOffice.org"     --> doF (W.shift "8")
+    , className =? "Firefox-bin"        --> doF (W.shift "9")
+    , className =? "Firefox"            --> doF (W.shift "9")
+    , className =? "Iceweasel"          --> doF (W.shift "9")
+    , className =? "Navigator"          --> doF (W.shift "9")
+    , className =? "Gran Paradiso"      --> doF (W.shift "9")
     , resource  =? "desktop_window"     --> doIgnore
     , className =? "WMClock"            --> doIgnore
     , className =? "stalonetray"        --> doIgnore
@@ -149,11 +140,11 @@ myManageHook = composeAll
 --             $ onWorkspace "gimp" gimp
 myLayoutHook = workspaceDir "~" 
              $ avoidStruts 
-             $ onWorkspace "home" grid
-             $ onWorkspace "web"  full
-             $ onWorkspace "vm"   full
-             $ onWorkspace "oo"   (tall ||| full ||| grid)
-             $ onWorkspace "pdf"  (full ||| tall)
+             $ onWorkspace "1"  grid
+             $ onWorkspace "2"  (grid ||| tall ||| full)
+             $ onWorkspace "3"  (grid ||| tall ||| full)
+             $ onWorkspace "8"  (full ||| tall ||| Mirror tall ||| grid)
+             $ onWorkspace "9"  full
              $ tall ||| Mirror tall ||| grid ||| full
   where
      -- default tiling algorithm partitions the screen into two panes
