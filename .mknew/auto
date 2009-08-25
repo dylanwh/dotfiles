@@ -1,6 +1,6 @@
 [%-
 SWITCH suffix;
-	CASE ['pl', 'PL'];
+	CASE ['pl', 'PL', 'pm', 'pmc', 'PM'];
 		INCLUDE perl;
 	CASE ['html', 'htm', 'shtml', 'php'];
 		INCLUDE html;
