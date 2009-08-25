@@ -1,0 +1,23 @@
+[%# vim: set ft=template: %]
+[%-
+SET path = filename.absolute.stringify;
+
+m = path.match("lib/(.+)");
+IF m;
+	file = m.0;
+ELSE;
+	m = path.match("([A-Z][\\w/]+)");
+	file = m.0;
+END;
+
+SET module = file.replace("/", "::").replace("\\.pm");
+
+%]
+use MooseX::Declare;
+
+class [% module %] {
+	our $VERSION = 0.01;
+	our $AUTHORITY = 'cpan:DHARDISON';
+
+
+}

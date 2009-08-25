@@ -1,0 +1,9 @@
+[%-
+IF filename == 'Build.PL';
+	INCLUDE Build.PL;
+ELSIF suffix == 'pm';
+	INCLUDE "perl-module";
+ELSE;
+	INCLUDE "perl-script";
+END
+-%]
