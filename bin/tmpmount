@@ -1,0 +1,30 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+use File::Temp 'tempdir';
+use Getopt::Long;
+use POSIX 'geteuid';
+use Fatal;
+Fatal->import('run');
+
+my @RSYNC = qw( rsync -va );
+my @MOUNT = qw( mount -t tmpfs );
+
+if (geteuid() != 0) {
+    die "This must be executed as root\n";
+}
+
+my $size = '250m';
+GetOptions('size|s=s' => \$size);
+
+my $dir    = shift or die "Usage: tmpmount [options] dir";
+my $tmpdir = tempdir( CLEANUP => 1 );
+
+run(@RSYNC => "$dir/",    "$tmpdir/");
+run(@MOUNT => '-o',       "size=$size", 'none', $dir);
+run(@RSYNC => "$tmpdir/", "$dir/");
+
+sub run {
+    warn "run: @_\n";
+    return system(@_) == 0;
+}

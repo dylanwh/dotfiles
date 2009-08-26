@@ -4,7 +4,7 @@ use warnings;
 use Getopt::Long qw( :config gnu_getopt );
 use IO::All;
 use Path::Class 'file';
-use File::Basename 'fileparse';
+use File::Path 'mkpath';
 use Template;
 
 # The file we are standing in for.
@@ -16,6 +16,9 @@ my $template = 'auto';
 # whether or not we create file.
 my $create = 0;
 
+# whether or not we mkpath(dirname(file))
+my $mkdir = 0;
+
 # pre-defined template variables
 my %define = ( ENV => { %ENV } );
 
@@ -23,12 +26,14 @@ my %define = ( ENV => { %ENV } );
 my @include = ("$ENV{HOME}/.mknew");
 
 GetOptions(
-    'create|C'     => \$create,
+    'create|c'     => \$create,
+    'mkdir|m'      => \$mkdir,
     'template|t=s' => \$template,
     'filename|f=s' => \$filename,
     'define|D=s%'  => \%define,
 );
 
+$mkdir = 1 if $create;
 
 die "$0 --filename is required" unless $filename;
 
@@ -40,9 +45,12 @@ if ( -f $filename ) {
     exit 0;
 }
 
+mkpath($filename->dir->stringify) if $mkdir;
+
 $define{filename} = $filename;
 $define{create}   = $create;
-$define{suffix}   = (split(/\./, $filename))[-1];
+$define{mkdir}    = $mkdir;
+$define{suffix}   = (split(/\./, $filename->basename))[-1];
 
 my $output = $create ? io($filename) : io->stdout ;
 my $tt = Template->new(
