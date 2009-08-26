@@ -13,7 +13,9 @@ END;
 SET module = file.replace("/", "::").replace("\\.pm");
 
 %]
+use feature ':5.10';
 use MooseX::Declare;
+use MooseX::AttributeHelpers;
 
 class [% module %] {
 	our $VERSION = 0.01;

@@ -3,6 +3,8 @@ IF filename == 'Build.PL';
 	INCLUDE Build.PL;
 ELSIF suffix == 'pm';
 	INCLUDE "perl-module";
+ELSIF suffix == 't';
+	INCLUDE "perl-test";
 ELSE;
 	INCLUDE "perl-script";
 END

@@ -11,7 +11,7 @@ package $pkg;
 use metaclass;
 PERL
 
-print join ("\n", map("$_->{class}->$_->{name}",
-		$pkg->meta->compute_all_applicable_methods())), "\n";
+print join ("\n", map("$_->{package_name}->$_->{name}",
+		$pkg->meta->get_all_methods())), "\n";
 
 

@@ -84,6 +84,10 @@ if exists("perl_fold")
   if !exists("perl_nofold_subs")
     syn region perlSubFold     start="^\z(\s*\)\<class\>.*[^};]$" end="^\z1}\s*\%(#.*\)\=$" transparent fold keepend
     syn region perlSubFold     start="^\z(\s*\)\<method\>.*[^};]$" end="^\z1}\s*\%(#.*\)\=$" transparent fold keepend
+    syn region perlSubFold     start="^\z(\s*\)\<around\>.*[^};]$" end="^\z1}\s*\%(#.*\)\=$" transparent fold keepend
+    syn region perlSubFold     start="^\z(\s*\)\<before\>.*[^};]$" end="^\z1}\s*\%(#.*\)\=$" transparent fold keepend
+    syn region perlSubFold     start="^\z(\s*\)\<after\>.*[^};]$" end="^\z1}\s*\%(#.*\)\=$" transparent fold keepend
+    syn region perlSubFold     start="^\z(\s*\)\<has\>.*[^};]$" end="^\z1);\s*\%(#.*\)\=$" transparent fold keepend
   endif
 endif
 
