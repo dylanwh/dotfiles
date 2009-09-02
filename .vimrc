@@ -160,7 +160,7 @@ if !exists('autocmds_loaded')
         autocmd BufEnter *.c,*.C,*.cc,*.h compiler gcc
 
         autocmd BufNewFile,BufRead *.cos setl ft=caos
-        autocmd BufNewFile,BufRead *.t setl ft=perl
+        autocmd BufNewFile,BufRead *.t,*.cgi setl ft=perl
         autocmd BufNewFile,BufRead *.lua setl foldmethod=marker |
                     \ setl comments=sO:-\ -,mO:-\ \ ,exO:]],s1:--[[,mb:-,ex:]],:-- |
                     \ setl commentstring=--%s
