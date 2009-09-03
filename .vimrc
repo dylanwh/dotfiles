@@ -148,8 +148,6 @@ if !exists('autocmds_loaded')
     augroup filetypedetect
         autocmd BufNewFile,BufReadPost *.tt,*.ttml,*.html,*.tt2
                     \ setl ft=html syn=template
-        autocmd BufNewFile,BufReadPost *.ttex
-                    \ setl syn=template-tex
         autocmd BufNewFile,BufReadPost *.hs,*.lhs,*.hsc 
                     \ setl noshiftround noexpandtab ts=8 sw=4
         autocmd BufNewFile,BufRead *.mkd,*.mdwn           
@@ -165,6 +163,7 @@ if !exists('autocmds_loaded')
                     \ setl comments=sO:-\ -,mO:-\ \ ,exO:]],s1:--[[,mb:-,ex:]],:-- |
                     \ setl commentstring=--%s
     augroup END
+
     autocmd BufReadPost *
                 \ if line("'\"") > 0 && line("'\"") <= line("$") |
                 \   exe "normal g`\"" |
@@ -188,4 +187,3 @@ function FF()
         return ""
     endif
 endfunction
-

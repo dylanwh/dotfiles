@@ -1,2 +1,0 @@
-#!/bin/sh
-exec urxvt -title wpa_cli -e sudo wpa_cli
