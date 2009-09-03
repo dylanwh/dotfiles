@@ -9,6 +9,8 @@
 # Ensure that this script evaluated as a login shell.
 [[ -z $REALNAME ]] && exec zsh -l $0
 
+exec xmonad
+
 # Third re-exec: 
 # Ensure wrappers (ssh-agent and dbus) are running, and that we are a login shell.
 if [[ -z $DID_WRAPPERS ]]
@@ -44,13 +46,6 @@ xset r rate 250 30
 setxkbmap -option terminate:ctrl_alt_bksp
 setxkbmap -option ctrl:nocaps
 make .Xdefaults
-
-export LAPTOP
-if have xmobar; then
-	LAPTOP=no
-else
-	LAPTOP=yes
-fi
 
 if [[ -n $SSH_ASKPASS ]]
 then

@@ -9,7 +9,7 @@ maxconnections  = 3
 maxsyncaccounts = 3
 holdconnectionopen = yes
 
-ui = Curses.Blinkenlights
+ui = Noninteractive.Basic
 #}}}
 
 [Account home]#{{{
@@ -20,35 +20,20 @@ quick            = 3
 socktimeout      = 60
 #}}}
 
-[Repository remote-home]#{{{
+[Repository local-home]#{{{
 type         = IMAP
 remotehost   = imap.gmail.com
 remoteuser   = dylan@hardison.net
+remotepass   = tJHNq6eBCUn
+folderfilter = lambda foldername: foldername.find("[Gmail]") != -1
 ssl          = yes
-nametrans    = lambda foldername: re.sub('^INBOX$', 'inbox', foldername)
-folderfilter = lambda foldername: foldername.find("[Gmail]") == -1
-foldersort   = unfair_cmp
 #}}}
 
-[Repository local-home]#{{{
-type         = Maildir
-localfolders = ~/mail
-sep          = /
-#}}}
-
-[mbnames]#{{{
-# offlineimap can record your mailbox names in a format you specify.
-# You can define the header, each mailbox item, the separator,
-# and the footer.  Here is an example for Mutt.
-# If enabled is yes, all six setting must be specified, even if they
-# are just the empty string "".
-#
-# The header, peritem, sep, and footer are all Python expressions passed
-# through eval, so you can (and must) use Python quoting.
-enabled = yes
-filename = ~/mail/mailboxes
-header = ''
-peritem = ~/mail/%(foldername)s
-sep = "\n"
-footer = "\n"
+[Repository remote-home]#{{{
+type         = IMAP
+remotehost    = imap.gmail.com
+remoteuser    = dylanwh@gmail.com
+remotepass    = biendort
+folderfilter = lambda foldername: foldername.find("[Gmail]") != -1
+ssl           = yes
 #}}}

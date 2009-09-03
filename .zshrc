@@ -188,6 +188,4 @@ esac
 ztitle
 have todo && todo --timeout --summary
 
-[[ -d $HOME/tmp ]] || mkdir -m 700 $HOME/tmp
-
 # vim: set sw=4 ts=4 foldmethod=marker path=.,~/.zsh:

@@ -71,7 +71,7 @@ main = do
             , modMask            = mod4Mask
             , layoutHook         = ewmhDesktopsLayout myLayoutHook
             , manageHook         = myManageHook <+> manageDocks
-            , logHook            = ewmhDesktopsLogHook >> if not isLaptop then myLogHook else return ()
+            , logHook            = ewmhDesktopsLogHook 
             }
 
     let myKeys = 
@@ -113,7 +113,7 @@ myManageHook = composeAll
     , resource  =? "pwsafe"             --> doFloat
     , className =? "Glade-3"            --> doFloat
     , title     =? "Factor workspace"   --> doFloat
-    , className =? "VirtualBox"         --> doF (W.shift "1")
+    , className =? "VirtualBox"         --> doF (W.shift "5")
     , resource  =? "mutt"               --> doF (W.shift "1")
     , resource  =? "offlineimap"        --> doF (W.shift "1")
     , resource  =? "irc"                --> doF (W.shift "1")
@@ -132,6 +132,7 @@ myManageHook = composeAll
     , className =? "WMClock"            --> doIgnore
     , className =? "stalonetray"        --> doIgnore
     , className =? "kxdocker"           --> doIgnore
+    , resource  =? "gnome-panel"        --> doFloat
     , resource  =? "kdesktop"           --> doIgnore
     , resource  =? "kicker"             --> doIgnore ]
 -- }}}
@@ -182,23 +183,6 @@ myLayoutHook = workspaceDir "~"
 
      -- Percent of screen to increment by when resizing panes
      delta   = 3/100
--- }}}
-
--- {{{ log hook
-myLogHook = dynamicLogWithPP 
-          $ xmobarPP { ppTitle   = xmobarColor "white" "" . shorten 100
-                     , ppLayout  = layout 
-                     , ppCurrent = xmobarColor "yellow" ""
-                     , ppHidden  = xmobarColor "LightSlateBlue" ""
-                     , ppHiddenNoWindows = xmobarColor "DarkSlateBlue" "" -- . wrap " " " "
-                     , ppWsSep   = " "
-                     , ppSep     = " | "
-                     , ppOutput  = \x -> putStrLn $ ' ' : x
-                     }
-    where layout = xmobarColor "SteelBlue3" ""
-          wrap b e x = b ++ x ++ e
-          -- crap color b e = wrap (color b) (color e)
-
 -- }}}
 
 scriptPrompt conf = do-- {{{
