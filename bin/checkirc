@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 package IRCView;
 use MooseX::POE;
 use POE qw( Component::IRC Wheel::Run );
