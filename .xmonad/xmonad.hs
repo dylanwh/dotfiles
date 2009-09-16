@@ -1,15 +1,16 @@
 -- vim: set et ts=4 sw=4 foldmethod=marker:
 -- {{{ Imports 
-import XMonad
+import XMonad hiding ( (|||) )
 import System.Exit
 
 import qualified XMonad.StackSet as W
 import qualified Data.Map        as M
 
 import XMonad.Actions.DwmPromote
--- import XMonad.Actions.DynamicWorkspaces
-import XMonad.Actions.UpdatePointer
+import XMonad.Actions.FindEmptyWorkspace
+import XMonad.Actions.CycleRecentWS
 import XMonad.Actions.SinkAll
+import XMonad.Layout.SimpleFloat
 
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.EwmhDesktops
@@ -21,9 +22,10 @@ import XMonad.Prompt.Directory
 import XMonad.Prompt.Shell
 import XMonad.Prompt.Ssh
 import XMonad.Prompt.XMonad
+import XMonad.Prompt.Layout
 
 import XMonad.Layout.Grid
---import XMonad.Layout.IM
+import XMonad.Layout.IM
 import XMonad.Layout.LayoutHints
 import XMonad.Layout.Magnifier
 import XMonad.Layout.Maximize
@@ -33,6 +35,8 @@ import XMonad.Layout.PerWorkspace
 import XMonad.Layout.Reflect (reflectHoriz)
 import XMonad.Layout.Tabbed
 import XMonad.Layout.WorkspaceDir
+import XMonad.Layout.LayoutCombinators
+
 
 import XMonad.Util.EZConfig
 
@@ -48,9 +52,6 @@ import System.IO (hPutStrLn, hClose, hFlush)
 main = do
     let myFont       = "-xos4-terminus-bold-r-*-*-*-140-100-100-*-*-iso8859-1"
     let myWorkspaces = map show [ 1 .. 9 ]
-    laptop <- getEnv "LAPTOP" `catch` const (return "none")
-    let isLaptop = laptop == "yes"
-
 
     let myXPConfig = defaultXPConfig 
             { font        = myFont
@@ -71,7 +72,7 @@ main = do
             , modMask            = mod4Mask
             , layoutHook         = ewmhDesktopsLayout myLayoutHook
             , manageHook         = myManageHook <+> manageDocks
-            , logHook            = ewmhDesktopsLogHook 
+            , logHook            = ewmhDesktopsLogHook >> myLogHook
             }
 
     let myKeys = 
@@ -89,15 +90,25 @@ main = do
             , ("M-S-m",            sendMessage Toggle)
             , ("M-z",              spawn "exec xlock")
             , ("M-S-t",            sinkAll)
+            , ("M-n",              viewEmptyWorkspace)
+            , ("M-S-n",            tagToEmptyWorkspace)
+            , ("M-<Tab>",          cycleRecentWS [xK_Super_L] xK_Tab xK_grave)
+            , ("M-x",              layoutPrompt myXPConfig)
+            , ("<F1>",             sendMessage (JumpToLayout "Tall"))
+            , ("<F2>",             sendMessage (JumpToLayout "Mirror Tall"))
+            , ("<F3>",             sendMessage (JumpToLayout "Full"))
+            , ("<F4>",             sendMessage (JumpToLayout "Grid"))
+            , ("<F5>",             sendMessage (JumpToLayout "Float"))
+            , ("<F6>",             sendMessage (JumpToLayout "IM"))
+            , ("<F7>",             sendMessage (JumpToLayout "Gimp"))
             ] 
-            {-
-            ++ [ ("M-" ++ [key], windows . W.view tag) 
-                | (key,tag) <- zip "123456789" [0..8] ]
-            -}
-    let mediaKeys = []
 
-    xmonad $ myConfig `additionalKeysP` myKeys `additionalKeys` mediaKeys
+    xmonad $ myConfig `additionalKeysP` myKeys
 -- }}}
+
+myLogHook = do status <- dynamicLogString defaultPP
+               home   <- io $ getEnv "HOME"
+               io $ writeFile (home ++ "/.xmonad/status") status
 
 -- {{{ manage hook:
 -- Execute arbitrary actions and WindowSet manipulations when managing
@@ -141,12 +152,7 @@ myManageHook = composeAll
 --             $ onWorkspace "gimp" gimp
 myLayoutHook = workspaceDir "~" 
              $ avoidStruts 
-             $ onWorkspace "1"  grid
-             $ onWorkspace "2"  (grid ||| tall ||| full)
-             $ onWorkspace "3"  (grid ||| tall ||| full)
-             $ onWorkspace "8"  (full ||| tall ||| Mirror tall ||| grid)
-             $ onWorkspace "9"  full
-             $ tall ||| Mirror tall ||| grid ||| full
+             $ tall ||| Mirror tall ||| full ||| grid ||| float ||| im ||| gimp
   where
      -- default tiling algorithm partitions the screen into two panes
      tall = named "Tall" 
@@ -161,16 +167,19 @@ myLayoutHook = workspaceDir "~"
           $ Grid
 
      -- im layout
-     {-im   = named "IM" 
+     im   = named "IM" 
           $ reflectHoriz 
           $ withIM (1%6) (Title "Buddy List") 
-          $ Grid-}
+          $ Grid
 
-     {-gimp = named "Gimp"
+     gimp = named "Gimp"
           $ withIM (0.13) (Role "gimp-toolbox")
           $ reflectHoriz 
           $ withIM (0.20) (Role "gimp-dock")
-          $ Full-}
+          $ Full
+
+     -- floating layout, renamed
+     float = named "Float" $ layoutHints $ maximize $  simpleFloat
 
      -- full layout, renamed.
      full = named "Full" $ smartBorders $ layoutHints Full
@@ -187,8 +196,10 @@ myLayoutHook = workspaceDir "~"
 
 scriptPrompt conf = do-- {{{
     dir <- io $ home "/.xmonad/scripts"
-    dirExecPromptNamed conf spawn dir  "Script: "
+    dirExecPromptNamed conf execSpawn dir  "Script: "
 -- }}}
+
+execSpawn str = spawn ("exec " ++ str)
 
 home :: String -> IO String-- {{{
 home path = do dir <- io $ getEnv "HOME" `catch` const (return "/")

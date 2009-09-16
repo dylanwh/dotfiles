@@ -11,15 +11,20 @@ ELSE;
 END;
 
 SET module = file.replace("/", "::").replace("\\.pm");
+IF module.match("Role");
+	class = 'role';
+ELSE;
+	class = 'class';
+END;
 
-%]
+-%]
 use feature ':5.10';
 use MooseX::Declare;
-use MooseX::AttributeHelpers;
 
-class [% module %] {
+[% class %] [% module %] {
 	our $VERSION = 0.01;
 	our $AUTHORITY = 'cpan:DHARDISON';
 
+	use MooseX::AttributeHelpers;
 
 }
