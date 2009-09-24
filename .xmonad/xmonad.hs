@@ -44,14 +44,22 @@ import Control.Arrow ((>>>), second)
 import Data.Char
 import Data.List (isPrefixOf)
 import Data.Ratio ((%))
+import Data.Maybe
 import System.Environment (getEnv)
 import System.IO (hPutStrLn, hClose, hFlush)
+import Text.XHtml (tag, strAttr, renderHtml, (<<), (!), primHtml)
+
 -- }}}
+wsHome   = "1"
+wsGimp   = "7"
+wsVM     = "5"
+wsOffice = "8"
+wsWeb    = "9"
 
 -- {{{ main
 main = do
     let myFont       = "-xos4-terminus-bold-r-*-*-*-140-100-100-*-*-iso8859-1"
-    let myWorkspaces = map show [ 1 .. 9 ]
+    let myWorkspaces = map show [1 .. 9]
 
     let myXPConfig = defaultXPConfig 
             { font        = myFont
@@ -65,7 +73,7 @@ main = do
 
     let myConfig = defaultConfig
             { borderWidth        = 2
-            , terminal           = "exec robo"
+            , terminal           = "robo"
             , normalBorderColor  = "#000033"
             , focusedBorderColor = "red"
             , workspaces         = myWorkspaces
@@ -76,7 +84,7 @@ main = do
             }
 
     let myKeys = 
-            [ ("M-`",              spawn $ terminal myConfig)
+            [ ("M-`",              spawnExec $ terminal myConfig)
             , ("M-c",              kill)
             , ("M-<Return>",       dwmpromote)
             , ("M-S-<Return>",     windows W.focusMaster)
@@ -88,7 +96,6 @@ main = do
             , ("M-d",              changeDir      myXPConfig)
             , ("M-m",              withFocused (sendMessage . maximizeRestore))
             , ("M-S-m",            sendMessage Toggle)
-            , ("M-z",              spawn "exec xlock")
             , ("M-S-t",            sinkAll)
             , ("M-n",              viewEmptyWorkspace)
             , ("M-S-n",            tagToEmptyWorkspace)
@@ -109,18 +116,22 @@ main = do
 myLogHook = do home <- io $ getEnv "HOME"
                dynamicLogWithPP (panzenPP (home ++ "/.panzen"))
 
-
-panzenPP f = defaultPP { ppTitle   = panzenColor "white". shorten 100
+panzenPP f = defaultPP { ppTitle   = panzenColor "white" . shorten 50
                        , ppLayout  = panzenColor "SteelBlue3"
                        , ppCurrent = panzenColor "yellow"
                        , ppHidden  = panzenColor "LightSlateBlue"
                        , ppHiddenNoWindows = panzenColor "DarkSlateBlue"
                        , ppWsSep   = " "
                        , ppSep     = " | "
-                       , ppOutput  = \s -> writeFile f ( "<span bgcolor='black' font='" ++ myFont ++ "'>" ++ s ++ "</span>\n")
+                       , ppOutput  = writeFile f . oneline . panzenBar . primHtml
                        }
-    where panzenColor fg = wrap ("<span color='" ++ fg ++ "'>") "</span>"
-          myFont         = "Terminus" -- -xos4-terminus-bold-r-*-*-*-140-100-100-*-*-iso8859-1"
+    where color   = strAttr "color"
+          font    = strAttr "font" "Terminus"
+          bold    = strAttr "weight" "bold"
+          span    = tag "span"
+          panzenColor   c = show . (span ! [color c, font, bold] <<)
+          panzenBar       = show . (span ! [font, bold] << )
+          oneline xs      = [ x | x <- xs, x /= '\n' ] ++ "\n"
 
 
 -- {{{ manage hook:
@@ -137,21 +148,22 @@ myManageHook = composeAll
     , resource  =? "pwsafe"             --> doFloat
     , className =? "Glade-3"            --> doFloat
     , title     =? "Factor workspace"   --> doFloat
-    , className =? "VirtualBox"         --> doF (W.shift "5")
-    , resource  =? "mutt"               --> doF (W.shift "1")
-    , resource  =? "offlineimap"        --> doF (W.shift "1")
-    , resource  =? "irc"                --> doF (W.shift "1")
-    , resource  =? "rss"                --> doF (W.shift "1")
-    , className =? "Gimp"               --> doF (W.shift "5")
-    , resource  =? "shell_fm"           --> doF (W.shift "7")
-    , className =? "Xpdf"               --> doF (W.shift "8")
-    , className =? "OpenOffice.org 2.4" --> doF (W.shift "8")
-    , resource  =? "OpenOffice.org"     --> doF (W.shift "8")
-    , className =? "Firefox-bin"        --> doF (W.shift "9")
-    , className =? "Firefox"            --> doF (W.shift "9")
-    , className =? "Iceweasel"          --> doF (W.shift "9")
-    , className =? "Navigator"          --> doF (W.shift "9")
-    , className =? "Gran Paradiso"      --> doF (W.shift "9")
+    , className =? "VirtualBox"         --> doF (W.shift wsVM)
+    , className =? "Gimp"               --> doF (W.shift wsGimp)
+    , resource  =? "mutt"               --> doF (W.shift wsHome)
+    , resource  =? "offlineimap"        --> doF (W.shift wsHome)
+    , resource  =? "irc"                --> doF (W.shift wsHome)
+    , resource  =? "rss"                --> doF (W.shift wsHome)
+    , resource  =? "shell_fm"           --> doF (W.shift wsHome)
+    , className =? "Xpdf"               --> doF (W.shift wsOffice)
+    , className =? "OpenOffice.org 2.4" --> doF (W.shift wsOffice)
+    , resource  =? "OpenOffice.org"     --> doF (W.shift wsOffice)
+    , className =? "Firefox-bin"        --> doF (W.shift wsWeb)
+    , className =? "Firefox"            --> doF (W.shift wsWeb)
+    , className =? "Iceweasel"          --> doF (W.shift wsWeb)
+    , className =? "Navigator"          --> doF (W.shift wsWeb)
+    , className =? "Gran Paradiso"      --> doF (W.shift wsWeb)
+    , className =? "Google-chrome"      --> doF (W.shift wsWeb)
     , resource  =? "desktop_window"     --> doIgnore
     , className =? "WMClock"            --> doIgnore
     , className =? "stalonetray"        --> doIgnore
@@ -165,7 +177,11 @@ myManageHook = composeAll
 --             $ onWorkspace "gimp" gimp
 myLayoutHook = workspaceDir "~" 
              $ avoidStruts 
-             $ tall ||| Mirror tall ||| full ||| grid ||| float ||| im ||| gimp
+             $ onWorkspace wsHome (tall ||| im)
+             $ onWorkspace wsVM   full
+             $ onWorkspace wsGimp gimp
+             $ onWorkspace wsWeb  full
+             $ tall ||| Mirror tall ||| grid ||| full
   where
      -- default tiling algorithm partitions the screen into two panes
      tall = named "Tall" 
@@ -201,29 +217,22 @@ myLayoutHook = workspaceDir "~"
      nmaster = 1
 
      -- Default proportion of screen occupied by master pane
-     ratio   = 1/2
+     ratio   = 7/12
 
      -- Percent of screen to increment by when resizing panes
-     delta   = 3/100
+     delta   = 2/100
 -- }}}
 
 scriptPrompt conf = do-- {{{
     dir <- io $ home "/.xmonad/scripts"
-    dirExecPromptNamed conf execSpawn dir  "Script: "
+    dirExecPromptNamed conf spawnExec dir  "Script: "
 -- }}}
 
-execSpawn str = spawn ("exec " ++ str)
+spawnExec str = spawn ("exec " ++ str)
 
 home :: String -> IO String-- {{{
 home path = do dir <- io $ getEnv "HOME" `catch` const (return "/")
                return (dir ++ '/' : path) -- }}}
-
-replace :: (Eq a) => [a] -> [a] -> [a] -> [a]-- {{{
-replace from to [] = []
-replace from to str@(x:xs)
-    | from `isPrefixOf` str = to ++ replace from to (drop (length from) str)
-    | otherwise             = x : replace from to xs
-
 
 data Bookmark = Bookmark-- {{{
 
@@ -240,7 +249,7 @@ bookmarkPrompt c = do
 gotoBookmark :: [(String, String)] -> String -> X ()
 gotoBookmark marks name =
     case lookup name marks of
-         Just url -> spawn ("firefox " ++ url)
+         Just url -> spawnExec ("firefox " ++ url)
          Nothing  -> return ()
 
 getBookmarks :: String -> IO [(String, String)]
