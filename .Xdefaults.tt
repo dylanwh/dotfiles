@@ -40,7 +40,8 @@ System.Mode: [% mode %]
 
 [% term %].foreground: #A8A8A8
 [% term %].background: #000000
-[% term %].cursorColor: #A8A8A8
+[% term %].cnursorColor: #A8A8A8
+[% term %].saveLines: 100
 
 outside.font: [% xfont_huge %]
 outside.*background:	#eeeeee
