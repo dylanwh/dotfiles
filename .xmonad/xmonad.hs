@@ -106,9 +106,22 @@ main = do
     xmonad $ myConfig `additionalKeysP` myKeys
 -- }}}
 
-myLogHook = do status <- dynamicLogString defaultPP
-               home   <- io $ getEnv "HOME"
-               io $ writeFile (home ++ "/.xmonad/status") status
+myLogHook = do home <- io $ getEnv "HOME"
+               dynamicLogWithPP (panzenPP (home ++ "/.panzen"))
+
+
+panzenPP f = defaultPP { ppTitle   = panzenColor "white". shorten 100
+                       , ppLayout  = panzenColor "SteelBlue3"
+                       , ppCurrent = panzenColor "yellow"
+                       , ppHidden  = panzenColor "LightSlateBlue"
+                       , ppHiddenNoWindows = panzenColor "DarkSlateBlue"
+                       , ppWsSep   = " "
+                       , ppSep     = " | "
+                       , ppOutput  = \s -> writeFile f ( "<span bgcolor='black' font='" ++ myFont ++ "'>" ++ s ++ "</span>\n")
+                       }
+    where panzenColor fg = wrap ("<span color='" ++ fg ++ "'>") "</span>"
+          myFont         = "Terminus" -- -xos4-terminus-bold-r-*-*-*-140-100-100-*-*-iso8859-1"
+
 
 -- {{{ manage hook:
 -- Execute arbitrary actions and WindowSet manipulations when managing
