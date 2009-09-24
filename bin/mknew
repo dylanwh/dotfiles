@@ -45,7 +45,7 @@ if ( -f $filename ) {
     exit 0;
 }
 
-mkpath($filename->dir->stringify) if $mkdir;
+#mkpath($filename->dir->stringify) if $mkdir;
 
 $define{filename} = $filename;
 $define{create}   = $create;
