@@ -56,7 +56,7 @@ $option{opt_z} = $option{ssh} ? 1 : $option{opt_z};
 
 if ($option{dtach}) {
 	if ($option{ssh}) { $DTACH_DIR =~ s/^\Q$ENV{HOME}/~/ }
-	my $socket = File::Spec->catfile($DTACH_DIR, $option{name} . '.dtach');
+	my $socket = File::Spec->catfile($DTACH_DIR, $option{name});
 	my @dtach = ('dtach', '-A', $socket);
 
 	push @dtach, '-z'                 if $option{opt_z};
