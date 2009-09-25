@@ -25,7 +25,18 @@ color body    green        black    "^#v[-+]"
 
 color index magenta default '!~p !~l'
 color index green default '~l'
-#source "awk -f $HOME/.mutt/friendcolor.awk $HOME/.addressbook|"
 color index brightred default '~H spam'
 color index brightyellow default '~T'
 color index brightblack default '~D'
+
+# Formatting options.
+set to_chars=" =TCFL"
+set date_format="!%A, %B %d, %Y at %I:%M%p %Z"
+set forward_format="Fwd: %s"
+set index_format="%?M?+%4C& %4C? %Z %{%b %d}  %-20.20n  %?y?(%.20Y) ?%s"
+set folder_format="%2C %t %f %> %d"
+
+ignore *
+unhdr_order *
+unignore From: Reply-To: To: Cc: Bcc: Date: Subject:
+hdr_order From: Reply-To: To: Cc: Bcc: Date: Subject: 

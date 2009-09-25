@@ -1,85 +1,81 @@
+source ~/.mutt/t-prot
+source ~/.mutt/gnupg
+source ~/.mutt/theme
+
+# Identity options
+set realname="Dylan William Hardison"
+set from="dylan@hardison.net"
+
+# Recongize messages addressed to me.
+alternates dylanwh@gmail.com \
+           dylan@haverdev.org \
+           dylan@sinedev.org \
+           dylan@midgetbutton.org \
+           dylan\\+[a-z]+@hardison.net \
+           dylan@lofn.hardison.net \
+           Hardison.Dylan8811@myspcmail.spcollege.edu
+
+# And messages to mailing lists I subscribe to.
+subscribe slug@nks.net \
+          slug-politics@nks.net \
+          haskell-cafe@haskell.org \
+          caml-list@inria.fr \
+          caml-list@yquem.inria.fr \
+          templates@template-toolkit.org \
+          macarthur@genesisfleet.com \
+          module-authors@perl.org \
+          debian-security-announce@lists.debian.org \
+          poe@perl.org \
+          dwm@suckless.org \
+          members@issmacarthur.com \
+          mailall@myspcmail.spcollege.edu \
+		  members@lists.issmacarthur.com \
+		  members@lists.deepspace2.com \
+		  pup@possumism.net \
+		  tbad@tampabad.org
+
+# Location options
+set mbox_type=Maildir
+set folder=~/mail
+set spoolfile="+inbox"
+set mbox="+read"
+set record="+sent"
+set postponed="+postponed"
+set signature="~/bin/signature|"
+
+# Behavior options
 set use_from
 set envelope_from
-set mbox_type=Maildir
-set to_chars=" =TCFL"
-set date_format="!%A, %B %d, %Y at %I:%M%p %Z"
-set forward_format="Fwd: %s"
-set index_format="%?M?+%4C& %4C? %Z %{%b %d}  %-20.20n  %?y?(%.20Y) ?%s"
-set folder_format="%2C %t %f %> %d"
+set reply_to             # Always use reply-to
+set ignore_list_reply_to # Except for mailing lists.
+set mail_check=80        # Check mailboxes every 80 seconds
+set menu_scroll          # Scroll line by line.
+set pager_stop           # Page down doesn't go to next message.
+set nomove               # I do not want to move read mail to my read mail directory.
+set noconfirmappend      # Don't ask me to add messages to existing mailbox.
+set delete               # Don't ask me if I want to delete something
+set fast_reply           # Don't ask me questions when I reply to a message
+set noprompt_after       # don't ask me for additional commands.
+set reverse_alias        # Map email addresses back to aliases.
+set reverse_name         # Reply as the target of the email
+set include              # Always include messages in replies.
+set tilde                # Use tildes in the internal pager like vim.
+set nohelp               # Don't show the help menu at the top
 
-set noimap_passive
+# set pager_index_lines=7 # show a mini-pager
 
-# ignore reply-to for mailing lists.
-set ignore_list_reply_to
-
-# Mutt will scan for new mail in all of your mailboxes every mail_check seconds.
-# The default is 5 seconds, which will make mutt feel very sluggish if you have more than a
-# couple of mailboxes defined. You'll like mutt better if you increase this to at least 60.
-set mail_check=80
-
-# scroll line by line.
-set menu_scroll
-
-# page down doesn't go to next message.
-set pager_stop
-
-# show a mini-pager
-# set pager_index_lines=7
-
-# I do not want to move read mail to my read mail directory.
-set nomove
-
-# Don't ask me to add messages to existing mailbox.
-set noconfirmappend
-
-# Don't ask me if I want to delete something
-set delete
-
-# Don't ask me questions when I reply to a message
-set fast_reply
-
-# Always use reply-to
-set reply_to
-
-# don't ask me for additional commands.
-set noprompt_after
-
-# Display titles in the terminal
-set xterm_set_titles
-set xterm_title="mutt"
-
-# Poop reduction
-set certificate_file=~/.mutt/certificates
-
-# Map email addresses back to aliases.
-set reverse_alias
-
-# Reply as the target of the email
-set reverse_name
-
-# always include messages in replies.
-set include
-
-# Use the date received rather than the date sent
-# to thread messages by subject.
-set thread_received
 set sort=threads
 set sort_aux=date-received
-
-# Use tildes in the internal pager like vim.
-set tilde
-
-# Don't show the help menu at the top
-set nohelp
+set thread_received
 
 folder-hook . push "\eV" # By default, collapse all threads
 set nocollapse_unread    # Except those with new messages.
 
-ignore *
-unhdr_order *
-unignore From: Reply-To: To: Cc: Bcc: Date: Subject:
-hdr_order From: Reply-To: To: Cc: Bcc: Date: Subject: 
+my_hdr Reply-By: `date --date="-3 days"`
+my_hdr X-Message-Flag: OUTLOOK ERROR: Message in violation of Microsoft Security Policy (MSP).
+my_hdr X-Religion: Optimus Prime
 
+# Recognize spam
 spam "X-Spam-Status: Yes" "spam"
 
 # These bindings make mutt act like vim, a bit.
@@ -87,8 +83,6 @@ bind  index zo collapse-thread
 bind  index zc collapse-thread
 bind  index G  last-entry
 bind  index gg first-entry
-macro index gI "c +INBOX\n"           'view inbox'
-macro index gF "c +[Gmail]/Starred\n" 'view important messages'
 
 bind index <Esc>[A previous-undeleted
 bind index <Esc>[B next-undeleted
@@ -100,12 +94,5 @@ bind index <Esc>0B next-undeleted
 bind index <Esc>0C next-page
 bind index <Esc>0D previous-page
 
-macro index A    ";tT~N | ~O\n;WN;t"     "mark all as read"
-macro index S    "s [Gmail]/Spam\n"            "report spam"
-
-#source ~/.mutt/t-prot
-source 'perl $HOME/.mutt/alias.pl ${YABOOK_FILE:-"$HOME/.yabook"} |'
-source ~/.mutt/gnupg
-source ~/.mutt/theme
-source ~/.mutt/profile.active
-
+# Reply as a specific address for mailing list
+send-hook '~t pup@possumism.net' 'set from="Dylan William Hardison <dylan+pup@hardison.net>"'
