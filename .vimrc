@@ -5,13 +5,14 @@ filetype plugin on
 filetype indent on
 
 " OPTIONS {{{
-set tabstop=4          " Number of spaces that a <Tab> in the file counts for. 
+set tabstop=4          " Number of spaces that a literal <Tab> in the file counts for. 
 set shiftwidth=4       " Number of spaces to use for each step of (auto)indent. 
 set shiftround         " Round indent to multiple of 'shiftwidth'.
 set autoindent         " Auto indent from current line to new line.
 set copyindent         " Try to not change the indentation style.
 set preserveindent     " Ditto.
-set smarttab           " Insert shiftwidth or tabstop as appropriate.
+set expandtab          " expand tabs to spaces
+set nosmarttab         " Insert shiftwidth or tabstop as appropriate.
 set ignorecase         " Ignore case
 set smartcase          " Unless I use upper-case letters.
 set showmatch          " Show matching brackets.
@@ -39,6 +40,8 @@ set foldopen=tag,search,quickfix,undo,jump,mark,percent
 set viminfo=!,'1000,%,h,f1,n~/.viminfo
 set statusline=%<%f\ %h%m%r%{FF()}%y%=0x%b\ %-14.(%l,%c%V%)\ %P
 set fillchars=fold:\ ,stl:\ ,stlnc:\  
+set listchars=tab:..
+set list
 set tags+=~/.tags,.tags
 set mouse=
 

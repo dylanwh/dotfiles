@@ -74,3 +74,13 @@ sorendition wB  # cyan/black
 #caption always "%{= kB}<%{w}%1`%{B}> %{w}%?%-Lw%?%{B}(%{w}%n* %t%?(%u)%?%{B})%{w}%?%+Lw%?%? %{B}%{g}%=%{B}[ %{.c}%M %d %{y}%0c%{B} ][ %{m}%l%{B} ]"
 
 hardstatus string "%t"
+
+# terminfo and termcap for nice 256 color terminal
+# allow bold colors - necessary for some reason
+attrcolor b ".I"
+# tell screen how to set colors. AB = background, AF=foreground
+termcapinfo xterm 'Co#256:AB=\E[48;5;%dm:AF=\E[38;5;%dm'
+# erase background with current bg color
+defbce "on"
+
+

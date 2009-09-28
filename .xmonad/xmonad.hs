@@ -9,6 +9,7 @@ import qualified Data.Map        as M
 import XMonad.Actions.DwmPromote
 import XMonad.Actions.FindEmptyWorkspace
 import XMonad.Actions.CycleRecentWS
+import XMonad.Actions.CycleWS
 import XMonad.Actions.SinkAll
 import XMonad.Layout.SimpleFloat
 
@@ -50,16 +51,19 @@ import System.IO (hPutStrLn, hClose, hFlush)
 import Text.XHtml (tag, strAttr, renderHtml, (<<), (!), primHtml)
 
 -- }}}
+
+-- Globals {{{
 wsHome   = "1"
 wsGimp   = "7"
 wsVM     = "5"
-wsOffice = "8"
+wsOffice = "10"
 wsWeb    = "9"
+-- }}}
 
 -- {{{ main
 main = do
     let myFont       = "-xos4-terminus-bold-r-*-*-*-140-100-100-*-*-iso8859-1"
-    let myWorkspaces = map show [1 .. 9]
+    let myWorkspaces = map show [1 .. 10]
 
     let myXPConfig = defaultXPConfig 
             { font        = myFont
@@ -101,13 +105,8 @@ main = do
             , ("M-S-n",            tagToEmptyWorkspace)
             , ("M-<Tab>",          cycleRecentWS [xK_Super_L] xK_Tab xK_grave)
             , ("M-x",              layoutPrompt myXPConfig)
-            , ("<F1>",             sendMessage (JumpToLayout "Tall"))
-            , ("<F2>",             sendMessage (JumpToLayout "Mirror Tall"))
-            , ("<F3>",             sendMessage (JumpToLayout "Full"))
-            , ("<F4>",             sendMessage (JumpToLayout "Grid"))
-            , ("<F5>",             sendMessage (JumpToLayout "Float"))
-            , ("<F6>",             sendMessage (JumpToLayout "IM"))
-            , ("<F7>",             sendMessage (JumpToLayout "Gimp"))
+            , ("M-0",              windows (W.greedyView "10"))
+            , ("M-S-0",            windows (W.shift "10"))
             ] 
 
     xmonad $ myConfig `additionalKeysP` myKeys
@@ -116,6 +115,7 @@ main = do
 myLogHook = do home <- io $ getEnv "HOME"
                dynamicLogWithPP (panzenPP (home ++ "/.panzen"))
 
+-- panzenPP {{{
 panzenPP f = defaultPP { ppTitle   = panzenColor "white" . shorten 50
                        , ppLayout  = panzenColor "SteelBlue3"
                        , ppCurrent = panzenColor "yellow"
@@ -132,7 +132,7 @@ panzenPP f = defaultPP { ppTitle   = panzenColor "white" . shorten 50
           panzenColor   c = show . (span ! [color c, font, bold] <<)
           panzenBar       = show . (span ! [font, bold] << )
           oneline xs      = [ x | x <- xs, x /= '\n' ] ++ "\n"
-
+-- }}}
 
 -- {{{ manage hook:
 -- Execute arbitrary actions and WindowSet manipulations when managing
@@ -181,6 +181,7 @@ myLayoutHook = workspaceDir "~"
              $ onWorkspace wsVM   full
              $ onWorkspace wsGimp gimp
              $ onWorkspace wsWeb  full
+             $ onWorkspace wsOffice (full ||| float)
              $ tall ||| Mirror tall ||| grid ||| full
   where
      -- default tiling algorithm partitions the screen into two panes

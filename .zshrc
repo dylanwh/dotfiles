@@ -145,6 +145,7 @@ alias pu=pushd
 alias find="noglob find"
 alias menu="vim ~/.menu"
 alias x2=xmms2
+alias cnm='cnetworkmanager'
 ## }}}
 
 # Autoload various functions
