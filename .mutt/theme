@@ -33,7 +33,7 @@ color index brightblack default '~D'
 set to_chars=" =TCFL"
 set date_format="!%A, %B %d, %Y at %I:%M%p %Z"
 set forward_format="Fwd: %s"
-set index_format="%?M?+%4C& %4C? %Z %{%b %d}  %-20.20n  %?y?(%.20Y) ?%s"
+set index_format="%4C %Z %{%b %d}  %-20.20n  %?y?(%.20Y) ?%?M?+& ?%s"
 set folder_format="%2C %t %f %> %d"
 
 ignore *

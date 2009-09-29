@@ -10,8 +10,10 @@ set from="dylan@hardison.net"
 alternates dylanwh@gmail.com \
            dylan@haverdev.org \
            dylan@sinedev.org \
-           dylan@midgetbutton.org \
+           dylan@midgetbutton.com \
+           dylanwh@tampabay.rr.com \
            dylan\\+[a-z]+@hardison.net \
+           it@hardison.net \
            dylan@lofn.hardison.net \
            Hardison.Dylan8811@myspcmail.spcollege.edu
 
@@ -24,28 +26,37 @@ subscribe slug@nks.net \
           templates@template-toolkit.org \
           macarthur@genesisfleet.com \
           module-authors@perl.org \
-          debian-security-announce@lists.debian.org \
           poe@perl.org \
           dwm@suckless.org \
+          dev@suckless.org \
           members@issmacarthur.com \
-          mailall@myspcmail.spcollege.edu \
-		  members@lists.issmacarthur.com \
-		  members@lists.deepspace2.com \
-		  pup@possumism.net \
-		  tbad@tampabad.org
+          members@lists.issmacarthur.com \
+          members@lists.deepspace2.com \
+          pup@possumism.net \
+          tbad@tampabad.org \
+          billing@hardison.net \
+          debian-security-announce@lists.debian.org \
+          mailall@myspcmail.spcollege.edu
 
 # Location options
 set mbox_type=Maildir
 set folder=~/mail
 set spoolfile="+inbox"
-set mbox="+read"
-set record="+sent"
-set postponed="+postponed"
+set mbox="+read/`date +%Y/%m`"
+set record="+sent/`date +%Y`"
+set postponed="+drafts"
 set signature="~/bin/signature|"
+
+set history_file=~/.mutt/history
+set history=1000
+set save_history=1000
+
+source "mailboxes $folder |"
 
 # Behavior options
 set use_from
 set envelope_from
+set sendmail="/usr/bin/msmtp"
 set reply_to             # Always use reply-to
 set ignore_list_reply_to # Except for mailing lists.
 set mail_check=80        # Check mailboxes every 80 seconds
@@ -62,11 +73,14 @@ set include              # Always include messages in replies.
 set tilde                # Use tildes in the internal pager like vim.
 set nohelp               # Don't show the help menu at the top
 
-# set pager_index_lines=7 # show a mini-pager
+set xterm_set_titles
+set sidebar_delim=' '
+set sidebar_visible=no
+set pager_index_lines=0
 
 set sort=threads
-set sort_aux=date-received
-set thread_received
+set sort_aux=date
+set thread_received=no
 
 folder-hook . push "\eV" # By default, collapse all threads
 set nocollapse_unread    # Except those with new messages.
@@ -93,6 +107,12 @@ bind index <Esc>0A previous-undeleted
 bind index <Esc>0B next-undeleted
 bind index <Esc>0C next-page
 bind index <Esc>0D previous-page
+
+macro generic,pager,index <F1> ":toggle sidebar_visible\n" "toggle sidebar"
+macro generic,pager,index <F2> ":toggle arrow_cursor\n" "toggle arrow cursor"
+macro index A "T.\n;WO;WN;t"  "mark all as read"
+macro index S "D~H spam\n"    "delete all spam"
+macro index,pager i "c +inbox\n" "go to inbox"
 
 # Reply as a specific address for mailing list
 send-hook '~t pup@possumism.net' 'set from="Dylan William Hardison <dylan+pup@hardison.net>"'
