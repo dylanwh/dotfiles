@@ -40,7 +40,7 @@ set foldopen=tag,search,quickfix,undo,jump,mark,percent
 set viminfo=!,'1000,%,h,f1,n~/.viminfo
 set statusline=%<%f\ %h%m%r%{FF()}%y%=0x%b\ %-14.(%l,%c%V%)\ %P
 set fillchars=fold:\ ,stl:\ ,stlnc:\  
-set listchars=tab:..
+set listchars=tab:>.
 set list
 set tags+=~/.tags,.tags
 set mouse=
@@ -48,8 +48,8 @@ set mouse=
 "set listchars=trail:-,tab:>.
 "set list
 
-"let mapleader = "\\"
-"let maplocalleader = ",,"
+let mapleader = "\\"
+let maplocalleader = ","
 
 "-- My name for adding chanelog entries.
 let changelog_username = $REALNAME " <".$EMAIL.">"
@@ -78,8 +78,8 @@ let g:git_branch_status_head_current=1
 let g:git_branch_status_text="[git"
 let g:git_branch_status_around=":]"
 
-let g:vimwiki_home = "~/docs/wiki/" 
-let g:vimwiki_smartCR = 1
+let g:vimwiki_list = [{'path': "~/docs/wiki"}]
+let g:vimwiki_hl_cb_checked = 1
 
 let autodate_format = "%Y-%m-%d"
 
@@ -117,7 +117,9 @@ map <c-w><c-b> :BottomExplorerWindow<cr>
 noremap <Space> <PageDown>
 noremap -       <PageUp>
 
-nmap ,,f :Explore<CR>
+nmap <silent> <Leader>wf <Plug>VimwikiFollowWord
+nmap <silent> <Leader>wb <Plug>VimwikiGoBackWord
+nmap <silent> <Leader>wn <Plug>VimwikiGoBackWord
 nmap <Up>   gk
 nmap <Down> gj
 
@@ -130,6 +132,7 @@ imap <C-w>\| <C-o><C-w>\|
 imap <C-w>=  <C-o><C-w>=
 imap <Up>    <C-o>gk
 imap <Down>  <C-o>gj
+
 " }}}
 
 " ABBREVS {{{

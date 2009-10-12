@@ -1,6 +1,6 @@
 " Vim color file
 " Maintainer:   Dylan Hardison <dylanwh@gmail.com>
-" Last Change:	2008-09-24.
+" Last Change:	2009-10-09.
 
 " Load the syntax highlighting defaults, if it's enabled.
 if exists("syntax_on")
@@ -27,11 +27,15 @@ hi Type       cterm=none ctermfg=2
 hi Special    cterm=none ctermfg=5
 
 if &t_Co > 16
-	"hi Operator ctermfg=45
-	hi LineNr     ctermfg=73 ctermbg=80
-	hi Identifier cterm=none ctermfg=23
-	hi Comment    cterm=none ctermfg=81
-	hi Folded     cterm=none ctermfg=73 ctermbg=80
+    "hi Operator ctermfg=45
+    hi Identifier cterm=none ctermfg=23
+    hi Comment    cterm=none ctermfg=81
+    hi LineNr     ctermfg=73 ctermbg=80
+    hi Folded     cterm=none ctermfg=73 ctermbg=80
+    hi Title      ctermfg=34
+else
+    hi Comment cterm=none ctermfg=8
+    hi Title ctermfg=3 cterm=bold
 endif
 
 hi clear PreProc

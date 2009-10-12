@@ -11,6 +11,7 @@ import XMonad.Actions.FindEmptyWorkspace
 import XMonad.Actions.CycleRecentWS
 import XMonad.Actions.CycleWS
 import XMonad.Actions.SinkAll
+import XMonad.Actions.DynamicWorkspaces
 import XMonad.Layout.SimpleFloat
 
 import XMonad.Hooks.DynamicLog
@@ -52,18 +53,24 @@ import Text.XHtml (tag, strAttr, renderHtml, (<<), (!), primHtml)
 
 -- }}}
 
--- Globals {{{
-wsHome   = "1"
-wsGimp   = "7"
-wsVM     = "5"
-wsOffice = "10"
-wsWeb    = "9"
+-- Misc {{{
+
+wsHome   = wsIndex 1
+wsWeb    = wsIndex 4
+wsGimp   = wsIndex 5
+wsOffice = wsIndex 3
+wsVM     = wsIndex 6
+
+wsList  = ["home", "code", "docs", "web", "gimp", "vm" ]
+wsIndex i = wsList !! (i-1)
+
+spawnExec str = spawn ("exec " ++ str)
+
 -- }}}
 
 -- {{{ main
 main = do
     let myFont       = "-xos4-terminus-bold-r-*-*-*-140-100-100-*-*-iso8859-1"
-    let myWorkspaces = map show [1 .. 10]
 
     let myXPConfig = defaultXPConfig 
             { font        = myFont
@@ -80,7 +87,7 @@ main = do
             , terminal           = "robo"
             , normalBorderColor  = "#000033"
             , focusedBorderColor = "red"
-            , workspaces         = myWorkspaces
+            , workspaces         = wsList
             , modMask            = mod4Mask
             , layoutHook         = ewmhDesktopsLayout myLayoutHook
             , manageHook         = myManageHook <+> manageDocks
@@ -105,15 +112,16 @@ main = do
             , ("M-S-n",            tagToEmptyWorkspace)
             , ("M-<Tab>",          cycleRecentWS [xK_Super_L] xK_Tab xK_grave)
             , ("M-x",              layoutPrompt myXPConfig)
-            , ("M-0",              windows (W.greedyView "10"))
-            , ("M-S-0",            windows (W.shift "10"))
+            , ("M-9",              windows (W.greedyView wsWeb))
             ] 
 
     xmonad $ myConfig `additionalKeysP` myKeys
 -- }}}
 
+-- {{{ myLogHook
 myLogHook = do home <- io $ getEnv "HOME"
                dynamicLogWithPP (panzenPP (home ++ "/.panzen"))
+--- }}}
 
 -- panzenPP {{{
 panzenPP f = defaultPP { ppTitle   = panzenColor "white" . shorten 50
@@ -198,7 +206,7 @@ myLayoutHook = workspaceDir "~"
 
      -- im layout
      im   = named "IM" 
-          $ reflectHoriz 
+          -- $ reflectHoriz 
           $ withIM (1%6) (Title "Buddy List") 
           $ Grid
 
@@ -229,7 +237,6 @@ scriptPrompt conf = do-- {{{
     dirExecPromptNamed conf spawnExec dir  "Script: "
 -- }}}
 
-spawnExec str = spawn ("exec " ++ str)
 
 home :: String -> IO String-- {{{
 home path = do dir <- io $ getEnv "HOME" `catch` const (return "/")
@@ -250,7 +257,7 @@ bookmarkPrompt c = do
 gotoBookmark :: [(String, String)] -> String -> X ()
 gotoBookmark marks name =
     case lookup name marks of
-         Just url -> spawnExec ("firefox " ++ url)
+         Just url -> spawnExec ("url-handler " ++ url)
          Nothing  -> return ()
 
 getBookmarks :: String -> IO [(String, String)]

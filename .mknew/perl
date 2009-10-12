@@ -1,13 +1,13 @@
 [%-
 IF filename == 'Build.PL';
-	INCLUDE Build.PL;
+    INCLUDE Build.PL;
 ELSIF suffix == 'pm';
-	INCLUDE "perl-module";
+    INCLUDE "perl-module";
 ELSIF suffix == 't';
-	INCLUDE "perl-test";
+    INCLUDE "perl-test";
 ELSIF suffix == 'cgi';
-	INCLUDE "perl-cgi";
+    INCLUDE "perl-cgi";
 ELSE;
-	INCLUDE "perl-script";
+    INCLUDE "perl-script";
 END
 -%]

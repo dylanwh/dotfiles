@@ -10,7 +10,7 @@ READNULLCMD=${PAGER:-/usr/bin/pager}
 LOGCHECK=30
 watch=(all)
 fignore=(.o .hi .pyc)
-cdpath=(~ ~/code)
+cdpath=(~ ~/code ~/work)
 fpath=(~/.zsh $fpath)
 
 ## }}}
@@ -49,38 +49,38 @@ setopt auto_resume             # automatically resume jobs from commands
 bindkey -v
 
 case $TERM in
-	linux|screen)
-		bindkey "^[[1~" beginning-of-line
-		bindkey "^[[3~" delete-char
-		bindkey "^[[4~" end-of-line
-		bindkey "^[[5~" up-line-or-history   # PageUp
-		bindkey "^[[6~" down-line-or-history # PageDown
-		bindkey "^[[A"  up-line-or-search    # up arrow for back-history-search
-		bindkey "^[[B"  down-line-or-search  # down arrow for fwd-history-search
-		bindkey "^?"   backward-delete-char
-		bindkey "^H"   backward-delete-char
-	;;
-	rxvt-unicode)
-		bindkey "^[[5~" up-line-or-history # pgup
-		bindkey "^[[6~" down-line-or-history # pgdown
-		bindkey "^[[7~" beginning-of-line  # home
-		bindkey "^[[8~" end-of-line        # end
-		bindkey "^[[A" up-line-or-search   # up arrow
-		bindkey "^[[B" down-line-or-search # down arrow
-		bindkey "^?"   backward-delete-char
-		bindkey "^H"   backward-delete-char
-	;;
-	*xterm*|rxvt*|(dt|k|E)term)
-		bindkey "^[[2~" yank
-		bindkey "^[[3~" delete-char
-		bindkey "^[[5~" up-line-or-history # PageUp
-		bindkey "^[[6~" down-line-or-history # PageDown
-		bindkey "^[[7~" beginning-of-line
-		bindkey "^[[8~" end-of-line
-		bindkey "^[[A" up-line-or-search ## up arrow for back-history-search
-		bindkey "^[[B" down-line-or-search ## down arrow for fwd-history-search
-		bindkey " " magic-space ## do history expansion on space
-	;;
+    linux|screen)
+        bindkey "^[[1~" beginning-of-line
+        bindkey "^[[3~" delete-char
+        bindkey "^[[4~" end-of-line
+        bindkey "^[[5~" up-line-or-history   # PageUp
+        bindkey "^[[6~" down-line-or-history # PageDown
+        bindkey "^[[A"  up-line-or-search    # up arrow for back-history-search
+        bindkey "^[[B"  down-line-or-search  # down arrow for fwd-history-search
+        bindkey "^?"   backward-delete-char
+        bindkey "^H"   backward-delete-char
+    ;;
+    rxvt-unicode)
+        bindkey "^[[5~" up-line-or-history # pgup
+        bindkey "^[[6~" down-line-or-history # pgdown
+        bindkey "^[[7~" beginning-of-line  # home
+        bindkey "^[[8~" end-of-line        # end
+        bindkey "^[[A" up-line-or-search   # up arrow
+        bindkey "^[[B" down-line-or-search # down arrow
+        bindkey "^?"   backward-delete-char
+        bindkey "^H"   backward-delete-char
+    ;;
+    *xterm*|rxvt*|(dt|k|E)term)
+        bindkey "^[[2~" yank
+        bindkey "^[[3~" delete-char
+        bindkey "^[[5~" up-line-or-history # PageUp
+        bindkey "^[[6~" down-line-or-history # PageDown
+        bindkey "^[[7~" beginning-of-line
+        bindkey "^[[8~" end-of-line
+        bindkey "^[[A" up-line-or-search ## up arrow for back-history-search
+        bindkey "^[[B" down-line-or-search ## down arrow for fwd-history-search
+        bindkey " " magic-space ## do history expansion on space
+    ;;
 esac
 
 bindkey -a q quote-line
@@ -94,21 +94,21 @@ bindkey '^r' vi-history-search-backward
 ## }}}
 ## {{{ FUNCTIONS
 function chpwd {
-	ztitle
-	have todo && todo --timeout --summary 
+    ztitle
+    have todo && todo --timeout --summary 
 }
 function mdc { mkdr -p $1 && cd $1 }
 function shuffle {
-	RANDOM=`date +%s`
-	(
-	while IFS= read -r i; do
-	    echo $RANDOM$RANDOM "$i";
-	done
-	) | sort | sed 's/^[0-9]* //'
+    RANDOM=`date +%s`
+    (
+    while IFS= read -r i; do
+        echo $RANDOM$RANDOM "$i";
+    done
+    ) | sort | sed 's/^[0-9]* //'
 }
 function namedir {
-	declare -g $1=$2
-	: ~$1
+    declare -g $1=$2
+    : ~$1
 }
 ## }}}
 ## {{{ ALIASES
@@ -170,24 +170,24 @@ have pinfo && alias info=pinfo
 have ack-grep && alias ack=ack-grep
 
 for dircolors in dircolors gdircolors; do
-	if have $dircolors; then
-		unset LS_COLORS
-		eval $($dircolors ~/.dir_colors)
-		# Colorize completions.
-		zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
-		break
-	fi
+    if have $dircolors; then
+        unset LS_COLORS
+        eval $($dircolors ~/.dir_colors)
+        # Colorize completions.
+        zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
+        break
+    fi
 done
 
 if [[ -d /opt/perl ]]; then
-	path=(/opt/perl/bin $path)
+    path=(/opt/perl/bin $path)
 fi
 
 case $OSTYPE in
-	*bsd*)
-		unalias grep egrep fgrep ggrep
-		alias ls="ls -Fh"
-	;;
+    *bsd*)
+        unalias grep egrep fgrep ggrep
+        alias ls="ls -Fh"
+    ;;
 esac
 
 ztitle

@@ -1,3 +1,5 @@
+HOST := $(shell hostname -s)
+
 help:
 	@echo targets: fixperms, schedule, pwsafe-merge
 
@@ -5,18 +7,19 @@ help:
 	scp lofn:.pwsafe.dat .
 	make fixperms
 
-.netrc:
-	scp lofn:.netrc .
-	make fixperms
-
 .Xdefaults: .Xdefaults.tt 
 	xrdb -cpp ttpp -n $< > $@
 	xrdb -cpp ttpp -load $@
 
+.procmailrc: .procmailrc@$(HOST)
+	ln -s $< $@
+
+.procmailrc@%:
+	touch $@
 
 fixperms:
 	chmod -Rc +x ~/bin ~/.xinitrc
-	chmod -Rc go-wrx ~/.netrc ~/.pwsafe.dat ~/pim ~/.msmtprc ~/.getmail
+	chmod -Rc go-wrx ~/.pwsafe.dat ~/pim ~/.msmtprc ~/.getmail
 
 schedule:
 	@rem -q

@@ -1,923 +1,603 @@
-" VimWiki plugin file
-" Language:     Wiki
-" Author:       Maxim Kim (habamax at gmail dot com)
-" Home:         http://code.google.com/p/vimwiki/
-" Filenames:    *.wiki
-" Last Change:  (02.06.2008 12:57)
-" Version:      0.4
+" Vimwiki autoload plugin file
+" Author: Maxim Kim <habamax@gmail.com>
+" Home: http://code.google.com/p/vimwiki/
 
 if exists("g:loaded_vimwiki_auto") || &cp
- finish
+  finish
 endif
 let g:loaded_vimwiki_auto = 1
 
-let s:wiki_badsymbols = '[<>|?*/\:"]'
+if has("win32")
+  let s:os_sep = '\'
+else
+  let s:os_sep = '/'
+endif
 
-"" vimwiki functions {{{2
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-function! s:msg(message) "{{{
-    echohl WarningMsg
-    echomsg 'vimwiki: '.a:message
-    echohl None
-endfunction "}}}
+let s:wiki_badsymbols = '['.g:vimwiki_stripsym.'<>|?*:"]'
+" MISC helper functions {{{
 
-function! s:getFileNameOnly(filename) "{{{
-    let word = substitute(a:filename, '\'.g:vimwiki_ext, "", "g")
-    let word = substitute(word, '.*[/\\]', "", "g")
-    return word
-endfunction "}}}
+" This function is double defined.
+" TODO: refactor common functions into new module.
+function! s:chomp_slash(str)"{{{
+  return substitute(a:str, '[/\\]\+$', '', '')
+endfunction"}}}
 
-function! s:editfile(command, filename) "{{{
-    let fname = escape(a:filename, '% ')
-    execute a:command.' '.fname
-
-    " if fname is new
-    " if g:vimwiki_addheading!=0 && glob(fname) == ''
-    " execute 'normal I! '.s:getfilename(fname)
-    " update
-    " endif
-endfunction "}}}
-
-function! s:SearchWord(wikiRx,cmd) "{{{
-    let hl = &hls
-    let lasts = @/
-    let @/ = a:wikiRx
-    set nohls
-    try
-        :silent exe 'normal ' a:cmd
-    catch /Pattern not found/
-        call s:msg('WikiWord not found')
-    endt
-    let @/ = lasts
-    let &hls = hl
-endfunction "}}}
-
-function! s:WikiGetWordAtCursor(wikiRX) "{{{
-    let col = col('.') - 1
-    let line = getline('.')
-    let ebeg = -1
-    let cont = match(line, a:wikiRX, 0)
-    while (ebeg >= 0 || (0 <= cont) && (cont <= col))
-        let contn = matchend(line, a:wikiRX, cont)
-        if (cont <= col) && (col < contn)
-            let ebeg = match(line, a:wikiRX, cont)
-            let elen = contn - ebeg
-            break
-        else
-            let cont = match(line, a:wikiRX, contn)
-        endif
-    endwh
-    if ebeg >= 0
-        return strpart(line, ebeg, elen)
-    else
-        return ""
-    endif
-endf "}}}
-
-function! s:WikiStripWord(word, sym) "{{{
-    function! s:WikiStripWordHelper(word, sym)
-        return substitute(a:word, s:wiki_badsymbols, a:sym, 'g')
-    endfunction
-
-    let result = a:word
-    if strpart(a:word, 0, 2) == "[["
-        let result = s:WikiStripWordHelper(strpart(a:word, 2, strlen(a:word)-4), a:sym)
-    endif
-    return result
-endfunction "}}}
-
-function! s:WikiIsLinkToNonWikiFile(word) "{{{
-    " Check if word is link to a non-wiki file.
-    " The easiest way is to check if it has extension like .txt or .html
-    if a:word =~ '\.\w\{1,4}$'
-        return 1
-    endif
-    return 0
-endfunction "}}}
-
-"" WikiWord history helper functions {{{
-" history is [['WikiWord.wiki', 11], ['AnotherWikiWord', 3] ... etc]
-" where numbers are column positions we should return when coming back.
-function! s:GetHistoryWord(historyItem)
-    return get(a:historyItem, 0)
+function! vimwiki#mkdir(path) "{{{
+  let path = expand(a:path)
+  if !isdirectory(path) && exists("*mkdir")
+    let path = s:chomp_slash(path)
+    call mkdir(path, "p")
+  endif
 endfunction
-function! s:GetHistoryColumn(historyItem)
-    return get(a:historyItem, 1)
+" }}}
+
+function! vimwiki#safe_link(string) "{{{
+  return substitute(a:string, s:wiki_badsymbols, g:vimwiki_stripsym, 'g')
 endfunction
 "}}}
 
-function! vimwiki#WikiNextWord() "{{{
-    call s:SearchWord(g:vimwiki_rxWikiWord, 'n')
-endfunction "}}}
+function! vimwiki#unsafe_link(string) "{{{
+  return substitute(a:string, g:vimwiki_stripsym, s:wiki_badsymbols, 'g')
+endfunction
+"}}}
 
-function! vimwiki#WikiPrevWord() "{{{
-    call s:SearchWord(g:vimwiki_rxWikiWord, 'N')
-endfunction "}}}
+function! vimwiki#subdir(path, filename)"{{{
+  let path = expand(a:path)
+  let filename = expand(a:filename)
+  let idx = 0
+  while path[idx] == filename[idx]
+    let idx = idx + 1
+  endwhile
 
-function! vimwiki#WikiFollowWord(split) "{{{
-    if a:split == "split"
-        let cmd = ":split "
-    elseif a:split == "vsplit"
-        let cmd = ":vsplit "
-    else
-        let cmd = ":e "
-    endif
-    let word = s:WikiStripWord(s:WikiGetWordAtCursor(g:vimwiki_rxWikiWord), g:vimwiki_stripsym)
-    " insert doesn't work properly inside :if. Check :help :if.
-    if word == ""
-        execute "normal! \n"
-        return
-    endif
-    if s:WikiIsLinkToNonWikiFile(word)
-        call s:editfile(cmd, word)
-    else
-        call insert(g:vimwiki_history, [expand('%:p'), col('.')])
-        call s:editfile(cmd, g:vimwiki_home.word.g:vimwiki_ext)
-    endif
-endfunction "}}}
-
-function! vimwiki#WikiGoBackWord() "{{{
-    if !empty(g:vimwiki_history)
-        let word = remove(g:vimwiki_history, 0)
-        " go back to saved WikiWord
-        execute ":e ".s:GetHistoryWord(word)
-        call cursor(line('.'), s:GetHistoryColumn(word))
-    endif
-endfunction "}}}
-
-function! vimwiki#WikiNewLine(direction) "{{{
-    "" direction == checkup - use previous line for checking
-    "" direction == checkdown - use next line for checking
-    function! s:WikiAutoListItemInsert(listSym, dir)
-        let sym = escape(a:listSym, '*')
-        if a:dir=='checkup'
-            let linenum = line('.')-1
-        else
-            let linenum = line('.')+1
-        end
-        let prevline = getline(linenum)
-        if prevline =~ '^\s\+'.sym
-            let curline = substitute(getline('.'),'^\s\+',"","g")
-            if prevline =~ '^\s*'.sym.'\s*$'
-                " there should be easier way ...
-                execute 'normal kA '."\<ESC>".'"_dF'.a:listSym.'JX'
-                return 1
-            endif
-            let ind = indent(linenum)
-            call setline(line('.'), strpart(prevline, 0, ind).a:listSym.' '.curline)
-            call cursor(line('.'), ind+3)
-            return 1
-        endif
-        return 0
-    endfunction
-
-    if s:WikiAutoListItemInsert('*', a:direction)
-        return
-    endif
-
-    if s:WikiAutoListItemInsert('#', a:direction)
-        return
-    endif
-
-    " delete <space>
-    if getline('.') =~ '^\s\+$'
-        execute 'normal x'
-    else
-        execute 'normal X'
-    endif
-endfunction "}}}
-
-function! vimwiki#WikiHighlightWords() "{{{
-    let wikies = glob(g:vimwiki_home.'*')
-    "" remove .wiki extensions
-    let wikies = substitute(wikies, '\'.g:vimwiki_ext, "", "g")
-    let g:vimwiki_wikiwords = split(wikies, '\n')
-    "" remove paths
-    call map(g:vimwiki_wikiwords, 'substitute(v:val, ''.*[/\\]'', "", "g")')
-    "" remove backup files (.wiki~)
-    call filter(g:vimwiki_wikiwords, 'v:val !~ ''.*\~$''')
-
-    for word in g:vimwiki_wikiwords
-        if word =~ g:vimwiki_word1 && !s:WikiIsLinkToNonWikiFile(word)
-            execute 'syntax match wikiWord /\<'.word.'\>/'
-        else
-            execute 'syntax match wikiWord /\[\['.substitute(word,  g:vimwiki_stripsym, s:wiki_badsymbols, "g").'\]\]/'
-        endif
-    endfor
-endfunction "}}}
-
-function! vimwiki#WikiGoHome()"{{{
-    execute ':e '.g:vimwiki_home.g:vimwiki_index.g:vimwiki_ext
-    let g:vimwiki_history = []
+  let p = split(strpart(filename, idx), '[/\\]')
+  let res = join(p[:-2], s:os_sep)
+  if len(res) > 0
+    let res = res.s:os_sep
+  endif
+  return res
 endfunction"}}}
 
-function! vimwiki#WikiDeleteWord() "{{{
-    "" file system funcs
-    "" Delete WikiWord you are in from filesystem
-    let val = input('Delete ['.expand('%').'] (y/n)? ', "")
-    if val!='y'
-        return
+function! vimwiki#current_subdir()"{{{
+  return vimwiki#subdir(VimwikiGet('path'), expand('%:p'))
+endfunction"}}}
+
+function! s:msg(message) "{{{
+  echohl WarningMsg
+  echomsg 'vimwiki: '.a:message
+  echohl None
+endfunction
+" }}}
+
+function! s:filename(link) "{{{
+  if a:link =~ '|'
+    return split(a:link, '|')[0]
+  elseif a:link =~ ']['
+    return split(a:link, '][')[0]
+  else
+    return a:link
+  endif
+endfunction
+" }}}
+
+function! s:is_wiki_word(str) "{{{
+  if a:str =~ g:vimwiki_word1 && a:str !~ '[[:space:]\\/]'
+    return 1
+  endif
+  return 0
+endfunction
+" }}}
+
+function! s:edit_file(command, filename) "{{{
+  let fname = escape(a:filename, '% ')
+  call vimwiki#mkdir(fnamemodify(a:filename, ":p:h"))
+  execute a:command.' '.fname
+endfunction
+" }}}
+
+function! s:search_word(wikiRx, cmd) "{{{
+  let match_line = search(a:wikiRx, 's'.a:cmd)
+  if match_line == 0
+    call s:msg('WikiWord not found')
+  endif
+endfunction
+" }}}
+
+function! s:get_word_at_cursor(wikiRX) "{{{
+  let col = col('.') - 1
+  let line = getline('.')
+  let ebeg = -1
+  let cont = match(line, a:wikiRX, 0)
+  while (ebeg >= 0 || (0 <= cont) && (cont <= col))
+    let contn = matchend(line, a:wikiRX, cont)
+    if (cont <= col) && (col < contn)
+      let ebeg = match(line, a:wikiRX, cont)
+      let elen = contn - ebeg
+      break
+    else
+      let cont = match(line, a:wikiRX, contn)
     endif
-    let fname = expand('%:p')
-    " call WikiGoBackWord()
-    try
-        call delete(fname)
-    catch /.*/
-        call s:msg('Cannot delete "'.expand('%:r').'"!')
-        return
-    endtry
-    execute "bdelete! ".escape(fname, " ")
+  endwh
+  if ebeg >= 0
+    return strpart(line, ebeg, elen)
+  else
+    return ""
+  endif
+endf "}}}
 
-    " delete from g:vimwiki_history list
-    call filter (g:vimwiki_history, 's:GetHistoryWord(v:val) != fname')
-    " as we got back to previous WikiWord - delete it from history - as much
-    " as possible
-    let hword = s:GetHistoryWord(remove(g:vimwiki_history, 0))
-    while !empty(g:vimwiki_history) && hword == s:GetHistoryWord(g:vimwiki_history[0])
-        let hword = s:GetHistoryWord(remove(g:vimwiki_history, 0))
+function! s:strip_word(word) "{{{
+  let result = a:word
+  if strpart(a:word, 0, 2) == "[["
+    " get rid of [[ and ]]
+    let w = strpart(a:word, 2, strlen(a:word)-4)
+
+    if w =~ '|'
+      " we want "link" from [[link|link desc]]
+      let w = split(w, "|")[0]
+    elseif w =~ ']['
+      " we want "link" from [[link][link desc]]
+      let w = split(w, "][")[0]
+    endif
+
+    let result = vimwiki#safe_link(w)
+  endif
+  return result
+endfunction
+" }}}
+
+function! s:is_link_to_non_wiki_file(word) "{{{
+  " Check if word is link to a non-wiki file.
+  " The easiest way is to check if it has extension like .txt or .html
+  if a:word =~ '\.\w\{1,4}$'
+    return 1
+  endif
+  return 0
+endfunction
+" }}}
+
+function! s:print_wiki_list() "{{{
+  let idx = 0
+  while idx < len(g:vimwiki_list)
+    if idx == g:vimwiki_current_idx
+      let sep = ' * '
+      echohl TablineSel
+    else
+      let sep = '   '
+      echohl None
+    endif
+    echo (idx + 1).sep.VimwikiGet('path', idx)
+    let idx += 1
+  endwhile
+  echohl None
+endfunction
+" }}}
+
+function! s:wiki_select(wnum)"{{{
+  if a:wnum < 1 || a:wnum > len(g:vimwiki_list)
+    return
+  endif
+  let b:vimwiki_idx = g:vimwiki_current_idx
+  let g:vimwiki_current_idx = a:wnum - 1
+endfunction
+" }}}
+
+function! s:update_wiki_link(fname, old, new) " {{{
+  echo "Updating links in ".a:fname
+  let has_updates = 0
+  let dest = []
+  for line in readfile(a:fname)
+    if !has_updates && match(line, a:old) != -1
+      let has_updates = 1
+    endif
+    call add(dest, substitute(line, a:old, escape(a:new, "&"), "g"))
+  endfor
+  " add exception handling...
+  if has_updates
+    call rename(a:fname, a:fname.'#vimwiki_upd#')
+    call writefile(dest, a:fname)
+    call delete(a:fname.'#vimwiki_upd#')
+  endif
+endfunction
+" }}}
+
+function! s:update_wiki_links_dir(dir, old_fname, new_fname) " {{{
+  let old_fname = substitute(a:old_fname, '[/\\]', '[/\\\\]', 'g')
+  let new_fname = a:new_fname
+
+  if !s:is_wiki_word(new_fname)
+    let new_fname = '[['.new_fname.']]'
+  endif
+  if !s:is_wiki_word(old_fname)
+    let old_fname = '\[\['.vimwiki#unsafe_link(old_fname).
+          \ '\%(|.*\)\?\%(\]\[.*\)\?\]\]'
+  else
+    let old_fname = '\<'.old_fname.'\>'
+  endif
+  let files = split(glob(VimwikiGet('path').a:dir.'*'.VimwikiGet('ext')), '\n')
+  for fname in files
+    call s:update_wiki_link(fname, old_fname, new_fname)
+  endfor
+endfunction
+" }}}
+
+function! s:update_wiki_links(old_fname, new_fname) " {{{
+  let old_fname = fnamemodify(a:old_fname, ":t:r")
+  let new_fname = fnamemodify(a:new_fname, ":t:r")
+
+  let subdirs = split(a:old_fname, '[/\\]')[: -2]
+
+  " TODO: Use Dictionary here...
+  let dirs_keys = ['']
+  let dirs_vals = ['']
+  if len(subdirs) > 0
+    let dirs_keys = ['']
+    let dirs_vals = [join(subdirs, '/').'/']
+    let idx = 0
+    while idx < len(subdirs) - 1
+      call add(dirs_keys, join(subdirs[: idx], '/').'/')
+      call add(dirs_vals, join(subdirs[idx+1 :], '/').'/')
+      let idx = idx + 1
     endwhile
+    call add(dirs_keys,join(subdirs, '/').'/')
+    call add(dirs_vals, '')
+  endif
 
-    " reread buffer => deleted WikiWord should appear as non-existent
+  let idx = 0
+  while idx < len(dirs_keys)
+    let dir = dirs_keys[idx]
+    let new_dir = dirs_vals[idx]
+    call s:update_wiki_links_dir(dir,
+          \ new_dir.old_fname, new_dir.new_fname)
+    let idx = idx + 1
+  endwhile
+endfunction
+" }}}
+
+function! s:get_wiki_buffers() "{{{
+  let blist = []
+  let bcount = 1
+  while bcount<=bufnr("$")
+    if bufexists(bcount)
+      let bname = fnamemodify(bufname(bcount), ":p")
+      if bname =~ VimwikiGet('ext')."$"
+        let bitem = [bname, getbufvar(bname, "vimwiki_prev_word")]
+        call add(blist, bitem)
+      endif
+    endif
+    let bcount = bcount + 1
+  endwhile
+  return blist
+endfunction
+" }}}
+
+function! s:open_wiki_buffer(item) "{{{
+  call s:edit_file('e', a:item[0])
+  if !empty(a:item[1])
+    call setbufvar(a:item[0], "vimwiki_prev_word", a:item[1])
+  endif
+endfunction
+" }}}
+
+" }}}
+" SYNTAX highlight {{{
+function! vimwiki#WikiHighlightWords() "{{{
+  " search all wiki files in 'path' and its subdirs.
+  let subdir = vimwiki#current_subdir()
+  let wikies = glob(VimwikiGet('path').subdir.'**/*'.VimwikiGet('ext'))
+
+  " remove .wiki extensions
+  let wikies = substitute(wikies, '\'.VimwikiGet('ext'), "", "g")
+  let g:vimwiki_wikiwords = split(wikies, '\n')
+
+  " remove backup files (.wiki~)
+  call filter(g:vimwiki_wikiwords, 'v:val !~ ''.*\~$''')
+
+  " remove paths
+  let rem_path = escape(expand(VimwikiGet('path')).subdir, '\')
+  call map(g:vimwiki_wikiwords, 'substitute(v:val, rem_path, "", "g")')
+
+  " Links with subdirs should be highlighted for linux and windows separators
+  " Change \ or / to [/\\]
+  let os_p = '[/\\]'
+  let os_p2 = escape(os_p, '\')
+  call map(g:vimwiki_wikiwords, 'substitute(v:val, os_p, os_p2, "g")')
+
+  for word in g:vimwiki_wikiwords
+    if g:vimwiki_camel_case &&
+          \ word =~ g:vimwiki_word1 && !s:is_link_to_non_wiki_file(word)
+      execute 'syntax match wikiWord /\%(^\|[^!]\)\zs\<'.word.'\>/'
+    endif
+    execute 'syntax match wikiWord /\[\[\<'.
+          \ vimwiki#unsafe_link(word).
+          \ '\>\%(|\+.*\)*\]\]/'
+    execute 'syntax match wikiWord /\[\[\<'.
+          \ vimwiki#unsafe_link(word).
+          \ '\>\]\[.\+\]\]/'
+  endfor
+  execute 'syntax match wikiWord /\[\[.\+\.\%(jpg\|png\|gif\)\%(|\+.*\)*\]\]/'
+  execute 'syntax match wikiWord /\[\[.\+\.\%(jpg\|png\|gif\)\]\[.\+\]\]/'
+endfunction
+" }}}
+
+function! vimwiki#hl_exists(hl)"{{{
+  if !hlexists(a:hl)
+    return 0
+  endif
+  redir => hlstatus
+  exe "silent hi" a:hl
+  redir END
+  return (hlstatus !~ "cleared")
+endfunction
+"}}}
+
+"}}}
+" WIKI functions {{{
+function! vimwiki#WikiNextWord() "{{{
+  call s:search_word(g:vimwiki_rxWikiWord, '')
+endfunction
+" }}}
+
+function! vimwiki#WikiPrevWord() "{{{
+  call s:search_word(g:vimwiki_rxWikiWord, 'b')
+endfunction
+" }}}
+
+function! vimwiki#WikiFollowWord(split) "{{{
+  if a:split == "split"
+    let cmd = ":split "
+  elseif a:split == "vsplit"
+    let cmd = ":vsplit "
+  else
+    let cmd = ":e "
+  endif
+  let word = s:strip_word(s:get_word_at_cursor(g:vimwiki_rxWikiWord))
+  if word == ""
+    execute "normal! \n"
+    return
+  endif
+  if s:is_link_to_non_wiki_file(word)
+    call s:edit_file(cmd, word)
+  else
+    let vimwiki_prev_word = [expand('%:p'), getpos('.')]
+    let subdir = vimwiki#current_subdir()
+    echomsg VimwikiGet('path').subdir.word.VimwikiGet('ext')
+    call s:edit_file(cmd, VimwikiGet('path').subdir.word.VimwikiGet('ext'))
+    let b:vimwiki_prev_word = vimwiki_prev_word
+  endif
+endfunction
+" }}}
+
+function! vimwiki#WikiGoBackWord() "{{{
+  if exists("b:vimwiki_prev_word")
+    " go back to saved WikiWord
+    let prev_word = b:vimwiki_prev_word
+    execute ":e ".substitute(prev_word[0], '\s', '\\\0', 'g')
+    call setpos('.', prev_word[1])
+  endif
+endfunction
+" }}}
+
+function! vimwiki#WikiGoHome(index) "{{{
+  call s:wiki_select(a:index)
+  call vimwiki#mkdir(VimwikiGet('path'))
+
+  try
+    execute ':e '.VimwikiGet('path').VimwikiGet('index').VimwikiGet('ext')
+  catch /E37/ " catch 'No write since last change' error
+    " this is really unsecure!!!
+    execute ':'.VimwikiGet('gohome').' '.
+          \ VimwikiGet('path').
+          \ VimwikiGet('index').
+          \ VimwikiGet('ext')
+  catch /E325/ " catch 'ATTENTION' error
+    " TODO: Hmmm, if open already opened index.wiki there is an error...
+    " Find out what is the reason and how to avoid it. Is it dangerous?
+    echomsg "Unknown error!"
+  endtry
+endfunction
+"}}}
+
+function! vimwiki#WikiDeleteWord() "{{{
+  "" file system funcs
+  "" Delete WikiWord you are in from filesystem
+  let val = input('Delete ['.expand('%').'] (y/n)? ', "")
+  if val != 'y'
+    return
+  endif
+  let fname = expand('%:p')
+  try
+    call delete(fname)
+  catch /.*/
+    call s:msg('Cannot delete "'.expand('%:t:r').'"!')
+    return
+  endtry
+  execute "bdelete! ".escape(fname, " ")
+
+  " reread buffer => deleted WikiWord should appear as non-existent
+  if expand('%:p') != ""
     execute "e"
-endfunction "}}}
+  endif
+endfunction
+"}}}
 
 function! vimwiki#WikiRenameWord() "{{{
-    "" Rename WikiWord, update all links to renamed WikiWord
-    let wwtorename = expand('%:r')
-    let isOldWordComplex = 0
-    if wwtorename !~ g:vimwiki_word1
-        let wwtorename = substitute(wwtorename,  g:vimwiki_stripsym, s:wiki_badsymbols, "g")
-        let isOldWordComplex = 1
+  "" Rename WikiWord, update all links to renamed WikiWord
+  let subdir = vimwiki#current_subdir()
+  let old_fname = subdir.expand('%:t')
+
+  " there is no file (new one maybe)
+  if glob(expand('%:p')) == ''
+    call s:msg('Cannot rename "'.expand('%:p').
+          \ '". It does not exist! (New file? Save it before renaming.)')
+    return
+  endif
+
+  let val = input('Rename "'.expand('%:t:r').'" (y/n)? ', "")
+  if val!='y'
+    return
+  endif
+
+  let new_link = input('Enter new name: ', "")
+
+  if new_link =~ '[/\\]'
+    " It is actually doable but I do not have free time to do it.
+    call s:msg('Cannot rename to a filename with path!')
+    return
+  endif
+
+  let new_link = subdir.new_link
+
+  " check new_fname - it should be 'good', not empty
+  if substitute(new_link, '\s', '', 'g') == ''
+    call s:msg('Cannot rename to an empty filename!')
+    return
+  endif
+  if s:is_link_to_non_wiki_file(new_link)
+    call s:msg('Cannot rename to a filename with extension (ie .txt .html)!')
+    return
+  endif
+
+  let new_link = s:strip_word(new_link)
+  let new_fname = VimwikiGet('path').s:filename(new_link).VimwikiGet('ext')
+
+  " do not rename if word with such name exists
+  let fname = glob(new_fname)
+  if fname != ''
+    call s:msg('Cannot rename to "'.new_fname.
+          \ '". File with that name exist!')
+    return
+  endif
+  " rename WikiWord file
+  try
+    echomsg "Renaming ".VimwikiGet('path').old_fname." to ".new_fname
+    let res = rename(expand('%:p'), expand(new_fname))
+    if res != 0
+      throw "Cannot rename!"
+    end
+  catch /.*/
+    call s:msg('Cannot rename "'.expand('%:t:r').'" to "'.new_fname.'"')
+    return
+  endtry
+
+  let &buftype="nofile"
+
+  let cur_buffer = [expand('%:p'),
+        \getbufvar(expand('%:p'), "vimwiki_prev_word")]
+
+  let blist = s:get_wiki_buffers()
+
+  " save wiki buffers
+  for bitem in blist
+    execute ':b '.escape(bitem[0], ' ')
+    execute ':update'
+  endfor
+
+  execute ':b '.escape(cur_buffer[0], ' ')
+
+  " remove wiki buffers
+  for bitem in blist
+    execute 'bwipeout '.escape(bitem[0], ' ')
+  endfor
+
+  let setting_more = &more
+  setlocal nomore
+
+  " update links
+  call s:update_wiki_links(old_fname, new_link)
+
+  " restore wiki buffers
+  for bitem in blist
+    if bitem[0] != cur_buffer[0]
+      call s:open_wiki_buffer(bitem)
     endif
+  endfor
 
-    " there is no file (new one maybe)
-    if glob(g:vimwiki_home.expand('%')) == ''
-        call s:msg('Cannot rename "'.expand('%').'". It does not exist!')
-        return
-    endif
+  call s:open_wiki_buffer([new_fname,
+        \ cur_buffer[1]])
+  " execute 'bwipeout '.escape(cur_buffer[0], ' ')
 
-    let val = input('Rename "'.expand('%:r').'" (y/n)? ', "")
-    if val!='y'
-        return
-    endif
-    let newWord = input('Enter new name: ', "")
-    " check newWord - it should be 'good', not empty
-    if substitute(newWord, '\s', '', 'g') == ''
-        call s:msg('Cannot rename to an empty filename!')
-        return
-    endif
-    if s:WikiIsLinkToNonWikiFile(newWord)
-        call s:msg('Cannot rename to a filename with extension (ie .txt .html)!')
-        return
-    endif
+  echomsg old_fname." is renamed to ".new_fname
 
-    if newWord !~ g:vimwiki_word1
-        " if newWord is 'complex wiki word' then add [[]]
-        let newWord = '[['.newWord.']]'
-    endif
-    let newFileName = s:WikiStripWord(newWord, g:vimwiki_stripsym).g:vimwiki_ext
+  let &more = setting_more
+endfunction
+" }}}
 
-    " do not rename if word with such name exists
-    let fname = glob(g:vimwiki_home.newFileName)
-    if fname != ''
-        call s:msg('Cannot rename to "'.newFileName.'". File with that name exist!')
-        return
-    endif
-    " rename WikiWord file
-    try
-        call rename(expand('%'), newFileName)
-        bd
-        "function call doesn't work
-        call s:editfile('e', newFileName)
-    catch /.*/
-        call s:msg('Cannot rename "'.expand('%:r').'" to "'.newFileName.'"')
-        return
-    endtry
+function! vimwiki#WikiUISelect()"{{{
+  call s:print_wiki_list()
+  let idx = input("Select Wiki (specify number): ")
+  if idx == ""
+    return
+  endif
+  call vimwiki#WikiGoHome(idx)
+endfunction
+"}}}
 
-    " save open buffers
-    let openbuffers = []
-    let bcount = 1
-    while bcount<=bufnr("$")
-        if bufexists(bcount)
-            call add(openbuffers, bufname(bcount))
-        endif
-        let bcount = bcount + 1
-    endwhile
+" }}}
+" TEXT OBJECTS functions {{{
 
-    " update links
-    execute ':args '.g:vimwiki_home.'*'.g:vimwiki_ext
-    if isOldWordComplex
-        execute ':silent argdo %s/\[\['.wwtorename.'\]\]/'.newWord.'/geI | update'
-    else
-        execute ':silent argdo %s/\<'.wwtorename.'\>/'.newWord.'/geI | update'
-    endif
-    execute ':argd *'.g:vimwiki_ext
+function! vimwiki#TO_header(inner) "{{{
+  if !search('^\(=\+\)[^=]\+\1\s*$', 'bcW')
+    return
+  endif
+  let level = vimwiki#count_first_sym(getline(line('.')))
+  normal V
+  if search('^\(=\{1,'.level.'}\)[^=]\+\1\s*$', 'W')
+    call cursor(line('.') - 1, 0)
+  else
+    call cursor(line('$'), 0)
+  endif
+  if a:inner && getline(line('.')) =~ '^\s*$'
+    let lnum = prevnonblank(line('.') - 1)
+    call cursor(lnum, 0)
+  endif
+endfunction
+"}}}
 
-    " restore open buffers
-    let bcount = 1
-    while bcount<=bufnr("$")
-        if bufexists(bcount)
-            if index(openbuffers, bufname(bcount)) == -1
-                execute 'silent bdelete '.escape(bufname(bcount), " ")
-            end
-        endif
-        let bcount = bcount + 1
-    endwhile
-
-    "" DONE: after renaming GUI caption is a bit corrupted?
-    "" FIXED: buffers menu is also not in the "normal" state, howto Refresh menu?
-    execute "emenu Buffers.Refresh\ menu"
-
+function! vimwiki#count_first_sym(line) "{{{
+  let idx = 0
+  while a:line[idx] == a:line[0] && idx < len(a:line)
+    let idx += 1
+  endwhile
+  return idx
 endfunction "}}}
 
-" Functions 2}}}
+function! vimwiki#AddHeaderLevel() "{{{
+  let lnum = line('.')
+  let line = getline(lnum)
 
-"" vimwiki html functions {{{2
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-function! s:WikiCreateDefaultCSS(path) " {{{
-    if glob(a:path.'style.css') == ""
-        let lines = ['body { margin: 1em 5em 1em 5em; font-size: 100%; }']
-        call add(lines, 'h1 {font-size: 2.0em;}')
-        call add(lines, 'h2 {font-size: 1.4em;}')
-        call add(lines, 'h3 {font-size: 1.0em;}')
-        call add(lines, 'h4 {font-size: 0.8em;}')
-        call add(lines, 'h5 {font-size: 0.7em;}')
-        call add(lines, 'h6 {font-size: 0.6em;}')
-        call add(lines, 'h1 { border-bottom: 1px solid #3366cc; text-align: right; padding: 0.3em 1em 0.3em 1em; }')
-        call add(lines, 'h3 { background: #e5ecf9; border-top: 1px solid #3366cc; padding: 0.1em 0.3em 0.1em 0.5em; }')
-        call add(lines, 'ul { margin-left: 2em; padding-left: 0.5em; }')
-        call add(lines, 'pre { border-left: 0.2em solid #ccc; margin-left: 2em; padding-left: 0.5em; }')
-        call add(lines, 'td { border: 1px solid #ccc; padding: 0.3em; }')
-        call add(lines, 'hr { border: none; border-top: 1px solid #ccc; }')
+  if line =~ '^\s*$'
+    return
+  endif
 
-        call writefile(lines, a:path.'style.css')
-        echomsg "Default style.css created."
+  if line !~ '^\(=\+\).\+\1\s*$'
+    let line = substitute(line, '^\s*', ' ', '')
+    let line = substitute(line, '\s*$', ' ', '')
+  endif
+  let level = vimwiki#count_first_sym(line)
+  if level < 6
+    call setline(lnum, '='.line.'=')
+  endif
+endfunction
+"}}}
+
+function! vimwiki#RemoveHeaderLevel() "{{{
+  let lnum = line('.')
+  let line = getline(lnum)
+
+  if line =~ '^\s*$'
+    return
+  endif
+
+  if line =~ '^\(=\+\).\+\1\s*$'
+    let line = strpart(line, 1, len(line) - 2)
+    if line =~ '^\s'
+      let line = strpart(line, 1, len(line))
     endif
-endfunction "}}}
-
-function! vimwiki#WikiAll2HTML(path) "{{{
-    if !isdirectory(a:path)
-        call s:msg('Please create '.a:path.' directory first!')
-        return
+    if line =~ '\s$'
+      let line = strpart(line, 0, len(line) - 1)
     endif
-    let wikifiles = split(glob(g:vimwiki_home.'*'.g:vimwiki_ext), '\n')
-    for wikifile in wikifiles
-        echo 'Processing '.wikifile
-        call vimwiki#Wiki2HTML(a:path, wikifile)
-    endfor
-    call s:WikiCreateDefaultCSS(g:vimwiki_home_html)
-    echomsg 'Wikifiles converted.'
-endfunction "}}}
+    call setline(lnum, line)
+  endif
+endfunction
+" }}}
 
-function! vimwiki#Wiki2HTML(path, wikifile) "{{{
-    if !isdirectory(a:path)
-        call s:msg('Please create '.a:path.' directory first!')
-        return
-    endif
-
-    "" helper funcs
-    function! s:isLinkToPic(lnk) "{{{
-        if a:lnk =~ '.\(png\|jpg\|gif\|jpeg\)$'
-            return 1
-        endif
-        return 0
-    endfunction "}}}
-
-    function! s:HTMLHeader(title, charset) "{{{
-        let lines=[]
-        call add(lines, "")
-        call add(lines, '<html>')
-        call add(lines, '<head>')
-        call add(lines, '<link rel="Stylesheet" type="text/css" href="style.css" />')
-        call add(lines, '<title>'.a:title.'</title>')
-        call add(lines, '<meta http-equiv="Content-Type" content="text/html; charset='.a:charset.'" />')
-        call add(lines, '</head>')
-        call add(lines, '<body>')
-        return lines
-    endfunction "}}}
-
-    function! s:HTMLFooter() "{{{
-        let lines=[]
-        call add(lines, "")
-        call add(lines, '</body>')
-        call add(lines, '</html>')
-        return lines
-    endfunction "}}}
-
-    function! s:closeCode(code, ldest) "{{{
-        if a:code
-            call add(a:ldest, "</pre></code>")
-            return 0
-        endif
-        return a:code
-    endfunction "}}}
-
-    function! s:closePre(pre, ldest) "{{{
-        if a:pre
-            call add(a:ldest, "</pre>")
-            return 0
-        endif
-        return a:pre
-    endfunction "}}}
-
-    function! s:closeTable(table, ldest) "{{{
-        if a:table
-            call add(a:ldest, "</table>")
-            return 0
-        endif
-        return a:table
-    endfunction "}}}
-
-    function! s:closeList(lists, ldest) "{{{
-        while len(a:lists)
-            let item = remove(a:lists, -1)
-            call add(a:ldest, item[0])
-        endwhile
-    endfunction! "}}}
-
-    function! s:processCode(line, code) "{{{
-        let lines = []
-        let code = a:code
-        let processed = 0
-        if !code && a:line =~ '^{{{\s*$'
-            let code = 1
-            call add(lines, "<code><pre>")
-            let processed = 1
-        elseif code && a:line =~ '^}}}\s*$'
-            let code = 0
-            call add(lines, "</pre></code>")
-            let processed = 1
-        elseif code
-            let processed = 1
-            call add(lines, a:line)
-        endif
-        return [processed, lines, code]
-    endfunction "}}}
-
-    function! s:processPre(line, pre) "{{{
-        let lines = []
-        let pre = a:pre
-        let processed = 0
-        if a:line =~ '^\s\+[^[:blank:]*#]'
-            if !pre
-                call add(lines, "<pre>")
-                let pre = 1
-            endif
-            let processed = 1
-            call add(lines, a:line)
-        elseif pre && a:line =~ '^\s*$'
-            let processed = 1
-            call add(lines, a:line)
-        elseif pre 
-            call add(lines, "</pre>")
-            let pre = 0
-        endif
-        return [processed, lines, pre]
-    endfunction "}}}
-
-    function! s:processList(line, lists) "{{{
-        let lines = []
-        let lstSym = ''
-        let lstTagOpen = ''
-        let lstTagClose = ''
-        let lstRegExp = ''
-        let processed = 0
-        if a:line =~ '^\s\+\*'
-            let lstSym = '*'
-            let lstTagOpen = '<ul>'
-            let lstTagClose = '</ul>'
-            let lstRegExp = '^\s\+\*'
-            let processed = 1
-        elseif a:line =~ '^\s\+#' 
-            let lstSym = '#'
-            let lstTagOpen = '<ol>'
-            let lstTagClose = '</ol>'
-            let lstRegExp = '^\s\+#'
-            let processed = 1
-        endif
-        if lstSym != ''
-            let indent = stridx(a:line, lstSym)
-            let cnt = len(a:lists)
-            if !cnt || (cnt && indent > a:lists[-1][1])
-                call add(a:lists, [lstTagClose, indent])
-                call add(lines, lstTagOpen)
-            elseif (cnt && indent < a:lists[-1][1])
-                while indent < a:lists[-1][1]
-                    let item = remove(a:lists, -1)
-                    call add(lines, item[0])
-                endwhile
-            endif
-            call add(lines, '<li>'.substitute(a:line, lstRegExp, '', '').'</li>')
-        else
-            while len(a:lists)
-                let item = remove(a:lists, -1)
-                call add(lines, item[0])
-            endwhile
-        endif
-        return [processed, lines]
-    endfunction "}}}
-
-    function! s:processP(line) "{{{
-        let lines = []
-        if a:line =~ '^\S'
-            call add(lines, '<p>'.a:line.'</p>')
-            return [1, lines]
-        endif
-        return [0, lines]
-    endfunction "}}}
-
-    function! s:processHeading(line) "{{{
-        let line = a:line
-        let processed = 0
-        if a:line =~ '^!!!!!!.*$'
-            let line = '<h6>'.strpart(a:line, 6).'</h6>'
-            let processed = 1
-        elseif a:line =~ '^!!!!!.*$'
-            let line = '<h5>'.strpart(a:line, 5).'</h5>'
-            let processed = 1
-        elseif a:line =~ '^!!!!.*$'
-            let line = '<h4>'.strpart(a:line, 4).'</h4>'
-            let processed = 1
-        elseif a:line =~ '^!!!.*$'
-            let line = '<h3>'.strpart(a:line, 3).'</h3>'
-            let processed = 1
-        elseif a:line =~ '^!!.*$'
-            let line = '<h2>'.strpart(a:line, 2).'</h2>'
-            let processed = 1
-        elseif a:line =~ '^!.*$'
-            let line = '<h1>'.strpart(a:line, 1).'</h1>'
-            let processed = 1
-        endif
-        if processed
-            return [processed, line]
-        endif
-
-        "" dumb test if Tagit has made changes to line
-        let lenbefore = len(line)
-        let line = s:Tagit(a:line, '^=\{6}.*=\{6}\s*$', '<h6>', '</h6>', 6)
-        if len(line)!=lenbefore
-            let processed = 1
-        endif
-
-        if !processed
-            let lenbefore = len(line)
-            let line = s:Tagit(a:line, '^=\{5}.*=\{5}\s*$', '<h5>', '</h5>', 5)
-            if len(line)!=lenbefore
-                let processed = 1
-            endif
-        endif
-        if !processed
-            let lenbefore = len(line)
-            let line = s:Tagit(a:line, '^=\{4}.*=\{4}\s*$', '<h4>', '</h4>', 4)
-            if len(line)!=lenbefore
-                let processed = 1
-            endif
-        endif
-        if !processed
-            let lenbefore = len(line)
-            let line = s:Tagit(a:line, '^=\{3}.*=\{3}\s*$', '<h3>', '</h3>', 3)
-            if len(line)!=lenbefore
-                let processed = 1
-            endif
-        endif
-        if !processed
-            let lenbefore = len(line)
-            let line = s:Tagit(a:line, '^=\{2}.*=\{2}\s*$', '<h2>', '</h2>', 2)
-            if len(line)!=lenbefore
-                let processed = 1
-            endif
-        endif
-        if !processed
-            let lenbefore = len(line)
-            let line = s:Tagit(a:line, '^=\{1}.*=\{1}\s*$', '<h1>', '</h1>', 1)
-            if len(line)!=lenbefore
-                let processed = 1
-            endif
-        endif
-
-        return [processed, line]
-    endfunction "}}}
-
-    function! s:processHR(line) "{{{
-        let line = a:line
-        let processed = 0
-        if a:line =~ '^-----*$'
-            let line = '<hr />'
-            let processed = 1
-        endif
-        return [processed, line]
-    endfunction "}}}
-
-    function! s:processTable(line, table) "{{{
-        let table = a:table
-        let lines = []
-        let processed = 0
-        if a:line =~ '^||.\+||.*'
-            if !table
-                call add(lines, "<table>")
-                let table = 1
-            endif
-            let processed = 1
-
-            call add(lines, "<tr>")
-            let pos1 = 0
-            let pos2 = 0
-            let done = 0
-            while !done
-                let pos1 = stridx(a:line, '||', pos2)
-                let pos2 = stridx(a:line, '||', pos1+2)
-                if pos1==-1 || pos2==-1
-                    let done = 1
-                    let pos2 = len(a:line)
-                endif
-                let line = strpart(a:line, pos1+2, pos2-pos1-2)
-                if line != ''
-                    call add(lines, "<td>".line."</td>")
-                endif
-            endwhile
-            call add(lines, "</tr>")
-
-        elseif table
-            call add(lines, "</table>")
-            let table = 0
-        endif
-        return [processed, lines, table]
-    endfunction "}}}
-
-    "" yes I know it is dumb to name variables like that ;)
-    function! s:Linkit(line, regexp, regexp2) "{{{
-        let line = a:line
-        let done = 0
-        let posend = -1
-        let posbeg = 0
-        let posbeg2 = 0
-        while !done
-            let posbeg = match(a:line, a:regexp, posend+1)
-            let posbeg2 = match(a:line, a:regexp2, posend+1)
-            if (posbeg < posbeg2 && posbeg!=-1) || (posbeg2==-1 && posbeg!=-1)
-                let str = matchstr(a:line, a:regexp, posbeg)
-                if str != ''
-                    let word = s:WikiStripWord(str, g:vimwiki_stripsym)
-
-                    let ext = '.html'
-                    let path = ''
-                    if s:WikiIsLinkToNonWikiFile(word)
-                        let ext = ''
-                        " let path = g:vimwiki_home
-                    endif
-
-                    if s:isLinkToPic(word)
-                        let strrep = '<img src="'.path.word.'" />'
-                    else
-                        let strrep = '<a href="'.path.word.ext.'">'.word.'</a>'
-                    endif
-                    let line = substitute(line, escape(str,'[]*?\'), strrep, "")
-                    let posend = posbeg+len(str)
-                else
-                    let done = 1
-                endif
-            elseif posbeg2 != -1
-                let str = matchstr(a:line, a:regexp2, posbeg2)
-                if str != ''
-                    if s:isLinkToPic(str)
-                        let strrep = '<img src="'.str.'" />'
-                    else
-                        let strrep = '<a href="'.str.'">'.str.'</a>'
-                    endif
-                    let line = substitute(line, str, strrep, "")
-                    let posend = posbeg2+len(str)
-                else
-                    let done = 1
-                endif
-            else
-                let done = 1
-            endif
-        endwhile
-        return line
-    endfunction "}}}
-
-    function! s:processLink(line) "{{{
-        let line = ''
-        let done = 0
-
-        let pos0 = 0
-        let pos1 = 0
-        let pos2 = 0
-        while !done
-            let pos1 = match(a:line, g:vimwiki_rxCode, pos2)
-            let pos2 = matchend(a:line, g:vimwiki_rxCode, pos1)
-            if pos1!=-1 && pos2!=-1
-                let line = line.s:Linkit(strpart(a:line, pos0, pos1-pos0), g:vimwiki_rxWikiWord, g:vimwiki_rxWeblink)
-                let line = line.strpart(a:line, pos1, pos2-pos1)
-                let pos0 = pos2
-            else
-                let line = line.s:Linkit(strpart(a:line, pos0, len(a:line)-pos0), g:vimwiki_rxWikiWord, g:vimwiki_rxWeblink)
-                let done = 1
-            endif
-        endwhile
-
-        return line
-    endfunction "}}}
-
-    "" TODO: processTODO(line)
-    
-    "" change dangerous html symbols - < > & (line)
-    function! s:safeHTML(line) "{{{
-        let line = substitute(a:line, '&', '\&amp;', 'g')
-        let line = substitute(line, '<', '\&lt;', 'g')
-        let line = substitute(line, '>', '\&gt;', 'g')
-        return line
-    endfunction "}}}
-
-    function! s:Tagit(line, regexp, tagOpen, tagClose, cSymRemove) "{{{
-        let line = a:line
-        let done = 0
-        while !done
-            let str = matchstr(line, a:regexp)
-            if str != ''
-                let strrep = a:tagOpen.strpart(str, a:cSymRemove, len(str)-2*a:cSymRemove).a:tagClose
-                let line = substitute(line, a:regexp, escape(strrep, '[]*.?&\'), "")
-            else
-                let done = 1
-            endif
-        endwhile
-        return line
-    endfunction "}}}
-
-    function! s:replacePairs(line, regexp, tagOpen, tagClose) "{{{
-        let line = ''
-        let done = 0
-
-        if a:regexp == g:vimwiki_rxCode
-            let line = s:Tagit(a:line, a:regexp, a:tagOpen, a:tagClose, 1)
-        else
-            let pos0 = 0
-            let pos1 = 0
-            let pos2 = 0
-            while !done
-                "" TODO: improve it, improve it, improve it...
-                let pos1 = match(a:line, g:vimwiki_rxCode, pos2)
-                let tpos1 = match(a:line, g:vimwiki_rxWeblink, pos2)
-                let ttpos1 = match(a:line, g:vimwiki_rxWikiWord, pos2)
-                let pos2 = matchend(a:line, g:vimwiki_rxCode, pos1)
-                let tpos2 = matchend(a:line, g:vimwiki_rxWeblink, tpos1)
-                let ttpos2 = matchend(a:line, g:vimwiki_rxWikiWord, ttpos1)
-                if (pos1 < tpos1)
-                    let pos1 = tpos1
-                endif
-                if (pos1 < ttpos1)
-                    let pos1 = ttpos1
-                endif
-                let pos2 = max([pos2, tpos2, ttpos2])
-
-                if pos1!=-1 && pos2!=-1
-                    let line = line.s:Tagit(strpart(a:line, pos0, pos1-pos0), a:regexp, a:tagOpen, a:tagClose, 1)
-                    let line = line.strpart(a:line, pos1, pos2-pos1)
-                    let pos0 = pos2
-                else
-                    let line = line.s:Tagit(strpart(a:line, pos0, len(a:line)-pos0), a:regexp, a:tagOpen, a:tagClose, 1)
-                    let done = 1
-                endif
-            endwhile
-        endif
-
-        return line
-    endfunction "}}}
-
-    let lsource=readfile(a:wikifile)
-    let ldest = s:HTMLHeader(s:getFileNameOnly(a:wikifile), &encoding)
-
-    let pre = 0
-    let code = 0
-    let table = 0
-    let lists = []
-
-    for line in lsource
-        let processed = 0
-        let lines = []
-
-        let line = s:safeHTML(line)
-
-        "" code
-        if !processed
-            let [processed, lines, code] = s:processCode(line, code)
-            if processed && len(lists)
-                call s:closeList(lists, ldest)
-            endif
-            if processed && table
-                let table = s:closeTable(table, ldest)
-            endif
-            if processed && pre
-                let pre = s:closePre(pre, ldest)
-            endif
-            call extend(ldest, lines)
-        endif
-
-        "" Pre
-        if !processed
-            let [processed, lines, pre] = s:processPre(line, pre)
-            if processed && len(lists)
-                call s:closeList(lists, ldest)
-            endif
-            if processed && table
-                let table = s:closeTable(table, ldest)
-            endif
-            if processed && code
-                let code = s:closeCode(code, ldest)
-            endif
-            call extend(ldest, lines)
-        endif
-
-
-        "" TODO: `code` do not emphasize or bold it.
-        "" list
-        if !processed
-            let [processed, lines] = s:processList(line, lists)
-            if processed && pre
-                let pre = s:closePre(pre, ldest)
-            endif
-            if processed && code
-                let code = s:closeCode(code, ldest)
-            endif
-            if processed && table
-                let table = s:closeTable(table, ldest)
-            endif
-            call map(lines, 's:replacePairs(v:val, ''_.\{-}_'', ''<em>'', ''</em>'')')
-            call map(lines, 's:replacePairs(v:val, ''\*.\{-}\*'', ''<strong>'', ''</strong>'')')
-            call map(lines, 's:processLink(v:val)')
-            call map(lines, 's:replacePairs(v:val, ''`.\{-}`'', ''<code>'', ''</code>'')')
-            call extend(ldest, lines)
-        endif
-
-        "" table
-        if !processed
-            let [processed, lines, table] = s:processTable(line, table)
-            call map(lines, 's:replacePairs(v:val, ''_.\{-}_'', ''<em>'', ''</em>'')')
-            call map(lines, 's:replacePairs(v:val, ''\*.\{-}\*'', ''<strong>'', ''</strong>'')')
-            call map(lines, 's:processLink(v:val)')
-            call map(lines, 's:replacePairs(v:val, ''`.\{-}`'', ''<code>'', ''</code>'')')
-            call extend(ldest, lines)
-        endif
-
-        if !processed
-            let [processed, line] = s:processHeading(line)
-            if processed
-                call s:closeList(lists, ldest)
-                let table = s:closeTable(table, ldest)
-                let code = s:closeCode(code, ldest)
-                call add(ldest, line)
-            endif
-        endif
-
-        if !processed
-            let [processed, line] = s:processHR(line)
-            if processed
-                call s:closeList(lists, ldest)
-                let table = s:closeTable(table, ldest)
-                let code = s:closeCode(code, ldest)
-                call add(ldest, line)
-            endif
-        endif
-
-        "" P
-        if !processed
-            let line = s:replacePairs(line, '_.\{-}_', '<em>', '</em>')
-            let line = s:replacePairs(line, '\*.\{-}\*', '<strong>', '</strong>')
-            let line = s:processLink(line)
-            let line = s:replacePairs(line, '`.\{-}`', '<code>', '</code>')
-            let [processed, lines] = s:processP(line)
-            if processed && pre
-                let pre = s:closePre(pre, ldest)
-            endif
-            if processed && code
-                let code = s:closeCode(code, ldest)
-            endif
-            if processed && table
-                let table = s:closeTable(table, ldest)
-            endif
-            call extend(ldest, lines)
-        endif
-
-        "" add the rest
-        if !processed
-            call add(ldest, line)
-        endif
-    endfor
-
-    "" process end of file
-    "" close opened tags if any
-    call s:closePre(pre, ldest)
-    call s:closeCode(code, ldest)
-    call s:closeList(lists, ldest)
-    call s:closeTable(table, ldest)
-
-
-    call extend(ldest, s:HTMLFooter())
-
-    "" make html file.
-    "" TODO: add html headings, css, etc.
-    let wwFileNameOnly = s:getFileNameOnly(a:wikifile)
-    call writefile(ldest, a:path.wwFileNameOnly.'.html')
-endfunction "}}}
-
-" 2}}}
+" }}}
