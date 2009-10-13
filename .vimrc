@@ -193,3 +193,25 @@ function FF()
         return ""
     endif
 endfunction
+
+function NativeTraits() range
+    if match(getline(a:firstline), "has") == -1
+        throw "This does not look like a has block"
+    endif
+
+    let range_has = a:firstline . "," . a:lastline
+    exec range_has . "sm/metaclass.*=>.*Collection::\\(\\w\\+\\).*,/traits => ['\\1'],/"
+    
+    call cursor(a:firstline, 0)
+    let pfirst = search('provides\s*=>\s*{', "nW", a:lastline)
+
+    call cursor(pfirst, 0)
+    let plast = search('^\s*}', "nW", a:lastline)
+    let range_prov = pfirst . "," . plast
+
+    exec range_prov . "sm/\\(\\w\\+\\)\\s*=>\\s*'\\(\\w\\+\\)'/\\2 => '\\1'/"
+    exec range_prov . "s/provides/handles/"
+endfunction
+
+command -range NativeTraits :<line1>,<line2>call NativeTraits()
+
