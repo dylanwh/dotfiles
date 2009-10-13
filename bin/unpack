@@ -5,28 +5,28 @@ file=$1
 dir=$(basename $file | sed 's/\..*$//')
 
 if [[ -e $dir ]]; then
-	integer i=0
-	while [[ -e "${dir}_$i" ]]; do
-		(( i++ ))
-	done
-	dir="${dir}_$i"
+    integer i=0
+    while [[ -e "${dir}_$i" ]]; do
+        (( i++ ))
+    done
+    dir="${dir}_$i"
 fi
 
 echo $dir
 mkdir $dir
 
 case $file in
-	*.zip)            unzip -d $dir $file     ;;
-	*.tar.gz|*.tgz)   tar -C $dir -zxvf $file ;;
-	*.tar.bz2|*.tbz2) tar -C $dir -jxvf $file ;;
-	*.tar)            tar -C $dir -xvf $file  ;;
+    *.zip)            unzip -d $dir $file     ;;
+    *.tar.gz|*.tgz)   tar -C $dir -zxvf $file ;;
+    *.tar.bz2|*.tbz2) tar -C $dir -jxvf $file ;;
+    *.tar)            tar -C $dir -xvf $file  ;;
 esac
 
 integer files=$(ls -A $dir | wc -l)
 echo "files: $files"
 if (( files == 1 )); then
-	local newdir=$(basename "$(ls -A $dir)")
-	mv $dir $dir.old
-	mv $dir.old/$newdir $newdir
-	rmdir $dir.old
+    local newdir=$(basename "$(ls -A $dir)")
+    mv $dir $dir.old
+    mv $dir.old/$newdir $newdir
+    rmdir $dir.old
 fi

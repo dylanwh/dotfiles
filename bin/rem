@@ -4,26 +4,26 @@ file=${REMIND_FILE:-"$HOME/.reminders"}
 opts=()
 
 while [[ -n $1 ]]; do
-	case $1 in
-		-F) file=$2
-		    shift
-		    shift
-		;;
-		*=*)
-			opts=($opts -i$1)
-			shift
-		;;
-		-*) opts=($opts $1)
-		    shift 
-		;;
-		*) 
-			break
-		;;
-	esac
+    case $1 in
+        -F) file=$2
+            shift
+            shift
+        ;;
+        *=*)
+            opts=($opts -i$1)
+            shift
+        ;;
+        -*) opts=($opts $1)
+            shift 
+        ;;
+        *) 
+            break
+        ;;
+    esac
 done
 
 if (( $#opts == 0 )); then
-	opts=('-q')
+    opts=('-q')
 fi
 
 cd $(dirname $file)

@@ -10,6 +10,6 @@ use metaclass;
 PERL
 
 print join ("\n\t<-",
-		$pkg->meta->linearized_isa), "\n";
+        $pkg->meta->linearized_isa), "\n";
 
 

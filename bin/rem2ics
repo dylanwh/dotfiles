@@ -1,11 +1,11 @@
 #!/usr/bin/env perl
 eval 'exec /usr/bin/env perl -S $0 ${1+"$@"}'
     if $running_under_some_shell;
-			# this emulates #! processing on NIH machines.
-			# (remove #! line above if indigestible)
+            # this emulates #! processing on NIH machines.
+            # (remove #! line above if indigestible)
 
 eval '$'.$1.'$2;' while $ARGV[0] =~ /^([A-Za-z_0-9]+=)(.*)/ && shift;
-			# process any FOO=bar switches
+            # process any FOO=bar switches
 
 # rem2ics by Anthony J. Chivetta <achivetta@gmail.com>
 # version 0.1 - 2006-06-09
@@ -17,33 +17,33 @@ eval '$'.$1.'$2;' while $ARGV[0] =~ /^([A-Za-z_0-9]+=)(.*)/ && shift;
 # This program is distributed in the hope that it will be useful,
 # but WITHOUT ANY WARRANTY; without even the implied warranty of
 # MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE
-$[ = 1;			# set array base to 1
-$, = ' ';		# set output field separator
-$\ = "\n";		# set output record separator
+$[ = 1;            # set array base to 1
+$, = ' ';        # set output field separator
+$\ = "\n";        # set output record separator
 
 print 'BEGIN:VCALENDAR';
 print 'VERSION:2.0';
 
 while (<>) {
-    chomp;	# strip record separator
+    chomp;    # strip record separator
     @Fld = split(' ', $_, -1);
 
     $s = '/', $Fld[1] =~ s/$s//g;
     print 'BEGIN:VEVENT';
     if ($Fld[5] ne '*') {
-	printf "DTSTART:%dT%02d%02d00\n", $Fld[1], $Fld[5] / 60, $Fld[5] % 60;
-	printf "DTEND:%dT%02d%02d00\n", $Fld[1], $Fld[5] / 60 + $Fld[4] / 60,
+    printf "DTSTART:%dT%02d%02d00\n", $Fld[1], $Fld[5] / 60, $Fld[5] % 60;
+    printf "DTEND:%dT%02d%02d00\n", $Fld[1], $Fld[5] / 60 + $Fld[4] / 60,
 
-	  $Fld[5] % 60 + $Fld[4] % 60;
-	print 'SUMMARY:' . substr($_, $_ =~ $Fld[7] &&
+      $Fld[5] % 60 + $Fld[4] % 60;
+    print 'SUMMARY:' . substr($_, $_ =~ $Fld[7] &&
 
-	  ($RLENGTH = length($&), $RSTART = length($`)+1));
+      ($RLENGTH = length($&), $RSTART = length($`)+1));
     }
     else {
-	printf "DTSTART:%d\n", $Fld[1];
-	print 'SUMMARY:' . substr($_, $_ =~ $Fld[6] &&
+    printf "DTSTART:%d\n", $Fld[1];
+    print 'SUMMARY:' . substr($_, $_ =~ $Fld[6] &&
 
-	  ($RLENGTH = length($&), $RSTART = length($`)+1));
+      ($RLENGTH = length($&), $RSTART = length($`)+1));
     }
     print 'END:VEVENT';
 }

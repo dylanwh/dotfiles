@@ -27,11 +27,11 @@ while (defined($ans = $term->readline(prompt('perl% ', 'reset green')))) {
     my $eval =  eval($ans);
     use strict;
     if (defined $eval) {
-	print "$eval\n";
+    print "$eval\n";
     }
     if (defined $@ and $@ ne "") {
-	print "Error: $@";
-	undef $@;
+    print "Error: $@";
+    undef $@;
     }
 }
 

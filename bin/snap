@@ -22,45 +22,45 @@ MainLoop();
 
 
 sub snap {
-	my $fh = new File::Temp (
-		UNLINK => 0,
-		TEMPLATE => "snapshotXXXX",
-		SUFFIX => ".png",
-		DIR  => $ENV{TEMPDIR} || '/tmp',
-	);
-	my $file = "$fh";
-	close $fh;
-	
-	$mw->destroy;
-	system('import', '-delay' => '0', $file);
-	$mw = new Tk::MainWindow(-title => "Preview");
+    my $fh = new File::Temp (
+        UNLINK => 0,
+        TEMPLATE => "snapshotXXXX",
+        SUFFIX => ".png",
+        DIR  => $ENV{TEMPDIR} || '/tmp',
+    );
+    my $file = "$fh";
+    close $fh;
+    
+    $mw->destroy;
+    system('import', '-delay' => '0', $file);
+    $mw = new Tk::MainWindow(-title => "Preview");
 
-	my $img = $mw->Photo(-format => 'png', -file => $file);
-	#my $can = $mw->Scrolled('Canvas', -scrollbars => 'seo');
-	
-	my $label = $mw->Label(-image => $img);
-	#$can->pack(-expand => 1, -fill => 'both');
-	$label->grid(-columnspan => 2);
-	my $but1 = $mw->Button(-text => "Save", -command => [\&save_file, $file]);
-	my $but2 = $mw->Button(-text => "Close", -command => sub { $mw->destroy });
+    my $img = $mw->Photo(-format => 'png', -file => $file);
+    #my $can = $mw->Scrolled('Canvas', -scrollbars => 'seo');
+    
+    my $label = $mw->Label(-image => $img);
+    #$can->pack(-expand => 1, -fill => 'both');
+    $label->grid(-columnspan => 2);
+    my $but1 = $mw->Button(-text => "Save", -command => [\&save_file, $file]);
+    my $but2 = $mw->Button(-text => "Close", -command => sub { $mw->destroy });
 
-	$but1->grid(-column => 0, -row => 1, -sticky => 'e');
-	$but2->grid(-column => 1, -row => 1, -sticky => 'w');
+    $but1->grid(-column => 0, -row => 1, -sticky => 'e');
+    $but2->grid(-column => 1, -row => 1, -sticky => 'w');
 
-	
+    
 }
 
 sub save_file {
-	my $file = shift;
-	my $savefile = $mw->getSaveFile(
-		-initialfile => "screenshot",
-		-filetypes => [['PNG','.png']],
-		-defaultextension => ".png",
-	);
-	if ($savefile) {
-		move($file, $savefile);
-	} else {
-		unlink($file) or die "Can't remove $file!";
-	}
-	$mw->destroy();
+    my $file = shift;
+    my $savefile = $mw->getSaveFile(
+        -initialfile => "screenshot",
+        -filetypes => [['PNG','.png']],
+        -defaultextension => ".png",
+    );
+    if ($savefile) {
+        move($file, $savefile);
+    } else {
+        unlink($file) or die "Can't remove $file!";
+    }
+    $mw->destroy();
 }

@@ -13,45 +13,45 @@ my @log;
 my $total = 0;
 
 while ($_ = readline $remind) {
-	chomp;
-	my ($date, $special, $tag, $duration, $time, $body) = split(/\s+/, $_, 6);
-	my ($year, $month, $day) = split(/\//, $date);
-	$body =~ s/^(\d\d?:\d\d(pm|am)?-)?\d\d?:\d\d(am|pm) //;
-	my $key = '';
+    chomp;
+    my ($date, $special, $tag, $duration, $time, $body) = split(/\s+/, $_, 6);
+    my ($year, $month, $day) = split(/\//, $date);
+    $body =~ s/^(\d\d?:\d\d(pm|am)?-)?\d\d?:\d\d(am|pm) //;
+    my $key = '';
 
-	if ($tag =~ /@([\w.-]+)/) {
-		$key = $1;
-	}
+    if ($tag =~ /@([\w.-]+)/) {
+        $key = $1;
+    }
 
-	my $record = $pdb->new_Record;
-	$record->{day} = $day;
-	$record->{month} = $month;
-	$record->{year} = $year;
+    my $record = $pdb->new_Record;
+    $record->{day} = $day;
+    $record->{month} = $month;
+    $record->{year} = $year;
 
-	push @log, [ $key, $body ];
+    push @log, [ $key, $body ];
 
-	if ($time ne '*') {
-		my $start = Time::Piece->strptime(
-			"$date " . timefrob($time), "%Y/%m/%d %H:%M"
-		);
-		$record->{start_hour} = $start->hour;
-		$record->{start_minute} = $start->minute;
-		if ($duration eq '*') {
-			$duration = 10;
-		}
+    if ($time ne '*') {
+        my $start = Time::Piece->strptime(
+            "$date " . timefrob($time), "%Y/%m/%d %H:%M"
+        );
+        $record->{start_hour} = $start->hour;
+        $record->{start_minute} = $start->minute;
+        if ($duration eq '*') {
+            $duration = 10;
+        }
 
-		$duration = $duration + 0;
-		my $end = $start + (ONE_MINUTE * $duration);
-		$record->{end_hour} = $end->hour;
-		$record->{end_minute} = $end->minute;
-	}
+        $duration = $duration + 0;
+        my $end = $start + (ONE_MINUTE * $duration);
+        $record->{end_hour} = $end->hour;
+        $record->{end_minute} = $end->minute;
+    }
 
-	delete $record->{alarm};
+    delete $record->{alarm};
 
-	$record->{description} = $body;
-	$pdb->append_Record($record);
+    $record->{description} = $body;
+    $pdb->append_Record($record);
 
-	$total++;
+    $total++;
 }
 
 my $record = $pdb->new_Record();
@@ -68,7 +68,7 @@ print "Added $total calendar entries.\n";
 
 
 sub timefrob {
-	my $n = shift;
-	return $n if $n eq '*';
-	int($n / 60) . ":" . ($n % 60);
+    my $n = shift;
+    return $n if $n eq '*';
+    int($n / 60) . ":" . ($n % 60);
 }

@@ -13,14 +13,14 @@ my %define = (
 
 # manually parse the arguments for cpp compatibility
 while (my $opt = shift @ARGV) {
-	if ($opt =~ /^-D(\w+)(?:=(.+?))?$/) { $define{$1} = $2 || 1; }
-	elsif ($opt =~ /^-U(\w+)$/)         { delete $define{$1} }
-	elsif ($opt =~ /^-I(.+?)$/)         { push @include, $1 }
-	elsif ($opt =~ /^-P(.+?)$/)         { push @pre_process, $1 }
-	elsif ($opt =~ /^-W(.+?)$/)         { push @wrapper, $1 }
-	elsif ($opt eq '--')                { last }
-	elsif ($opt =~ /^-/)                { die "Unknown option: $opt\n" }
-	else                                { push @ARGV, $opt; last }
+    if ($opt =~ /^-D(\w+)(?:=(.+?))?$/) { $define{$1} = $2 || 1; }
+    elsif ($opt =~ /^-U(\w+)$/)         { delete $define{$1} }
+    elsif ($opt =~ /^-I(.+?)$/)         { push @include, $1 }
+    elsif ($opt =~ /^-P(.+?)$/)         { push @pre_process, $1 }
+    elsif ($opt =~ /^-W(.+?)$/)         { push @wrapper, $1 }
+    elsif ($opt eq '--')                { last }
+    elsif ($opt =~ /^-/)                { die "Unknown option: $opt\n" }
+    else                                { push @ARGV, $opt; last }
 }
 
 my $template = new Template {

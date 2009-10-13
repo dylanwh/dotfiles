@@ -8,9 +8,9 @@ my @screens = `screen -ls`;
 
 my ($n) = grep (/$ppid/, @screens);
 if ($n) {
-	$n =~ /$ppid\.(\S+)/;
-	print "$1\n";
+    $n =~ /$ppid\.(\S+)/;
+    print "$1\n";
 } else {
-	print "???\n";
+    print "???\n";
 }
 

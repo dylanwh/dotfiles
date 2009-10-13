@@ -2,7 +2,7 @@
 #
 U=''
 case $LANG in
-	*UTF-8*) U='U' ;;
+    *UTF-8*) U='U' ;;
 esac
 
 exec autossh -M 4242 lofn.sinedev.org -D8080  -t screen -D -RR$U

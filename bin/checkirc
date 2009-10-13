@@ -7,87 +7,87 @@ use Time::Piece;
 $|++;
 
 my %colors = (
-	nick => 'orange',
-	ignore => 'grey50',
+    nick => 'orange',
+    ignore => 'grey50',
 );
 
 sub START {
-	my $self = $_[OBJECT];
-	my $irc = POE::Component::IRC->spawn(
-		nick => 'dylan',
-		ircname => 'dylan',
-		password => 'sorbet',
-	);
-	$_[HEAP]{irc} = $irc;
-	$self->title("irssi");
-	$irc->yield( register => 'all' );
-	$irc->yield( 
-		connect  => { 
-			server => 'localhost',
-			port => '7771'
-		}
-	);
+    my $self = $_[OBJECT];
+    my $irc = POE::Component::IRC->spawn(
+        nick => 'dylan',
+        ircname => 'dylan',
+        password => 'sorbet',
+    );
+    $_[HEAP]{irc} = $irc;
+    $self->title("irssi");
+    $irc->yield( register => 'all' );
+    $irc->yield( 
+        connect  => { 
+            server => 'localhost',
+            port => '7771'
+        }
+    );
 }
 
 event 'irc_ctcp_action' => sub {
-	my ($self, $who, $where, $what) = @_[OBJECT, ARG0 .. ARG2];
-	my ($nick) = split(/!/, $who);
-	my $chan   = $where->[0];
-	return if $who =~ /dylan/i;
-	$self->title("{nick $nick} on $chan");
-	$self->text("{nick $nick}{ignore \@$chan} * $what");
+    my ($self, $who, $where, $what) = @_[OBJECT, ARG0 .. ARG2];
+    my ($nick) = split(/!/, $who);
+    my $chan   = $where->[0];
+    return if $who =~ /dylan/i;
+    $self->title("{nick $nick} on $chan");
+    $self->text("{nick $nick}{ignore \@$chan} * $what");
 };
 
 event 'irc_msg' => sub {
-	my ($self, $who, $where, $what) = @_[OBJECT, ARG0 .. ARG2];
-	my ($from) = split(/!/, $who);
-	#return if $from =~ /dylan/i;
-	
-	$self->title("<$from> $what");
-	$self->text("<$from> $what");
+    my ($self, $who, $where, $what) = @_[OBJECT, ARG0 .. ARG2];
+    my ($from) = split(/!/, $who);
+    #return if $from =~ /dylan/i;
+    
+    $self->title("<$from> $what");
+    $self->text("<$from> $what");
 };
 
 event 'irc_public' => sub {
-	my ($self, $who, $where, $what) = @_[OBJECT, ARG0 .. ARG2];
-	my ($nick) = split(/!/, $who);
-	my $chan   = $where->[0];
-	return if $who =~ /dylan/i;
-	$self->title("{nick $nick} on $chan");
-	$self->text("{nick $nick}{ignore \@$chan}> $what");
-	#print "$chan <$nick> $what\n";
+    my ($self, $who, $where, $what) = @_[OBJECT, ARG0 .. ARG2];
+    my ($nick) = split(/!/, $who);
+    my $chan   = $where->[0];
+    return if $who =~ /dylan/i;
+    $self->title("{nick $nick} on $chan");
+    $self->text("{nick $nick}{ignore \@$chan}> $what");
+    #print "$chan <$nick> $what\n";
 };
 
 event '_default' => sub {
-	print STDERR "event: $_[ARG0]\n";
+    print STDERR "event: $_[ARG0]\n";
 };
 
 sub stamp {
-	my ($self) = @_;
-	localtime->strftime("%H:%M:%S");
+    my ($self) = @_;
+    localtime->strftime("%H:%M:%S");
 }
 
 sub title {
-	my ($self, $text) = @_;
-	my $stamp = $self->stamp;
-	$self->print("^tw(){ignore [$stamp]} $text");
+    my ($self, $text) = @_;
+    my $stamp = $self->stamp;
+    $self->print("^tw(){ignore [$stamp]} $text");
 }
 
 sub text {
-	my ($self, $text) = @_;
-	my $stamp = $self->stamp;
-	$self->print("{ignore [$stamp]} $text");
+    my ($self, $text) = @_;
+    my $stamp = $self->stamp;
+    $self->print("{ignore [$stamp]} $text");
 }
 
 sub print {
-	my ($self, $text) = @_;
-	$text =~ s/\{(\w+) (.+?)\}/$self->color($1, $2)/ge;
-	print $text, "\n";
+    my ($self, $text) = @_;
+    $text =~ s/\{(\w+) (.+?)\}/$self->color($1, $2)/ge;
+    print $text, "\n";
 }
 
 sub color {
-	my ($self, $color, $text) = @_;
-	$color = $colors{$color} || $color;
-	return "^fg($color)$text^fg()";
+    my ($self, $color, $text) = @_;
+    $color = $colors{$color} || $color;
+    return "^fg($color)$text^fg()";
 }
 
 new IRCView;

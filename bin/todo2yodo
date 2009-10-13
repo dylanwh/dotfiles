@@ -19,66 +19,66 @@ my ($todo) = $doc->getElementsByTagName('todo');
 my $cats = $todo->getElementsByTagName('note', 0);
 
 foreach my $i (0 .. $cats->getLength - 1) {
-	my $cat = $cats->item($i);
-	my $category = getCategory($cat);
-	my $notes = $cat->getElementsByTagName('note', 0);
-	if ($notes->getLength > 0) {
+    my $cat = $cats->item($i);
+    my $category = getCategory($cat);
+    my $notes = $cat->getElementsByTagName('note', 0);
+    if ($notes->getLength > 0) {
 
-		foreach my $i (0 .. $notes->getLength - 1) {
-			my $rec = {};
-			my $note = $notes->item($i);
-			my $prio = $note->getAttribute('priority');
-			my $time = $note->getAttribute('time');
-			my $done = $note->getAttribute('done');
-			my $text = getText($note->getFirstChild);
-			$rec->{priority} = $prio;
-			$rec->{time} = $time;
-			if ($done) {
-				$rec->{completed} = 1;
-			}
-			( $rec->{note} ) = split(/\n/, $text);
-			$rec->{category} = $category;
-			print Dump($rec);
-		}
-	} else {
-		my $rec = {};
-		my $note = $cat;
-		my $prio = $note->getAttribute('priority');
-		my $time = $note->getAttribute('time');
-		my $done = $note->getAttribute('done');
-		my $text = getText($note->getFirstChild);
-		$rec->{priority} = $prio;
-		$rec->{time} = $time;
-		$rec->{category} = undef;
-		if ($done) {
-			$rec->{done} = $done;
-		}
-		( $rec->{note} ) = split(/\n/, $text);
-		print Dump($rec);
-	}
+        foreach my $i (0 .. $notes->getLength - 1) {
+            my $rec = {};
+            my $note = $notes->item($i);
+            my $prio = $note->getAttribute('priority');
+            my $time = $note->getAttribute('time');
+            my $done = $note->getAttribute('done');
+            my $text = getText($note->getFirstChild);
+            $rec->{priority} = $prio;
+            $rec->{time} = $time;
+            if ($done) {
+                $rec->{completed} = 1;
+            }
+            ( $rec->{note} ) = split(/\n/, $text);
+            $rec->{category} = $category;
+            print Dump($rec);
+        }
+    } else {
+        my $rec = {};
+        my $note = $cat;
+        my $prio = $note->getAttribute('priority');
+        my $time = $note->getAttribute('time');
+        my $done = $note->getAttribute('done');
+        my $text = getText($note->getFirstChild);
+        $rec->{priority} = $prio;
+        $rec->{time} = $time;
+        $rec->{category} = undef;
+        if ($done) {
+            $rec->{done} = $done;
+        }
+        ( $rec->{note} ) = split(/\n/, $text);
+        print Dump($rec);
+    }
 }
 
 sub getCategory {
-	my $node = shift;
-	if ($node->getFirstChild->getNodeType == TEXT_NODE) {
-		my $s = $node->getFirstChild->toString;
-		$s =~ s/^\s*//gs;
-		$s =~ s/\s*$//gs;
-		return $s;
-	} else {
-		die "Cannot get category!\n";
-	}
+    my $node = shift;
+    if ($node->getFirstChild->getNodeType == TEXT_NODE) {
+        my $s = $node->getFirstChild->toString;
+        $s =~ s/^\s*//gs;
+        $s =~ s/\s*$//gs;
+        return $s;
+    } else {
+        die "Cannot get category!\n";
+    }
 }
 
 sub getText {
-	my $node = shift;
-	my $s = $node->toString;
-	$s =~ s/^\s*//gs;
-	$s =~ s/\s*$//gs;
-	return $s;
+    my $node = shift;
+    my $s = $node->toString;
+    $s =~ s/^\s*//gs;
+    $s =~ s/\s*$//gs;
+    return $s;
 }
 
 sub isDone {
-	my $note = shift;
-	return $note->getAttribute('done');
+    my $note = shift;
+    return $note->getAttribute('done');
 }

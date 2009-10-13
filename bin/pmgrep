@@ -1,5 +1,5 @@
 #!/usr/bin/env perl
 
 foreach my $path (@INC) {
-	system("grep", "-r", @ARGV, $path);
+    system("grep", "-r", @ARGV, $path);
 }

@@ -6,16 +6,16 @@ from os import getenv
 
 parser = OptionParser()
 parser.add_option("-f", "--file", dest="filename",
-		help="read netrc FILE", metavar="FILE",
-		default = getenv("HOME") + "/.netrc")
+        help="read netrc FILE", metavar="FILE",
+        default = getenv("HOME") + "/.netrc")
 parser.add_option("-m", "--machine", dest="machine",
-		help="select machine MACHINE", metavar="MACHINE")
+        help="select machine MACHINE", metavar="MACHINE")
 parser.add_option("-u", "--username", dest="username",
-		help="display username",
-		action='store_true', default=False)
+        help="display username",
+        action='store_true', default=False)
 parser.add_option("-p", "--password", dest="password",
-		help="display password",
-		action='store_true', default=False)
+        help="display password",
+        action='store_true', default=False)
 
 (opt, args) = parser.parse_args()
 
@@ -24,22 +24,22 @@ n = netrc(opt.filename)
 hosts = n.hosts
 
 if opt.machine:
-	machines = [ opt.machine ]
+    machines = [ opt.machine ]
 else:
-	machines = hosts.keys()
+    machines = hosts.keys()
 
 if opt.username and opt.password:
-	def show(name, host):
-		print "%s:%s" % (host[0], host[2])
+    def show(name, host):
+        print "%s:%s" % (host[0], host[2])
 elif opt.username:
-	def show(name, host):
-		print host[0]
+    def show(name, host):
+        print host[0]
 elif opt.password:
-	def show(name, host):
-		print host[2]
+    def show(name, host):
+        print host[2]
 else:
-	def show(name, host):
-		print name
+    def show(name, host):
+        print name
 
 for m in machines:
-	show(m, hosts[m])
+    show(m, hosts[m])

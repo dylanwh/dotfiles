@@ -10,29 +10,29 @@ my $DTACH_DIR = "$ENV{HOME}/.dtach";
 my %option    = (opt_r => 'winch');
 
 BEGIN {
-	my $e = 0;
-	for (my $i = 0; $i < @ARGV; $i++) {
-		if ($ARGV[$i] eq '-e' and $ARGV[$i+1] =~ /ssh$/) {
-			$ARGV[$i]   = '-s';
-			$ARGV[$i+1] = $ARGV[$i+2] || '';
-			$ARGV[$i+2] = '--';
-			$i += 2;
-			$e = 1;
-		}
-		elsif ($ARGV[$i] eq '-e') {
-			$ARGV[$i] = '--';
-			$e = 1;
-		}
-	}
+    my $e = 0;
+    for (my $i = 0; $i < @ARGV; $i++) {
+        if ($ARGV[$i] eq '-e' and $ARGV[$i+1] =~ /ssh$/) {
+            $ARGV[$i]   = '-s';
+            $ARGV[$i+1] = $ARGV[$i+2] || '';
+            $ARGV[$i+2] = '--';
+            $i += 2;
+            $e = 1;
+        }
+        elsif ($ARGV[$i] eq '-e') {
+            $ARGV[$i] = '--';
+            $e = 1;
+        }
+    }
 
-	if ($e or not @ARGV) {
-		unshift @ARGV, '-t';
-	}
+    if ($e or not @ARGV) {
+        unshift @ARGV, '-t';
+    }
 }
 
 GetOptions(
-	\%option,
-	'test',       # print command instead of executing
+    \%option,
+    'test',       # print command instead of executing
     'name|n=s',   # name of session.
     'ssh|s=s',    # ssh hostname
     'autossh|A',  # use autossh
@@ -48,33 +48,33 @@ $option{name} ||= @cmd ? $cmd[0] : $SHELL[0];
 $option{name} =~ s/\W+/_/g;
 
 if ($option{term}) {
-	$option{opt_E} = 1;
-	$option{opt_z} = 1;
+    $option{opt_E} = 1;
+    $option{opt_z} = 1;
 }
 
 $option{opt_z} = $option{ssh} ? 1 : $option{opt_z};
 
 if ($option{dtach}) {
-	if ($option{ssh}) { $DTACH_DIR =~ s/^\Q$ENV{HOME}/~/ }
-	my $socket = File::Spec->catfile($DTACH_DIR, $option{name});
-	my @dtach = ('dtach', '-A', $socket);
+    if ($option{ssh}) { $DTACH_DIR =~ s/^\Q$ENV{HOME}/~/ }
+    my $socket = File::Spec->catfile($DTACH_DIR, $option{name});
+    my @dtach = ('dtach', '-A', $socket);
 
-	push @dtach, '-z'                 if $option{opt_z};
-	push @dtach, '-E'                 if $option{opt_E};
-	push @dtach, '-r', $option{opt_r} if $option{opt_r};
-	@cmd = @cmd ? (@dtach, @cmd) : (@dtach, @SHELL);
+    push @dtach, '-z'                 if $option{opt_z};
+    push @dtach, '-E'                 if $option{opt_E};
+    push @dtach, '-r', $option{opt_r} if $option{opt_r};
+    @cmd = @cmd ? (@dtach, @cmd) : (@dtach, @SHELL);
 }
 
 if ($option{ssh}) {
-	my @ssh = ('ssh', $option{ssh});
-	@cmd = @cmd ? (@ssh, '-t', '--', @cmd) : @ssh;
+    my @ssh = ('ssh', $option{ssh});
+    @cmd = @cmd ? (@ssh, '-t', '--', @cmd) : @ssh;
 }
 
 if ($option{term}) {
-	my $title = $option{name};
-	$title =~ s/_/ /g;
-	my @term = ($TERM, -title => $title, -name => $option{name});
-	@cmd = (@term, @cmd ? ('-e', @cmd) : ());
+    my $title = $option{name};
+    $title =~ s/_/ /g;
+    my @term = ($TERM, -title => $title, -name => $option{name});
+    @cmd = (@term, @cmd ? ('-e', @cmd) : ());
 }
 
 if ($option{test}) { print "@cmd\n" }

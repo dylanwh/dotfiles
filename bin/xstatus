@@ -3,19 +3,19 @@
 trap 'echo freedom; kill -INT $pid; rm $pipe; exit' ZERR INT HUP KILL TERM
 
 if [[ -f $HOME/.xmobarrc@$HOST ]]; then
-	file=$HOME/.xmobarrc@$HOST
+    file=$HOME/.xmobarrc@$HOST
 else
-	file=$HOME/.xmobarrc
+    file=$HOME/.xmobarrc
 fi
 
 cd $HOME
 #trayer --edge top \
-#	   --align right \
-#	   --SetDockType true \
-#	   --SetPartialStrut true \
-#	   --expand true \
-#	   --width 4 \
-#	   --tint 0x100000 \
-#	   --transparent true \
-#	   --height 20 &
+#       --align right \
+#       --SetDockType true \
+#       --SetPartialStrut true \
+#       --expand true \
+#       --width 4 \
+#       --tint 0x100000 \
+#       --transparent true \
+#       --height 20 &
 exec xmobar $file

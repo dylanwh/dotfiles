@@ -6,7 +6,7 @@ use warnings;
 my $module = shift;
 eval "use $module";
 if ($@) {
-	die $@;
+    die $@;
 }
 
 print "Version of $module: ", $module->VERSION, "\n";

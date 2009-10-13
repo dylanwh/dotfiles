@@ -8,7 +8,7 @@ yodo2pda
 echo "Hit the sync button!"
 inotifywait -r -e create /dev >/dev/null 2>/dev/null
 while ! pilot-xfer -i -p /dev/pilot *.pdb; do
-	sleep 2
+    sleep 2
 done
 
 rm -vrf ~/tmp/pda

@@ -8,50 +8,50 @@ points=()
 local -A names totals
 
 while ! which inotifywait &>/dev/null; do
-	echo "install inotifywait"
-	sleep 60
+    echo "install inotifywait"
+    sleep 60
 done
 
 for dir in $maildirs; do
-	for folder in $folders; do
-		local point="$dir/$folder/new"
-		if [[ -e $point ]]; then
-			points=($points $point/)
-			names[$point/]="${dir:t}/$folder"
-		fi
-	done
+    for folder in $folders; do
+        local point="$dir/$folder/new"
+        if [[ -e $point ]]; then
+            points=($points $point/)
+            names[$point/]="${dir:t}/$folder"
+        fi
+    done
 done
 
 function watch {
-	exec inotifywait -m -e modify -e create -e attrib -e move -e delete --format %w $argv 2>/dev/null
+    exec inotifywait -m -e modify -e create -e attrib -e move -e delete --format %w $argv 2>/dev/null
 }
 
 function count {
-	local point=$1
-	totals[$point]=$(ls $point | wc -l)
+    local point=$1
+    totals[$point]=$(ls $point | wc -l)
 }
 
 function display {
-	local displayed="no"
-	for point in $points; do
-		if (( totals[$point] )); then
-			displayed="yes"
-			print -n "[${names[$point]}: <fc=yellow>${totals[$point]}</fc>] "
-		fi
-	done
-	if [[ $displayed == "no" ]]; then
-		print -n "no new mail"
-	fi
-	echo
+    local displayed="no"
+    for point in $points; do
+        if (( totals[$point] )); then
+            displayed="yes"
+            print -n "[${names[$point]}: <fc=yellow>${totals[$point]}</fc>] "
+        fi
+    done
+    if [[ $displayed == "no" ]]; then
+        print -n "no new mail"
+    fi
+    echo
 }
 
 for point in $points; do
-	count $point
+    count $point
 done
 display
 
 watch $points | while read point; do
-	count $point
-	#print ${names[$point]}: ${totals[$point]}
-	display
+    count $point
+    #print ${names[$point]}: ${totals[$point]}
+    display
 done

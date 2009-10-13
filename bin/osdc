@@ -4,8 +4,8 @@ use warnings;
 use IO::Socket;
 my $port = 8007;
 my $s = new IO::Socket::INET(
-	PeerAddr => 'localhost',
-	PeerPort => $port,
+    PeerAddr => 'localhost',
+    PeerPort => $port,
 ) or die "Can't connect to localhost:$port: $!";
 
 $s->print(join(' ', @ARGV), "\n");

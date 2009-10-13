@@ -41,8 +41,8 @@ sub Get_Status {
     my $status = "000", $msg = "Error";
     
     if ($line =~ /^(\d\d\d) (.*)/) {
-	$status = $1;
-	$msg    = $2;
+    $status = $1;
+    $msg    = $2;
     }
     return ($status, $msg);
 }
@@ -54,43 +54,43 @@ sub Define_Word {
     my $ret  = "";
 
     if ($word eq "") {
-	return "";
+    return "";
     }
 
     print $fh "define $DICTIONARY \"$word\"\n";
     ($status, $msg) = Get_Status($fh);
 
     if ($status == 552) {
-	$ret = "No match.\n";
+    $ret = "No match.\n";
     }
     elsif ($status == 551) {
-	$ret = "Invalid dictionary.\n";
+    $ret = "Invalid dictionary.\n";
     }
     elsif ($status == 150) {
-	$msg =~ /(\d+) .*/;
-	$numdefs = $1;
-	$ret = "$numdefs definitions retrieved:\n";
-	
-	while ($numdefs--) {
-	    ($status, $msg) = Get_Status($fh);
-	    if ($status == 151) {
-		$msg =~ /^\"(.+)\" (\w+) \"(.+)\"/;
-		$word = $1;
-		$dictname = $2;
-		$dict = $3;
-		$ret = $ret."\nFrom $dict:\n";
-		$line = "";
-		while (!($line =~ /^\./)) {
-		    $line = <$fh>;
-		    chop($line); chop($line);
-		    if (!($line =~ /^\./)) {
-			$ret = $ret."$line\n";
-		    }
-		}
-	    }
-	}
-	# Get the final status message.
-	($status, $msg) = Get_Status($fh);
+    $msg =~ /(\d+) .*/;
+    $numdefs = $1;
+    $ret = "$numdefs definitions retrieved:\n";
+    
+    while ($numdefs--) {
+        ($status, $msg) = Get_Status($fh);
+        if ($status == 151) {
+        $msg =~ /^\"(.+)\" (\w+) \"(.+)\"/;
+        $word = $1;
+        $dictname = $2;
+        $dict = $3;
+        $ret = $ret."\nFrom $dict:\n";
+        $line = "";
+        while (!($line =~ /^\./)) {
+            $line = <$fh>;
+            chop($line); chop($line);
+            if (!($line =~ /^\./)) {
+            $ret = $ret."$line\n";
+            }
+        }
+        }
+    }
+    # Get the final status message.
+    ($status, $msg) = Get_Status($fh);
     }
 
     return $ret;
@@ -104,33 +104,33 @@ sub Match_Word {
     my $ret  = "";
 
     if ($word eq "") {
-	return "";
+    return "";
     }
 
     print $fh "match $DICTIONARY $match \"$word\"\n";
     ($status, $msg) = Get_Status($fh);
 
     if ($status == 152) {
-	$line = "";
-	print "Dictionary\tTerm\n";
-	print "----------\t----\n";
-	while (!($line =~ /^\./)) {
-	    $line = <$fh>;
-	    chop($line); chop($line);
-	    if (!($line =~ /^\./)) {
-		$line =~ /(\w+) \"(.*)\"/;
-		$sep = "\t\t";
-		if ((length $1) >=8) {
-		    $sep = "\t";
-		}
-		print "$1$sep$2\n";
-	    }
-	}
-	# Get the final status message.
-	($status, $msg) = Get_Status($fh);
+    $line = "";
+    print "Dictionary\tTerm\n";
+    print "----------\t----\n";
+    while (!($line =~ /^\./)) {
+        $line = <$fh>;
+        chop($line); chop($line);
+        if (!($line =~ /^\./)) {
+        $line =~ /(\w+) \"(.*)\"/;
+        $sep = "\t\t";
+        if ((length $1) >=8) {
+            $sep = "\t";
+        }
+        print "$1$sep$2\n";
+        }
+    }
+    # Get the final status message.
+    ($status, $msg) = Get_Status($fh);
     }
     else {
-	print "No match.\n";
+    print "No match.\n";
     }
 }
 
@@ -143,27 +143,27 @@ sub Get_DictList {
     ($status, $msg) = Get_Status($fh);
     print "Dictionary list from $HOSTNAME, port $PORT:\n\n";
     if ($status == 110) {
-	$line = "";
-	print "Name\t\tFull Name\n";
-	print "----\t\t---------\n";
-	while (!($line =~ /^\./)) {
-	    $line = <$fh>;
-	    chop($line); chop($line);
-	    if (!($line =~ /^\./)) {
-		$line =~ /(\w+) \"(.*)\"/;
-		$sep = "\t\t";
-		if ((length $1) >=8) {
-		    $sep = "\t";
-		}
-		print "$1$sep$2\n";
-	    }
-	}
-	
-	# Get the final status message.
-	($status, $msg) = Get_Status($fh);
+    $line = "";
+    print "Name\t\tFull Name\n";
+    print "----\t\t---------\n";
+    while (!($line =~ /^\./)) {
+        $line = <$fh>;
+        chop($line); chop($line);
+        if (!($line =~ /^\./)) {
+        $line =~ /(\w+) \"(.*)\"/;
+        $sep = "\t\t";
+        if ((length $1) >=8) {
+            $sep = "\t";
+        }
+        print "$1$sep$2\n";
+        }
+    }
+    
+    # Get the final status message.
+    ($status, $msg) = Get_Status($fh);
     }
     else {
-	print "Dictionary list unavailable.\n";
+    print "Dictionary list unavailable.\n";
     }
     
 }
@@ -177,27 +177,27 @@ sub Get_MatchInfo {
     ($status, $msg) = Get_Status($fh);
     print "Matching strategy list from $HOSTNAME, port $PORT:\n\n";
     if ($status == 111) {
-	$line = "";
-	print "Name\t\tDescription\n";
-	print "----\t\t-----------\n";
-	while (!($line =~ /^\./)) {
-	    $line = <$fh>;
-	    chop($line); chop($line);
-	    if (!($line =~ /^\./)) {
-		$line =~ /(\w+) \"(.*)\"/;
-		$sep = "\t\t";
-		if ((length $1) >=8) {
-		    $sep = "\t";
-		}
-		print "$1$sep$2\n";
-	    }
-	}
-	
-	# Get the final status message.
-	($status, $msg) = Get_Status($fh);
+    $line = "";
+    print "Name\t\tDescription\n";
+    print "----\t\t-----------\n";
+    while (!($line =~ /^\./)) {
+        $line = <$fh>;
+        chop($line); chop($line);
+        if (!($line =~ /^\./)) {
+        $line =~ /(\w+) \"(.*)\"/;
+        $sep = "\t\t";
+        if ((length $1) >=8) {
+            $sep = "\t";
+        }
+        print "$1$sep$2\n";
+        }
+    }
+    
+    # Get the final status message.
+    ($status, $msg) = Get_Status($fh);
     }
     else {
-	print "Matching strategy list unavailable.\n";
+    print "Matching strategy list unavailable.\n";
     }
     
 }
@@ -211,23 +211,23 @@ sub Get_DictInfo {
     print $fh "show info $dict\n";
     ($status, $msg) = Get_Status($fh);
     if ($status == 112) {
-	print "Information for $dict on $HOSTNAME, port $PORT:\n";
+    print "Information for $dict on $HOSTNAME, port $PORT:\n";
 
-	# Skip the first line of dict description.
-	$line = <$fh>;
-	while (!($line =~ /^\./)) {
-	    $line = <$fh>;
-	    chop($line); chop($line);
-	    if (!($line =~ /^\./)) {
-		print "$line\n";
-	    }
-	}
-	# Get the final status message.
-	($status, $msg) = Get_Status($fh);
-	
+    # Skip the first line of dict description.
+    $line = <$fh>;
+    while (!($line =~ /^\./)) {
+        $line = <$fh>;
+        chop($line); chop($line);
+        if (!($line =~ /^\./)) {
+        print "$line\n";
+        }
+    }
+    # Get the final status message.
+    ($status, $msg) = Get_Status($fh);
+    
     }
     else {
-	print "Dictionary \"$dict\" not found.\n";
+    print "Dictionary \"$dict\" not found.\n";
     }
     
 }
@@ -240,21 +240,21 @@ sub Get_ServerInfo {
     print $fh "show server\n";
     ($status, $msg) = Get_Status($fh);
     if ($status == 114) {
-	$ret = "Information for $HOSTNAME, port $PORT:\n";
-	$line = "";
-	while (!($line =~ /^\./)) {
-	    $line = <$fh>;
-	    chop($line); chop($line);
-	    if (!($line =~ /^\./)) {
-		$ret = $ret.$line."\n";
-	    }
-	}
-	
-	# Get the final status message.
-	($status, $msg) = Get_Status($fh);
+    $ret = "Information for $HOSTNAME, port $PORT:\n";
+    $line = "";
+    while (!($line =~ /^\./)) {
+        $line = <$fh>;
+        chop($line); chop($line);
+        if (!($line =~ /^\./)) {
+        $ret = $ret.$line."\n";
+        }
+    }
+    
+    # Get the final status message.
+    ($status, $msg) = Get_Status($fh);
     }
     else {
-	$ret =  "Dictionary \"$dict\" not found.\n";
+    $ret =  "Dictionary \"$dict\" not found.\n";
     }
     
     return $ret;

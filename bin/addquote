@@ -8,8 +8,8 @@ use YAML qw(LoadFile DumpFile);
 my $quotes = LoadFile("$ENV{HOME}/.quotes");
 my @lines;
 while (<>) {
-	chomp;
-	push(@lines, $_);
+    chomp;
+    push(@lines, $_);
 }
 
 
