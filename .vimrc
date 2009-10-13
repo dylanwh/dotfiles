@@ -170,6 +170,9 @@ if !exists('autocmds_loaded')
                     \ setl commentstring=--%s
     augroup END
 
+    autocmd FileType gitconfig set noet nolist
+    autocmd FileType gitcommit set noet nolist
+    autocmd FileType make set noet nolist
     autocmd BufReadPost *
                 \ if line("'\"") > 0 && line("'\"") <= line("$") |
                 \   exe "normal g`\"" |

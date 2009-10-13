@@ -13,8 +13,7 @@
 	record = !git add -p && git commit
 
 [color]
-ui = auto
-
+	ui = auto
 
 [user]
 	name=Dylan William Hardison
