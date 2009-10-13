@@ -2,54 +2,13 @@ source ~/.mutt/t-prot
 source ~/.mutt/gnupg
 source ~/.mutt/theme
 
-# Identity options
-set realname="Dylan William Hardison"
-set from="dylan@hardison.net"
-
-# Recongize messages addressed to me.
-alternates dylanwh@gmail.com \
-           dylan@haverdev.org \
-           dylan@sinedev.org \
-           dylan@midgetbutton.com \
-           dylanwh@tampabay.rr.com \
-           dylan\\+[a-z]+@hardison.net \
-           it@hardison.net \
-           dylan@lofn.hardison.net \
-           Hardison.Dylan8811@myspcmail.spcollege.edu
-
-# And messages to mailing lists I subscribe to.
-subscribe slug@nks.net \
-          slug-politics@nks.net \
-          haskell-cafe@haskell.org \
-          caml-list@inria.fr \
-          caml-list@yquem.inria.fr \
-          templates@template-toolkit.org \
-          macarthur@genesisfleet.com \
-          module-authors@perl.org \
-          poe@perl.org \
-          dwm@suckless.org \
-          dev@suckless.org \
-          members@issmacarthur.com \
-          members@lists.issmacarthur.com \
-          members@lists.deepspace2.com \
-          pup@possumism.net \
-          tbad@tampabad.org \
-          billing@hardison.net \
-          debian-security-announce@lists.debian.org \
-          mailall@myspcmail.spcollege.edu
-
-# Location options
-set mbox_type=Maildir
-set folder=~/mail
-set spoolfile="+inbox"
-set mbox="+read/`date +%Y/%m`"
-set record="+sent/`date +%Y`"
-set postponed="+drafts"
-set signature="~/bin/signature|"
-
 set history_file=~/.mutt/history
 set history=1000
 set save_history=1000
+
+set mbox_type=Maildir
+set folder=~/mail
+set spoolfile="+inbox"
 
 source "mailboxes $folder |"
 
@@ -85,9 +44,8 @@ set thread_received=no
 folder-hook . push "\eV" # By default, collapse all threads
 set nocollapse_unread    # Except those with new messages.
 
-my_hdr Reply-By: `date --date="-3 days"`
-my_hdr X-Message-Flag: OUTLOOK ERROR: Message in violation of Microsoft Security Policy (MSP).
-my_hdr X-Religion: Optimus Prime
+folder-hook .    source "~/.mutt/home"
+folder-hook work source "~/.mutt/work"
 
 # Recognize spam
 spam "X-Spam-Status: Yes" "spam"

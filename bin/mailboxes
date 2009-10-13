@@ -34,5 +34,5 @@ while (my $dir = pop @dirs) {
     }
 }
 
-@mailboxes = grep !/inbox$/, sort @mailboxes;
-print "mailboxes +inbox @mailboxes\n";
+@mailboxes = grep !/(inbox|work)$/, sort @mailboxes;
+print "mailboxes +inbox +work @mailboxes\n";
