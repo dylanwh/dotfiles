@@ -26,5 +26,10 @@ if (( $#opts == 0 )); then
     opts=('-q')
 fi
 
-cd $(dirname $file)
+dir=$(dirname $file)
+if [[ $dir == $HOME && -d $dir/.remind ]]; then
+    cd $dir/.remind
+else
+    cd $dir
+fi
 exec remind $opts $file $argv
