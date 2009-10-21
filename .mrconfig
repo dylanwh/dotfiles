@@ -6,7 +6,7 @@ what = status
 checkout = git clone gitosis@git.sinedev.org:dylan-home
 
 [docs]
-checkout = git clone gitosis@git.sinedev.org:dylan-docs
+checkout = git clone gitosis@git.sinedev.org:dylan-docs docs
 
 #[linux-2.6]
 #checkout = git clone git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux-2.6.git
