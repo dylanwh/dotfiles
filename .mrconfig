@@ -3,13 +3,10 @@
 what = status
 
 []
-checkout = git clone lofn:/srv/git/dylan/home
+checkout = git clone gitosis@git.sinedev.org:dylan-home
 
 [docs]
-checkout = git clone lofn:/srv/git/dylan/docs
-
-[pim]
-checkout = darcs get lofn:/srv/git/dylan/pim
+checkout = git clone gitosis@git.sinedev.org:dylan-docs
 
 #[linux-2.6]
 #checkout = git clone git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux-2.6.git
