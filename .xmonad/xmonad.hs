@@ -57,11 +57,11 @@ import Text.XHtml (tag, strAttr, renderHtml, (<<), (!), primHtml)
 
 wsHome   = wsIndex 1
 wsWeb    = wsIndex 4
-wsGimp   = wsIndex 5
-wsOffice = wsIndex 3
-wsVM     = wsIndex 6
+wsGimp   = wsIndex 6
+wsOffice = wsIndex 5
+wsVM     = wsIndex 7
 
-wsList  = ["home", "code", "docs", "web", "gimp", "vm" ]
+wsList  = ["home", "code", "work", "web", "docs", "gimp", "vm" ]
 wsIndex i = wsList !! (i-1)
 
 spawnExec str = spawn ("exec " ++ str)
@@ -250,7 +250,7 @@ instance XPrompt Bookmark where
 
 bookmarkPrompt :: XPConfig -> X ()
 bookmarkPrompt c = do
-    file  <- io $ getEnv "BOOKMARKS" `catch` const (home "pim/bookmarks")
+    file  <- io $ getEnv "BOOKMARKS" `catch` const (home ".surfraw.bookmarks")
     marks <- io $ getBookmarks file
     mkXPrompt Bookmark c (mkComplFunFromList' (map fst marks)) (gotoBookmark marks)
 

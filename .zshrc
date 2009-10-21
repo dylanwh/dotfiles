@@ -193,4 +193,6 @@ esac
 ztitle
 have todo && todo --timeout --summary
 
+namedir moonshine ~/code/moonshine
+
 # vim: set sw=4 ts=4 foldmethod=marker path=.,~/.zsh:

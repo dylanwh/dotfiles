@@ -12,7 +12,7 @@ set autoindent         " Auto indent from current line to new line.
 set copyindent         " Try to not change the indentation style.
 set preserveindent     " Ditto.
 set expandtab          " expand tabs to spaces
-set nosmarttab         " Insert shiftwidth or tabstop as appropriate.
+set smarttab           " Insert shiftwidth or tabstop as appropriate.
 set ignorecase         " Ignore case
 set smartcase          " Unless I use upper-case letters.
 set showmatch          " Show matching brackets.
