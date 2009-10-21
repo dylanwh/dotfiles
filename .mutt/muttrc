@@ -1,6 +1,5 @@
 source ~/.mutt/t-prot
 source ~/.mutt/gnupg
-source ~/.mutt/theme
 
 set history_file=~/.mutt/history
 set history=1000
@@ -10,7 +9,11 @@ set mbox_type=Maildir
 set folder=~/mail
 set spoolfile="+inbox"
 
-source "mailboxes $folder |"
+mailboxes +inbox +work +slug \
+          +haskell-cafe +caml \
+          +templates +poe \
+          +suckless +security \
+          +netflix
 
 # Behavior options
 set use_from

@@ -1,0 +1,24 @@
+# vim: set ft=muttrc:
+# Identity options
+set realname="Dylan Hardison"
+set from="dylan.hardison@iinteractive.com"
+
+# Location options
+set mbox="+work/archive/`date +%Y/%m`"
+set record="+work/sent/`date +%Y`"
+set postponed="+work/drafts"
+reset signature
+
+# Recongize messages addressed to me.
+unalternates *
+alternates dylan@iinteractive.com
+
+unsubscribe *
+# And messages to mailing lists I subscribe to.
+subscribe all@iinteractive.com \
+          devteam@iinteractive.com \
+          projects@iinteractive.com
+
+unmy_hdr *
+
+source ~/.mutt/theme

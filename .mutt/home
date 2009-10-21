@@ -1,0 +1,53 @@
+# vim: set ft=muttrc:
+# Identity options
+set realname="Dylan William Hardison"
+set from="dylan@hardison.net"
+
+# Location options
+set spoolfile="+inbox"
+set mbox="+archive/`date +%Y/%m`"
+set record="+sent/`date +%Y`"
+set postponed="+drafts"
+set signature="~/bin/signature|"
+
+# Recongize messages addressed to me.
+unalternates *
+alternates dylanwh@gmail.com \
+           dylan@haverdev.org \
+           dylan@sinedev.org \
+           dylan@midgetbutton.com \
+           dylanwh@tampabay.rr.com \
+           dylan\\+[a-z]+@hardison.net \
+           it@hardison.net \
+           dylan@lofn.hardison.net \
+           Hardison.Dylan8811@myspcmail.spcollege.edu
+
+unsubscribe *
+# And messages to mailing lists I subscribe to.
+subscribe slug@nks.net \
+          slug-politics@nks.net \
+          haskell-cafe@haskell.org \
+          caml-list@inria.fr \
+          caml-list@yquem.inria.fr \
+          templates@template-toolkit.org \
+          macarthur@genesisfleet.com \
+          module-authors@perl.org \
+          poe@perl.org \
+          dwm@suckless.org \
+          dev@suckless.org \
+          members@issmacarthur.com \
+          members@lists.issmacarthur.com \
+          members@lists.deepspace2.com \
+          pup@possumism.net \
+          tbad@tampabad.org \
+          billing@hardison.net \
+          debian-security-announce@lists.debian.org \
+          mailall@myspcmail.spcollege.edu \
+          debian-news@lists.debian.org
+
+unmy_hdr *
+my_hdr Reply-By: `date --date="-3 days"`
+my_hdr X-Message-Flag: OUTLOOK ERROR: Message in violation of Microsoft Security Policy (MSP).
+my_hdr X-Religion: Optimus Prime
+
+source ~/.mutt/theme
