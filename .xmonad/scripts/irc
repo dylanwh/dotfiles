@@ -1,2 +1,2 @@
 #!/bin/sh
-exec urxvt -name irc -title irc -e ssh -t lofn -- tmux attach -t chat
+exec dterm -n irc -t irc -e ssh -t lofn -- tmux -u attach -t chat

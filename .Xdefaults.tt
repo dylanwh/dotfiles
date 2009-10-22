@@ -1,14 +1,11 @@
 [%# vim: set ft=template: %]
 [% DEFAULT
-mode        = "default"
 xfont       = "-xos4-terminus-bold-r-*-*-*-120-100-100-*-*-iso8859-1"
 xfont_big   = "-xos4-terminus-bold-r-*-*-*-140-100-100-*-*-iso8859-1"
 xfont_huge  = "-xos4-terminus-bold-r-*-*-*-320-*-*-*-*-*-*"
 xfont_other = "-xos4-terminus-bold-r-normal--14-140-72-72-c-80-iso8859-1"
 
 %]
-System.Mode: [% mode %]
-
 [% SET term = 'Rxvt' %]
 
 [% term %].font: [% xfont %]
@@ -44,32 +41,32 @@ System.Mode: [% mode %]
 [% term %].saveLines: 100
 
 outside.font: [% xfont_huge %]
-outside.*background:	#eeeeee
-outside.*foreground:	#000000
+outside.*background:    #eeeeee
+outside.*foreground:    #000000
 outside.termName:       rxvt-unicode-outside
-outside.*color0:		#000000
-outside.*color1:		#cc0000
-outside.*color2:		#009900
-outside.*color3:		#999900
-outside.*color4:		#0066ff
-outside.*color5:		#993399
-outside.*color6:		#009999
-outside.*color7:		#cccccc
-outside.*color8:		#333333
-outside.*color9:		#ff0000
-outside.*color10:		#00cc00
-outside.*color11:		#cccc00
-outside.*color12:		#3399ff
-outside.*color13:		#cc66ff
-outside.*color14:		#33cccc
-outside.*color15:		#ffffff
+outside.*color0:        #000000
+outside.*color1:        #cc0000
+outside.*color2:        #009900
+outside.*color3:        #999900
+outside.*color4:        #0066ff
+outside.*color5:        #993399
+outside.*color6:        #009999
+outside.*color7:        #cccccc
+outside.*color8:        #333333
+outside.*color9:        #ff0000
+outside.*color10:       #00cc00
+outside.*color11:       #cccc00
+outside.*color12:       #3399ff
+outside.*color13:       #cc66ff
+outside.*color14:       #33cccc
+outside.*color15:       #ffffff
 
-pwsafe.geometry:   60x5
-pwsafe.foreground: #00FF54
+pwsafe_prompt.geometry:   60x5
+pwsafe_prompt.foreground: #00FF54
 
 [%-
 MACRO change_font(font) BLOCK;
-	"\\033]710;$font\\007\\033]711;$font\\007";
+    "\\033]710;$font\\007\\033]711;$font\\007";
 END;
 -%]
 

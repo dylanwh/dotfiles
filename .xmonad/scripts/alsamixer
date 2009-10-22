@@ -1,2 +1,2 @@
 #!/bin/sh
-exec robo -t alsamixer
+exec dterm alsamixer

@@ -1,0 +1,39 @@
+#!/usr/bin/perl
+use strict;
+use Getopt::Long qw( :config gnu_getopt );
+
+my $TERM = 'urxvt';
+my ($title, $name, $dtach, $host);
+
+foreach (@ARGV) { if ($_ eq '-e') { $_ = '--'; last } }
+
+GetOptions(
+    'title|t=s' => \$title,
+    'name|n=s'  => \$name,
+    'dtach|d'   => \$dtach,
+    'host|h=s'  => \$host,
+);
+
+my (@run) = @ARGV;
+
+unless ($title) {
+    $title = $run[0];
+    $title =~ s/[^A-Za-z]+/ /g;
+}
+
+unless ($name) {
+    $name = $run[0];
+    $name =~ s/\W+/_/g;
+}
+
+if ($dtach) {
+    my @dtach = (
+        'dtach',
+        '-A'  => "$ENV{HOME}/.dtach/$name",
+        '-r'  => 'winch',
+        '-Ez'
+    );
+    unshift @run, @dtach;
+}
+
+exec($TERM => -name => $name, -title => $title, -e => @run);

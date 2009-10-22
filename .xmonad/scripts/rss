@@ -1,2 +1,0 @@
-#!/bin/sh
-exec robo -t -d -r ctrl_l -s lofn -n rss newsbeuter
