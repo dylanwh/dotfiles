@@ -81,7 +81,7 @@ main = do
 
     let myConfig = defaultConfig
             { borderWidth        = 2
-            , terminal           = "robo"
+            , terminal           = "dterm"
             , normalBorderColor  = "#000033"
             , focusedBorderColor = "red"
             , workspaces         = wsList
