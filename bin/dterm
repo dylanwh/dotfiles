@@ -36,4 +36,8 @@ if ($dtach) {
     unshift @run, @dtach;
 }
 
-exec($TERM => -name => $name, -title => $title, -e => @run);
+if (@run) {
+    unshift @run, '-e';
+}
+
+exec($TERM => -name => $name, -title => $title, @run);
