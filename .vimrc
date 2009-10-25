@@ -21,7 +21,7 @@ set nobackup           " Do not keep backups.
 set hlsearch           " Highlight searches.
 set incsearch          " Incremental search; highlight as you type.
 set secure             " shell and write commands are not allowed in "./.vimrc".
-set exrc               " Read .vimrc from current dir
+set noexrc             " Read .vimrc from current dir (off)
 set modeline           " Allow modelines.
 set ruler              " Show cursor position at all times.
 set laststatus=2       " Always display a status bar.
@@ -40,11 +40,10 @@ set foldopen=tag,search,quickfix,undo,jump,mark,percent
 set viminfo=!,'1000,%,h,f1,n~/.viminfo
 set statusline=%<%f\ %h%m%r%{FF()}%y%=0x%b\ %-14.(%l,%c%V%)\ %P
 set fillchars=fold:\ ,stl:\ ,stlnc:\  
-set listchars=tab:>.
+set listchars=tab:>.,trail:_
 set list
 set tags+=~/.tags,.tags
 set mouse=
-
 "set listchars=trail:-,tab:>.
 "set list
 
@@ -74,7 +73,7 @@ let is_chicken = 1
 
 let g:haddock_browser = "sensible-browser"
 
-let g:git_branch_status_head_current=1 
+let g:git_branch_status_head_current=1
 let g:git_branch_status_text="[git"
 let g:git_branch_status_around=":]"
 
@@ -87,7 +86,7 @@ let autodate_format = "%Y-%m-%d"
 let perl_extended_vars = 1
 
 "-- Shows package part of var names in green
-let perl_want_scope_in_variables = 1 
+let perl_want_scope_in_variables = 1
 
 "-- Highlight POD with perl files.
 let perl_include_pod = 1
@@ -154,9 +153,7 @@ if !exists('autocmds_loaded')
     augroup filetypedetect
         autocmd BufNewFile,BufReadPost *.tt,*.ttml,*.html,*.tt2
                     \ setl ft=html syn=template
-        autocmd BufNewFile,BufReadPost *.hs,*.lhs,*.hsc 
-                    \ setl noshiftround noexpandtab ts=8 sw=4
-        autocmd BufNewFile,BufRead *.mkd,*.mdwn           
+        autocmd BufNewFile,BufRead *.mkd,*.mdwn
                     \ setl ai formatoptions=tcroqn2 comments=n:>
         autocmd BufNewFile,BufRead *.rem
                     \ setl ft=remind
@@ -170,9 +167,9 @@ if !exists('autocmds_loaded')
                     \ setl commentstring=--%s
     augroup END
 
-    autocmd FileType gitconfig set noet nolist
-    autocmd FileType gitcommit set noet nolist
-    autocmd FileType make set noet nolist
+    autocmd FileType gitconfig setl noet nolist
+    autocmd FileType gitcommit setl noet nolist
+    autocmd FileType make setl noet nolist
     autocmd BufReadPost *
                 \ if line("'\"") > 0 && line("'\"") <= line("$") |
                 \   exe "normal g`\"" |
@@ -204,7 +201,7 @@ function NativeTraits() range
 
     let range_has = a:firstline . "," . a:lastline
     exec range_has . "sm/metaclass.*=>.*Collection::\\(\\w\\+\\).*,/traits => ['\\1'],/"
-    
+
     call cursor(a:firstline, 0)
     let pfirst = search('provides\s*=>\s*{', "nW", a:lastline)
 

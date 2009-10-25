@@ -29,6 +29,8 @@ if !exists('g:haskell_indent_case')
     let g:haskell_indent_case = 5
 endif
 
+setlocal expandtab nopreserveindent nocopyindent
+setlocal nosmartindent
 setlocal indentexpr=GetHaskellIndent()
 setlocal indentkeys=!^F,o,O
 
