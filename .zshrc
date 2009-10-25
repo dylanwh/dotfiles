@@ -179,10 +179,6 @@ for dircolors in dircolors gdircolors; do
     fi
 done
 
-if [[ -d /opt/perl ]]; then
-    path=(/opt/perl/bin $path)
-fi
-
 case $OSTYPE in
     *bsd*)
         unalias grep egrep fgrep ggrep

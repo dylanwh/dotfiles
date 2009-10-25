@@ -9,7 +9,7 @@ help:
 
 .Xdefaults: .Xdefaults.tt 
 	xrdb -cpp ttpp -n $< > $@
-	xrdb -cpp ttpp -load $@
+	xrdb -load $@
 
 .procmailrc: .procmailrc@$(HOST)
 	ln -s $< $@
@@ -18,8 +18,9 @@ help:
 	touch $@
 
 fixperms:
-	chmod -Rc +x ~/bin ~/.xinitrc
-	chmod -Rc go-wrx ~/.pwsafe.dat ~/pim ~/.msmtprc ~/.getmail
+	-chmod -Rc +x ~/bin ~/.xinitrc
+	-chmod -Rc go-wrx ~/.pwsafe.dat ~/pim ~/.msmtprc ~/.getmail
+	-sudo chown -Rc $(USER):$(USER) $(HOME)
 
 schedule:
 	@rem -q

@@ -17,7 +17,7 @@ rate=40
 # 01:16 <jcristau> dontzap was turned off again by default in the server, and terminate was made an option in xkeyboard-config
 setxkbmap -option terminate:ctrl_alt_bksp
 setxkbmap -option ctrl:nocaps
-make .Xdefaults
+make .Xdefaults &> .Xdefaults.log
 
 xsetroot -solid $bgcolor
 xsetroot -cursor_name left_ptr
