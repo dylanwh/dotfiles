@@ -27,8 +27,7 @@ import XMonad.Prompt.XMonad
 import XMonad.Layout.Grid
 import XMonad.Layout.IM
 import XMonad.Layout.LayoutHints
-import XMonad.Layout.Magnifier
--- import XMonad.Layout.Maximize
+import XMonad.Layout.Maximize
 import XMonad.Layout.Named
 import XMonad.Layout.NoBorders
 import XMonad.Layout.PerWorkspace
@@ -99,8 +98,7 @@ main = do
             , ("M-<Return>",       dwmpromote)
             , ("M-S-<Return>",     windows W.focusMaster)
             , ("M-b",              sendMessage ToggleStruts)
-            , ("M-m",              sendMessage Toggle)
---            , ("M-S-m",          withFocused (sendMessage . maximizeRestore))
+            , ("M-m",            withFocused (sendMessage . maximizeRestore))
             , ("M-s",              sshPrompt      myXPConfig)
             , ("M-p",              scriptPrompt   myXPConfig)
             , ("M-S-p",            shellPrompt    myXPConfig)
@@ -190,19 +188,19 @@ myLayoutHook = workspaceDir "~"
      -- default tiling algorithm partitions the screen into two panes
      tall = named "Tall" 
           $ layoutHints
-          $ magnifier'
+          $ maximize
           $ Tall nmaster delta ratio
 
      -- default grid
      grid = named "Grid" 
           $ layoutHints
-          $ magnifierOff
+          $ maximize
           $ Grid
 
      -- im layout
      im   = named "IM" 
           $ layoutHints
-          $ magnifierOff
+          $ maximize
           $ withIM (1%6) (Title "Buddy List") 
           $ Grid
 
