@@ -1,10 +1,10 @@
 " Vim color file
 " Maintainer:   Dylan Hardison <dylanwh@gmail.com>
-" Last Change:	2009-10-23.
+" Last Change:  2009-10-27.
 
 " Load the syntax highlighting defaults, if it's enabled.
 if exists("syntax_on")
-	syntax reset
+    syntax reset
 endif
 
 let colors_name = "dylan2"
@@ -41,8 +41,7 @@ endif
 hi clear PreProc
 hi link PreProc Special
 
-hi clear SpecialKey
-hi link SpecialKey Error
+hi SpecialKey ctermfg=white ctermbg=5 cterm=none
 
 "hi link luaFunction Keyword
 "hi link luaFunction Keyword

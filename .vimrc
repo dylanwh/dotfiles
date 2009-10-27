@@ -4,6 +4,15 @@ syntax on
 filetype plugin on
 filetype indent on
 
+runtime! ftplugin/man.vim
+
+if $TERM == 'rxvt-unicode-outside'
+    set bg=light
+    colorscheme default
+else
+    colorscheme dylan2
+endif
+
 " OPTIONS {{{
 set tabstop=4          " Number of spaces that a literal <Tab> in the file counts for. 
 set shiftwidth=4       " Number of spaces to use for each step of (auto)indent. 
@@ -97,9 +106,6 @@ let perl_string_as_statement = 1
 
 "-- enable perl folding
 let perl_fold = 1
-
-
-
 " }}}
 
 " MAPPINGS {{{
@@ -143,8 +149,40 @@ iab  nad and
 iab  btw by the way
 " }}}
 
+" FUNCTIONS {{{
+function! FF()
+    let val = "[" . &ff . "]"
+    if val != "[unix]"
+        return val
+    else
+        return ""
+    endif
+endfunction
+
+function! NativeTraits() range
+    if match(getline(a:firstline), "has") == -1
+        throw "This does not look like a has block"
+    endif
+
+    let range_has = a:firstline . "," . a:lastline
+    exec range_has . "sm/metaclass.*=>.*Collection::\\(\\w\\+\\).*,/traits => ['\\1'],/"
+
+    call cursor(a:firstline, 0)
+    let pfirst = search('provides\s*=>\s*{', "nW", a:lastline)
+
+    call cursor(pfirst, 0)
+    let plast = search('^\s*}', "nW", a:lastline)
+    let range_prov = pfirst . "," . plast
+
+    exec range_prov . "sm/\\(\\w\\+\\)\\s*=>\\s*'\\(\\w\\+\\)'/\\2 => '\\1'/"
+    exec range_prov . "s/provides/handles/"
+endfunction
+
+" }}}
+
 " COMMANDS {{{
 command MakePath silent call mkdir(expand("%:p:h"), "p") 
+command -range NativeTraits :<line1>,<line2>call NativeTraits()
 " }}}
 
 " AUTO BOTS, TRANSFORM AND ROLL OUT {{{
@@ -170,48 +208,10 @@ if !exists('autocmds_loaded')
     autocmd FileType gitconfig setl noet nolist
     autocmd FileType gitcommit setl noet nolist
     autocmd FileType make setl noet nolist
+    autocmd FileType man  setl nolist
     autocmd BufReadPost *
                 \ if line("'\"") > 0 && line("'\"") <= line("$") |
                 \   exe "normal g`\"" |
                 \ endif
 endif
 " }}}
-
-runtime! ftplugin/man.vim
-if $TERM == 'rxvt-unicode-outside'
-    set bg=light
-    colorscheme default
-else
-    colorscheme dylan2
-endif
-
-function FF()
-    let val = "[" . &ff . "]"
-    if val != "[unix]"
-        return val
-    else
-        return ""
-    endif
-endfunction
-
-function NativeTraits() range
-    if match(getline(a:firstline), "has") == -1
-        throw "This does not look like a has block"
-    endif
-
-    let range_has = a:firstline . "," . a:lastline
-    exec range_has . "sm/metaclass.*=>.*Collection::\\(\\w\\+\\).*,/traits => ['\\1'],/"
-
-    call cursor(a:firstline, 0)
-    let pfirst = search('provides\s*=>\s*{', "nW", a:lastline)
-
-    call cursor(pfirst, 0)
-    let plast = search('^\s*}', "nW", a:lastline)
-    let range_prov = pfirst . "," . plast
-
-    exec range_prov . "sm/\\(\\w\\+\\)\\s*=>\\s*'\\(\\w\\+\\)'/\\2 => '\\1'/"
-    exec range_prov . "s/provides/handles/"
-endfunction
-
-command -range NativeTraits :<line1>,<line2>call NativeTraits()
-
