@@ -178,7 +178,7 @@ myManageHook = composeAll
 --             $ onWorkspace "gimp" gimp
 myLayoutHook = workspaceDir "~" 
              $ avoidStruts 
-             $ onWorkspace wsHome (tall ||| im)
+             $ onWorkspace wsHome (tall ||| Mirror tall ||| im)
              $ onWorkspace wsVM   full
              $ onWorkspace wsGimp gimp
              $ onWorkspace wsWeb  full
@@ -231,7 +231,6 @@ scriptPrompt conf = do-- {{{
     dir <- io $ home "/.xmonad/scripts"
     dirExecPromptNamed conf spawnExec dir  "Script: "
 -- }}}
-
 
 data Bookmark = Bookmark-- {{{
 

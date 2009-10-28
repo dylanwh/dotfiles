@@ -3,7 +3,7 @@ use strict;
 use Getopt::Long qw( :config gnu_getopt );
 
 my $TERM = 'urxvt';
-my ($title, $name, $dtach, $host);
+my ($title, $name, $dtach, $host, $raw);
 
 foreach (@ARGV) { if ($_ eq '-e') { $_ = '--'; last } }
 
@@ -12,6 +12,7 @@ GetOptions(
     'name|n=s'  => \$name,
     'dtach|d'   => \$dtach,
     'host|h=s'  => \$host,
+    'raw|r'     => \$raw,
 );
 
 my (@run) = @ARGV;
@@ -36,8 +37,13 @@ if ($dtach) {
     unshift @run, @dtach;
 }
 
-if (@run) {
-    unshift @run, '-e';
-}
+if (not $raw) {
+    if (@run) {
+        unshift @run, '-e';
+    }
 
-exec($TERM => -name => $name, -title => $title, @run);
+    exec($TERM => -name => $name, -title => $title, @run);
+}
+else {
+    exec(@run);
+}

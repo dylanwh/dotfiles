@@ -18,18 +18,17 @@ PR_HOST="$BOLD_GREEN%m$RESET"
 PR_JOBS="%2(j.($MAGENTA%j jobs$RESET).%1(j.($MAGENTA%j job$RESET).))"
 PR_BRANCH="%1(v. ($GREEN%1v$RESET).)"
 
-declare -g GIT_BRANCH GIT_BRANCH_TIME
 function prompt_dylan_precmd {
-	if [[ -f .git/HEAD ]]; then
-		local head=$(awk -F ': ' '{print $2}' .git/HEAD)
-		psvar[1]="${head:t}"
-	else
-		psvar=()
-	fi
+    local branch=$(git branch 2>/dev/null | awk '{print $2}' )
+    if [[ -n $branch ]]; then
+        psvar[1]="$branch"
+    else
+        psvar=()
+    fi
 }
 
 function notime {
-	RPROMPT="$PR_JOBS"
+    RPROMPT="$PR_JOBS"
 }
 
 prompt_dylan_precmd 
