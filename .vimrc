@@ -122,9 +122,9 @@ map <c-w><c-b> :BottomExplorerWindow<cr>
 noremap <Space> <PageDown>
 noremap -       <PageUp>
 
-nmap <silent> <Leader>wf <Plug>VimwikiFollowWord
-nmap <silent> <Leader>wb <Plug>VimwikiGoBackWord
-nmap <silent> <Leader>wn <Plug>VimwikiGoBackWord
+nmap <silent><Leader>wf <Plug>VimwikiFollowWord
+nmap <silent><Leader>wb <Plug>VimwikiGoBackWord
+nmap <silent><Leader>wn <Plug>VimwikiGoBackWord
 nmap <Up>   gk
 nmap <Down> gj
 
