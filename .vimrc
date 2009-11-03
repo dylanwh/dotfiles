@@ -48,13 +48,11 @@ set grepprg=grep\ -nH\ \ --exclude='*.svn*'\ $*
 set foldopen=tag,search,quickfix,undo,jump,mark,percent
 set viminfo=!,'1000,%,h,f1,n~/.viminfo
 set statusline=%<%f\ %h%m%r%{FF()}%y%=0x%b\ %-14.(%l,%c%V%)\ %P
-set fillchars=fold:\ ,stl:\ ,stlnc:\  
-set listchars=tab:>.,trail:_
-set list
+set fillchars=fold:\ ,stl:\ ,stlnc:\  " borders
 set tags+=~/.tags,.tags
-set mouse=
-"set listchars=trail:-,tab:>.
-"set list
+set listchars=tab:>.,trail:_
+set list   " This and the above line make for visible whitespace.
+set mouse= " disable mouse
 
 let mapleader = "\\"
 let maplocalleader = ","

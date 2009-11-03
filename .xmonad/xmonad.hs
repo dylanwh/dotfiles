@@ -146,7 +146,7 @@ panzenPP f = defaultPP { ppTitle   = panzenColor "white" . shorten 50
 -- and click on the client you're interested in.
 myManageHook = composeAll
     [ className =? "MPlayer"            --> doFloat
-    , resource  =? "pwsafe"             --> doFloat
+    , resource  =? "pwsafe_prompt"      --> doFloat
     , className =? "Glade-3"            --> doFloat
     , title     =? "Factor workspace"   --> doFloat
     , className =? "VirtualBox"         --> doF (W.shift wsVM)
@@ -156,6 +156,8 @@ myManageHook = composeAll
     , resource  =? "irc"                --> doF (W.shift wsHome)
     , resource  =? "rss"                --> doF (W.shift wsHome)
     , resource  =? "shell_fm"           --> doF (W.shift wsHome)
+    , className =? "Pidgin"             --> doF (W.shift wsIM)
+    , title     =? "Buddy List"         --> doF (W.shift wsIM)
     , className =? "Xpdf"               --> doF (W.shift wsDocs)
     , className =? "OpenOffice.org 2.4" --> doF (W.shift wsDocs)
     , resource  =? "OpenOffice.org"     --> doF (W.shift wsDocs)
@@ -178,7 +180,7 @@ myManageHook = composeAll
 --             $ onWorkspace "gimp" gimp
 myLayoutHook = workspaceDir "~" 
              $ avoidStruts 
-             $ onWorkspace wsHome (tall ||| Mirror tall ||| im)
+             $ onWorkspace wsHome (tall ||| Mirror tall ||| full)
              $ onWorkspace wsVM   full
              $ onWorkspace wsGimp gimp
              $ onWorkspace wsWeb  full
@@ -197,12 +199,11 @@ myLayoutHook = workspaceDir "~"
           $ maximize
           $ Grid
 
-     -- im layout
-     im   = named "IM" 
+     {-im   = named "IM" 
           $ layoutHints
           $ maximize
           $ withIM (1%6) (Title "Buddy List") 
-          $ Grid
+          $ Grid-}
 
      gimp = named "Gimp"
           $ layoutHints
