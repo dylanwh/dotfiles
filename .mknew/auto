@@ -6,5 +6,9 @@ SWITCH suffix;
         INCLUDE html;
     CASE 'xml';
         INCLUDE xml;
+    CASE;
+        IF filename.match("/bin/");
+            INCLUDE "perl-script";
+        END;
 END;
 -%]

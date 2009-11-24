@@ -47,7 +47,7 @@ set backspace=eol,start,indent
 set grepprg=grep\ -nH\ \ --exclude='*.svn*'\ $*
 set foldopen=tag,search,quickfix,undo,jump,mark,percent
 set viminfo=!,'1000,%,h,f1,n~/.viminfo
-set statusline=%<%f\ %h%m%r%{FF()}%y%=0x%b\ %-14.(%l,%c%V%)\ %P
+set statusline=%<%f\ %h%m%r%{FF()}%{FENC()}%y%=0x%b\ %-14.(%l,%c%V%)\ %P
 set fillchars=fold:\ ,stl:\ ,stlnc:\  " borders
 set tags+=~/.tags,.tags
 set listchars=tab:>.,trail:_
@@ -151,6 +151,15 @@ iab  btw by the way
 function! FF()
     let val = "[" . &ff . "]"
     if val != "[unix]"
+        return val
+    else
+        return ""
+    endif
+endfunction
+
+function! FENC()
+    let val = "[" . &fenc . "]"
+    if val != "[utf-8]"
         return val
     else
         return ""

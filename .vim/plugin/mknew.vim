@@ -1,1 +1,1 @@
-autocmd BufNewFile  * exec "silent 0read! mknew -m -f" . shellescape(expand("%"))
+autocmd BufNewFile  * exec "silent 0read! mknew -f" . shellescape(expand("%"))

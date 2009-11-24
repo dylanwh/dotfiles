@@ -19,7 +19,7 @@ PR_JOBS="%2(j.($MAGENTA%j jobs$RESET).%1(j.($MAGENTA%j job$RESET).))"
 PR_BRANCH="%1(v. ($GREEN%1v$RESET).)"
 
 function prompt_dylan_precmd {
-    local branch=$(git branch 2>/dev/null | awk '{print $2}' )
+    local branch=$(git branch 2>/dev/null | awk '/\*/ {print $2}' )
     if [[ -n $branch ]]; then
         psvar[1]="$branch"
     else

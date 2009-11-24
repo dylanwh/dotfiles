@@ -16,9 +16,6 @@ my $template = 'auto';
 # whether or not we create file.
 my $create = 0;
 
-# whether or not we mkpath(dirname(file))
-my $mkdir = 0;
-
 # pre-defined template variables
 my %define = ( ENV => { %ENV } );
 
@@ -27,13 +24,10 @@ my @include = ("$ENV{HOME}/.mknew");
 
 GetOptions(
     'create|c'     => \$create,
-    'mkdir|m'      => \$mkdir,
     'template|t=s' => \$template,
     'filename|f=s' => \$filename,
     'define|D=s%'  => \%define,
 );
-
-$mkdir = 1 if $create;
 
 die "$0 --filename is required" unless $filename;
 
@@ -45,11 +39,8 @@ if ( -f $filename ) {
     exit 0;
 }
 
-#mkpath($filename->dir->stringify) if $mkdir;
-
 $define{filename} = $filename;
 $define{create}   = $create;
-$define{mkdir}    = $mkdir;
 $define{suffix}   = (split(/\./, $filename->basename))[-1];
 
 my $output = $create ? io($filename) : io->stdout ;
