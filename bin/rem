@@ -9,12 +9,12 @@ while [[ -n $1 ]]; do
             shift
             shift
         ;;
+        -*) opts=($opts $1)
+            shift 
+        ;;
         *=*)
             opts=($opts -i$1)
             shift
-        ;;
-        -*) opts=($opts $1)
-            shift 
         ;;
         *) 
             break
