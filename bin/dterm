@@ -42,6 +42,9 @@ if (not $raw) {
         unshift @run, '-e';
     }
 
+    if (-e "$ENV{HOME}/.outside") {
+        $name = 'outside';
+    }
     exec($TERM => -name => $name, -title => $title, @run);
 }
 else {
