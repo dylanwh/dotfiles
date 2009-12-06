@@ -2,7 +2,7 @@
 "
 " Language:     Perl with MooseX::Declare and Moose keywords
 " Maintainer:   Rafael Kitover <rkitover@cpan.org>
-" Last Change:  2009-05-04
+" Last Change:  2009-09-30
 " Contributors: Denis Pokataev
 "
 " ORIGINAL VERSION:
@@ -47,7 +47,7 @@ if !exists("perl_string_as_statement")
 endif
 
 " Moose (and some other common) functions
-syn match perlStatementProc		"\<\%(blessed\|reftype\|confess\|carp\|croak\|class_has\|has\|inner\|is\|mutable\|super\)\>"
+syn match perlStatementProc		"\<\%(blessed\|reftype\|confess\|carp\|croak\|class_has\|has\|inner\|is\|mutable\|immutable\|immutable\|super\|requires\)\>"
 
 " Moose typelib stuff
 syn match perlStatementProc		"\<\%(subtype\|coerce\|as\|from\|via\|message\|enum\|class_type\|role_type\|maybe_type\|duck_type\|optimize_as\|type\|where\)\>"
@@ -56,13 +56,14 @@ syn match perlStatementProc		"\<\%(subtype\|coerce\|as\|from\|via\|message\|enum
 " already highlighted.)
 syn match perlStatementProc             "\<\%(plan\|use_ok\|require_ok\|ok\|isnt\|diag\|like\|unlike\|cmp_ok\|is_deeply\|skip\|can_ok\|isa_ok\|pass\|fail\|BAIL_OUT\|meta_ok\|does_ok\|has_attribute_ok\|throws_ok\|dies_ok\|lives_ok\|lives_and\)\>"
 
-syn match perlMethodName +\%(\h\|::\|['"]\)\%(\w\|::\)\+["']\?\_s*\|+ contained nextgroup=perlPossibleComma
+"syn match perlMethodName +\%(\h\|::\|['"]\)\%([\w\$\{\}]\|::\)\+["']\?\_s*\|+ contained nextgroup=perlPossibleComma
+syn match perlMethodName +\w\++ contained nextgroup=perlPossibleComma
 
 syn match perlPossibleComma +\_s*\%(=>\|,\)\?\_s*\|+ contained nextgroup=perlAnonSubOrMethod
 
-syn match perlAnonSubOrMethod +\_s*\%(\<sub\>\|\<method\>\)\?\_s*\|+ contained contains=perlFunction nextgroup=perlMethodSignature
+syn match perlAnonSubOrMethod +\_s*\%(sub\|method\)\_s*\|+ contained contains=perlFunction nextgroup=perlMethodSignature
 
-syn match perlMethodSignature +(\_[^)]*)\_s*\|+ nextgroup=perlSubAttributes contained contains=@perlExpr,perlStatementProc
+syn match perlMethodSignature +\_s*\%((\_[^)]*)\)\?\_s*\|+ nextgroup=perlSubAttributes contained contains=@perlExpr,perlStatementProc
 
 syn match perlFunction +\<\%(class\|role\|extends\|with\)\>\_s*+ nextgroup=perlPackageRef
 
@@ -78,16 +79,13 @@ syn match perlString "\<Any\>\|\<Item\>\|\<Bool\>\|\<Maybe\>\|\<Undef\>\|\<Defin
 if !exists("perl_no_sync_on_sub")
   syn sync match perlSync	grouphere NONE "^\s*\<method\>"
   syn sync match perlSync	grouphere NONE "^\s*\<class\>"
+  syn sync match perlSync	grouphere NONE "^\s*\<role\>"
 endif
 
 if exists("perl_fold")
   if !exists("perl_nofold_subs")
     syn region perlSubFold     start="^\z(\s*\)\<class\>.*[^};]$" end="^\z1}\s*\%(#.*\)\=$" transparent fold keepend
     syn region perlSubFold     start="^\z(\s*\)\<method\>.*[^};]$" end="^\z1}\s*\%(#.*\)\=$" transparent fold keepend
-    syn region perlSubFold     start="^\z(\s*\)\<around\>.*[^};]$" end="^\z1}\s*\%(#.*\)\=$" transparent fold keepend
-    syn region perlSubFold     start="^\z(\s*\)\<before\>.*[^};]$" end="^\z1}\s*\%(#.*\)\=$" transparent fold keepend
-    syn region perlSubFold     start="^\z(\s*\)\<after\>.*[^};]$" end="^\z1}\s*\%(#.*\)\=$" transparent fold keepend
-    syn region perlSubFold     start="^\z(\s*\)\<has\>.*[^};]$" end="^\z1);\s*\%(#.*\)\=$" transparent fold keepend
   endif
 endif
 
@@ -475,7 +473,7 @@ if exists("perl_fold")
   syn sync fromstart
 else
   " fromstart above seems to set minlines even if perl_fold is not set.
-  syn sync minlines=0
+  syn sync minlines=3000
 endif
 
 
@@ -592,7 +590,7 @@ endif
 if exists("perl_sync_dist")
   execute "syn sync maxlines=" . perl_sync_dist
 else
-  syn sync maxlines=100
+  syn sync maxlines=5000
 endif
 
 syn sync match perlSyncPOD	grouphere perlPOD "^=pod"
