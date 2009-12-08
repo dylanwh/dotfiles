@@ -32,7 +32,7 @@ function notime {
 }
 
 prompt_dylan_precmd 
-precmd_functions=( $precmd_functions prompt_dylan_precmd )
+#precmd_functions=( $precmd_functions prompt_dylan_precmd )
 
 PROMPT="$PR_NAME@$PR_HOST:$PR_DIR$PR_BRANCH%# "
 RPROMPT="$PR_JOBS $PR_TIME $PR_DATE"

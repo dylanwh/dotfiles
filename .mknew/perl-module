@@ -18,11 +18,11 @@ ELSE;
 END;
 
 -%]
-use feature ':5.10';
+use 5.10.0;
 use MooseX::Declare;
 
 [% class %] [% module %] {
-    our $VERSION = 0.01;
+    our $VERSION = 0.001;
     our $AUTHORITY = 'cpan:DHARDISON';
 
 }
