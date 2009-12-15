@@ -147,6 +147,9 @@ alias menu="vim ~/.menu"
 alias x2=xmms2
 alias cnm='cnetworkmanager'
 alias vw='vim ~/docs/wiki/index.wiki'
+alias -g ...='../..'
+alias -g ....='../../..'
+alias -g .....='../../../..'
 ## }}}
 
 # Autoload various functions
