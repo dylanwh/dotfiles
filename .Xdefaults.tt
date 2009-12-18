@@ -4,6 +4,7 @@ xfont       = "-xos4-terminus-bold-r-*-*-*-120-100-100-*-*-iso8859-1"
 xfont_big   = "-xos4-terminus-bold-r-*-*-*-140-100-100-*-*-iso8859-1"
 xfont_huge  = "-xos4-terminus-bold-r-*-*-*-320-*-*-*-*-*-*"
 xfont_other = "-xos4-terminus-bold-r-normal--14-140-72-72-c-80-iso8859-1"
+xfont_tiny  = "-xos4-terminus-medium-r-*-*-*-120-75-75-*-*-iso8859-1"
 
 %]
 [% SET term = 'Rxvt' %]
@@ -75,6 +76,7 @@ URxvt.keysym.M-C-1: command:[% change_font(xfont) %]
 URxvt.keysym.M-C-2: command:[% change_font(xfont_big) %]
 URxvt.keysym.M-C-3: command:[% change_font(xfont_huge) %]
 URxvt.keysym.M-C-4: command:[% change_font(xfont_other) %]
+URxvt.keysym.M-C-5: command:[% change_font(xfont_tiny) %]
 URxvt.keysym.S-Insert: builtin:
 URxvt.searchable-scrollback: CM-s
 

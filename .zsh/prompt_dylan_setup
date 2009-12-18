@@ -16,27 +16,24 @@ PR_DIR="$BOLD_BLUE%~$RESET"
 PR_NAME="$BOLD_GREEN%n$RESET"
 PR_HOST="$BOLD_GREEN%m$RESET"
 PR_JOBS="%2(j.($MAGENTA%j jobs$RESET).%1(j.($MAGENTA%j job$RESET).))"
-PR_BRANCH="%1(v. ($GREEN%1v$RESET).)"
+PR_VCS='${vcs_info_msg_0_}'
 
-function prompt_dylan_precmd {
-    local branch=$(git branch 2>/dev/null | awk '{print $2}' )
-    if [[ -n $branch ]]; then
-        psvar[1]="$branch"
-    else
-        psvar=()
-    fi
-}
+autoload -Uz vcs_info
+zstyle ':vcs_info:*' enable svn svk git
+zstyle ':vcs_info:*' actionformats \
+    '(%F{2}%s:%b, %a%f)'
+zstyle ':vcs_info:*' formats       \
+    '(%F{2}%s:%b%f)'
+zstyle ':vcs_info:(sv[nk]|bzr):*' branchformat '%b:%r'
 
-function notime {
-    RPROMPT="$PR_JOBS"
-}
+vcs_info
+precmd_functions=( $precmd_functions vcs_info )
 
-prompt_dylan_precmd 
-precmd_functions=( $precmd_functions prompt_dylan_precmd )
-
-PROMPT="$PR_NAME@$PR_HOST:$PR_DIR$PR_BRANCH%# "
-RPROMPT="$PR_JOBS $PR_TIME $PR_DATE"
+PROMPT="$PR_NAME@$PR_HOST:$PR_DIR%# "
+RPROMPT="$PR_VCS$PR_JOBS"
 PS2='%_: '
 RPS2=''
 
-prompt_opts=( cr percent )
+alias norp='unset RPROMPT'
+
+prompt_opts=( cr percent subst )

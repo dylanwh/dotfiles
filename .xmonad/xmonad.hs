@@ -10,8 +10,8 @@ import XMonad.Actions.DwmPromote
 import XMonad.Actions.CycleRecentWS
 import XMonad.Actions.CycleWS
 import XMonad.Actions.SinkAll
-import XMonad.Actions.DynamicWorkspaces
-import XMonad.Layout.SimpleFloat
+-- import XMonad.Actions.DynamicWorkspaces
+-- import XMonad.Layout.SimpleFloat
 
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.EwmhDesktops
@@ -30,7 +30,7 @@ import XMonad.Layout.LayoutHints
 import XMonad.Layout.Maximize
 import XMonad.Layout.Named
 import XMonad.Layout.NoBorders
-import XMonad.Layout.PerWorkspace
+-- import XMonad.Layout.PerWorkspace
 import XMonad.Layout.Reflect (reflectHoriz)
 import XMonad.Layout.Tabbed
 import XMonad.Layout.WorkspaceDir
@@ -50,14 +50,14 @@ import Text.XHtml (tag, strAttr, renderHtml, (<<), (!), primHtml)
 -- }}}
 
 -- Misc {{{
-wsHome   = "home"
-wsWeb    = "web"
+wsHome   = "1"
+wsVM     = "6"
 wsGimp   = "gimp"
-wsDocs   = "docs"
-wsVM     = "vm"
+wsDocs   = "8"
+wsWeb    = "9"
 
-wsList  = ["home", "code", "work", "fs", "docs", "vm", "gimp", "misc", "web" ]
-wsKeys  = zip (map show [1 .. 9]) wsList
+wsList  = map show [1 .. 9]
+wsKeys  = [ (x,x) | x <- wsList ]
 
 spawnExec str = spawn ("exec " ++ str)
 
@@ -68,7 +68,7 @@ home path = do dir <- io $ getEnv "HOME" `catch` const (return "/")
 -- {{{ main
 main = do
     let myFont     = "-xos4-terminus-bold-r-*-*-*-140-100-100-*-*-iso8859-1"
-    let myXPConfig = defaultXPConfig 
+    let myXPConfig = defaultXPConfig
             { font        = myFont
             , height      = 24
             , bgColor     = "black"
@@ -179,13 +179,8 @@ myManageHook = composeAll
 -- {{{ layout hook:
 --             $ onWorkspace "gimp" gimp
 myLayoutHook = workspaceDir "~" 
-             $ avoidStruts 
-             $ onWorkspace wsHome (tall ||| Mirror tall ||| full)
-             $ onWorkspace wsVM   full
-             $ onWorkspace wsGimp gimp
-             $ onWorkspace wsWeb  full
-             $ onWorkspace wsDocs (full ||| float)
-             $ tall ||| Mirror tall ||| grid ||| full
+             $ avoidStruts
+             $ (tall ||| Mirror tall ||| grid ||| full ||| gimp)
   where
      -- default tiling algorithm partitions the screen into two panes
      tall = named "Tall" 
@@ -211,9 +206,6 @@ myLayoutHook = workspaceDir "~"
           $ reflectHoriz 
           $ withIM (0.20) (Role "gimp-dock")
           $ Full
-
-     -- floating layout, renamed
-     float = named "Float" $ layoutHints $ simpleFloat
 
      -- full layout, renamed.
      full = named "Full" $ smartBorders $ layoutHints Full

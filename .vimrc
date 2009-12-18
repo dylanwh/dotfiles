@@ -14,8 +14,8 @@ else
 endif
 
 " OPTIONS {{{
-set tabstop=4          " Number of spaces that a literal <Tab> in the file counts for. 
-set shiftwidth=4       " Number of spaces to use for each step of (auto)indent. 
+set tabstop=4          " Number of spaces that a literal <Tab> in the file counts for.
+set shiftwidth=4       " Number of spaces to use for each step of (auto)indent.
 set shiftround         " Round indent to multiple of 'shiftwidth'.
 set autoindent         " Auto indent from current line to new line.
 set copyindent         " Try to not change the indentation style.
@@ -47,10 +47,12 @@ set backspace=eol,start,indent
 set grepprg=grep\ -nH\ \ --exclude='*.svn*'\ $*
 set foldopen=tag,search,quickfix,undo,jump,mark,percent
 set viminfo=!,'1000,%,h,f1,n~/.viminfo
-set statusline=%<%f\ %h%m%r%{FF()}%y%=0x%b\ %-14.(%l,%c%V%)\ %P
+set statusline=%<%f\ %h%m%r%{FF()}%{FENC()}%y%=0x%B\ %-14.(%l,%c%V%)\ %P
 set fillchars=fold:\ ,stl:\ ,stlnc:\  " borders
 set tags+=~/.tags,.tags
-set listchars=tab:>.,trail:_
+set nowrap
+set sidescroll=5
+set listchars=tab:>.,trail:_,precedes:<,extends:>
 set list   " This and the above line make for visible whitespace.
 set mouse= " disable mouse
 
@@ -61,7 +63,7 @@ let maplocalleader = ","
 let changelog_username = $REALNAME " <".$EMAIL.">"
 
 "-- My name for adding debian changelog entries.
-let debianfullname = $REALNAME 
+let debianfullname = $REALNAME
 
 "-- Highlight builtins.
 let python_highlight_all = 1
@@ -102,14 +104,15 @@ let perl_include_pod = 1
 "-- different from string contents.
 let perl_string_as_statement = 1
 
-"-- enable perl folding
-let perl_fold = 1
+"-- disable perl folding
+"unlet perl_fold
 " }}}
 
 " MAPPINGS {{{
 map <F1> :tab help<CR>
 map <F2> :nohlsearch<CR>
 map <F3> :set nu!<BAR>set nu?<CR>
+map <F4> :%s/\s\+$//<CR>
 
 map gn <C-o>:tab new<CR>
 map K \K
@@ -157,6 +160,15 @@ function! FF()
     endif
 endfunction
 
+function! FENC()
+    let val = "[" . &fenc . "]"
+    if val != "[utf-8]"
+        return val
+    else
+        return ""
+    endif
+endfunction
+
 function! NativeTraits() range
     if match(getline(a:firstline), "has") == -1
         throw "This does not look like a has block"
@@ -179,7 +191,7 @@ endfunction
 " }}}
 
 " COMMANDS {{{
-command MakePath silent call mkdir(expand("%:p:h"), "p") 
+command MakePath silent call mkdir(expand("%:p:h"), "p")
 command -range NativeTraits :<line1>,<line2>call NativeTraits()
 " }}}
 

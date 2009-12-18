@@ -46,12 +46,16 @@ g:haddock_browser_callformat	haskellmode.txt	/*g:haddock_browser_callformat*
 g:haddock_docdir	haskellmode.txt	/*g:haddock_docdir*
 g:haddock_indexfiledir	haskellmode.txt	/*g:haddock_indexfiledir*
 g:vimwiki_auto_checkbox	vimwiki.txt	/*g:vimwiki_auto_checkbox*
+g:vimwiki_badsyms	vimwiki.txt	/*g:vimwiki_badsyms*
 g:vimwiki_camel_case	vimwiki.txt	/*g:vimwiki_camel_case*
 g:vimwiki_fold_empty_lines	vimwiki.txt	/*g:vimwiki_fold_empty_lines*
+g:vimwiki_fold_lists	vimwiki.txt	/*g:vimwiki_fold_lists*
+g:vimwiki_folding	vimwiki.txt	/*g:vimwiki_folding*
 g:vimwiki_global_ext	vimwiki.txt	/*g:vimwiki_global_ext*
 g:vimwiki_hl_cb_checked	vimwiki.txt	/*g:vimwiki_hl_cb_checked*
 g:vimwiki_hl_headers	vimwiki.txt	/*g:vimwiki_hl_headers*
 g:vimwiki_list	vimwiki.txt	/*g:vimwiki_list*
+g:vimwiki_list_ignore_newline	vimwiki.txt	/*g:vimwiki_list_ignore_newline*
 g:vimwiki_lower	vimwiki.txt	/*g:vimwiki_lower*
 g:vimwiki_menu	vimwiki.txt	/*g:vimwiki_menu*
 g:vimwiki_stripsym	vimwiki.txt	/*g:vimwiki_stripsym*
@@ -99,7 +103,6 @@ vimwiki-mappings	vimwiki.txt	/*vimwiki-mappings*
 vimwiki-multiple-wikies	vimwiki.txt	/*vimwiki-multiple-wikies*
 vimwiki-option-css_name	vimwiki.txt	/*vimwiki-option-css_name*
 vimwiki-option-ext	vimwiki.txt	/*vimwiki-option-ext*
-vimwiki-option-folding	vimwiki.txt	/*vimwiki-option-folding*
 vimwiki-option-gohome	vimwiki.txt	/*vimwiki-option-gohome*
 vimwiki-option-html_footer	vimwiki.txt	/*vimwiki-option-html_footer*
 vimwiki-option-html_header	vimwiki.txt	/*vimwiki-option-html_header*
@@ -111,6 +114,7 @@ vimwiki-option-syntax	vimwiki.txt	/*vimwiki-option-syntax*
 vimwiki-options	vimwiki.txt	/*vimwiki-options*
 vimwiki-prerequisites	vimwiki.txt	/*vimwiki-prerequisites*
 vimwiki-syntax	vimwiki.txt	/*vimwiki-syntax*
+vimwiki-syntax-blockquotes	vimwiki.txt	/*vimwiki-syntax-blockquotes*
 vimwiki-syntax-comments	vimwiki.txt	/*vimwiki-syntax-comments*
 vimwiki-syntax-headers	vimwiki.txt	/*vimwiki-syntax-headers*
 vimwiki-syntax-links	vimwiki.txt	/*vimwiki-syntax-links*
