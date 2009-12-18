@@ -186,6 +186,10 @@ done
 case $OSTYPE in
     *bsd*)
         unalias grep egrep fgrep ggrep
+        if have gmake; then
+            alias make=gmake
+            alias bsdmake='command make'
+        fi
         if have gls; then
             alias ls='gls --color=auto -F -h'
         else
