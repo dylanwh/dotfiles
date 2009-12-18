@@ -2,6 +2,7 @@ HOST := $(shell hostname -s)
 
 help:
 	@echo targets: fixperms, schedule, pwsafe-merge
+	@echo HOST = $(HOST)
 
 .pwsafe.dat:
 	scp lofn:.pwsafe.dat .

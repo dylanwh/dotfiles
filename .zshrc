@@ -182,7 +182,11 @@ done
 case $OSTYPE in
     *bsd*)
         unalias grep egrep fgrep ggrep
-        alias ls="ls -Fh"
+        if have gls; then
+            alias ls='gls --color=auto -F -h'
+        else
+            alias ls="ls -Fh"
+        fi
     ;;
 esac
 
