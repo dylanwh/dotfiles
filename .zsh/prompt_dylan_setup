@@ -26,13 +26,16 @@ zstyle ':vcs_info:*' formats       \
     '(%F{2}%s:%b%f)'
 zstyle ':vcs_info:(sv[nk]|bzr):*' branchformat '%b:%r'
 
-vcs_info
-precmd_functions=( $precmd_functions vcs_info )
-
 PROMPT="$PR_NAME@$PR_HOST:$PR_DIR%# "
-RPROMPT="$PR_VCS$PR_JOBS"
 PS2='%_: '
 RPS2=''
+
+if vcs_info &>/dev/null; then
+    precmd_functions=( $precmd_functions vcs_info )
+    RPROMPT="$PR_VCS$PR_JOBS"
+else
+    RPROMPT="$PR_JOBS"
+fi
 
 alias norp='unset RPROMPT'
 
