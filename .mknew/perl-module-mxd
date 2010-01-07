@@ -1,0 +1,9 @@
+use 5.10.0;
+use MooseX::Declare;
+
+[% class %] [% module %] {
+    our $VERSION = 0.001;
+    our $AUTHORITY = 'cpan:DHARDISON';
+
+
+}

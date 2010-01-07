@@ -17,7 +17,6 @@ export TZ=US/Eastern
 
 export LESSHISTFILE='-'
 export SSH_AGENT_FILE=$HOME/.ssh/agent@$HOST
-export PERL_USE_MOOSE=1
 
 declare -U path perl5lib
 declare -gxT PERL5LIB perl5lib

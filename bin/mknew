@@ -17,7 +17,7 @@ my $template = 'auto';
 my $create = 0;
 
 # pre-defined template variables
-my %define = ( ENV => { %ENV } );
+my %define = ( %ENV );
 
 # include path
 my @include = ("$ENV{HOME}/.mknew");
@@ -52,9 +52,4 @@ my $tt = Template->new(
     }
 );
 
-if (-f file($include[0], $template)) {
-    $tt->process($template, \%define, $output) or die $tt->error . "\n";
-}
-else {
-    die "No $template";
-}
+$tt->process($template, \%define, $output) or die $tt->error . "\n";

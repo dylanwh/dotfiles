@@ -1,4 +1,5 @@
 HOST := $(shell hostname -s)
+DISPLAY ?= :0.0
 
 help:
 	@echo targets: fixperms, schedule, pwsafe-merge
