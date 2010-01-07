@@ -10,8 +10,6 @@ import XMonad.Actions.DwmPromote
 import XMonad.Actions.CycleRecentWS
 import XMonad.Actions.CycleWS
 import XMonad.Actions.SinkAll
--- import XMonad.Actions.DynamicWorkspaces
--- import XMonad.Layout.SimpleFloat
 
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.EwmhDesktops
@@ -30,7 +28,6 @@ import XMonad.Layout.LayoutHints
 import XMonad.Layout.Maximize
 import XMonad.Layout.Named
 import XMonad.Layout.NoBorders
--- import XMonad.Layout.PerWorkspace
 import XMonad.Layout.Reflect (reflectHoriz)
 import XMonad.Layout.Tabbed
 import XMonad.Layout.WorkspaceDir
@@ -177,7 +174,6 @@ myManageHook = composeAll
 -- }}}
 
 -- {{{ layout hook:
---             $ onWorkspace "gimp" gimp
 myLayoutHook = workspaceDir "~" 
              $ avoidStruts
              $ (tall ||| Mirror tall ||| grid ||| full ||| gimp)

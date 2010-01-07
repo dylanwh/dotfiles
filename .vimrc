@@ -106,6 +106,10 @@ let perl_string_as_statement = 1
 
 "-- disable perl folding
 "unlet perl_fold
+
+let redcode_highlight_numbers=1
+
+
 " }}}
 
 " MAPPINGS {{{
@@ -209,6 +213,7 @@ if !exists('autocmds_loaded')
         autocmd BufEnter *.c,*.C,*.cc,*.h compiler gcc
 
         autocmd BufNewFile,BufRead *.cos setl ft=caos
+        autocmd BufNewFile,BufRead *.red setl ft=redcode
         autocmd BufNewFile,BufRead *.t,*.cgi setl ft=perl
         autocmd BufNewFile,BufRead *.lua setl foldmethod=marker |
                     \ setl comments=sO:-\ -,mO:-\ \ ,exO:]],s1:--[[,mb:-,ex:]],:-- |

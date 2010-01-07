@@ -202,5 +202,6 @@ ztitle
 have todo && todo --timeout --summary
 
 namedir moonshine ~/code/moonshine
+namedir progfiles ~/.wine/drive_c/Program\ Files
 
 # vim: set sw=4 ts=4 foldmethod=marker path=.,~/.zsh:
