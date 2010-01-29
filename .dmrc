@@ -1,4 +1,6 @@
 
 
 [Desktop]
-Session=default
+Session=xsession
+Language=en_US.UTF-8
+Layout=us

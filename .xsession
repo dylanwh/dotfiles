@@ -24,11 +24,17 @@ xsetroot -cursor_name left_ptr
 
 xset r rate $delay $rate
 
-gconftool --type int    --set /desktop/gnome/peripherals/keyboard/rate $rate
-gconftool --type int    --set /desktop/gnome/peripherals/keyboard/delay $delay   
-gconftool --type string --set /desktop/gnome/applications/window_manager xmonad
-
-#gconftool --type boolean --set /apps/nautilus/preferences/show_desktop false
+gconftool -t list --list-type string \
+    -s /desktop/gnome/peripherals/keyboard/kbd/options '[ctrl   ctrl:nocaps,terminate   terminate:ctrl_alt_bksp]'
+gconftool -t boolean \
+    -s /desktop/gnome/peripherals/keyboard/general/groupPerWindow false
+gconftool -t int     -s /desktop/gnome/peripherals/keyboard/rate $rate
+gconftool -t int     -s /desktop/gnome/peripherals/keyboard/delay $delay
+gconftool -t string  -s /desktop/gnome/applications/window_manager xmonad
+gconftool -t boolean -s /apps/nautilus/preferences/show_desktop false
+gconftool -t boolean -s /desktop/gnome/background/draw_background false
+gconftool -t boolean -s /desktop/gnome/background/disable_background true
+gconftool -t string  -s /desktop/gnome/interface/gtk_theme Dust
 
 rm -f ~/.panzen
 
