@@ -24,17 +24,26 @@ xsetroot -cursor_name left_ptr
 
 xset r rate $delay $rate
 
+# no, do NOT override my xkbmaps!
+kb_options="[terminate\tterminate:ctrl_alt_bksp,ctrl\tctrl:nocaps,Compose key\tcompose:menu]"
 gconftool -t list --list-type string \
-    -s /desktop/gnome/peripherals/keyboard/kbd/options '[ctrl   ctrl:nocaps,terminate   terminate:ctrl_alt_bksp]'
+    -s /desktop/gnome/peripherals/keyboard/kbd/options "$(echo -e $kb_options)"
+# no, I do not want per-window keymaps!
 gconftool -t boolean \
     -s /desktop/gnome/peripherals/keyboard/general/groupPerWindow false
 gconftool -t int     -s /desktop/gnome/peripherals/keyboard/rate $rate
 gconftool -t int     -s /desktop/gnome/peripherals/keyboard/delay $delay
+# yes, xmonad is REALLY my window manager. gnome IGNORES $WINDOW_MANAGER at times.
 gconftool -t string  -s /desktop/gnome/applications/window_manager xmonad
+
+# the following lines make the desktop behave as I want.
 gconftool -t boolean -s /apps/nautilus/preferences/show_desktop false
 gconftool -t boolean -s /desktop/gnome/background/draw_background false
 gconftool -t boolean -s /desktop/gnome/background/disable_background true
 gconftool -t string  -s /desktop/gnome/interface/gtk_theme Dust
+gconftool -t string -s  /desktop/gnome/background/picture_filename ""
+gconftool -t string -s  /desktop/gnome/background/primary_color $bgcolor
+gconftool -t string -s  /desktop/gnome/background/secondary_color $bgcolor
 
 rm -f ~/.panzen
 
