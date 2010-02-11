@@ -2,4 +2,6 @@
 
 account=''
 vared -p 'account: ' account 
-pwsafe -p $account
+if [[ -n $account ]]; then
+    pwsafe -E -p $account | xclip -i
+fi
