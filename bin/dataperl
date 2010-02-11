@@ -1,0 +1,13 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+use YAML;
+use IO::All;
+
+my $code = shift or die;
+my $func = eval "sub { $code }";
+
+local $/ = undef;
+my $str = <STDIN>;
+local $_ = Load($str);
+print $func->();
