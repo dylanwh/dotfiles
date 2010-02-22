@@ -1,16 +1,13 @@
 # vim: set ft=muttrc:
 # NAME: work
-# Identity options
 set realname="Dylan Hardison"
 set from="dylan.hardison@iinteractive.com"
-
-# Location options
 set folder="imaps://dylan.hardison%40iinteractive.com@imap.gmail.com"
 set smtp_url="smtps://dylan.hardison%40iinteractive.com@smtp.gmail.com"
-set spoolfile="+INBOX/"
-set postponed='+[Gmail]/Drafts'
+unset signature
 
-reset signature
+source ~/.mutt/google
+source ~/.mutt/passwd.work
 
 # Recongize messages addressed to me.
 unalternates *
@@ -28,5 +25,4 @@ unmy_hdr *
 unmailboxes *
 mailboxes +INBOX +daily +issue +arc +bes +linode
 
-source ~/.mutt/passwd.work
 source ~/.mutt/theme

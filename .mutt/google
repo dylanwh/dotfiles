@@ -1,0 +1,3 @@
+set spoolfile="+INBOX/"
+set postponed='+[Gmail]/Drafts'
+unset record
