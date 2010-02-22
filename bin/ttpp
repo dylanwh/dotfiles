@@ -27,8 +27,7 @@ my $template = new Template {
     INCLUDE_PATH => \@include,     # or list ref
     PRE_PROCESS  => \@pre_process, # prefix each template
     WRAPPER      => \@wrapper,     # wrappers
-    TRIM         => 1,             # more
     EVAL_PERL    => 1,             # evaluate Perl code blocks
 };
 
-$template->process(\*ARGV, \%define);
+$template->process(\*ARGV, \%define) or die $template->error;

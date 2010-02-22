@@ -9,12 +9,6 @@ set mbox_type=Maildir
 set folder=~/mail
 set spoolfile="+inbox"
 
-mailboxes +inbox +work +slug \
-          +haskell-cafe +caml \
-          +templates +poe \
-          +suckless +security \
-          +netflix
-
 # Behavior options
 set use_from
 set envelope_from
@@ -35,6 +29,13 @@ set include              # Always include messages in replies.
 set tilde                # Use tildes in the internal pager like vim.
 set nohelp               # Don't show the help menu at the top
 
+set imap_idle
+set imap_passive=no
+set imap_servernoise=no
+set imap_headers="X-Spam-Status"
+set header_cache="~/.mutt/cache"
+set message_cachedir="~/.mutt/cache"
+
 set xterm_set_titles
 set sidebar_delim=' '
 set sidebar_visible=no
@@ -46,9 +47,6 @@ set thread_received=no
 
 folder-hook . push "\eV" # By default, collapse all threads
 set nocollapse_unread    # Except those with new messages.
-
-folder-hook .    source "~/.mutt/home"
-folder-hook work source "~/.mutt/work"
 
 # Recognize spam
 spam "X-Spam-Status: Yes" "spam"
@@ -74,9 +72,12 @@ bind pager,index <Esc><Return> sidebar-open
 
 macro generic,pager,index <F1> ":toggle sidebar_visible\n" "toggle sidebar"
 macro generic,pager,index <F2> ":toggle arrow_cursor\n"    "toggle arrow cursor"
+macro generic,pager,index <F3>     "!muttprofile\n:source ~/.mutt/profile.active\nm" "New message with profile"
 macro index               A    "T.\n;WO;WN;t"              "mark all as read"
 macro index               S    "D~H spam\n"                "delete all spam"
 macro index,pager         i    "c +inbox\n"                "go to inbox"
 
 # Reply as a specific address for mailing list
 send-hook '~t pup@possumism.net' 'set from="Dylan William Hardison <dylan+pup@hardison.net>"'
+
+source ~/.mutt/profile.active

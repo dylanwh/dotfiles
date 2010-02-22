@@ -1,0 +1,68 @@
+# vim: set ft=muttrc:
+# NAME: home
+# Identity options
+set realname="Dylan William Hardison"
+set from="dylan@hardison.net"
+
+# Location options
+set folder="imaps://dylan%40hardison.net@imap.gmail.com"
+set smtp_url="smtps://dylan%40hardison.net@smtp.gmail.com"
+
+set spoolfile="+INBOX/"
+set postponed='+[Gmail]/Drafts'
+unset record
+
+set signature="~/bin/signature|"
+
+# Recongize messages addressed to me.
+unalternates *
+alternates dylanwh@gmail.com \
+           dylan@haverdev.org \
+           dylan@sinedev.org \
+           dylan@midgetbutton.com \
+           dylanwh@tampabay.rr.com \
+           dylan\\+[a-z]+@hardison.net \
+           it@hardison.net \
+           dylan@lofn.hardison.net \
+           Hardison.Dylan8811@myspcmail.spcollege.edu \
+           dhardison@cpan.org
+
+unsubscribe *
+# And messages to mailing lists I subscribe to.
+subscribe slug@nks.net \
+          slug-politics@nks.net \
+          haskell-cafe@haskell.org \
+          caml-list@inria.fr \
+          caml-list@yquem.inria.fr \
+          templates@template-toolkit.org \
+          macarthur@genesisfleet.com \
+          module-authors@perl.org \
+          poe@perl.org \
+          dwm@suckless.org \
+          dev@suckless.org \
+          members@issmacarthur.com \
+          members@lists.issmacarthur.com \
+          members@lists.deepspace2.com \
+          pup@possumism.net \
+          tbad@tampabad.org \
+          billing@hardison.net \
+          family@hardison.net \
+          debian-security-announce@lists.debian.org \
+          mailall@myspcmail.spcollege.edu \
+          debian-news@lists.debian.org
+
+unmailboxes *
+mailboxes +INBOX +daily +sms +facebook \
+          +slug +slug/archive \
+          +haskell-cafe +caml \
+          +templates +poe \
+          +suckless +security \
+          +netflix +billing
+
+unmy_hdr *
+my_hdr Reply-By: `date --date="-3 days"`
+my_hdr X-Message-Flag: OUTLOOK ERROR: Message in violation of Microsoft Security Policy (MSP).
+my_hdr X-Religion: Optimus Prime
+
+source ~/.mutt/theme
+source ~/.mutt/passwd.home

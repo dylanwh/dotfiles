@@ -8,6 +8,6 @@ my $code = shift or die;
 my $func = eval "sub { $code }";
 
 local $/ = undef;
-my $str = <STDIN>;
+my $str = <ARGV>;
 local $_ = Load($str);
 print $func->();

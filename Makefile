@@ -13,6 +13,10 @@ help:
 	xrdb -cpp ttpp -n $< > $@
 	xrdb -load $@
 
+.msmtprc: .msmtprc.tt .emailrc
+	ttpp -DACCOUNT_FILE=.emailrc $< > $@
+	chmod 600 $@
+
 .procmailrc: .procmailrc@$(HOST)
 	ln -s $< $@
 
@@ -21,7 +25,7 @@ help:
 
 fixperms:
 	-chmod -Rc +x ~/bin ~/.xinitrc
-	-chmod -Rc go-wrx ~/.pwsafe.dat ~/pim ~/.msmtprc ~/.getmail
+	-chmod -Rc go-wrx ~/.pwsafe.dat ~/pim ~/.msmtprc ~/.getmail ~/.emailrc
 	-sudo chown -Rc $(USER):$(USER) $(HOME)
 
 schedule:
