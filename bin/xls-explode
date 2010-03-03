@@ -1,0 +1,94 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+use open ':utf8';
+use charnames ':full';
+use Spreadsheet::ParseExcel;
+use Text::CSV;
+use Path::Class;
+use File::Basename 'basename';
+use Encode;
+use List::MoreUtils 'none';
+
+my $file = shift;
+
+die "usage: $0 file.xls\n" unless $file or $file =~ /\.xls/;
+
+my $csv = Text::CSV->new({ binary => 1 });
+my $p   = Spreadsheet::ParseExcel->new;
+my $doc = $p->Parse($file);
+
+my $dir = dir(phrase_to_ident(basename($file, ".xls")));
+warn "Directory: $dir\n";
+$dir->mkpath;
+
+for my $sheet ( $doc->worksheets ) {
+    my $file = $dir->file( phrase_to_ident( $sheet->get_name ) . ".csv" );
+    my $fh   = $file->openw;
+
+    my ( $row_min, $row_max ) = $sheet->row_range();
+    my ( $col_min, $col_max ) = $sheet->col_range();
+
+    warn "    File: $file\n";
+    for my $row ( $row_min .. $row_max ) {
+        my @row = map {
+            clean(
+                $sheet->get_cell( $row, $_ )
+            )
+        } $col_min .. $col_max;
+        next if none { $_ } @row;
+        $csv->print($fh, \@row);
+        $fh->print("\n");
+    }
+
+    $fh->close;
+}
+
+sub phrase_to_ident {
+    my ($ident) = @_;
+    #$ident =~ s/\(.*?\)//g;
+    $ident =~ s/&/ and /g;
+    $ident =~ s/\W+/_/g;
+    $ident =~ s/_+$//;
+    $ident =~ s/^_+//;
+    $ident =~ s/_+/_/g;
+    $ident =~ s/([a-z])([A-Z])/$1_$2/g;
+
+    if ($ident =~ s/^(\d{4})_//) {
+        $ident .= "_$1";
+    }
+    return lc $ident;
+}
+
+sub clean {
+    my ($cell) = @_;
+    return '' unless $cell;
+    my $t = $cell->value;
+    unless (Encode::is_utf8($t)) {
+        $t = Encode::decode("iso-8859-1", $t);
+    }
+
+    return remove_utf8_punctuation($t); # Encode::decode_utf8(demoroniser(Encode::encode_utf8($t)));
+}
+
+sub remove_utf8_punctuation {
+    local $_ = shift;
+
+    s/\N{SINGLE LOW-9 QUOTATION MARK}/,/g;
+    s/\N{DOUBLE LOW-9 QUOTATION MARK}/,,/g;
+    s/\N{HORIZONTAL ELLIPSIS}/.../g;
+
+    s/\N{MODIFIER LETTER CIRCUMFLEX ACCENT}/^/g;
+
+    s/\N{LEFT SINGLE QUOTATION MARK}/'/g;
+    s/\N{RIGHT SINGLE QUOTATION MARK}/'/g;
+    s/\N{LEFT DOUBLE QUOTATION MARK}/"/g;
+    s/\N{RIGHT DOUBLE QUOTATION MARK}/"/g;
+    s/\N{BULLET}/*/g;
+    s/\N{EN DASH}/-/g;
+    s/\N{EM DASH}/-/g;
+    s/\N{LATIN CAPITAL LIGATURE OE}/OE/g;
+    s/\N{LATIN SMALL LIGATURE OE}/oe/g;
+
+    return $_;
+}
