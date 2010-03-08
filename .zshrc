@@ -10,8 +10,10 @@ READNULLCMD=${PAGER:-/usr/bin/pager}
 LOGCHECK=30
 watch=(all)
 fignore=(.o .hi .pyc)
-cdpath=(~ ~/code ~/work)
+cdpath=(~ ~/code ~/work ~/work/marriott)
 fpath=(~/.zsh $fpath)
+
+export PERL_CPANM_DEV=1
 
 ## }}}
 ## {{{ OPTIONS
