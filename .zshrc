@@ -3,6 +3,8 @@
 # See also: ~/.zshenv ~/.zprofile [~/.zshrc] ~/.zlogin ~/.zlogout
 
 ## {{{ VARIABLES
+export XMMS_PATH='tcp://:1985'
+
 HISTSIZE=3000
 SAVEHIST=3000
 HISTFILE=~/.zhistory
