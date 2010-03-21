@@ -84,6 +84,7 @@ case $TERM in
         bindkey "^[[A" up-line-or-search ## up arrow for back-history-search
         bindkey "^[[B" down-line-or-search ## down arrow for fwd-history-search
         bindkey " " magic-space ## do history expansion on space
+        bindkey "^[OM" accept-line
     ;;
 esac
 
