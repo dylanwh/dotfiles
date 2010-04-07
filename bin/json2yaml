@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 use JSON 'from_json';
-use YAML::Syck 'Dump';
+use YAML::XS 'Dump';
 
 local $/ = undef;
 print Dump(from_json(scalar readline ARGV));

@@ -3,7 +3,6 @@
 # See also: ~/.zshenv ~/.zprofile [~/.zshrc] ~/.zlogin ~/.zlogout
 
 ## {{{ VARIABLES
-export XMMS_PATH='tcp://:1985'
 
 HISTSIZE=3000
 SAVEHIST=3000
@@ -16,6 +15,8 @@ cdpath=(~ ~/code ~/work ~/work/marriott)
 fpath=(~/.zsh $fpath)
 
 export PERL_CPANM_DEV=1
+export PS_PERSONALITY=linux
+export XMMS_PATH='tcp://:1985'
 
 ## }}}
 ## {{{ OPTIONS

@@ -46,6 +46,7 @@ if (not $raw) {
         $name = 'outside';
     }
     exec($TERM =>
+        -ls =>
         option(-name => $name),
         option(-title => $title), 
         @run);

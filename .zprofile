@@ -5,12 +5,12 @@
 export REALNAME="Dylan William Hardison"
 export EMAIL="dylan@hardison.net"
 export EDITOR="vim"
-export VISUAL=$EDITOR
-export BROWSER="w3m"
+export VISUAL="$EDITOR"
+export BROWSER="google-chrome"
 export MANPAGER=less
 
-export HOST=${HOST/.*/}
-export OSTYPE=$OSTYPE
+export HOST="${HOST/.*/}"
+export OSTYPE="$OSTYPE"
 
 export LC_COLLATE=POSIX # sort in POSIX order.
 export TZ=US/Eastern
@@ -28,7 +28,7 @@ if [[ -d /opt/perl ]]; then
 fi
 
 case $HOST in
-    lofn) 
+    lofn)
         # to enable UTF-8.
         export LANG=en_US.UTF-8
     ;; 
