@@ -7,60 +7,67 @@ xfont_other = "-xos4-terminus-bold-r-normal--14-140-72-72-c-80-iso8859-1"
 xfont_tiny  = "-xos4-terminus-medium-r-*-*-*-120-75-75-*-*-iso8859-1"
 
 %]
-[% SET term = 'Rxvt' %]
+[% FOREACH term IN ['Rxvt', 'XTerm'] %]
+[% term %]*font: [% xfont %]
+[% term %]*boldFont: [% xfont %]
 
-[% term %].font: [% xfont %]
+[% term %]*scrollBar: false
+[% term %]*meta8: false
+[% term %]*modifier: mod1
+[% term %]*reverseVideo: false
 
-[% term %].scrollBar: false
-[% term %].meta8: false
-[% term %].modifier: mod1
-[% term %].reverseVideo: false
+[% term %]*color0: #000000
+[% term %]*color1: #A80000
+[% term %]*color2: #00A800
+[% term %]*color3: Orange3
 
-[% term %].color0: #000000
-[% term %].color1: #A80000
-[% term %].color2: #00A800
-[% term %].color3: Orange3
+[% term %]*color4: #000078
+[% term %]*color5: #A800A8
+[% term %]*color6: #00A8A8
+[% term %]*color7: #A8A8A8
 
-[% term %].color4: #000078
-[% term %].color5: #A800A8
-[% term %].color6: #00A8A8
-[% term %].color7: #A8A8A8
+[% term %]*color8:  #646464
+[% term %]*color9:  #FF0054
+[% term %]*color10: #00FF54
+[% term %]*color11: #FFFF54
 
-[% term %].color8:  #646464
-[% term %].color9:  #FF0054
-[% term %].color10: #00FF54
-[% term %].color11: #FFFF54
+[% term %]*color12: #0000FF
+[% term %]*color13: #FF00FF
+[% term %]*color14: #00FFFF
+[% term %]*color15: #FFFFFF
 
-[% term %].color12: #0000FF
-[% term %].color13: #FF00FF
-[% term %].color14: #00FFFF
-[% term %].color15: #FFFFFF
+[% term %]*foreground: #A8A8A8
+[% term %]*background: #000000
+[% term %]*cursorColor: #A8A8A8
+[% term %]*saveLines: 100
+[% END %]
 
-[% term %].foreground: #A8A8A8
-[% term %].background: #000000
-[% term %].cnursorColor: #A8A8A8
-[% term %].saveLines: 100
+XTerm*boldMode: false
+XTerm*alwaysBoldMode: false
+XTerm*termName: xterm-256color
 
 outside.font: [% xfont_huge %]
-outside.*background:    #eeeeee
-outside.*foreground:    #000000
-outside.termName:       rxvt-unicode-outside
-outside.*color0:        #000000
-outside.*color1:        #cc0000
-outside.*color2:        #009900
-outside.*color3:        #999900
-outside.*color4:        #0066ff
-outside.*color5:        #993399
-outside.*color6:        #009999
-outside.*color7:        #cccccc
-outside.*color8:        #333333
-outside.*color9:        #ff0000
-outside.*color10:       #00cc00
-outside.*color11:       #cccc00
-outside.*color12:       #3399ff
-outside.*color13:       #cc66ff
-outside.*color14:       #33cccc
-outside.*color15:       #ffffff
+outside.boldFont: [% xfont_huge %]
+outside*background:    #eeeeee
+outside*foreground:    #000000
+outside*termName:       rxvt-unicode-outside
+outside**color0:        #000000
+outside*color1:        #cc0000
+outside*color2:        #009900
+outside*color3:        #999900
+outside*color4:        #0066ff
+outside*color5:        #993399
+outside*color6:        #009999
+outside*color7:        #cccccc
+outside*color8:        #333333
+outside*color9:        #ff0000
+outside*color10:       #00cc00
+outside*color11:       #cccc00
+outside*color12:       #3399ff
+outside*color13:       #cc66ff
+outside*color14:       #33cccc
+outside*color15:       #ffffff
+outside*cursorColor:   black
 
 pwsafe_prompt.geometry:   60x5
 pwsafe_prompt.foreground: #00FF54

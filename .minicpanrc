@@ -1,3 +1,5 @@
 local: /srv/cpan
 remote: http://cpan.pair.com/pub/CPAN/
 also_mirror: indices/ls-lR.gz
+skip_perl: 1
+

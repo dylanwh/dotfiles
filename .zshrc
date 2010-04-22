@@ -11,7 +11,7 @@ READNULLCMD=${PAGER:-/usr/bin/pager}
 LOGCHECK=30
 watch=(all)
 fignore=(.o .hi .pyc)
-cdpath=(~ ~/code ~/work ~/work/marriott)
+cdpath=(~ ~/code ~/work ~/work/bes)
 fpath=(~/.zsh $fpath)
 
 export PERL_CPANM_DEV=1
@@ -22,7 +22,8 @@ export XMMS_PATH='tcp://:1985'
 ## {{{ OPTIONS
 setopt autocd                  # change to dirs without cd
 setopt autopushd               # automatically append dirs to the push/pop list
-setopt pushdignoredups         # and do not duplicate them
+setopt pushd_ignore_dups       # and do not duplicate them
+setopt pushd_to_home           # pushd with no args is like cd with no args.
 setopt nocdablevars            # the need for an explicit $
 setopt listpacked              # compact completion lists
 setopt nolisttypes             # show types in completion
@@ -49,6 +50,7 @@ setopt checkjobs               # warn me about bg processes when exiting
 setopt nohup                   # and do not kill them, either
 setopt auto_continue           # automatically continue disowned jobs.
 setopt auto_resume             # automatically resume jobs from commands
+setopt transient_rprompt
 ## }}}
 ## {{{ KEY BINDINGS
 bindkey -v
@@ -116,6 +118,13 @@ function namedir {
     declare -g $1=$2
     : ~$1
 }
+
+function perlpath {
+    local dir="${1:-.}"
+    dir=$( cd $dir &> /dev/null && pwd  )
+    perl5lib=(./lib $(find $dir -name lib))
+}
+
 ## }}}
 ## {{{ ALIASES
 alias cp='cp -i'
@@ -209,5 +218,6 @@ have todo && todo --timeout --summary
 
 namedir moonshine ~/code/moonshine
 namedir progfiles ~/.wine/drive_c/Program\ Files
+namedir bes       ~/work/bes
 
 # vim: set sw=4 ts=4 foldmethod=marker path=.,~/.zsh:

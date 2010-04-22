@@ -48,4 +48,5 @@ gconftool -t string -s  /desktop/gnome/background/secondary_color $bgcolor
 rm -f ~/.panzen
 
 export WINDOW_MANAGER=xmonad
+env > ~/.xenv2
 exec gnome-session
