@@ -47,12 +47,12 @@ subscribe slug@nks.net \
           debian-news@lists.debian.org
 
 unmailboxes *
-mailboxes +INBOX +daily +sms +facebook \
-          +slug +slug/archive \
+mailboxes +INBOX +daily +message \
+          +ignored +netflix +billing \
+          +slug \
           +haskell-cafe +caml \
           +templates +poe \
-          +suckless +security \
-          +netflix +billing
+          +suckless +security
 
 unmy_hdr *
 my_hdr Reply-By: `date --date="-3 days"`

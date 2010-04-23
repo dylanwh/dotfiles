@@ -15,7 +15,7 @@ set envelope_from
 set sendmail="/usr/bin/msmtp"
 set reply_to             # Always use reply-to
 set ignore_list_reply_to # Except for mailing lists.
-set mail_check=80        # Check mailboxes every 80 seconds
+set mail_check=60        # Check mailboxes every 80 seconds
 set menu_scroll          # Scroll line by line.
 set pager_stop           # Page down doesn't go to next message.
 set nomove               # I do not want to move read mail to my read mail directory.
@@ -29,7 +29,7 @@ set include              # Always include messages in replies.
 set tilde                # Use tildes in the internal pager like vim.
 set nohelp               # Don't show the help menu at the top
 
-set imap_idle
+set imap_idle=yes
 set imap_passive=no
 set imap_servernoise=no
 set imap_headers="X-Spam-Status"
