@@ -56,7 +56,7 @@ setopt transient_rprompt
 bindkey -v
 
 case $TERM in
-    linux|screen)
+    linux|screen*)
         bindkey "^[[1~" beginning-of-line
         bindkey "^[[3~" delete-char
         bindkey "^[[4~" end-of-line
@@ -68,9 +68,9 @@ case $TERM in
         bindkey "^H"   backward-delete-char
     ;;
     rxvt-unicode)
+        bindkey "^[[7~" beginning-of-line  # home
         bindkey "^[[5~" up-line-or-history # pgup
         bindkey "^[[6~" down-line-or-history # pgdown
-        bindkey "^[[7~" beginning-of-line  # home
         bindkey "^[[8~" end-of-line        # end
         bindkey "^[[A" up-line-or-search   # up arrow
         bindkey "^[[B" down-line-or-search # down arrow
