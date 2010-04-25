@@ -1,0 +1,37 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+use File::stat;
+use IO::Handle;
+use Fcntl 'F_GETFD', 'F_SETFD', 'FD_CLOEXEC';
+use YAML 'LoadFile', 'Dump';
+
+my $name       = shift @ARGV;
+my $hosts_file = "$ENV{HOME}/.sshfu";
+
+die "config file dangerous perms" if stat($hosts_file)->mode & 0066;
+my @hosts = @{ LoadFile($hosts_file) };
+
+my @matches = grep { index($_->{name}, $name) >= 0 } @hosts;
+
+die "No hosts match $name\n"       if @matches < 1;
+die "Too many hosts match $name\n" if @matches > 1;
+
+my $host = $matches[0];
+
+sshpass($host, @ARGV);
+
+sub sshpass {
+    my ($host, @args) = @_;
+    my ($in, $out);
+    pipe ($in, $out);
+    $out->autoflush(1);
+    $out->print($host->{admin_pass} . "\n");
+
+    my $flags = fcntl($in, F_GETFD, 0);
+    fcntl($in, F_SETFD, $flags ^ FD_CLOEXEC);
+    my $fd = $in->fileno;
+
+    print "Going to ssh to $host->{hostname}, using fd $fd for password\n";
+    exec('sshpass', "-d$fd", 'ssh', '-oStrictHostKeyChecking=no', "$host->{admin}\@$host->{hostname}", @args);
+}

@@ -1,9 +1,11 @@
 " Dylan William Hardison's .vimrc file.
 " vim: set fdm=marker expandtab:
 if has("terminfo")
-  set t_Co=16
-  set t_AB=[%?%p1%{8}%<%t%p1%{40}%+%e%p1%{92}%+%;%dm
-  set t_AF=[%?%p1%{8}%<%t%p1%{30}%+%e%p1%{82}%+%;%dm
+    if &t_Co < 16
+        set t_Co=16
+        set t_AB=[%?%p1%{8}%<%t%p1%{40}%+%e%p1%{92}%+%;%dm
+        set t_AF=[%?%p1%{8}%<%t%p1%{30}%+%e%p1%{82}%+%;%dm
+    end
 else
   set t_Co=16
   set t_Sf=[3%dm
