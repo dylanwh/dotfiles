@@ -1,14 +1,19 @@
 #!/usr/bin/env perl
 use strict;
 use warnings;
-use open ':utf8';
 use charnames ':full';
 use Spreadsheet::ParseExcel;
 use Text::CSV;
 use Path::Class;
 use File::Basename 'basename';
 use Encode;
+use Encode::Guess 'ascii', 'latin1', 'utf8';
+use Try::Tiny;
+
 use List::MoreUtils 'none';
+
+binmode STDOUT, ':encoding(utf8)';
+use open ':encoding(utf8)';
 
 my $file = shift;
 
@@ -25,6 +30,7 @@ $dir->mkpath;
 for my $sheet ( $doc->worksheets ) {
     my $file = $dir->file( phrase_to_ident( $sheet->get_name ) . ".csv" );
     my $fh   = $file->openw;
+    binmode $fh, ':encoding(utf-8)';
 
     my ( $row_min, $row_max ) = $sheet->row_range();
     my ( $col_min, $col_max ) = $sheet->col_range();
@@ -44,9 +50,11 @@ for my $sheet ( $doc->worksheets ) {
     $fh->close;
 }
 
+
 sub phrase_to_ident {
     my ($ident) = @_;
-    #$ident =~ s/\(.*?\)//g;
+    $ident =~ s/\(.*\s+.*\)//g;
+    $ident =~ s/\((\S+)\)/_$1_/g;
     $ident =~ s/&/ and /g;
     $ident =~ s/\W+/_/g;
     $ident =~ s/_+$//;
@@ -64,8 +72,18 @@ sub clean {
     my ($cell) = @_;
     return '' unless $cell;
     my $t = $cell->value;
-    unless (Encode::is_utf8($t)) {
-        $t = Encode::decode("iso-8859-1", $t);
+    if ($cell->encoding != 2 and $t) {
+        try {
+            $t = decode('Guess', $t);
+        } catch {
+            if ($t =~ /[\xC2\xC3]/) {
+                $t = decode('utf8', $t);
+            }
+            else {
+                use Devel::StringInfo 'string_info';
+                string_info ($t);
+            }
+        };
     }
 
     return remove_utf8_punctuation($t); # Encode::decode_utf8(demoroniser(Encode::encode_utf8($t)));

@@ -14,6 +14,9 @@
 
 [color]
 	ui = auto
+	diff = auto
+	status = auto
+	branch = auto
 
 [user]
 	name=Dylan William Hardison

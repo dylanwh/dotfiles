@@ -4,12 +4,19 @@ use warnings;
 use File::stat;
 use IO::Handle;
 use Fcntl 'F_GETFD', 'F_SETFD', 'FD_CLOEXEC';
+use Getopt::Long qw(  :config pass_through gnu_compat bundling no_getopt_compat );
 use YAML 'LoadFile', 'Dump';
+
+
+my ($root);
+GetOptions(
+    'root|r' => \$root,
+);
 
 my $name       = shift @ARGV;
 my $hosts_file = "$ENV{HOME}/.sshfu";
 
-die "config file dangerous perms" if stat($hosts_file)->mode & 0066;
+die "config file has dangerous perms" if stat($hosts_file)->mode & 0066;
 my @hosts = @{ LoadFile($hosts_file) };
 
 my @matches = grep { index($_->{name}, $name) >= 0 } @hosts;

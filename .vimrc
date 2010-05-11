@@ -32,7 +32,6 @@ set shiftround         " Round indent to multiple of 'shiftwidth'.
 set autoindent         " Auto indent from current line to new line.
 set copyindent         " Try to not change the indentation style.
 set preserveindent     " Ditto.
-set expandtab          " expand tabs to spaces
 set smarttab           " Insert shiftwidth or tabstop as appropriate.
 set ignorecase         " Ignore case
 set smartcase          " Unless I use upper-case letters.
@@ -65,8 +64,8 @@ set tags+=~/.tags,.tags
 set nowrap
 set sidescroll=5
 set listchars=tab:>.,trail:_,precedes:<,extends:>
-set list   " This and the above line make for visible whitespace.
-set mouse= " disable mouse
+set nolist  " This and the above line make for visible whitespace.
+set mouse=  " disable mouse
 
 let mapleader = "\\"
 let maplocalleader = ","
