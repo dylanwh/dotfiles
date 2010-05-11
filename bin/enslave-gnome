@@ -14,8 +14,9 @@ xsetroot -cursor_name left_ptr
 
 xset r rate $delay $rate
 
-# no, do NOT override my xkbmaps!
-kb_options="[terminate\tterminate:ctrl_alt_bksp,ctrl\tctrl:nocaps,Compose key\tcompose:menu]"
+# my xkb options
+kb_options="[terminate\tterminate:ctrl_alt_bksp,ctrl\tctrl:nocaps]"
+
 gconftool -t list --list-type string \
     -s /desktop/gnome/peripherals/keyboard/kbd/options "$(echo -e $kb_options)"
 # no, I do not want per-window keymaps!

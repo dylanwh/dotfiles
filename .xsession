@@ -10,6 +10,8 @@
 [[ -z $REALNAME ]] && exec zsh -l $0
 
 make .Xdefaults &> .Xdefaults.log
+xmodmap -e 'keysym Menu = Super_R'
+xrdb -merge .Xdefaults
 rm -f ~/.panzen
 
 export WINDOW_MANAGER=xmonad

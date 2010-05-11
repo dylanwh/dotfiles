@@ -31,7 +31,6 @@ import XMonad.Layout.Named
 import XMonad.Layout.NoBorders
 import XMonad.Layout.Reflect (reflectHoriz)
 import XMonad.Layout.Tabbed
---import XMonad.Layout.WorkspaceDir
 import XMonad.Layout.LayoutCombinators
 
 import XMonad.Util.EZConfig
@@ -83,10 +82,10 @@ main = do
             , focusedBorderColor = "red"
             , workspaces         = wsList
             , modMask            = mod4Mask
-            , layoutHook         = ewmhDesktopsLayout myLayoutHook
+            , layoutHook         = myLayoutHook
             , manageHook         = myManageHook <+> manageDocks
-            , logHook            = ewmhDesktopsLogHook >> myLogHook
-            , startupHook        = {-ewmhDesktopsStartup >>-} setWMName "LG3D"
+            , logHook            = myLogHook
+            , startupHook        = setWMName "LG3D"
             }
 
     let myKeys = 
@@ -102,12 +101,11 @@ main = do
             , ("M-p",              scriptPrompt   myXPConfig)
             , ("M-S-p",            shellPrompt    myXPConfig)
             , ("M-o",              bookmarkPrompt myXPConfig)
-            --, ("M-d",              changeDir      myXPConfig)
             , ("M-<Tab>",          cycleRecentWS [xK_Super_L] xK_Tab xK_grave)
             ] ++ [ ("M-"   ++ k,   windows (W.greedyView n))  | (k, n) <- wsKeys ]
               ++ [ ("M-S-" ++ k,   windows (W.shift      n))  | (k, n) <- wsKeys ]
 
-    xmonad $ myConfig `additionalKeysP` myKeys
+    xmonad $ ewmh $ myConfig `additionalKeysP` myKeys
 -- }}}
 
 -- {{{ myLogHook
@@ -176,8 +174,7 @@ myManageHook = composeAll
 -- }}}
 
 -- {{{ layout hook:
-myLayoutHook = {-workspaceDir "~" 
-             $ -}avoidStruts
+myLayoutHook = avoidStruts
              $ (tall ||| Mirror tall ||| grid ||| full ||| gimp)
   where
      -- default tiling algorithm partitions the screen into two panes

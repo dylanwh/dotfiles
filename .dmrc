@@ -2,5 +2,5 @@
 
 [Desktop]
 Session=xsession
-Language=en_US.UTF-8
+Language=en_US.utf8
 Layout=us
