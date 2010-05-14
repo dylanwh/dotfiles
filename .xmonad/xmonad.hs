@@ -7,8 +7,6 @@ import qualified XMonad.StackSet as W
 import qualified Data.Map        as M
 
 import XMonad.Actions.DwmPromote
-import XMonad.Actions.CycleRecentWS
-import XMonad.Actions.CycleWS
 import XMonad.Actions.SinkAll
 
 import XMonad.Hooks.DynamicLog
@@ -43,13 +41,12 @@ import Data.Maybe
 import System.Environment (getEnv)
 import System.IO (hPutStrLn, hClose, hFlush)
 import Text.XHtml (tag, strAttr, renderHtml, (<<), (!), primHtml)
-
 -- }}}
 
 -- Misc {{{
 wsHome   = "1"
 wsVM     = "6"
-wsGimp   = "gimp"
+wsGimp   = "7"
 wsDocs   = "8"
 wsWeb    = "9"
 
@@ -91,8 +88,6 @@ main = do
     let myKeys = 
             [ ("M-`",              spawnExec $ terminal myConfig)
             , ("M-c",              kill)
-            , ("M-<Page_Up>",      prevWS)
-            , ("M-<Page_Down>",    nextWS)
             , ("M-<Return>",       dwmpromote)
             , ("M-S-<Return>",     windows W.focusMaster)
             , ("M-b",              sendMessage ToggleStruts)
@@ -101,7 +96,6 @@ main = do
             , ("M-p",              scriptPrompt   myXPConfig)
             , ("M-S-p",            shellPrompt    myXPConfig)
             , ("M-o",              bookmarkPrompt myXPConfig)
-            , ("M-<Tab>",          cycleRecentWS [xK_Super_L] xK_Tab xK_grave)
             , ("M-S-q",            spawn "gnome-session-save --gui --logout-dialog")
             , ("M-S-l",            spawn "gnome-screensaver-command -l")
             ] ++ [ ("M-"   ++ k,   windows (W.greedyView n))  | (k, n) <- wsKeys ]
