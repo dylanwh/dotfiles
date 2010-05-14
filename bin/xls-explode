@@ -72,6 +72,10 @@ sub clean {
     my ($cell) = @_;
     return '' unless $cell;
     my $t = $cell->value;
+    if ($t =~ /^\d+$/) {
+        $t = $cell->unformatted;
+    }
+
     if ($cell->encoding != 2 and $t) {
         try {
             $t = decode('Guess', $t);

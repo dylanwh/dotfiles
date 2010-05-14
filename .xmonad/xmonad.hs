@@ -102,6 +102,8 @@ main = do
             , ("M-S-p",            shellPrompt    myXPConfig)
             , ("M-o",              bookmarkPrompt myXPConfig)
             , ("M-<Tab>",          cycleRecentWS [xK_Super_L] xK_Tab xK_grave)
+            , ("M-S-q",            spawn "gnome-session-save --gui --logout-dialog")
+            , ("M-S-l",            spawn "gnome-screensaver-command -l")
             ] ++ [ ("M-"   ++ k,   windows (W.greedyView n))  | (k, n) <- wsKeys ]
               ++ [ ("M-S-" ++ k,   windows (W.shift      n))  | (k, n) <- wsKeys ]
 
@@ -115,6 +117,7 @@ myLogHook = do home <- io $ getEnv "HOME"
 
 -- panzenPP {{{
 panzenPP f = defaultPP { ppTitle   = panzenColor "white" . shorten 50
+                       , ppVisible = panzenColor "orange"
                        , ppLayout  = panzenColor "SteelBlue3"
                        , ppCurrent = panzenColor "yellow"
                        , ppHidden  = panzenColor "LightSlateBlue"

@@ -1,11 +1,11 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 use strict;
 use warnings;
 use File::stat;
 use IO::Handle;
 use Fcntl 'F_GETFD', 'F_SETFD', 'FD_CLOEXEC';
 use Getopt::Long qw(  :config pass_through gnu_compat bundling no_getopt_compat );
-use YAML 'LoadFile', 'Dump';
+use YAML::XS 'LoadFile', 'Dump';
 
 
 my ($root);
