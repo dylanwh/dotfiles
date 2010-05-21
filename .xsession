@@ -14,5 +14,6 @@ xmodmap -e 'keysym Menu = Super_R'
 xrdb -merge .Xdefaults
 rm -f ~/.panzen
 
+export OOO_FORCE_DESKTOP=gnome
 export WINDOW_MANAGER=xmonad
 exec gnome-session

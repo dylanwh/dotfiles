@@ -8,6 +8,8 @@ import qualified Data.Map        as M
 
 import XMonad.Actions.DwmPromote
 import XMonad.Actions.SinkAll
+import XMonad.Actions.FindEmptyWorkspace
+import XMonad.Actions.GridSelect
 
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.EwmhDesktops
@@ -50,7 +52,7 @@ wsGimp   = "7"
 wsDocs   = "8"
 wsWeb    = "9"
 
-wsList  = map show [1 .. 9]
+wsList  = map show $ [1 .. 9] ++ [0]
 wsKeys  = [ (x,x) | x <- wsList ]
 
 spawnExec str = spawn ("exec " ++ str)
@@ -71,8 +73,12 @@ main = do
             , bgHLight    = "black"
             , fgHLight    = "white"
             }
-
-    let myConfig = defaultConfig
+    let myGSConfig = (buildDefaultGSConfig fromClassName) 
+            { gs_cellheight = 30
+            , gs_cellwidth = 100 
+            , gs_cellpadding = 5
+            }
+    let myConfig = ewmh $ defaultConfig
             { borderWidth        = 2
             , terminal           = "dterm"
             , normalBorderColor  = "#000033"
@@ -82,7 +88,6 @@ main = do
             , layoutHook         = myLayoutHook
             , manageHook         = myManageHook <+> manageDocks
             , logHook            = myLogHook
-            , startupHook        = setWMName "LG3D"
             }
 
     let myKeys = 
@@ -98,10 +103,15 @@ main = do
             , ("M-o",              bookmarkPrompt myXPConfig)
             , ("M-S-q",            spawn "gnome-session-save --gui --logout-dialog")
             , ("M-S-l",            spawn "gnome-screensaver-command -l")
+            , ("M-n",              viewEmptyWorkspace)
+            , ("M-S-n",            tagToEmptyWorkspace)
+            , ("M-g",              goToSelected myGSConfig)
+            , ("M-f",              bringSelected myGSConfig)
             ] ++ [ ("M-"   ++ k,   windows (W.greedyView n))  | (k, n) <- wsKeys ]
               ++ [ ("M-S-" ++ k,   windows (W.shift      n))  | (k, n) <- wsKeys ]
 
-    xmonad $ ewmh $ myConfig `additionalKeysP` myKeys
+    let myConf = myConfig { startupHook = startupHook myConfig >> setWMName "LG3D" }
+    xmonad $ myConf `additionalKeysP` myKeys
 -- }}}
 
 -- {{{ myLogHook
@@ -152,9 +162,6 @@ myManageHook = composeAll
     , resource  =? "shell_fm"           --> doF (W.shift wsHome)
     , className =? "Pidgin"             --> doF (W.shift wsHome)
     , title     =? "Buddy List"         --> doF (W.shift wsHome)
-    , className =? "Xpdf"               --> doF (W.shift wsDocs)
-    , className =? "OpenOffice.org 2.4" --> doF (W.shift wsDocs)
-    , resource  =? "OpenOffice.org"     --> doF (W.shift wsDocs)
     , className =? "Firefox-bin"        --> doF (W.shift wsWeb)
     , className =? "Firefox"            --> doF (W.shift wsWeb)
     , className =? "Iceweasel"          --> doF (W.shift wsWeb)
