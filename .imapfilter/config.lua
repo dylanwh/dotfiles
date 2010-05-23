@@ -3,21 +3,21 @@
 -- of the code comes first, and the specific details come later.
 
 function main()
-	-- my normal @hardison.net account
-	local home = IMAP {
-    	server = 'imap.gmail.com',
-    	username = 'dylan@hardison.net',
-    	password = get_mutt_var("passwd.home", "imap_pass"),
-    	ssl = 'ssl3',
-	}
+    -- my normal @hardison.net account
+    local home = IMAP {
+        server = 'imap.gmail.com',
+        username = 'dylan@hardison.net',
+        password = get_mutt_var("passwd.home", "imap_pass"),
+        ssl = 'ssl3',
+    }
 
-	-- my work email account
-	local work = IMAP {
-    	server = 'imap.gmail.com',
-    	username = 'dylan.hardison@iinteractive.com',
-    	password = get_mutt_var("passwd.work", "imap_pass"),
-    	ssl = 'ssl3',
-	}
+    -- my work email account
+    local work = IMAP {
+        server = 'imap.gmail.com',
+        username = 'dylan.hardison@iinteractive.com',
+        password = get_mutt_var("passwd.work", "imap_pass"),
+        ssl = 'ssl3',
+    }
 
     -- trash rules
     trash(home, "daily",        is_older(0))
@@ -36,8 +36,8 @@ function main()
     move(home,    "billing", "billing/archive", is_expired(15))
 
 
-	-- I only need a few rules for work.
-	trash(work, "issue",  is_older(7))
+    -- I only need a few rules for work.
+    trash(work, "issue",  is_older(7))
     trash(work, "linode", is_older(7))
     trash(work, "daily",  is_older(0))
 end
