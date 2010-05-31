@@ -31,6 +31,9 @@ TERM vt100
 TERM rxvt
 TERM rxvt-unicode
 TERM screen
+TERM screen-16color
+TERM screen-88color
+TERM screen-256color
 # EIGHTBIT specifies whether to enable display of eight-bit ISO 8859
 #	characters.  This is set to either:
 #
