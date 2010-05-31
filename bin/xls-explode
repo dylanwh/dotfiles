@@ -12,9 +12,6 @@ use Try::Tiny;
 
 use List::MoreUtils 'none';
 
-binmode STDOUT, ':encoding(utf8)';
-use open ':encoding(utf8)';
-
 my $file = shift;
 
 die "usage: $0 file.xls\n" unless $file or $file =~ /\.xls/;
@@ -30,7 +27,7 @@ $dir->mkpath;
 for my $sheet ( $doc->worksheets ) {
     my $file = $dir->file( phrase_to_ident( $sheet->get_name ) . ".csv" );
     my $fh   = $file->openw;
-    binmode $fh, ':encoding(utf-8)';
+    binmode $fh, ':encoding(utf8)';
 
     my ( $row_min, $row_max ) = $sheet->row_range();
     my ( $col_min, $col_max ) = $sheet->col_range();
@@ -42,6 +39,7 @@ for my $sheet ( $doc->worksheets ) {
                 $sheet->get_cell( $row, $_ )
             )
         } $col_min .. $col_max;
+
         next if none { $_ } @row;
         $csv->print($fh, \@row);
         $fh->print("\n");
@@ -68,6 +66,7 @@ sub phrase_to_ident {
     return lc $ident;
 }
 
+use Devel::StringInfo 'string_info';
 sub clean {
     my ($cell) = @_;
     return '' unless $cell;
@@ -80,14 +79,25 @@ sub clean {
         try {
             $t = decode('Guess', $t);
         } catch {
-            if ($t =~ /[\xC2\xC3]/) {
-                $t = decode('utf8', $t);
-            }
-            else {
-                use Devel::StringInfo 'string_info';
-                string_info ($t);
+            unless (utf8::is_utf8($t)) {
+                if (utf8::valid($t)) {
+                    try {
+                        $t = decode('utf8', $t);
+                    } catch {
+                        string_info ($t);
+                        die "pants";
+                    };
+                }
+                else {
+                    die "invalid: $t\n"
+                }
             }
         };
+
+        if($t =~ /cause de ton sexe tu n'es pas consid.+r.+ comme .+tant/) {
+            printf "GOT: %d, %s\n", $cell->encoding, $t;
+            string_info($t);
+        }
     }
 
     return remove_utf8_punctuation($t); # Encode::decode_utf8(demoroniser(Encode::encode_utf8($t)));

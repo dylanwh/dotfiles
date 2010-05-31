@@ -20,7 +20,6 @@ hi link perlStatementNew NONE
 "map <silent> z; :silent call TogglePerlFold()<CR>
 "map <silent> z/ :silent setlocal foldtext<<CR>
 iab mx MooseX
-iab $s $self
 
 "inoremap { { }<C-o>3h
 "inoremap [ [ ]<C-o>3h
