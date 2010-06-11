@@ -1,2 +1,2 @@
 #!/bin/sh
-exec google-chrome --enable-plugins --enable-extensions
+exec google-chrome --enable-plugins --enable-extensions --enable-user-scripts
