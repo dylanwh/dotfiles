@@ -3,7 +3,7 @@
 # This all works only if you have mutt-1.3.12 or newer
 # or if you use something like the pagerfilter patch
 # (http://www.escape.de/users/tolot/mutt/).
-set display_filter='t-prot --ftr-ad -akcelmtS=6 -Mmutt --spass -L$HOME/.mutt/mlfooters -A$HOME/.mutt/adfooters'
+#set display_filter='t-prot --ftr-ad -akcelmtS=6 -Mmutt --spass -L$HOME/.mutt/mlfooters -A$HOME/.mutt/adfooters'
 
 # toggle TOFU protection with ESC-0 and ESC-1
 macro generic \e0 ":unset display_filter\n" "Turn TOFU protection off"

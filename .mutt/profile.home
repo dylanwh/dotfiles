@@ -24,8 +24,10 @@ alternates dylanwh@gmail.com \
 
 unsubscribe *
 # And messages to mailing lists I subscribe to.
-subscribe slug@nks.net \
-          slug-politics@nks.net \
+subscribe slug@nks\.net \
+          slug-politics@nks\.net \
+          slug@(suncoastlug\.org|sjofn\.hardison.net) \
+          slug-politics@(suncoastlug\.org|sjofn\.hardison\.net) \
           haskell-cafe@haskell.org \
           caml-list@inria.fr \
           caml-list@yquem.inria.fr \
