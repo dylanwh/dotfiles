@@ -182,7 +182,7 @@ colors
 promptinit   # Setup prompt theming 
 prompt dylan # Set the prompt.
 
-umask  022   # Create files that are read-only by group.
+umask  027   # Create files that are read-only by group.
 stty -ixon   # Disable the freeze-the-terminal-on-control-s thing.
 ttyctl -f    # Freeze terminal properties.
 

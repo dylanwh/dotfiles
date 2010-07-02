@@ -15,6 +15,7 @@ import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.EwmhDesktops
 import XMonad.Hooks.SetWMName
 import XMonad.Hooks.ManageDocks
+import XMonad.Hooks.ManageHelpers
 
 import XMonad.Prompt
 import XMonad.Prompt.DirExec
@@ -40,6 +41,11 @@ import Data.Char
 import Data.List (isPrefixOf)
 import Data.Ratio ((%))
 import Data.Maybe
+
+-- next two lines are for myIsFullscreen.
+import Data.Bits ((.&.))
+import XMonad.Util.WindowProperties (getProp32s)
+
 import System.Environment (getEnv)
 import System.IO (hPutStrLn, hClose, hFlush)
 import Text.XHtml (tag, strAttr, renderHtml, (<<), (!), primHtml)
@@ -148,33 +154,36 @@ panzenPP f = defaultPP { ppTitle   = panzenColor "white" . shorten 50
 -- To find the property name associated with a program, use
 -- > xprop | grep WM_CLASS
 -- and click on the client you're interested in.
-myManageHook = composeAll
-    [ className =? "MPlayer"            --> doFloat
-    , resource  =? "pwsafe_prompt"      --> doFloat
-    , className =? "Glade-3"            --> doFloat
-    , title     =? "Factor workspace"   --> doFloat
-    , className =? "VirtualBox"         --> doF (W.shift wsVM)
-    , className =? "Gimp"               --> doF (W.shift wsGimp)
-    , resource  =? "mutt"               --> doF (W.shift wsHome)
-    , resource  =? "offlineimap"        --> doF (W.shift wsHome)
-    , resource  =? "irc"                --> doF (W.shift wsHome)
-    , resource  =? "rss"                --> doF (W.shift wsHome)
-    , resource  =? "shell_fm"           --> doF (W.shift wsHome)
-    , className =? "Pidgin"             --> doF (W.shift wsHome)
-    , title     =? "Buddy List"         --> doF (W.shift wsHome)
-    , className =? "Firefox-bin"        --> doF (W.shift wsWeb)
-    , className =? "Firefox"            --> doF (W.shift wsWeb)
-    , className =? "Iceweasel"          --> doF (W.shift wsWeb)
-    , className =? "Navigator"          --> doF (W.shift wsWeb)
-    , className =? "Gran Paradiso"      --> doF (W.shift wsWeb)
-    , className =? "Google-chrome"      --> doF (W.shift wsWeb)
-    , resource  =? "desktop_window"     --> doIgnore
-    , className =? "WMClock"            --> doIgnore
-    , className =? "stalonetray"        --> doIgnore
-    , className =? "kxdocker"           --> doIgnore
-    , resource  =? "gnome-panel"        --> doFloat
-    , resource  =? "kdesktop"           --> doIgnore
-    , resource  =? "kicker"             --> doIgnore ]
+myManageHook = composeOne
+    [ transience
+    , myIsFullscreen                    -?> (doF W.focusDown <+> doFullFloat)
+    , resource  =? "pwsafe_prompt"      -?> doFloat
+    , className =? "Glade-3"            -?> doFloat
+    , title     =? "Factor workspace"   -?> doFloat
+    {-
+    , className =? "MPlayer"            -?> doFloat
+    , className =? "VirtualBox"         -?> doF (W.shift wsVM)
+    , className =? "Gimp"               -?> doF (W.shift wsGimp)
+    , resource  =? "mutt"               -?> doF (W.shift wsHome)
+    , resource  =? "offlineimap"        -?> doF (W.shift wsHome)
+    , resource  =? "irc"                -?> doF (W.shift wsHome)
+    , resource  =? "rss"                -?> doF (W.shift wsHome)
+    , resource  =? "shell_fm"           -?> doF (W.shift wsHome)
+    , className =? "Pidgin"             -?> doF (W.shift wsHome)
+    , title     =? "Buddy List"         -?> doF (W.shift wsHome)
+    , className =? "Firefox-bin"        -?> doF (W.shift wsWeb)
+    , className =? "Firefox"            -?> doF (W.shift wsWeb)
+    , className =? "Iceweasel"          -?> doF (W.shift wsWeb)
+    , className =? "Navigator"          -?> doF (W.shift wsWeb)
+    , className =? "Gran Paradiso"      -?> doF (W.shift wsWeb)
+    , className =? "Google-chrome"      -?> doF (W.shift wsWeb)-}
+    , resource  =? "desktop_window"     -?> doIgnore
+    , className =? "WMClock"            -?> doIgnore
+    , className =? "stalonetray"        -?> doIgnore
+    , className =? "kxdocker"           -?> doIgnore
+    , resource  =? "gnome-panel"        -?> doFloat
+    , resource  =? "kdesktop"           -?> doIgnore
+    , resource  =? "kicker"             -?> doIgnore ]
 -- }}}
 
 -- {{{ layout hook:
@@ -183,12 +192,14 @@ myLayoutHook = avoidStruts
   where
      -- default tiling algorithm partitions the screen into two panes
      tall = named "Tall" 
+          $ lessBorders OnlyFloat
           $ layoutHints
           $ maximize
           $ Tall nmaster delta ratio
 
      -- default grid
      grid = named "Grid" 
+          $ lessBorders OnlyFloat
           $ layoutHints
           $ maximize
           $ Grid
@@ -200,6 +211,7 @@ myLayoutHook = avoidStruts
           $ Grid-}
 
      gimp = named "Gimp"
+          $ lessBorders OnlyFloat
           $ layoutHints
           $ withIM (0.13) (Role "gimp-toolbox")
           $ reflectHoriz 
@@ -207,7 +219,10 @@ myLayoutHook = avoidStruts
           $ Full
 
      -- full layout, renamed.
-     full = named "Full" $ smartBorders $ layoutHints Full
+     full = named "Full" 
+          $ lessBorders OnlyFloat
+          $ layoutHints
+          $ Full
 
      -- The default number of windows in the master pane
      nmaster = 1
@@ -250,3 +265,14 @@ getBookmarks file = do
 pair :: String -> (String, String)
 pair = break isSpace >>> second (dropWhile isSpace)
 -- }}}
+
+
+myIsFullscreen = do w <- ask
+                    fs <- isFullscreen
+                    if fs then return fs
+                          else liftX $ do p <- getProp32s "_MOTIF_WM_HINTS" w
+                                          case p of 
+                                               Just (flags:_:decorations:_) -> return ((flags .&. 2) /= 0 && decorations == 0)
+                                               Nothing -> return False
+
+
