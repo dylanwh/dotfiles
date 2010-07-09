@@ -31,7 +31,7 @@
 w3m=`which w3m`
 firefox=`which firefox`
 chrome=`which google-chrome`
-http_prgs="$chrome:XW $w3m:VT"
+http_prgs="$firefox:XW $w3m:VT"
 https_prgs="$http_prgs"
 mailto_prgs="mutt:VT"
 gopher_prgs="/usr/bin/lynx:XT /usr/bin/gopher:XT"

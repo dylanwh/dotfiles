@@ -18,14 +18,8 @@ export TZ=US/Eastern
 export LESSHISTFILE='-'
 export SSH_AGENT_FILE=$HOME/.ssh/agent@$HOST
 
-declare -U path perl5lib
-declare -gxT PERL5LIB perl5lib
 perl5lib=(~/lib 'lib')
 path=(~/bin $path)
-
-if [[ -d /opt/perl ]]; then
-    path=(~/bin /opt/perl/bin $path)
-fi
 
 case $HOST in
     lofn)
