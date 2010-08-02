@@ -3,13 +3,6 @@ package [% module %];
 use [% IF class == 'role'; 'Moose::Role'; ELSE; 'Moose'; END %];
 use namespace::autoclean;
 
-our $VERSION = 0.001;
-our $AUTHORITY = 'cpan:DHARDISON';
-
-
-
-
-
-__PACKAGE__->meta->make_immutable;
+[% IF class != 'role' %]__PACKAGE__->meta->make_immutable;[% END %]
 
 1;[%- '' -%]
