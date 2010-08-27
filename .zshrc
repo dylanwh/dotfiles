@@ -101,6 +101,8 @@ bindkey '^r' vi-history-search-backward
 
 ## }}}
 ## {{{ FUNCTIONS
+alias have='whence -p ls &>/dev/null'
+
 function chpwd {
     ztitle
     have todo && todo --timeout --summary 
@@ -134,11 +136,6 @@ alias md="mkdir -p"
 alias rd="rmdir"
 alias df="df -h"
 alias free="free -m"
-alias grep='egrep --color=auto'
-alias ggrep='command grep --color=auto'
-alias egrep='egrep --color=auto'
-alias fgrep='fgrep --color=auto'
-alias ls='ls --color=auto -F -h'
 alias la='ls -ax'
 alias ll='ls -l'
 alias lsd='ls -d *(/)'
@@ -169,6 +166,45 @@ alias gc='git commit'
 alias -g ...='../..'
 alias -g ....='../../..'
 alias -g .....='../../../..'
+alias json2yaml='perl -MJSON -MYAML::XS -MIO::All -E '\''say Dump( decode_json( io->stdin->all ) )'\'
+alias yaml2json='perl -MJSON -MYAML::XS -MIO::All -E '\''say encode_json( Load( io->stdin->all ) )'\'
+
+have pinfo      && alias info=pinfo
+have ack-grep   && alias ack=ack-grep
+
+# handle ls specially...
+local ls_cmd=ls
+local -a ls_args
+
+if have gls; then ls_cmd=gls; fi
+ls_args=('-Fh' '--color=auto' '--group-directories-first')
+
+while (( $#ls_args > 0 )); do
+	if $ls_cmd $ls_args .zsh &> /dev/null; then
+		break
+	else
+		ls_args[-1]=()
+	fi
+done
+alias ls="$ls_cmd $ls_args"
+unset ls_cmd ls_args
+
+case $OSTYPE in
+	*gnu*)
+		# use colors on gnu systems.
+		alias grep='grep --color=auto'
+		alias egrep='egrep --color=auto'
+		alias fgrep='fgrep --color=auto'
+	;;
+	*bsd*)
+		have gdircolors && alias dircolors=gdircolors
+		if have gmake; then
+    		alias make=gmake
+    		alias bsdmake='command make'
+		fi
+	;;
+esac
+
 ## }}}
 
 # Autoload various functions
@@ -189,33 +225,12 @@ ttyctl -f    # Freeze terminal properties.
 # Add sbin directories for sudo tab completion.
 zstyle ':completion:*:sudo:*' command-path $path /usr/sbin /sbin
 
-have pinfo && alias info=pinfo
-have ack-grep && alias ack=ack-grep
-
-for dircolors in dircolors gdircolors; do
-    if have $dircolors; then
-        unset LS_COLORS
-        eval $($dircolors ~/.dir_colors)
-        # Colorize completions.
-        zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
-        break
-    fi
-done
-
-case $OSTYPE in
-    *bsd*)
-        unalias grep egrep fgrep ggrep
-        if have gmake; then
-            alias make=gmake
-            alias bsdmake='command make'
-        fi
-        if have gls; then
-            alias ls='gls --color=auto -F -h'
-        else
-            alias ls="ls -Fh"
-        fi
-    ;;
-esac
+if have dircolors; then
+	unset LS_COLORS
+	eval $(dircolors ~/.dir_colors)
+	# Colorize completions.
+	zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
+fi
 
 ztitle
 have todo && todo --timeout --summary
