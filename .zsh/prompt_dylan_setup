@@ -11,7 +11,7 @@ local BLUE="%{${fg[blue]}%}"
 local BOLD_BLUE="%{${fg_bold[blue]}%}"
 
 PR_TIME="$YELLOW%D{%H:%M}$RESET"
-PR_DATE="$YELLOW%D{%b-%d}$RESET"
+PR_DATE="$YELLOW%D{%Y-%m-%d}$RESET"
 PR_DIR="$BOLD_BLUE%~$RESET"
 PR_NAME="$BOLD_GREEN%n$RESET"
 PR_HOST="$BOLD_GREEN%m$RESET"
@@ -25,8 +25,10 @@ zstyle ':vcs_info:*' actionformats \
 zstyle ':vcs_info:*' formats       \
     '(%F{2}%s:%b%f)'
 zstyle ':vcs_info:(sv[nk]|bzr):*' branchformat '%b:%r'
+zstyle ':vcs_info:git:*' check-for-changes true
+zstyle ':vcs_info:svn:*' check-for-changes true
 
-PROMPT="$PR_NAME@$PR_HOST:$PR_DIR%# "
+PROMPT="$PR_TIME $PR_NAME@$PR_HOST:$PR_DIR%# "
 PS2='%_: '
 RPS2=''
 

@@ -50,7 +50,7 @@ setopt checkjobs               # warn me about bg processes when exiting
 setopt nohup                   # and do not kill them, either
 setopt auto_continue           # automatically continue disowned jobs.
 setopt auto_resume             # automatically resume jobs from commands
-setopt transient_rprompt
+setopt transient_rprompt       # only show rprompt for current line.
 ## }}}
 ## {{{ KEY BINDINGS
 bindkey -v
@@ -107,7 +107,9 @@ function chpwd {
     ztitle
     have todo && todo --timeout --summary 
 }
+
 function mdc { mkdr -p $1 && cd $1 }
+
 function shuffle {
     RANDOM=`date +%s`
     (
@@ -125,6 +127,11 @@ function perlpath {
     local dir="${1:-.}"
     dir=$( cd $dir &> /dev/null && pwd  )
     perl5lib=(./lib $(find $dir -name lib))
+}
+
+function prefix {
+	local cmd="$1"; shift
+	exec $cmd "$@" | sed 's/^/'"$cmd"': /'
 }
 
 ## }}}

@@ -16,10 +16,8 @@ echo $dir
 mkdir $dir
 
 case $file in
-    *.zip)            unzip -d $dir $file     ;;
-    *.tar.gz|*.tgz)   tar -C $dir -zxvf $file ;;
-    *.tar.bz2|*.tbz2) tar -C $dir -jxvf $file ;;
-    *.tar)            tar -C $dir -xvf $file  ;;
+    *.zip)                unzip -d $dir $file     ;;
+    *.tar.*|*.tgz|*.tbz2) tar -C $dir -xvf $file  ;;
 esac
 
 integer files=$(ls -A $dir | wc -l)

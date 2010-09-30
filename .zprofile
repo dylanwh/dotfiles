@@ -18,6 +18,13 @@ export TZ=US/Eastern
 export LESSHISTFILE='-'
 export SSH_AGENT_FILE=$HOME/.ssh/agent@$HOST
 
+if [[ -d /etc/profile.d ]]; then
+	for file in /etc/profile.d/*(.); do
+		source $file
+	done
+fi
+
+
 perl5lib=(~/lib 'lib')
 path=(~/bin $path)
 
