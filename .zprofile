@@ -19,7 +19,7 @@ export LESSHISTFILE='-'
 export SSH_AGENT_FILE=$HOME/.ssh/agent@$HOST
 
 if [[ -d /etc/profile.d ]]; then
-	for file in /etc/profile.d/*(.); do
+	for file in /etc/profile.d/*(.N); do
 		source $file
 	done
 fi
