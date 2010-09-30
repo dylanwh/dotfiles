@@ -76,6 +76,7 @@ macro generic,pager,index <F3>     "!muttprofile\n:source ~/.mutt/profile.active
 macro index               A    "T.\n;WO;WN;t"              "mark all as read"
 macro index               S    "D~H spam\n"                "delete all spam"
 macro index,pager         i    "c +inbox\n"                "go to inbox"
+macro index,pager         I    "c +[Gmail]/Important\n"    "go to important"
 
 # Reply as a specific address for mailing list
 send-hook '~t pup@possumism.net' 'set from="Dylan William Hardison <dylan+pup@hardison.net>"'

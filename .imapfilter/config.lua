@@ -21,6 +21,7 @@ function main()
 
     -- trash rules
     trash(home, "daily",        is_older(0))
+    trash(home, "unwanted",     is_older(7))
     trash(home, "message",      is_older(1))
     trash(home, "security",     is_older(7))
     trash(home, "suckless",     is_older(7))
@@ -32,14 +33,13 @@ function main()
 
     -- archive rules
     archive(home, "INBOX", is_expired(7))
-    move(home,    "slug",    "slug/archive",    is_expired(15))
+    move(home,    "slug",    "slug/archive",    is_expired(7))
     move(home,    "billing", "billing/archive", is_expired(15))
 
 
     -- I only need a few rules for work.
-    --[[trash(work, "issue",  is_older(7))
     trash(work, "linode", is_older(7))
-    trash(work, "daily",  is_older(0))]]
+    trash(work, "daily",  is_older(0))
 end
 
 -- This function takes a mutt config file and a variable name,

@@ -1,4 +1,5 @@
 set spoolfile="+INBOX/"
 set postponed='+[Gmail]/Drafts'
 set mbox="+[Gmail]/All Mail"
+set trash="+[Gmail]/Trash"
 unset record
