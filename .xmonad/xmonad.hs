@@ -32,6 +32,7 @@ import XMonad.Layout.Named
 import XMonad.Layout.NoBorders
 import XMonad.Layout.Reflect (reflectHoriz)
 import XMonad.Layout.Tabbed
+import XMonad.Layout.SimpleFloat
 import XMonad.Layout.LayoutCombinators
 
 import XMonad.Util.EZConfig
@@ -188,7 +189,7 @@ myManageHook = composeOne
 
 -- {{{ layout hook:
 myLayoutHook = avoidStruts
-             $ (tall ||| Mirror tall ||| grid ||| full ||| gimp)
+             $ (tall ||| Mirror tall ||| grid ||| simpleFloat ||| gimp ||| full )
   where
      -- default tiling algorithm partitions the screen into two panes
      tall = named "Tall" 
