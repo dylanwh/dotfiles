@@ -1,5 +1,7 @@
 #!/usr/bin/env perl
 use strict;
+use warnings;
+use File::Basename;
 use Getopt::Long qw( :config gnu_getopt );
 
 my $TERM = 'urxvt';
@@ -18,8 +20,7 @@ GetOptions(
 my (@run) = @ARGV;
 
 unless ($title) {
-    $title = $run[0];
-    $title =~ s/[^A-Za-z]+/ /g;
+    $title = "$run[0]: @run[1..$#run]";
 }
 
 unless ($name) {
