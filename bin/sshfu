@@ -26,6 +26,7 @@ die "Too many hosts match $name\n" if @matches > 1;
 
 my $host = $matches[0];
 
+print "\e]2;sshfu: $host->{name}\a";
 sshpass($host, @ARGV);
 
 sub sshpass {
