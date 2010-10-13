@@ -52,6 +52,7 @@ set cpoptions+=$       " Show '$' for change operations.
 set encoding=utf-8     " Keep things internally as utf-8.
 set fileencoding=utf-8 " Read/Write files using utf-8.
 set titlestring=vim:\ %F
+set title
 set wildmode=longest,list,full " thanks nornagon!
 set wildignore=*.bak,~,*.o,*.info,*.swp,*.dvi,*.pdf,.*
 set backspace=eol,start,indent
@@ -115,11 +116,12 @@ let perl_include_pod = 1
 "-- different from string contents.
 let perl_string_as_statement = 1
 
-"-- disable perl folding
-"unlet perl_fold
+"-- enable perl folding
+"let perl_fold = 1
 
 let redcode_highlight_numbers=1
 
+let &titleold=$ZTITLE
 
 " }}}
 

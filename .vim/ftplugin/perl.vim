@@ -1,5 +1,5 @@
 "-- Pretty folding.
-"setlocal foldtext=PerlFoldTextNoLines()
+setlocal foldtext=PerlFoldTextNoLines()
 setlocal textwidth=100
 setlocal equalprg=perltidy\ -pbp\ -l=100
 setlocal expandtab
@@ -9,16 +9,16 @@ if $HOST == 'mani'
 end
 
 "-- Do not fold package-level things.
-"if expand("%:e") == 'pm'
-"    setlocal foldlevel=1
-"endif
+if expand("%:e") == 'pm'
+    setlocal foldlevel=1
+endif
 
 "-- Do not highlight 'new'!
 hi link perlStatementNew NONE
 
 "-- toggle displaying numbers at the end.
-"map <silent> z; :silent call TogglePerlFold()<CR>
-"map <silent> z/ :silent setlocal foldtext<<CR>
+map <silent> z; :silent call TogglePerlFold()<CR>
+map <silent> z/ :silent setlocal foldtext<<CR>
 iab mx MooseX
 
 "inoremap { { }<C-o>3h

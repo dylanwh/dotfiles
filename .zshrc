@@ -104,7 +104,6 @@ bindkey '^r' vi-history-search-backward
 alias have='whence -p ls &>/dev/null'
 
 function chpwd {
-    ztitle
     have todo && todo --timeout --summary 
 }
 
@@ -215,7 +214,7 @@ esac
 ## }}}
 
 # Autoload various functions
-autoload sshbegin sshend run-help ztitle
+autoload sshbegin sshend run-help
 autoload compinit promptinit colors
 
 # initialize advanced tab completion.
