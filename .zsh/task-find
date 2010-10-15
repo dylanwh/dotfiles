@@ -1,7 +1,0 @@
-#!zsh
-local task=${1// /-}
-if [[ -z $task ]]; then
-	echo "task-find expects one argument." >&2
-	exit 1
-fi
-echo ${$(find . -maxdepth 2 -path $task:h -name $task:t -type d | head -1):s:./::}

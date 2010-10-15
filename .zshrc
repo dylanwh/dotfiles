@@ -9,10 +9,11 @@ SAVEHIST=3000
 HISTFILE=~/.zhistory
 READNULLCMD=${PAGER:-/usr/bin/pager}
 LOGCHECK=30
+
 watch=(all)
 fignore=(.o .hi .pyc)
-cdpath=(~ ~/code ~/work ~/work/bes)
-fpath=(~/.zsh $fpath)
+cdpath=(~ ~/code ~/work)
+fpath=(~/.zsh/lib $fpath)
 
 export PERL_CPANM_DEV=1
 export PS_PERSONALITY=linux
@@ -178,22 +179,26 @@ alias yaml2json='perl -MJSON -MYAML::XS -MIO::All -E '\''say encode_json( Load( 
 have pinfo      && alias info=pinfo
 have ack-grep   && alias ack=ack-grep
 
-# handle ls specially...
-local ls_cmd=ls
-local -a ls_args
+if [[ ! -f ~/.zsh/alias-ls ]]; then
+	# handle ls specially...
+	local ls_cmd=ls
+	local -a ls_args
 
-if have gls; then ls_cmd=gls; fi
-ls_args=('-Fh' '--color=auto' '--group-directories-first')
+	if have gls; then ls_cmd=gls; fi
+	ls_args=('-Fh' '--color=auto' '--group-directories-first')
 
-while (( $#ls_args > 0 )); do
-	if $ls_cmd $ls_args .zsh &> /dev/null; then
-		break
-	else
-		ls_args[-1]=()
-	fi
-done
-alias ls="$ls_cmd $ls_args"
-unset ls_cmd ls_args
+	while (( $#ls_args > 0 )); do
+		if $ls_cmd $ls_args ~/.zsh &> /dev/null; then
+			break
+		else
+			ls_args[-1]=()
+		fi
+	done
+	echo "alias ls=\"$ls_cmd $ls_args\"" > ~/.zsh/alias-ls
+	unset ls_cmd ls_args
+fi
+
+source ~/.zsh/alias-ls
 
 case $OSTYPE in
 	*gnu*)

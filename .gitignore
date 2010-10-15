@@ -9,7 +9,8 @@
 !.Xdefaults.tt
 !.bip
 !.boring
-!.config
+!.config/user-dirs.dirs
+!.config/user-dirs.locale
 !.contacts
 !.cpanm
 !.dir_colors
@@ -68,3 +69,4 @@
 !.zsh
 !.zshenv
 !.zshrc
+.mutt/profile.active

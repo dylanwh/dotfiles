@@ -1,5 +1,0 @@
-#!zsh
-local dir=$(task-find $1)
-mv $TASKDIR/$dir $TASKDIR/today
-ln -s $TASKDIR/today/$dir:t $dir
-cd $TASKDIR/today/$dir:t

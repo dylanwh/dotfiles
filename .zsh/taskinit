@@ -1,7 +1,0 @@
-#!zsh
-
-if [[ -z $TASKDIR ]]; then
-	TASKDIR=$HOME/task
-fi
-
-autoload -U task task-new task-list task-find task-grab
