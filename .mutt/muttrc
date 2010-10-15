@@ -30,8 +30,8 @@ set tilde                # Use tildes in the internal pager like vim.
 set nohelp               # Don't show the help menu at the top
 
 set imap_idle=yes
-set imap_passive=no
-set imap_servernoise=no
+set imap_passive=yes
+set imap_servernoise=yes
 set imap_headers="X-Spam-Status"
 set header_cache="~/.mutt/cache"
 set message_cachedir="~/.mutt/cache"

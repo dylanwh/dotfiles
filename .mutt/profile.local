@@ -1,13 +1,16 @@
 # vim: set ft=muttrc:
-# NAME: home
+# NAME: local
+# Identity options
 set realname="Dylan William Hardison"
 set from="dylan@hardison.net"
-set folder="imaps://dylan%40hardison.net@imap.gmail.com"
-set smtp_url="smtps://dylan%40hardison.net@smtp.gmail.com"
-set signature="~/bin/signature|"
 
-source ~/.mutt/google
-source ~/.mutt/passwd.home
+# Location options
+#set spoolfile="+inbox"
+#set mbox="+archive/`date +%Y/%m`"
+#set record="+sent/`date +%Y`"
+#set postponed="+drafts"
+
+set signature="~/bin/signature|"
 
 # Recongize messages addressed to me.
 unalternates *
@@ -20,18 +23,12 @@ alternates dylanwh@gmail.com \
            it@hardison.net \
            dylan@lofn.hardison.net \
            Hardison.Dylan8811@myspcmail.spcollege.edu \
-           dhardison@cpan.org \
-           dylancapone@hardison.net \
-           president@suncoastlug.org \
-           info@suncoastlug.org \
-           newmembers@suncoastlug.org
+           dhardison@cpan.org
 
 unsubscribe *
 # And messages to mailing lists I subscribe to.
-subscribe slug@nks\.net \
-          slug-politics@nks\.net \
-          slug@(suncoastlug\.org|sjofn\.hardison.net) \
-          slug-politics@(suncoastlug\.org|sjofn\.hardison\.net) \
+subscribe slug@nks.net \
+          slug-politics@nks.net \
           haskell-cafe@haskell.org \
           caml-list@inria.fr \
           caml-list@yquem.inria.fr \
@@ -53,18 +50,10 @@ subscribe slug@nks\.net \
           debian-news@lists.debian.org
 
 unmailboxes *
-mailboxes +INBOX +daily +message \
-          +ignored +netflix +billing \
-          +slug \
-          +haskell-cafe +caml \
-          +templates +poe \
-          +suckless +security
 
 unmy_hdr *
 my_hdr Reply-By: `date --date="-3 days"`
 my_hdr X-Message-Flag: OUTLOOK ERROR: Message in violation of Microsoft Security Policy (MSP).
 my_hdr X-Religion: Optimus Prime
 
-
 source ~/.mutt/theme
-
