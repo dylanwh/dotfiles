@@ -3,20 +3,19 @@ use strict;
 use warnings;
 use autodie;
 use Path::Class;
+use IO::Pipe;
 use File::HomeDir;
-use File::MMagic;
 use DateTime;
 use DateTime::Format::Strptime;
 
 my $root = dir( File::HomeDir::FreeDesktop->my_download );
-my $mm   = File::MMagic->new;
 my $fmt  = new DateTime::Format::Strptime( pattern => '%Y/%m/%d' );
 
 while ( my $file = $root->next ) {
     next if $file->is_dir;
 
     my $mtime     = $fmt->format_datetime( DateTime->from_epoch( epoch => $file->stat->mtime ) );
-    my $mime_type = $mm->checktype_filename($file);
+    my $mime_type = get_mime($file . "");
     my $date_dir  = $root->subdir($mtime);
     my $mime_dir  = $root->subdir('mime')->subdir($mime_type);
 
@@ -32,3 +31,14 @@ $today->mkpath;
 
 unlink($root->subdir('today')) if -e $root->subdir('today');
 symlink($today, $root->subdir('today'));
+
+sub get_mime {
+    my $file = shift;
+    my $pipe = IO::Pipe->new;
+    $pipe->reader("file", qw( -bL --mime-type ), $file);
+    my $mime = $pipe->getline;
+    chomp $mime;
+
+    return $mime;
+}
+

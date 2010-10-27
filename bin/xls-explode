@@ -1,6 +1,7 @@
 #!/usr/bin/env perl
 use strict;
 use warnings;
+use bigint;
 use charnames ':full';
 use Spreadsheet::ParseExcel;
 use Text::CSV;
@@ -71,8 +72,8 @@ sub clean {
     my ($cell) = @_;
     return '' unless $cell;
     my $t = $cell->value;
-    if ($t =~ /^\d+$/) {
-        $t = $cell->unformatted;
+    if ($t =~ /^\d+$/ and $cell->unformatted =~ /^\d\.\d+e\+\d+/i) {
+        $t = Math::BigInt->new($cell->unformatted) . "";
     }
 
     if ($cell->encoding != 2 and $t) {

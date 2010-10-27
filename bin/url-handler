@@ -39,7 +39,7 @@ ftp_prgs="/usr/bin/lynx:XT /usr/bin/ncftp:XT"
 
 # Program used as an xterm (if it doesn't support -T you'll need to change
 # the command line in getprg)
-XTERM="urxvt"
+XTERM="dterm"
 
 
 ###########################################################################
