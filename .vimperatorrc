@@ -1,8 +1,7 @@
 set hls
 "set guioptions=b
 set showtabline=1
-set ds=
-set editor=robo\ -t\ vim
+set editor=dterm\ -e\ vim
 
 noremap h H
 noremap l L
