@@ -245,10 +245,12 @@ fi
 
 have todo && todo --timeout --summary
 
-namedir moonshine ~/code/moonshine
-namedir progfiles ~/.wine/drive_c/Program\ Files
-namedir g2        ~/work/g2
-namedir hewitt    ~/work/hewitt
-namedir bes       ~/work/hewitt/bes
+namedir moonshine    ~/code/moonshine
+namedir progfiles    ~/.wine/drive_c/Program\ Files
+namedir g2           ~/work/g2
+namedir hewitt       ~/work/hewitt
+namedir bes          ~/work/hewitt/bes
+namedir bes2011      ~bes/BES-2011
+namedir bes2011_data ~bes/BES-2011-Data
 
 # vim: set sw=4 ts=4 foldmethod=marker path=.,~/.zsh:
