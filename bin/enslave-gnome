@@ -36,4 +36,9 @@ gconftool -t string -s  /desktop/gnome/background/picture_filename ""
 gconftool -t string -s  /desktop/gnome/background/primary_color $bgcolor
 gconftool -t string -s  /desktop/gnome/background/secondary_color $bgcolor
 
-
+if [[ -e /lib/security/pam_ssh.so ]]; then
+	# disable ssh keyring component.
+	gconftool -t boolean -s /apps/gnome-keyring/daemon-components/ssh false
+else
+	gconftool -t boolean -s /apps/gnome-keyring/daemon-components/ssh true
+fi
