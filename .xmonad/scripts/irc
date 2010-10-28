@@ -1,2 +1,2 @@
 #!/bin/sh
-exec dterm -n irc -t irc -e ssh -qt lofn -- tmux -2u attach -t chat
+exec dterm -n irc -t irc -e autossh -qt lofn -- tmux -2u attach -t chat
