@@ -62,7 +62,7 @@ wsWeb    = "9"
 wsList  = map show $ [1 .. 9] ++ [0]
 wsKeys  = [ (x,x) | x <- wsList ]
 
-spawnExec str = spawn ("exec " ++ str)
+spawnExec str = spawn ("exec " ++ str ++ " &> /dev/null")
 
 home path = do dir <- io $ getEnv "HOME" `catch` const (return "/")
                return (dir ++ '/' : path)
