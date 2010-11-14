@@ -1,5 +1,6 @@
 set hls
 "set guioptions=b
+set ds=duck
 set showtabline=1
 set editor=dterm\ -e\ vim
 
@@ -10,5 +11,7 @@ map \ :set invum<CR>
 set! general.warnOnAboutConfig=false
 set! browser.tabs.loadDivertedInBackground=false
 set! browser.download.manager.useWindow=false
+set! browser.download.manager.showWhenStarting=false
+set! browser.download.manager.showAlertOnComplete=false
 set! browser.download.lastDir=/home/dylan/var/download
 
