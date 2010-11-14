@@ -1,0 +1,39 @@
+#!zsh
+
+zmodload zsh/terminfo 2> /dev/null
+
+[[ ${terminfo[hs]} == "yes" ]] || return 1
+
+def_title="zsh: %~"
+title=""
+mode="print"
+
+while getopts "et:" option; do
+	case $option in
+		(t)
+			title="$OPTARG"
+		;;
+		(e)
+			mode="exec"
+		;;
+	esac
+done
+
+case $mode in
+	print)
+		if [[ -z $title ]]; then
+			print -Pn "\e]2;$def_title\a"
+		else
+			print -n "\e]2;$title\a"
+		fi
+	;;
+	exec)
+		cmd=($argv[$OPTIND,$#argv])
+		if [[ -z $title ]]; then
+			title="$cmd"
+		fi
+		print -n "\e]2;$title\a"
+		$cmd
+	;;
+esac
+

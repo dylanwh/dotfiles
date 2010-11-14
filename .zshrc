@@ -118,6 +118,7 @@ function shuffle {
     done
     ) | sort | sed 's/^[0-9]* //'
 }
+
 function namedir {
     declare -g $1=$2
     : ~$1
@@ -175,6 +176,9 @@ alias -g ....='../../..'
 alias -g .....='../../../..'
 alias json2yaml='perl -MJSON -MYAML::XS -MIO::All -E '\''say Dump( decode_json( io->stdin->all ) )'\'
 alias yaml2json='perl -MJSON -MYAML::XS -MIO::All -E '\''say encode_json( Load( io->stdin->all ) )'\'
+alias mplayer="title -e -- mplayer"
+alias evince="title -e -- evince"
+alias ssh="title -e -- ssh"
 
 have pinfo      && alias info=pinfo
 have ack-grep   && alias ack=ack-grep
@@ -249,7 +253,9 @@ namedir moonshine    ~/code/moonshine
 namedir progfiles    ~/.wine/drive_c/Program\ Files
 namedir g2           ~/work/g2
 namedir hewitt       ~/work/hewitt
+namedir arc          ~/work/hewitt/arc
 namedir bes          ~/work/hewitt/bes
+namedir bes2010      ~bes/BES-2010
 namedir bes2011      ~bes/BES-2011
 namedir bes2011_data ~bes/BES-2011-Data
 

@@ -18,7 +18,7 @@ PR_HOST="$BOLD_GREEN%m$RESET"
 PR_JOBS="%2(j.($MAGENTA%j jobs$RESET).%1(j.($MAGENTA%j job$RESET).))"
 PR_VCS='${vcs_info_msg_0_}'
 
-autoload -Uz vcs_info ztitle
+autoload -Uz vcs_info title
 zstyle ':vcs_info:*' enable svn svk git
 zstyle ':vcs_info:*' actionformats \
     '(%F{2}%s:%b, %a%f)'
@@ -33,7 +33,7 @@ PS2='%_: '
 RPS2=''
 
 if vcs_info &>/dev/null; then
-    precmd_functions+=( vcs_info ztitle )
+    precmd_functions+=( vcs_info title )
     RPROMPT="$PR_VCS$PR_JOBS"
 else
     RPROMPT="$PR_JOBS"

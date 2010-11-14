@@ -121,8 +121,6 @@ let perl_string_as_statement = 1
 
 let redcode_highlight_numbers=1
 
-let &titleold=$ZTITLE
-
 " }}}
 
 " MAPPINGS {{{
