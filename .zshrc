@@ -179,6 +179,7 @@ alias yaml2json='perl -MJSON -MYAML::XS -MIO::All -E '\''say encode_json( Load( 
 alias mplayer="title -e -- mplayer"
 alias evince="title -e -- evince"
 alias ssh="title -e -- ssh"
+alias man="title -e -- man"
 
 have pinfo      && alias info=pinfo
 have ack-grep   && alias ack=ack-grep
@@ -223,7 +224,7 @@ esac
 ## }}}
 
 # Autoload various functions
-autoload sshbegin sshend run-help
+autoload sshbegin sshend run-help title
 autoload compinit promptinit colors
 
 # initialize advanced tab completion.

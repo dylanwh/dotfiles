@@ -1,0 +1,29 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+use IO::File;
+use Cwd 'realpath';
+
+my $TMUX_ENV = "$ENV{HOME}/.ssh/tmux.env";
+
+my @path = grep { realpath($_) ne "$ENV{HOME}/bin" } split(/:/, $ENV{PATH});
+$ENV{PATH} = join(':', @path);
+
+# csh is easier to parse. eew.
+system("ssh-agent -c > '$TMUX_ENV'") unless -f $TMUX_ENV;
+parse_tmux_env($TMUX_ENV);
+exec(tmux => @ARGV);
+
+sub parse_tmux_env {
+    my ($file) = @_;
+    my $fh = IO::File->new($file, "r") or die "unable to open $file: $!\n";
+
+    while (my $cmd = $fh->getline) {
+        if ($cmd =~ /^setenv (\w+) (.+?);/) {
+            $ENV{$1}=$2;
+        }
+        elsif ($cmd =~ /^echo (.+?);/) {
+
+        }
+    }
+}
