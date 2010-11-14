@@ -2,8 +2,8 @@
 	default = matching
 
 [user]
-	email = dylan@hardison.net
-	name = Dylan William Hardison
+	email=dylan@hardison.net
+	name=Dylan William Hardison
 
 [alias]
 	co=checkout
@@ -17,7 +17,3 @@
 	diff = auto
 	status = auto
 	branch = auto
-
-[user]
-	name=Dylan William Hardison
-	email=dylan@hardison.net
