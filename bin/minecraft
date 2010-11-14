@@ -1,0 +1,10 @@
+#!/bin/zsh
+
+MINECRAFT_JAR=$HOME/var/games/Minecraft.jar
+
+if [[ ! -f $MINECRAFT_JAR ]]; then
+	mkdir -p $(dirname $MINECRAFT_JAR)
+	wget -O $MINECRAFT_JAR 'http://minecraft.net/download/Minecraft.jar?v=1289443057546'
+fi
+
+exec java -Xmx1024M -Xms512M -cp $MINECRAFT_JAR net.minecraft.LauncherFrame
