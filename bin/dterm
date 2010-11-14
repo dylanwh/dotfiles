@@ -6,7 +6,7 @@ use Getopt::Long qw( :config gnu_getopt );
 
 my $TERM  = 'urxvt';
 my $SHELL = $ENV{SHELL} || '/bin/bash';
-my ($title, $name, $dtach, $host, $raw, $eep, $ctrl_l);
+my ($title, $name, $dtach, $host, $raw, $eep, $ctrl_l, $chdir);
 
 foreach (@ARGV) {
     if ($_ eq '-e') {
@@ -29,6 +29,7 @@ GetOptions(
     'raw|r'     => \$raw,
     'l'         => \$ctrl_l,
     'e'         => \$eep,
+    'chdir|C=s' => \$chdir,
 );
 
 my (@run) = @ARGV;
@@ -54,6 +55,8 @@ if ($dtach) {
     );
     unshift @run, @dtach;
 }
+
+chdir $chdir if $chdir;
 
 if (not $raw) {
     unshift @run, '-e' if @run;
