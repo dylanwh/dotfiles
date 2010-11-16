@@ -75,6 +75,7 @@
 .ssh/id_rsa
 .ssh/id_rsa.pub
 .ssh/known_hosts
+.ssh/tmux.env
 .cpanm/build.log
 .cpanm/latest-build
 .cpanm/work/
@@ -87,3 +88,10 @@
 .xmonad/xmonad.hi
 .xmonad/xmonad.o
 .zsh/alias-ls
+.bip/bip.pid
+.imapfilter/certificates
+.imapfilter/status
+.mutt/passwd.home
+.mutt/passwd.work
+.newsbeuter/cache.db
+.newsbeuter/queue
