@@ -133,6 +133,7 @@ alias vimrc="$EDITOR ~/.vimrc"
 alias muttrc="$EDITOR ~/.mutt/muttrc"
 alias zrc='vim ~/.zshrc'
 alias zenv='vim ~/.zshenv' 
+alias zpro='vim ~/.zprofile'
 alias xrc='vim ~/.xinitrc'
 alias xmrc='vim ~/.xmonad/xmonad.hs'
 alias xs=cd
