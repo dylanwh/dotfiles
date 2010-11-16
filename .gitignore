@@ -88,6 +88,7 @@
 .xmonad/xmonad.hi
 .xmonad/xmonad.o
 .zsh/alias-ls
+.zsh/cache
 .bip/bip.pid
 .imapfilter/certificates
 .imapfilter/status
