@@ -68,6 +68,7 @@ case $TERM in
         bindkey "^[[B"  down-line-or-search  # down arrow for fwd-history-search
         bindkey "^?"   backward-delete-char
         bindkey "^H"   backward-delete-char
+        bindkey "^[OM" accept-line
     ;;
     rxvt-unicode)
         bindkey "^[[7~" beginning-of-line  # home
