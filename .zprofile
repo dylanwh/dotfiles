@@ -6,7 +6,7 @@ export REALNAME="Dylan William Hardison"
 export EMAIL="dylan@hardison.net"
 export EDITOR="vim"
 export VISUAL="$EDITOR"
-export BROWSER="google-chrome"
+export BROWSER="firefox"
 export MANPAGER=less
 
 export HOST="${HOST/.*/}"
@@ -16,14 +16,12 @@ export LC_COLLATE=POSIX # sort in POSIX order.
 export TZ=US/Eastern
 
 export LESSHISTFILE='-'
-export SSH_AGENT_FILE=$HOME/.ssh/agent@$HOST
 
 if [[ -d /etc/profile.d ]]; then
 	for file in /etc/profile.d/*(.N); do
 		source $file
 	done
 fi
-
 
 perl5lib=(~/lib 'lib')
 path=(~/bin $path)

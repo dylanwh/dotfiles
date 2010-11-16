@@ -4,6 +4,5 @@
 
 # run other components -- zsh is a bourne shell
 if [[ -o interactive ]]; then
-	#sshbegin
 	uptime
 fi

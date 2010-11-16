@@ -1,0 +1,6 @@
+#!zsh
+declare -gxT PERL5LIB perl5lib # declare array
+declare -U path perl5lib       # remove duplicates
+local dir="${3:-.}"
+dir=$( cd $dir &> /dev/null && pwd  )
+perl5lib=(./lib $(find $dir -name lib))

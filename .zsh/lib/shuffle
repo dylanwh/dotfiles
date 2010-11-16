@@ -1,0 +1,8 @@
+#!zsh
+
+RANDOM=`date +%s`
+(
+while IFS= read -r i; do
+    echo $RANDOM$RANDOM "$i";
+done
+) | sort | sed 's/^[0-9]* //'

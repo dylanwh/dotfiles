@@ -1,0 +1,3 @@
+#!zsh
+local cmd="$1"; shift
+$cmd "$@" | sed 's/^/'"$cmd"': /'

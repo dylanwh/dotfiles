@@ -35,14 +35,15 @@ setopt glob_complete           # complete globs with a menu.
 setopt nocorrect               # no spelling correction
 setopt promptcr                # add \n which overwrites cmds with no \n
 setopt histverify              # when using ! cmds, confirm first
-setopt interactivecomments     # escape commands so i can use them later
-setopt printexitvalue          # alert me if something has failed
 setopt hist_ignore_dups        # ignore same commands run twice+
 setopt appendhistory           # do not overwrite history 
-setopt nomatch                 # #fooo!
-setopt noclobber               # do not overwrite files with >
 setopt sharehistory            # share history between all running instances.
 setopt hist_find_no_dups       # ignore dups in history search.
+setopt extended_history        # store time info in history.
+setopt interactive_comments    # escape commands so i can use them later
+setopt print_exit_value        # alert me if something has failed
+setopt nomatch                 # #fooo!
+setopt noclobber               # do not overwrite files with >
 setopt noflow_control          # disable control-q/control-s
 setopt hashcmds                # avoid having to type 'rehash' all the time.
 setopt rm_star_wait            # wait beforing ask if I want to delete all those files...
@@ -102,41 +103,19 @@ bindkey '^r' vi-history-search-backward
 
 ## }}}
 ## {{{ FUNCTIONS
-alias have='whence -p ls &>/dev/null'
-
-function chpwd {
-    have todo && todo --timeout --summary 
-}
+# Autoload various functions
+autoload run-help compinit promptinit colors
+autoload title shuffle perlpath prefix
 
 function mdc { mkdr -p $1 && cd $1 }
-
-function shuffle {
-    RANDOM=`date +%s`
-    (
-    while IFS= read -r i; do
-        echo $RANDOM$RANDOM "$i";
-    done
-    ) | sort | sed 's/^[0-9]* //'
-}
-
-function namedir {
-    declare -g $1=$2
-    : ~$1
-}
-
-function perlpath {
-    local dir="${1:-.}"
-    dir=$( cd $dir &> /dev/null && pwd  )
-    perl5lib=(./lib $(find $dir -name lib))
-}
-
-function prefix {
-	local cmd="$1"; shift
-	exec $cmd "$@" | sed 's/^/'"$cmd"': /'
-}
-
+function namedir { declare -g $1=$2; : ~$1 }
 ## }}}
 ## {{{ ALIASES
+alias have='whence -p ls &>/dev/null'
+alias -g ...='../..'
+alias -g ....='../../..'
+alias -g .....='../../../..'
+
 alias cp='cp -i'
 alias mv='mv -i'
 alias rm='rm -i'
@@ -171,18 +150,18 @@ alias vw='vim ~/docs/wiki/index.wiki'
 alias gra='git rebase --amend'
 alias grc='git rebase --continue'
 alias gc='git commit'
-alias -g ...='../..'
-alias -g ....='../../..'
-alias -g .....='../../../..'
-alias json2yaml='perl -MJSON -MYAML::XS -MIO::All -E '\''say Dump( decode_json( io->stdin->all ) )'\'
-alias yaml2json='perl -MJSON -MYAML::XS -MIO::All -E '\''say encode_json( Load( io->stdin->all ) )'\'
 alias mplayer="title -e -- mplayer"
 alias evince="title -e -- evince"
 alias ssh="title -e -- ssh"
 alias man="title -e -- man"
 
+have todo.pl    && alias t=todo.pl
 have pinfo      && alias info=pinfo
 have ack-grep   && alias ack=ack-grep
+
+alias -g ...='../..'
+alias -g ....='../../..'
+alias -g .....='../../../..'
 
 if [[ ! -f ~/.zsh/alias-ls ]]; then
 	# handle ls specially...
@@ -223,9 +202,19 @@ esac
 
 ## }}}
 
-# Autoload various functions
-autoload sshbegin sshend run-help title
-autoload compinit promptinit colors
+# Add sbin directories for sudo tab completion.
+zstyle ':completion:*:sudo:*' command-path $path /usr/sbin /sbin
+
+# cache the output of completion functions.
+zstyle ':completion:*' use-cache on
+zstyle ':completion:*' cache-path ~/.zsh/cache
+
+if have dircolors; then
+	unset LS_COLORS
+	eval $(dircolors ~/.dir_colors)
+	# Colorize completions.
+	zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
+fi
 
 # initialize advanced tab completion.
 compinit -d ~/.zcompdump
@@ -237,18 +226,6 @@ prompt dylan # Set the prompt.
 umask  077   # Create files that are read-only by group.
 stty -ixon   # Disable the freeze-the-terminal-on-control-s thing.
 ttyctl -f    # Freeze terminal properties.
-
-# Add sbin directories for sudo tab completion.
-zstyle ':completion:*:sudo:*' command-path $path /usr/sbin /sbin
-
-if have dircolors; then
-	unset LS_COLORS
-	eval $(dircolors ~/.dir_colors)
-	# Colorize completions.
-	zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
-fi
-
-have todo && todo --timeout --summary
 
 namedir moonshine    ~/code/moonshine
 namedir progfiles    ~/.wine/drive_c/Program\ Files
