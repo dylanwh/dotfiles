@@ -6,11 +6,12 @@
 /pub
 /mnt
 .*
+!.config/
+!.config/user-dirs.dirs
+!.config/user-dirs.locale
 !.Xdefaults.tt
 !.bip
 !.boring
-!.config/user-dirs.dirs
-!.config/user-dirs.locale
 !.contacts
 !.cpanm
 !.dir_colors
@@ -96,3 +97,12 @@
 .mutt/passwd.work
 .newsbeuter/cache.db
 .newsbeuter/queue
+.config/Empathy/
+.config/autostart/
+.config/desktop-couch/
+.config/enchant/
+.config/google-chrome/
+.config/gtk-2.0/
+.config/indicators/
+.config/monitors.xml
+.config/totem/
