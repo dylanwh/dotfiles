@@ -1,5 +1,6 @@
 HOST := $(shell hostname -s)
 DISPLAY ?= :0.0
+DROPBOX ?= ~/.local/Dropbox
 
 help:
 	@echo targets: fixperms, schedule, pwsafe-merge
@@ -37,4 +38,31 @@ pwsafe-merge:
 	rm pwsafe
 	scp .pwsafe.dat lofn:
 
-.PHONY: schedule fixperms help pwsafe-merge
+
+docs:
+	-rm $@
+	ln -fs $(DROPBOX)/Documents $@
+
+pics:
+	-rm $@
+	ln -fs $(DROPBOX)/Photos $@
+
+pub:
+	-rm $@
+	ln -fs $(DROPBOX)/Public $@
+
+desk:
+	-rm $@
+	ln -fs $(DROPBOX)/Desktop $@
+
+mus:
+	-rm $@
+	ln -fs $(DROPBOX)/Music $@
+
+vid:
+	-rm $@
+	ln -fs $(DROPBOX)/Video $@
+
+tmp:
+	mkdir $@
+.PHONY: schedule fixperms help pwsafe-merge docs pics pub desk

@@ -127,6 +127,7 @@ alias free="free -m"
 alias la='ls -ax'
 alias ll='ls -l'
 alias lsd='ls -d *(/)'
+alias l='ls -L'
 alias vi=vim
 alias gvi=gvim
 alias vimrc="$EDITOR ~/.vimrc"
@@ -165,13 +166,15 @@ alias -g ...='../..'
 alias -g ....='../../..'
 alias -g .....='../../../..'
 
-if [[ ! -f ~/.zsh/alias-ls ]]; then
+mkdir -p ~/.cache/zsh
+
+if [[ ! -f ~/.cache/zsh/alias-ls ]]; then
 	# handle ls specially...
 	local ls_cmd=ls
 	local -a ls_args
 
 	if have gls; then ls_cmd=gls; fi
-	ls_args=('-Fh' '--color=auto' '--group-directories-first')
+	ls_args=('-Fh' '-H' '--color=auto' '--group-directories-first')
 
 	while (( $#ls_args > 0 )); do
 		if $ls_cmd $ls_args ~/.zsh &> /dev/null; then
@@ -180,11 +183,11 @@ if [[ ! -f ~/.zsh/alias-ls ]]; then
 			ls_args[-1]=()
 		fi
 	done
-	echo "alias ls=\"$ls_cmd $ls_args\"" > ~/.zsh/alias-ls
+	echo "alias ls=\"$ls_cmd $ls_args\"" > ~/.cache/zsh/alias-ls 
 	unset ls_cmd ls_args
 fi
 
-source ~/.zsh/alias-ls
+source ~/.cache/zsh/alias-ls
 
 case $OSTYPE in
 	*gnu*)
@@ -204,12 +207,13 @@ esac
 
 ## }}}
 
+
 # Add sbin directories for sudo tab completion.
 zstyle ':completion:*:sudo:*' command-path $path /usr/sbin /sbin
 
 # cache the output of completion functions.
 zstyle ':completion:*' use-cache on
-zstyle ':completion:*' cache-path ~/.zsh/cache
+zstyle ':completion:*' cache-path ~/.cache/zsh
 
 if have dircolors; then
 	unset LS_COLORS
@@ -219,7 +223,7 @@ if have dircolors; then
 fi
 
 # initialize advanced tab completion.
-compinit -d ~/.zcompdump
+compinit -d ~/.cache/zsh/zcompdump
 
 colors
 promptinit   # Setup prompt theming 
@@ -231,6 +235,7 @@ ttyctl -f    # Freeze terminal properties.
 
 namedir moonshine    ~/code/moonshine
 namedir progfiles    ~/.wine/drive_c/Program\ Files
+namedir dropbox      ~/.local/Dropbox
 namedir g2           ~/work/g2
 namedir hewitt       ~/work/hewitt
 namedir arc          ~/work/hewitt/arc
