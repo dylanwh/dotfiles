@@ -244,4 +244,8 @@ namedir bes2010      ~bes/BES-2010
 namedir bes2011      ~bes/BES-2011
 namedir bes2011_data ~bes/BES-2011-Data
 
+if have xdg-user-dir; then
+	cd $(xdg-user-dir DESKTOP)
+fi
+
 # vim: set sw=4 ts=4 foldmethod=marker path=.,~/.zsh:
