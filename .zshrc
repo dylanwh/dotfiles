@@ -12,7 +12,7 @@ LOGCHECK=30
 
 watch=(all)
 fignore=(.o .hi .pyc)
-cdpath=(~ ~/code ~/work)
+cdpath=(~ ~/.local/Dropbox)
 fpath=(~/.zsh/lib $fpath)
 
 export PERL_CPANM_DEV=1
