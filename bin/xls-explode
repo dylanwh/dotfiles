@@ -72,8 +72,12 @@ sub clean {
     my ($cell) = @_;
     return '' unless $cell;
     my $t = $cell->value;
-    if ($t =~ /^\d+$/ and $cell->unformatted =~ /^\d\.\d+e\+\d+/i) {
-        $t = Math::BigInt->new($cell->unformatted) . "";
+    if ($t =~ /^\d+$/ 
+            or $cell->unformatted =~ /^\d\.\d+e\+\d+/i
+            or $cell->unformatted =~ /^\d+$/
+    ) {
+        my ($zeros) = $cell->unformatted =~ /^(0+)\d+$/;
+        $t = ($zeros || '') . Math::BigInt->new($cell->unformatted);
     }
 
     if ($cell->encoding != 2 and $t) {
