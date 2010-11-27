@@ -9,6 +9,7 @@ use DateTime;
 use DateTime::Format::Strptime;
 
 my $root = dir( File::HomeDir::FreeDesktop->my_download );
+print "dir: $root\n";
 my $fmt  = new DateTime::Format::Strptime( pattern => '%Y/%m/%d' );
 
 while ( my $file = $root->next ) {
