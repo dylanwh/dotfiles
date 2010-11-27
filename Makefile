@@ -64,5 +64,11 @@ vid:
 	ln -fs $(DROPBOX)/Video $@
 
 tmp:
-	mkdir $@
-.PHONY: schedule fixperms help pwsafe-merge docs pics pub desk
+	-mkdir $@
+
+folders=docs pics pub desk mus vid tmp
+
+folders: $(folders)
+
+
+.PHONY: schedule fixperms help pwsafe-merge folders $(folders)
