@@ -1,5 +1,6 @@
 #!/bin/zsh
 
+dropbox=$HOME/.local/Dropbox
 bgcolor='#330000'
 delay=200
 rate=40
