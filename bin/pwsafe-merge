@@ -1,0 +1,5 @@
+#!/bin/sh
+scp lofn:.pwsafe.dat pwsafe
+pwsafe --merge pwsafe
+rm pwsafe
+scp .pwsafe.dat lofn:
