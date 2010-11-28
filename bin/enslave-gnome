@@ -12,18 +12,19 @@ setxkbmap -option ctrl:nocaps
 xsetroot -solid $bgcolor
 xsetroot -cursor_name left_ptr
 
-xset r rate $delay $rate
-
 # my xkb options
 kb_options="[terminate\tterminate:ctrl_alt_bksp,ctrl\tctrl:nocaps]"
-
 gconftool -t list --list-type string \
     -s /desktop/gnome/peripherals/keyboard/kbd/options "$(echo -e $kb_options)"
+
 # no, I do not want per-window keymaps!
 gconftool -t boolean \
     -s /desktop/gnome/peripherals/keyboard/general/groupPerWindow false
+
+xset r rate $delay $rate
 gconftool -t int     -s /desktop/gnome/peripherals/keyboard/rate $rate
 gconftool -t int     -s /desktop/gnome/peripherals/keyboard/delay $delay
+
 # yes, xmonad is REALLY my window manager. gnome IGNORES $WINDOW_MANAGER at times.
 gconftool -t string  -s /desktop/gnome/applications/window_manager xmonad
 
@@ -36,9 +37,43 @@ gconftool -t string -s  /desktop/gnome/background/picture_filename ""
 gconftool -t string -s  /desktop/gnome/background/primary_color $bgcolor
 gconftool -t string -s  /desktop/gnome/background/secondary_color $bgcolor
 
+# sane placement of window border buttons (for metacity)
+gconftool -t string -s /apps/metacity/general/button_layout "menu:minimize,maximize,close"
+
 if [[ -e /lib/security/pam_ssh.so ]]; then
 	# disable ssh keyring component.
 	gconftool -t boolean -s /apps/gnome-keyring/daemon-components/ssh false
 else
 	gconftool -t boolean -s /apps/gnome-keyring/daemon-components/ssh true
 fi
+
+function dropdir {
+	rm -f "$1"
+	ln -s "$dropbox/$2" "$1"
+}
+
+dropdir ~/docs Documents
+dropdir ~/pub Public
+dropdir ~/desk Desktop
+dropdir ~/pics Photos
+dropdir ~/vid Video
+dropdir ~/mus Music
+mkdir -p ~/tmp
+
+cat > ~/.config/user-dirs.dirs <<'DIRS'
+# This file is written by xdg-user-dirs-update
+# If you want to change or add directories, just edit the line you're
+# interested in. All local changes will be retained on the next run
+# Format is XDG_xxx_DIR="$HOME/yyy", where yyy is a shell-escaped
+# homedir-relative path, or XDG_xxx_DIR="/yyy", where /yyy is an
+# absolute path. No other format is supported.
+# 
+XDG_DESKTOP_DIR="$HOME/desk"
+XDG_DOWNLOAD_DIR="$HOME/tmp"
+XDG_TEMPLATES_DIR="$HOME/docs"
+XDG_PUBLICSHARE_DIR="$HOME/pub"
+XDG_DOCUMENTS_DIR="$HOME/docs"
+XDG_MUSIC_DIR="$HOME/mus"
+XDG_PICTURES_DIR="$HOME/pics"
+XDG_VIDEOS_DIR="$HOME/vid"
+DIRS
