@@ -1,0 +1,11 @@
+#!/bin/zsh
+
+MINECRAFT_JAR=$HOME/.local/minecraft/minecraft_server.jar
+
+if [[ ! -f $MINECRAFT_JAR ]]; then
+	mkdir -p $(dirname $MINECRAFT_JAR)
+	wget -O $MINECRAFT_JAR 'http://minecraft.net/download/minecraft_server.jar?v=1291588926343'
+fi
+
+cd $(dirname $MINECRAFT_JAR)
+exec java -Xmx1024M -Xms1024M -jar $MINECRAFT_JAR nogui

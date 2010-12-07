@@ -1,6 +1,6 @@
 #!/bin/zsh
 
-MINECRAFT_JAR=$HOME/var/games/Minecraft.jar
+MINECRAFT_JAR=$HOME/.local/minecraft/Minecraft.jar
 
 if [[ ! -f $MINECRAFT_JAR ]]; then
 	mkdir -p $(dirname $MINECRAFT_JAR)
