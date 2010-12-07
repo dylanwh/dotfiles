@@ -15,7 +15,6 @@ fignore=(.o .hi .pyc)
 cdpath=(~ ~/.local/Dropbox)
 fpath=(~/.zsh/lib $fpath)
 
-export PERL_CPANM_DEV=1
 export PS_PERSONALITY=linux
 export XMMS_PATH='tcp://:1985'
 
@@ -188,6 +187,7 @@ if [[ ! -f ~/.cache/zsh/alias-ls ]]; then
 fi
 
 source ~/.cache/zsh/alias-ls
+[[ -f ~/.local/perl/env.sh ]] && source ~/.local/perl/env.sh
 
 case $OSTYPE in
 	*gnu*)
