@@ -1,0 +1,13 @@
+#!/bin/bash
+
+if which trash &> /dev/null; then
+	RM=trash
+else
+	RM='rm -f'
+fi
+
+DOWNLOAD="$(xdg-user-dir DOWNLOAD)"
+if [[ -n $DOWNLOAD ]]; then
+	find "$DOWNLOAD" -type f -mtime +7 -exec $RM -v {} \;
+	find "$DOWNLOAD" -depth -type d -empty -prune -exec rmdir {} \;
+fi

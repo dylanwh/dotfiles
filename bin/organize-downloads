@@ -24,7 +24,8 @@ while ( my $file = $root->next ) {
     $mime_dir->mkpath;
 
     rename( $file, $date_dir->file( $file->basename ) );
-    symlink( $date_dir->file( $file->basename ), $mime_dir->file( $file->basename ) );
+    symlink( $date_dir->file( $file->basename ), $mime_dir->file( $file->basename ) ) 
+        unless -e $mime_dir->file( $file->basename );
 }
 
 my $today = $root->subdir( $fmt->format_datetime( DateTime->now ) );

@@ -1,0 +1,6 @@
+#!/usr/bin/awk -f
+BEGIN               { init = 1; line  = ""; count = 1 }
+$0 == line          { count++ }
+$0 != line && !init { print count, line; count = 1 }
+$0                  { line = $0 }
+init                { init = 0 }
