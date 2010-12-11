@@ -1,10 +1,13 @@
+/code
+/desk
 /docs
 /logs
-/code
-/work
-/var
+/mus
+/pics
 /pub
-/mnt
+/tmp
+/vid
+/work
 .*
 !.config/
 !.config/user-dirs.dirs
@@ -72,7 +75,6 @@
 !.zshrc
 .mutt/profile.active
 .mutt/history
-.mutt/cache
 .ssh/id_rsa
 .ssh/id_rsa.pub
 .ssh/known_hosts
