@@ -98,7 +98,7 @@ let g:git_branch_status_head_current=1
 let g:git_branch_status_text="[git"
 let g:git_branch_status_around=":]"
 
-let g:vimwiki_list = [{'path': "~/docs/wiki"}]
+let g:vimwiki_list = [{'path': "~/.local/Dropbox/Documents/wiki"}]
 let g:vimwiki_hl_cb_checked = 1
 
 let autodate_format = "%Y-%m-%d"

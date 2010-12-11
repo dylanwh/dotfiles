@@ -148,10 +148,12 @@ alias menu="vim ~/.menu"
 alias x2=nyxmms2
 alias x2go='noglob nyxmms2 jump'
 alias cnm='cnetworkmanager'
-alias vw='vim ~/docs/wiki/index.wiki'
-alias gra='git rebase --amend'
-alias grc='git rebase --continue'
-alias gc='git commit'
+alias vw='vim ~docs/wiki/index.wiki'
+alias gia='git add'
+alias gis='git status'
+alias gira='git rebase --amend'
+alias girc='git rebase --continue'
+alias gic='git commit'
 alias mplayer="title -e -- mplayer"
 alias evince="title -e -- evince"
 alias ssh="title -e -- ssh"
@@ -229,13 +231,17 @@ colors
 promptinit   # Setup prompt theming 
 prompt dylan # Set the prompt.
 
-umask  077   # Create files that are read-only by group.
+umask  077   # Create files that are readable only by moi
 stty -ixon   # Disable the freeze-the-terminal-on-control-s thing.
 ttyctl -f    # Freeze terminal properties.
 
-namedir moonshine    ~/code/moonshine
 namedir progfiles    ~/.wine/drive_c/Program\ Files
 namedir dropbox      ~/.local/Dropbox
+namedir docs         ~/.local/Dropbox/Documents
+namedir trash        ~/.local/share/Trash
+
+namedir moonshine    ~/code/moonshine
+
 namedir g2           ~/work/g2
 namedir hewitt       ~/work/hewitt
 namedir arc          ~/work/hewitt/arc
