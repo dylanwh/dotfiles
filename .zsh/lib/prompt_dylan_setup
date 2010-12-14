@@ -19,9 +19,10 @@ PR_HOST="$BOLD_GREEN%m$RESET"
 #PR_JOBS="%2(j.[${MAGENTA}jobs:%j$RESET].%1(j.[${MAGENTA}job:%j$RESET].))"
 PR_JOBS="%1(j.[${MAGENTA}jobs:%j$RESET].)"
 PR_VCS='${vcs_info_msg_0_}'
-PR_DBOX="%1(V.[$BOLD_CYAN%1v$RESET].)"
+#PR_DBOX="%1(V.[$BOLD_CYAN%1v$RESET].)"
 
-autoload -Uz vcs_info title dropbox_info
+autoload -Uz vcs_info title 
+#autoload -Uz dropbox_info
 zstyle ':vcs_info:*' enable svn svk git
 zstyle ':vcs_info:*' actionformats \
     '[%F{2}%s:%b, %a%f]'
@@ -36,7 +37,7 @@ PS2='%_: '
 RPS2=''
 
 precmd_functions+=( title )
-precmd_functions+=( dropbox_info )
+#precmd_functions+=( dropbox_info )
 
 if vcs_info &>/dev/null; then
     precmd_functions+=( vcs_info )
