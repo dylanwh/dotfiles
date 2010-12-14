@@ -1,0 +1,9 @@
+#!zsh
+
+SED='s/^\.: //; s/up to date/ok/; /unwatched/ d'
+
+if have dropbox && ! dropbox running; then
+	psvar[1]=$( dropbox filestatus . | sed $SED )
+else
+	psvar[1]=''
+fi
