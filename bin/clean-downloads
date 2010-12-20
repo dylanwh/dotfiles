@@ -10,5 +10,5 @@ DOWNLOAD="$(xdg-user-dir DOWNLOAD)"
 if [[ -n $DOWNLOAD ]]; then
 	find "$DOWNLOAD" -type f -mtime +7 -print0 | xargs -r0 $RM -v
 	symlinks -rd "$DOWNLOAD"
-	find "$DOWNLOAD" -depth -type d -empty -prune -exec rmdir {} \;
+	find "$DOWNLOAD" -depth -not -name today -type d -empty -prune -exec rmdir {} \;
 fi

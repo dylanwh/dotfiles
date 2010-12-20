@@ -1,14 +1,16 @@
 #!/usr/bin/env perl
 use strict;
 use warnings;
+use Sys::Hostname;
 use Template;
 
 my @pre_process;
 my @wrapper;
 my @include;
 my %define = (
-    HOME   => $ENV{HOME},
-    LAPTOP => $ENV{LAPTOP},
+    HOST => hostname,
+    HOME => $ENV{HOME},
+    ENV  => { %ENV },
 );
 
 # manually parse the arguments for cpp compatibility
@@ -22,6 +24,8 @@ while (my $opt = shift @ARGV) {
     elsif ($opt =~ /^-/)                { die "Unknown option: $opt\n" }
     else                                { push @ARGV, $opt; last }
 }
+
+$define{HOST} = (split(/\./, $define{HOST}))[0];
 
 my $template = new Template {
     INCLUDE_PATH => \@include,     # or list ref
