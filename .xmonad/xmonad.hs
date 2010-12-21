@@ -8,8 +8,11 @@ import qualified Data.Map        as M
 
 import XMonad.Actions.DwmPromote
 import XMonad.Actions.SinkAll
-import XMonad.Actions.FindEmptyWorkspace
 import XMonad.Actions.GridSelect
+import XMonad.Actions.UpdatePointer
+import XMonad.Actions.DynamicWorkspaces
+import XMonad.Actions.FocusNth
+import XMonad.Actions.CycleWS
 
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.EwmhDesktops
@@ -22,18 +25,19 @@ import XMonad.Prompt.DirExec
 import XMonad.Prompt.Directory
 import XMonad.Prompt.Shell
 import XMonad.Prompt.Ssh
-import XMonad.Prompt.XMonad
+import XMonad.Prompt.AppLauncher
 
 import XMonad.Layout.Grid
 import XMonad.Layout.IM
 import XMonad.Layout.LayoutHints
-import XMonad.Layout.Maximize
 import XMonad.Layout.Named
 import XMonad.Layout.NoBorders
 import XMonad.Layout.Reflect (reflectHoriz)
 import XMonad.Layout.Tabbed
 import XMonad.Layout.SimpleFloat
 import XMonad.Layout.LayoutCombinators
+import XMonad.Layout.OneBig
+import XMonad.Layout.WorkspaceDir
 
 import XMonad.Util.EZConfig
 
@@ -53,15 +57,6 @@ import Text.XHtml (tag, strAttr, renderHtml, (<<), (!), primHtml)
 -- }}}
 
 -- Misc {{{
-wsHome   = "1"
-wsVM     = "6"
-wsGimp   = "7"
-wsDocs   = "8"
-wsWeb    = "9"
-
-wsList  = map show $ [1 .. 9] ++ [0]
-wsKeys  = [ (x,x) | x <- wsList ]
-
 spawnExec str = spawn ("exec " ++ str ++ " &> /dev/null")
 
 home path = do dir <- io $ getEnv "HOME" `catch` const (return "/")
@@ -76,10 +71,11 @@ main = do
             , height      = 24
             , bgColor     = "black"
             , fgColor     = "#A8A8A8"
-            , borderColor = "blue"
-            , bgHLight    = "black"
-            , fgHLight    = "white"
+            , borderColor = "red"
+            , bgHLight    = "white"
+            , fgHLight    = "black"
             }
+    let myXPConfig' = myXPConfig { height = 28 }
     let myGSConfig = (buildDefaultGSConfig fromClassName) 
             { gs_cellheight = 30
             , gs_cellwidth = 100 
@@ -90,40 +86,56 @@ main = do
             , terminal           = "dterm"
             , normalBorderColor  = "#000033"
             , focusedBorderColor = "red"
-            , workspaces         = wsList
+            , workspaces         = ["chat", "code", "web"]
             , modMask            = mod4Mask
             , layoutHook         = myLayoutHook
             , manageHook         = myManageHook <+> manageDocks
             , logHook            = myLogHook
+            , focusFollowsMouse  = True
             }
 
     let myKeys = 
             [ ("M-`",              spawnExec $ terminal myConfig)
             , ("M-c",              kill)
             , ("M-<Return>",       dwmpromote)
-            , ("M-S-<Return>",     windows W.focusMaster)
-            , ("M-b",              sendMessage ToggleStruts)
-            , ("M-m",            withFocused (sendMessage . maximizeRestore))
+            , ("M-S-t",            withFocused $ windows . W.sink)
+            , ("M-S-b",            sendMessage ToggleStruts)
             , ("M-s",              sshPrompt      myXPConfig)
             , ("M-p",              scriptPrompt   myXPConfig)
             , ("M-S-p",            shellPrompt    myXPConfig)
             , ("M-o",              bookmarkPrompt myXPConfig)
+            , ("M-d",              changeDir myXPConfig)
             , ("M-S-q",            spawn "gnome-session-save --gui --logout-dialog")
             , ("M-S-l",            spawn "gnome-screensaver-command -l")
-            , ("M-n",              viewEmptyWorkspace)
-            , ("M-S-n",            tagToEmptyWorkspace)
             , ("M-g",              goToSelected myGSConfig)
-            , ("M-f",              bringSelected myGSConfig)
-            ] ++ [ ("M-"   ++ k,   windows (W.greedyView n))  | (k, n) <- wsKeys ]
-              ++ [ ("M-S-" ++ k,   windows (W.shift      n))  | (k, n) <- wsKeys ]
+            , ("M-b",              bringSelected myGSConfig)
+            , ("M-<Left>",         prevWS)
+            , ("M-<Right>",        nextWS)
+            , ("M-f",              selectWorkspace myXPConfig')
+            , ("M-S-f",            withWorkspace myXPConfig' (windows . W.shift))
+            , ("M-x",              removeWorkspace)
+            , ("M-r",              renameWorkspace myXPConfig')
+            ] ++ [ ("M-" ++ tenkey n, focusNth $ n - 1) | n <- [1..10] ]
+
+{-
+   , ((modm .|. shiftMask, xK_BackSpace), removeWorkspace)
+   , ((modm .|. shiftMask, xK_v      ), selectWorkspace defaultXPConfig)
+   , ((modm, xK_m                    ), withWorkspace defaultXPConfig (windows . W.shift))
+   , ((modm .|. shiftMask, xK_m      ), withWorkspace defaultXPConfig (windows . copy))
+   , ((modm .|. shiftMask, xK_r      ), renameWorkspace defaultXPConfig)
+-}
 
     let myConf = myConfig { startupHook = startupHook myConfig >> setWMName "LG3D" }
     xmonad $ myConf `additionalKeysP` myKeys
 -- }}}
 
+tenkey 10 = "0"
+tenkey n  = show n
+
 -- {{{ myLogHook
 myLogHook = do home <- io $ getEnv "HOME"
                dynamicLogWithPP (panzenPP (home ++ "/.panzen"))
+               updatePointer (Relative 0.5 0.5)
 --- }}}
 
 -- panzenPP {{{
@@ -161,23 +173,6 @@ myManageHook = composeOne
     , resource  =? "pwsafe_prompt"      -?> doFloat
     , className =? "Glade-3"            -?> doFloat
     , title     =? "Factor workspace"   -?> doFloat
-    {-
-    , className =? "MPlayer"            -?> doFloat
-    , className =? "VirtualBox"         -?> doF (W.shift wsVM)
-    , className =? "Gimp"               -?> doF (W.shift wsGimp)
-    , resource  =? "mutt"               -?> doF (W.shift wsHome)
-    , resource  =? "offlineimap"        -?> doF (W.shift wsHome)
-    , resource  =? "irc"                -?> doF (W.shift wsHome)
-    , resource  =? "rss"                -?> doF (W.shift wsHome)
-    , resource  =? "shell_fm"           -?> doF (W.shift wsHome)
-    , className =? "Pidgin"             -?> doF (W.shift wsHome)
-    , title     =? "Buddy List"         -?> doF (W.shift wsHome)
-    , className =? "Firefox-bin"        -?> doF (W.shift wsWeb)
-    , className =? "Firefox"            -?> doF (W.shift wsWeb)
-    , className =? "Iceweasel"          -?> doF (W.shift wsWeb)
-    , className =? "Navigator"          -?> doF (W.shift wsWeb)
-    , className =? "Gran Paradiso"      -?> doF (W.shift wsWeb)
-    , className =? "Google-chrome"      -?> doF (W.shift wsWeb)-}
     , resource  =? "desktop_window"     -?> doIgnore
     , className =? "WMClock"            -?> doIgnore
     , className =? "stalonetray"        -?> doIgnore
@@ -189,41 +184,31 @@ myManageHook = composeOne
 
 -- {{{ layout hook:
 myLayoutHook = avoidStruts
-             $ (tall ||| Mirror tall ||| grid ||| simpleFloat ||| gimp ||| full )
+             $ workspaceDir "~"
+             $ (tall ||| Mirror tall ||| onebig ||| grid ||| simpleFloat ||| full)
   where
      -- default tiling algorithm partitions the screen into two panes
      tall = named "Tall" 
           $ lessBorders OnlyFloat
           $ layoutHints
-          $ maximize
           $ Tall nmaster delta ratio
 
      -- default grid
      grid = named "Grid" 
           $ lessBorders OnlyFloat
           $ layoutHints
-          $ maximize
           $ Grid
-
-     {-im   = named "IM" 
-          $ layoutHints
-          $ maximize
-          $ withIM (1%6) (Title "Buddy List") 
-          $ Grid-}
-
-     gimp = named "Gimp"
-          $ lessBorders OnlyFloat
-          $ layoutHints
-          $ withIM (0.13) (Role "gimp-toolbox")
-          $ reflectHoriz 
-          $ withIM (0.20) (Role "gimp-dock")
-          $ Full
 
      -- full layout, renamed.
      full = named "Full" 
           $ lessBorders OnlyFloat
           $ layoutHints
           $ Full
+
+     onebig = named "OneBig"
+            $ lessBorders OnlyFloat
+            $ layoutHints
+            $ OneBig (3/4) (3/4)
 
      -- The default number of windows in the master pane
      nmaster = 1

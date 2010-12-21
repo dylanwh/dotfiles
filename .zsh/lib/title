@@ -4,7 +4,7 @@ zmodload zsh/terminfo 2> /dev/null
 
 [[ ${terminfo[hs]} == "yes" ]] || return 1
 
-def_title="zsh: %~"
+def_title="%~"
 title=""
 mode="print"
 
@@ -22,6 +22,11 @@ done
 case $mode in
 	print)
 		if [[ -z $title ]]; then
+			local pwd=$(pwd)
+			local base=$(dirname $pwd)
+				if [[ $base == $HOME/code ]]; then
+					def_title="code: $(basename $pwd)"
+				fi
 			print -Pn "\e]2;$def_title\a"
 		else
 			print -n "\e]2;$title\a"
