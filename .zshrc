@@ -12,7 +12,7 @@ LOGCHECK=30
 
 watch=(all)
 fignore=(.o .hi .pyc)
-cdpath=(~ ~/.local/Dropbox)
+cdpath=(~ ~/.local/Dropbox ~/code)
 fpath=(~/.zsh/lib $fpath)
 
 export PS_PERSONALITY=linux
@@ -154,6 +154,9 @@ alias gis='git status'
 alias gira='git rebase --amend'
 alias girc='git rebase --continue'
 alias gic='git commit'
+alias dbs='dropbox status'
+alias dbfs='dropbox filestatus'
+alias cdd='cd ~/desk'
 alias mplayer="title -e -- mplayer"
 alias evince="title -e -- evince"
 alias ssh="title -e -- ssh"
@@ -251,7 +254,7 @@ namedir bes2011      ~bes/BES-2011
 namedir bes2011_data ~bes/BES-2011-Data
 
 if have xdg-user-dir; then
-	cd $(xdg-user-dir DESKTOP)
+	[[ $PWD == $HOME ]] && cd $(xdg-user-dir DESKTOP)
 fi
 
 # vim: set sw=4 ts=4 foldmethod=marker path=.,~/.zsh:

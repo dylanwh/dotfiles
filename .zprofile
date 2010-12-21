@@ -1,6 +1,7 @@
 # Dylan William Hardison's .zprofile file.
 # This script is executed for login shells and before ~/.zshrc for interactive shells.
 # See also: ~/.zshenv [~/.zprofile] ~/.zshrc ~/.zlogin ~/.zlogout
+# #'
 
 export REALNAME="Dylan William Hardison"
 export EMAIL="dylan@hardison.net"
