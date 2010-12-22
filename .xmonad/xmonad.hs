@@ -111,11 +111,14 @@ main = do
             , ("M-b",              bringSelected myGSConfig)
             , ("M-<Left>",         prevWS)
             , ("M-<Right>",        nextWS)
-            , ("M-f",              selectWorkspace myXPConfig')
-            , ("M-S-f",            withWorkspace myXPConfig' (windows . W.shift))
+            , ("M-0",              selectWorkspace myXPConfig)
+            , ("M-S-0",            withWorkspace myXPConfig (windows . W.shift))
+            , ("M-f",              selectWorkspace myXPConfig)
+            , ("M-S-f",            withWorkspace myXPConfig (windows . W.shift))
+            , ("M-r",              renameWorkspace myXPConfig)
             , ("M-x",              removeWorkspace)
-            , ("M-r",              renameWorkspace myXPConfig')
-            ] ++ [ ("M-" ++ tenkey n, focusNth $ n - 1) | n <- [1..10] ]
+            ] ++ [ ("M-" ++ show n, withNthWorkspace W.greedyView $ n - 1) | n <- [1..9] ]
+              ++ [ ("M-S-" ++ show n, withNthWorkspace W.shift $ n - 1) | n <- [1..9] ]
 
 {-
    , ((modm .|. shiftMask, xK_BackSpace), removeWorkspace)
@@ -128,9 +131,6 @@ main = do
     let myConf = myConfig { startupHook = startupHook myConfig >> setWMName "LG3D" }
     xmonad $ myConf `additionalKeysP` myKeys
 -- }}}
-
-tenkey 10 = "0"
-tenkey n  = show n
 
 -- {{{ myLogHook
 myLogHook = do home <- io $ getEnv "HOME"
@@ -240,7 +240,7 @@ bookmarkPrompt c = do
 gotoBookmark :: [(String, String)] -> String -> X ()
 gotoBookmark marks name =
     case lookup name marks of
-         Just url -> spawnExec ("url-handler " ++ url)
+         Just url -> spawnExec ("firefox " ++ url)
          Nothing  -> return ()
 
 getBookmarks :: String -> IO [(String, String)]
@@ -252,7 +252,6 @@ pair :: String -> (String, String)
 pair = break isSpace >>> second (dropWhile isSpace)
 -- }}}
 
-
 myIsFullscreen = do w <- ask
                     fs <- isFullscreen
                     if fs then return fs
@@ -260,5 +259,3 @@ myIsFullscreen = do w <- ask
                                           case p of 
                                                Just (flags:_:decorations:_) -> return ((flags .&. 2) /= 0 && decorations == 0)
                                                Nothing -> return False
-
-
