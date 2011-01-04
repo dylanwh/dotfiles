@@ -100,6 +100,8 @@ bindkey "^_" copy-prev-shell-word
 bindkey '^P' push-input
 bindkey '^[h' run-help
 bindkey '^r' vi-history-search-backward
+bindkey '^A' beginning-of-line
+bindkey '^E' end-of-line
 
 ## }}}
 ## {{{ FUNCTIONS
@@ -254,7 +256,7 @@ namedir bes2011      ~bes/BES-2011
 namedir bes2011_data ~bes/BES-2011-Data
 
 if have xdg-user-dir; then
-	[[ $PWD == $HOME ]] && cd $(xdg-user-dir DESKTOP)
+	[[ $PWD == $HOME ]] && pushd $(xdg-user-dir DESKTOP)
 fi
 
 # vim: set sw=4 ts=4 foldmethod=marker path=.,~/.zsh:
