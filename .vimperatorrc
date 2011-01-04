@@ -16,3 +16,4 @@ set! browser.download.manager.showWhenStarting=false
 set! browser.download.manager.showAlertOnComplete=false
 set! browser.download.lastDir=/home/dylan/var/download
 
+javascript liberator.beep = function () { return false; }

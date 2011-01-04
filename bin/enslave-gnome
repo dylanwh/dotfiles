@@ -14,7 +14,11 @@ xsetroot -solid $bgcolor
 xsetroot -cursor_name left_ptr
 
 # my xkb options
-kb_options="[terminate\tterminate:ctrl_alt_bksp,ctrl\tctrl:nocaps]"
+altwin=''
+if grep -q swap_alt_win /usr/share/X11/xkb/symbols/altwin; then
+	altwin=',altwin\taltwin:swap_alt_win'
+fi
+kb_options="[terminate\tterminate:ctrl_alt_bksp,ctrl\tctrl:nocaps$altwin]"
 gconftool -t list --list-type string \
     -s /desktop/gnome/peripherals/keyboard/kbd/options "$(echo -e $kb_options)"
 

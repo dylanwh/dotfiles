@@ -96,6 +96,7 @@ main = do
 
     let myKeys = 
             [ ("M-`",              spawnExec $ terminal myConfig)
+            , ("M-<Escape>",       spawnExec $ terminal myConfig)
             , ("M-c",              kill)
             , ("M-<Return>",       dwmpromote)
             , ("M-S-t",            withFocused $ windows . W.sink)
@@ -109,14 +110,15 @@ main = do
             , ("M-S-l",            spawn "gnome-screensaver-command -l")
             , ("M-g",              goToSelected myGSConfig)
             , ("M-b",              bringSelected myGSConfig)
-            , ("M-<Left>",         prevWS)
-            , ("M-<Right>",        nextWS)
+            , ("M-<Left>",         spawn "x2 prev")
+            , ("M-<Right>",        spawn "x2 next")
             , ("M-0",              selectWorkspace myXPConfig)
             , ("M-S-0",            withWorkspace myXPConfig (windows . W.shift))
             , ("M-f",              selectWorkspace myXPConfig)
             , ("M-S-f",            withWorkspace myXPConfig (windows . W.shift))
             , ("M-r",              renameWorkspace myXPConfig)
-            , ("M-x",              removeWorkspace)
+            , ("M-S-x",            removeWorkspace)
+            , ("M-x",              spawn "x2 toggle 2> /tmp/foo") 
             ] ++ [ ("M-" ++ show n, withNthWorkspace W.greedyView $ n - 1) | n <- [1..9] ]
               ++ [ ("M-S-" ++ show n, withNthWorkspace W.shift $ n - 1) | n <- [1..9] ]
 

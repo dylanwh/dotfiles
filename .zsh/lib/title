@@ -22,11 +22,6 @@ done
 case $mode in
 	print)
 		if [[ -z $title ]]; then
-			local pwd=$(pwd)
-			local base=$(dirname $pwd)
-				if [[ $base == $HOME/code ]]; then
-					def_title="code: $(basename $pwd)"
-				fi
 			print -Pn "\e]2;$def_title\a"
 		else
 			print -n "\e]2;$title\a"

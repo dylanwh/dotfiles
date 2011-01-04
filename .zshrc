@@ -108,9 +108,10 @@ bindkey '^E' end-of-line
 # Autoload various functions
 autoload run-help compinit promptinit colors
 autoload title shuffle perlpath prefix
-
 function mdc { mkdr -p $1 && cd $1 }
 function namedir { declare -g $1=$2; : ~$1 }
+function save_cwd { echo $PWD >! ~/.cache/zsh/last_cwd }
+chpwd_functions+=( save_cwd )
 ## }}}
 ## {{{ ALIASES
 alias have='whence -p ls &>/dev/null'
@@ -149,6 +150,9 @@ alias find="noglob find"
 alias menu="vim ~/.menu"
 alias x2=nyxmms2
 alias x2go='noglob nyxmms2 jump'
+alias x2pls='nyxmms2 playlist'
+alias ne='x2 next'
+alias pr='x2 prev'
 alias cnm='cnetworkmanager'
 alias vw='vim ~docs/wiki/index.wiki'
 alias gia='git add'
