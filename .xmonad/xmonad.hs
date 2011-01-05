@@ -106,6 +106,7 @@ main = do
             , ("M-S-p",            shellPrompt    myXPConfig)
             , ("M-o",              bookmarkPrompt myXPConfig)
             , ("M-d",              changeDir myXPConfig)
+            , ("M-q",              return ())
             , ("M-S-q",            spawn "gnome-session-save --gui --logout-dialog")
             , ("M-S-l",            spawn "gnome-screensaver-command -l")
             , ("M-g",              goToSelected myGSConfig)
@@ -117,7 +118,7 @@ main = do
             , ("M-f",              selectWorkspace myXPConfig)
             , ("M-S-f",            withWorkspace myXPConfig (windows . W.shift))
             , ("M-r",              renameWorkspace myXPConfig)
-            , ("M-S-x",            removeWorkspace)
+            , ("M-S-c",            removeWorkspace)
             , ("M-x",              spawn "x2 toggle 2> /tmp/foo") 
             ] ++ [ ("M-" ++ show n, withNthWorkspace W.greedyView $ n - 1) | n <- [1..9] ]
               ++ [ ("M-S-" ++ show n, withNthWorkspace W.shift $ n - 1) | n <- [1..9] ]
