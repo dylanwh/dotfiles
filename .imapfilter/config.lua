@@ -39,6 +39,7 @@ function main()
 
     -- I only need a few rules for work.
     trash(work, "linode", is_older(7))
+    trash(work, "issue", is_older(7))
     trash(work, "daily",  is_older(0))
 end
 
