@@ -63,6 +63,9 @@ home path = do dir <- io $ getEnv "HOME" `catch` const (return "/")
                return (dir ++ '/' : path)
 -- }}}
 
+fromResource :: Window -> Bool -> X (String, String)
+fromResource w active = runQuery resource w >>= flip defaultColorizer active
+
 -- {{{ main
 main = do
     let myFont     = "-xos4-terminus-bold-r-*-*-*-140-100-100-*-*-iso8859-1"
@@ -86,7 +89,7 @@ main = do
             , terminal           = "dterm"
             , normalBorderColor  = "#000033"
             , focusedBorderColor = "red"
-            , workspaces         = ["chat", "code", "web"]
+            , workspaces         = ["chat", "web"]
             , modMask            = mod4Mask
             , layoutHook         = myLayoutHook
             , manageHook         = myManageHook <+> manageDocks

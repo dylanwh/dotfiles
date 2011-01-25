@@ -3,6 +3,7 @@ use strict;
 use warnings;
 use Sys::Hostname;
 use Template;
+use encoding 'utf8';
 
 my @pre_process;
 my @wrapper;
