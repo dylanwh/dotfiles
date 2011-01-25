@@ -4,5 +4,12 @@
 
 # run other components -- zsh is a bourne shell
 if [[ -o interactive ]]; then
-	uptime
+	case $HOST in
+		lofn)
+			: # nothing
+		;;
+		*)
+			uptime
+		;;
+	esac
 fi
