@@ -6,6 +6,7 @@ use IO::Handle;
 use Fcntl 'F_GETFD', 'F_SETFD', 'FD_CLOEXEC';
 use Getopt::Long qw(  :config pass_through gnu_compat bundling no_getopt_compat );
 use YAML::XS 'LoadFile', 'Dump';
+use if $ENV{DISPLAY}, 'Clipboard';
 
 
 my ($root);
@@ -44,5 +45,9 @@ sub sshpass {
     my $fd = $in->fileno;
 
     print "Going to ssh to $user\@$host->{hostname}, using fd $fd for password\n";
+    if ($ENV{DISPLAY}) {
+        print "Root password in clipboard.\n";
+        Clipboard->copy($host->{root_pass});
+    }
     exec('sshpass', "-d$fd", 'ssh', '-oStrictHostKeyChecking=no', "$user\@$host->{hostname}", @args);
 }
