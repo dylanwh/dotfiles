@@ -167,6 +167,7 @@ alias mplayer="title -e -- mplayer"
 alias evince="title -e -- evince"
 alias ssh="title -e -- ssh"
 alias man="title -e -- man"
+alias aptitude='sudo aptitude'
 
 have todo.pl    && alias t=todo.pl
 have pinfo      && alias info=pinfo
@@ -223,7 +224,7 @@ esac
 zstyle ':completion:*:sudo:*' command-path $path /usr/sbin /sbin
 
 # cache the output of completion functions.
-zstyle ':completion:*' use-cache on
+zstyle ':completion:*' use-cache off
 zstyle ':completion:*' cache-path ~/.cache/zsh
 
 if have dircolors; then

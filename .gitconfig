@@ -11,6 +11,7 @@
 	br=branch
 	st=status
 	record = !git add -p && git commit
+	lg = log --graph --pretty=format:'%Cred%h%Creset%C(yellow)%d%Creset %C(bold blue)%an %Cgreen(%cr)%Creset%n%s%n' --abbrev-commit --date=relative --stat=72
 
 [color]
 	ui = auto

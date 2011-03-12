@@ -13,15 +13,15 @@ use Try::Tiny;
 
 use List::MoreUtils 'none';
 
-my $file = shift;
+my $file = file(shift);
 
 die "usage: $0 file.xls\n" unless $file or $file =~ /\.xls/;
 
 my $csv = Text::CSV->new({ binary => 1 });
 my $p   = Spreadsheet::ParseExcel->new;
-my $doc = $p->Parse($file);
+my $doc = $p->Parse($file->stringify);
 
-my $dir = dir(phrase_to_ident(basename($file, ".xls")));
+my $dir = $file->parent->subdir(phrase_to_ident(basename($file, ".xls")));
 warn "Directory: $dir\n";
 $dir->mkpath;
 
