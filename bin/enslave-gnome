@@ -13,6 +13,8 @@ if [[ -n $DISPLAY ]]; then
 
 	xsetroot -solid $bgcolor
 	xsetroot -cursor_name left_ptr
+
+	xset r rate $delay $rate
 fi
 
 # my xkb options
@@ -28,7 +30,7 @@ gconftool -t list --list-type string \
 gconftool -t boolean \
     -s /desktop/gnome/peripherals/keyboard/general/groupPerWindow false
 
-xset r rate $delay $rate
+
 gconftool -t int     -s /desktop/gnome/peripherals/keyboard/rate $rate
 gconftool -t int     -s /desktop/gnome/peripherals/keyboard/delay $delay
 
