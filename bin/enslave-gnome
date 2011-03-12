@@ -54,7 +54,9 @@ fi
 
 function dropdir {
 	rm -f "$1"
-	ln -s "$dropbox/$2" "$1"
+	if [[ -d $dropbox/$2 ]]; then
+		ln -s "$dropbox/$2" "$1"
+	fi
 }
 
 dropdir ~/docs Documents
