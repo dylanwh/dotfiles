@@ -5,13 +5,15 @@ bgcolor='#330000'
 delay=200
 rate=40
 
-# 01:16 <jcristau> setxkbmap -option terminate:ctrl_alt_bksp might help
-# 01:16 <jcristau> dontzap was turned off again by default in the server, and terminate was made an option in xkeyboard-config
-setxkbmap -option terminate:ctrl_alt_bksp
-setxkbmap -option ctrl:nocaps
+if [[ -n $DISPLAY ]]; then
+	# 01:16 <jcristau> setxkbmap -option terminate:ctrl_alt_bksp might help
+	# 01:16 <jcristau> dontzap was turned off again by default in the server, and terminate was made an option in xkeyboard-config
+	setxkbmap -option terminate:ctrl_alt_bksp
+	setxkbmap -option ctrl:nocaps
 
-xsetroot -solid $bgcolor
-xsetroot -cursor_name left_ptr
+	xsetroot -solid $bgcolor
+	xsetroot -cursor_name left_ptr
+fi
 
 # my xkb options
 altwin=''
