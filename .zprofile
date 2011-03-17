@@ -25,7 +25,6 @@ if [[ -d /etc/profile.d ]]; then
 fi
 
 perl5lib=(~/lib 'lib')
-path=(~/bin $path)
 
 case $HOST in
     lofn)
