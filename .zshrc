@@ -168,6 +168,7 @@ alias evince="title -e -- evince"
 alias ssh="title -e -- ssh"
 alias man="title -e -- man"
 alias aptitude='sudo aptitude'
+alias irssi-safe='title -t irssi -e dtach -A ~/.irssi/dtach -Ez irssi'
 
 have todo.pl    && alias t=todo.pl
 have pinfo      && alias info=pinfo

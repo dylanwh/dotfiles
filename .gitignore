@@ -28,7 +28,6 @@
 !.gvimrc
 !.imapfilter
 !.inputrc
-!.irssi
 !.mailcap
 !.menu
 !.minicpanrc
@@ -43,7 +42,7 @@
 !.remind
 !.reminders
 !.screenrc
-!.ssh
+!.ssh/config
 !.surfraw.bookmarks
 !.surfraw.conf
 !.terminfo
