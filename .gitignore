@@ -13,7 +13,6 @@
 !.config/user-dirs.dirs
 !.config/user-dirs.locale
 !.Xdefaults.tt
-!.bip
 !.boring
 !.contacts
 !.cpanm
@@ -91,7 +90,6 @@
 .xmonad/xmonad.o
 .zsh/alias-ls
 .zsh/cache
-.bip/bip.pid
 .imapfilter/certificates
 .imapfilter/status
 .mutt/passwd.home
