@@ -175,7 +175,7 @@ panzenPP f = defaultPP { ppTitle   = panzenColor "white" . shorten 50
 -- and click on the client you're interested in.
 myManageHook = composeOne
     [ transience
-    , myIsFullscreen                    -?> (doF W.focusDown <+> doFullFloat)
+    , myIsFullscreen                    -?> doFullFloat
     , resource  =? "pwsafe_prompt"      -?> doFloat
     , className =? "Glade-3"            -?> doFloat
     , title     =? "Factor workspace"   -?> doFloat

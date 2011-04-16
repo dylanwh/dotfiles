@@ -41,7 +41,7 @@ set nobackup           " Do not keep backups.
 set hlsearch           " Highlight searches.
 set incsearch          " Incremental search; highlight as you type.
 set secure             " shell and write commands are not allowed in "./.vimrc".
-set noexrc             " Read .vimrc from current dir (off)
+set exrc             " Read .vimrc from current dir (off)
 set modeline           " Allow modelines.
 set ruler              " Show cursor position at all times.
 set laststatus=2       " Always display a status bar.
