@@ -150,6 +150,7 @@ alias find="noglob find"
 alias menu="vim ~/.menu"
 alias x2=nyxmms2
 alias x2go='noglob nyxmms2 jump'
+alias x2l='noglob nyxmms2 list'
 alias x2pls='nyxmms2 playlist'
 alias ne='x2 next'
 alias pr='x2 prev'

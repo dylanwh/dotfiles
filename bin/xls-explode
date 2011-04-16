@@ -56,14 +56,21 @@ sub phrase_to_ident {
     $ident =~ s/\((\S+)\)/_$1_/g;
     $ident =~ s/&/ and /g;
     $ident =~ s/\W+/_/g;
+    $ident =~ s/([a-z])([A-Z])/$1_$2/g;
+    $ident =~ s/([A-Za-z])(\d)/$1_$2/g;
+    $ident =~ s/(\d)([A-Za-z])/$1_$2/g;
     $ident =~ s/_+$//;
     $ident =~ s/^_+//;
     $ident =~ s/_+/_/g;
-    $ident =~ s/([a-z])([A-Z])/$1_$2/g;
+    $ident =~ s/_v_(\d)/_v$1/g;
+    $ident =~ s/^v_(\d)/v$1/g;
 
     if ($ident =~ s/^(\d{4})_//) {
         $ident .= "_$1";
     }
+    
+    $ident =~ s/v(\d+)_(\d{4})/$2_v$1/g;
+
     return lc $ident;
 }
 

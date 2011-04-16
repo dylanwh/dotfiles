@@ -33,6 +33,8 @@ set mark-symlinked-directories on
 "\e[6~": history-search-forward
 "\e[3~": delete-char
 "\e[2~": quoted-insert
+"\e[A":  history-search-backward
+"\e[B":  history-search-forward
 
 # gnome-terminal (escape + arrow key)
 "\e[5C": forward-word
