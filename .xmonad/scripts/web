@@ -1,2 +1,2 @@
 #!/bin/sh
-exec nice -n 18 firefox > /dev/null 2> /dev/null
+exec google-chrome
