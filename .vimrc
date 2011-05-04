@@ -58,17 +58,18 @@ set wildignore=*.bak,~,*.o,*.info,*.swp,*.dvi,*.pdf,.*
 set backspace=eol,start,indent
 set grepprg=grep\ -nH\ \ --exclude='*.svn*'\ $*
 set foldopen=tag,search,quickfix,undo,jump,mark,percent
-set viminfo=!,'1000,%,h,f1,n~/.viminfo
+set viminfo=!,'1000,%,h,f1,n~/.cache/viminfo
 set statusline=%<%f\ %h%m%r%{FF()}%{FENC()}%y%=0x%B\ %-14.(%l,%c%V%)\ %P
 set fillchars=fold:\ ,stl:\ ,stlnc:\  " borders
 set tags+=~/.tags,.tags
 set nowrap
 set sidescroll=5
 set listchars=tab:>.,trail:_,precedes:<,extends:>
-set nolist  " This and the above line make for visible whitespace.
-set mouse=  " disable mouse
+set nolist     " This and the above line make for visible whitespace.
+set mouse=     " disable mouse
+set clipboard= " don't automatically put stuff in the clipboard.
 
-let mapleader = "\\"
+let mapleader      = "\\"
 let maplocalleader = ","
 
 "-- My name for adding chanelog entries.
@@ -85,7 +86,7 @@ let c_gnu=1
 let c_comment_strings=1
 
 "-- Disable the annoying paren highlighter.
-let loaded_matchparen = 1
+"let loaded_matchparen = 1
 let g:inkpot_black_background = 1
 let g:bluez_transbg = 1
 

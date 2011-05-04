@@ -100,7 +100,7 @@ URxvt.keysym.C-M-y: perl:mark-and-yank:activate_mark_mode
 URxvt.keysym.C-M-u: perl:mark-and-yank:activate_mark_url_mode
 URxvt.perl-lib: [% HOME %]/.urxvt/
 URxvt.perl-ext: mark-and-yank
-URxvt.urlLauncher: firefox
+URxvt.urlLauncher: url-handler
 URxvt.underlineURLs: true
 [%- END -%]
 

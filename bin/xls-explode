@@ -1,6 +1,7 @@
 #!/usr/bin/env perl
 use strict;
 use warnings;
+use feature 'switch';
 use bigint;
 use charnames ':full';
 use Spreadsheet::ParseExcel;
@@ -75,44 +76,66 @@ sub phrase_to_ident {
 }
 
 use Devel::StringInfo 'string_info';
+
+sub clean_int {
+    my ($x) = @_;
+    my ($zeros) = $x =~ /^(0+)\d+$/;
+    
+    return ($zeros || '') . Math::BigInt->new($x);
+}
+
+sub clean_decode {
+    my ($str) = @_;
+
+    try {
+        $str = decode( 'Guess', $str );
+    }
+    catch {
+        unless ( utf8::is_utf8($str) ) {
+            if ( utf8::valid($str) ) {
+                try {
+                    $str = decode( 'utf8', $str );
+                }
+                catch {
+                    string_info($str);
+                    die "evil";
+                };
+            }
+            else {
+                die "invalid: $str\n";
+            }
+        }
+    };
+
+    return $str;
+}
+
 sub clean {
     my ($cell) = @_;
     return '' unless $cell;
-    my $t = $cell->value;
-    if ($t =~ /^\d+$/ 
-            or $cell->unformatted =~ /^\d\.\d+e\+\d+/i
-            or $cell->unformatted =~ /^\d+$/
-    ) {
-        my ($zeros) = $cell->unformatted =~ /^(0+)\d+$/;
-        $t = ($zeros || '') . Math::BigInt->new($cell->unformatted);
-    }
+    my $v = $cell->value;
+    my $u = $cell->unformatted;
+    my $e = $cell->encoding;
 
-    if ($cell->encoding != 2 and $t) {
-        try {
-            $t = decode('Guess', $t);
-        } catch {
-            unless (utf8::is_utf8($t)) {
-                if (utf8::valid($t)) {
-                    try {
-                        $t = decode('utf8', $t);
-                    } catch {
-                        string_info ($t);
-                        die "pants";
-                    };
-                }
-                else {
-                    die "invalid: $t\n"
-                }
+    given ($v) {
+        when (/^\d+$/) {
+            $v = clean_int($v);
+        }
+        default {
+            if ($e != 2 and $v) {
+                $v = clean_decode($v);
             }
-        };
-
-        if($t =~ /cause de ton sexe tu n'es pas consid.+r.+ comme .+tant/) {
-            printf "GOT: %d, %s\n", $cell->encoding, $t;
-            string_info($t);
+            $v = remove_utf8_punctuation($v);
         }
     }
 
-    return remove_utf8_punctuation($t); # Encode::decode_utf8(demoroniser(Encode::encode_utf8($t)));
+    if ("$v" eq 'NaN') {
+        printf "GOT NAN: %d, %s vs. %s\n", $e, $v, $u;
+        string_info($v);
+        exit 1;
+    }
+
+    return $v;
 }
 
 sub remove_utf8_punctuation {

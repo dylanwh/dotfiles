@@ -24,7 +24,7 @@ setopt autocd                  # change to dirs without cd
 setopt autopushd               # automatically append dirs to the push/pop list
 setopt pushd_ignore_dups       # and do not duplicate them
 setopt pushd_to_home           # pushd with no args is like cd with no args.
-setopt nocdablevars            # the need for an explicit $
+setopt cdablevars            # the need for an explicit $
 setopt listpacked              # compact completion lists
 setopt nolisttypes             # show types in completion
 setopt extended_glob           # weird & wacky pattern matching - yay zsh!
@@ -152,6 +152,7 @@ alias x2=nyxmms2
 alias x2go='noglob nyxmms2 jump'
 alias x2l='noglob nyxmms2 list'
 alias x2pls='nyxmms2 playlist'
+alias x2s='x2 list | grep -A10 -B10 -- "->"'
 alias ne='x2 next'
 alias pr='x2 prev'
 alias cnm='cnetworkmanager'
@@ -187,7 +188,7 @@ if [[ ! -f ~/.cache/zsh/alias-ls ]]; then
 	local -a ls_args
 
 	if have gls; then ls_cmd=gls; fi
-	ls_args=('-Fh' '-H' '--color=auto' '--group-directories-first')
+	ls_args=('-Fh' '--color=auto' '--group-directories-first')
 
 	while (( $#ls_args > 0 )); do
 		if $ls_cmd $ls_args ~/.zsh &> /dev/null; then

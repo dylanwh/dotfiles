@@ -246,7 +246,7 @@ bookmarkPrompt c = do
 gotoBookmark :: [(String, String)] -> String -> X ()
 gotoBookmark marks name =
     case lookup name marks of
-         Just url -> spawnExec ("firefox " ++ url)
+         Just url -> spawnExec ("url-handler " ++ url)
          Nothing  -> return ()
 
 getBookmarks :: String -> IO [(String, String)]
