@@ -1,0 +1,195 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+use English;
+use Getopt::Long qw(:config gnu_getopt);
+
+use Eval::Closure;
+use Set::Object;
+use Template;
+use Text::CSV;
+
+my (@modules, $file, $expr, $encode);
+my $named = 0;
+my %csv_in = (
+    quote => q{"},
+    sep   => q{,},
+    esc   => q{"},
+    eol   => qq{\n},
+);
+my %csv_out;
+
+GetOptions(
+    'i=s%'     => \%csv_in,
+    'o=s%'     => \%csv_out,
+    'F=s'      => \$csv_in{sep},
+    'M=s@'     => \@modules,
+    'n|named'  => \$named,
+    'd|debug'  => \$ENV{CSV_DEBUG},
+    'f|file=s' => \$file,
+    'e|expr=s' => \$expr,
+    'E|encode' => \$encode,
+);
+
+foreach (@modules) {
+    s|^([\w:]+)=(.+)$|"$1 qw(" . join(" ", split(/,/, $2)) . ")"|ge;
+    if (s/^-//) {
+        $_ = "no $_";
+    }
+    else {
+        $_ = "use $_";
+    }
+}
+
+
+
+if (not $file and not $expr) {
+    if ($ARGV[0] and not -f $ARGV[0]) {
+        $expr = shift @ARGV;
+    }
+}
+
+my $csv_in   = new_csv( expand(%csv_in));
+my $csv_out  = new_csv( expand(%csv_in, %csv_out) );
+my $template = Template->new({INCLUDE_PATH => ["."]});
+
+my $source = "";
+my %vars   = (
+    expr    => $expr,
+    file    => $file,
+    modules => \@modules,
+    named   => $named,
+);
+
+$template->process(\*DATA, \%vars, \$source) or die $template->error;
+
+if ($ENV{CSV_DEBUG}) { warn $source; exit }
+
+my $func = eval_closure(
+    environment => {
+        '$CSV_OUT' => \$csv_out,
+        '$CSV_IN'  => \$csv_in,
+        '$FH'      => \*ARGV,
+        '@NAMES'   => $named ? get_names($csv_in, \*ARGV) : [],
+    },
+    source => "sub { $source }",
+);
+
+binmode STDOUT, ':raw';
+$func->();
+
+sub expand {
+    my (%opt) = @_;
+    local $_;
+
+    for my $key (keys %opt) {
+        $_ = $opt{$key};
+        next unless $_;
+        s/\\t/\t/g;
+        s/\\n/\n/g;
+        s/\\r/\r/g;
+        s/\\e/\e/g;
+        $opt{$key} = $_;
+    }
+
+    return %opt;
+}
+
+sub emit(@) {
+    $csv_out->print(\*STDOUT, [ @_ ]);
+};
+
+sub emitr($) {
+    $csv_out->print(\*STDOUT, $_[0])
+};
+
+sub new_csv {
+    my (%opt) = @_;
+
+    Text::CSV->new(
+        {   
+            binary      => 1,
+            eol         => $opt{eol},
+            quote_char  => $opt{quote},
+            sep_char    => $opt{sep},
+            escape_char => $opt{esc} // $opt{escape},
+            blank_is_undef => 1,
+        }
+    ) or die Text::CSV->error_diag;
+}
+
+sub get_names {
+    my ($csv_in, $fh) = @_;
+
+    my (%total, %count);
+    my $i = 0;
+
+    my @names = map { phrase_to_ident($_) } @{ $csv_in->getline($fh) };
+    foreach (@names) {
+        next unless defined $_;
+        $total{$_}++;
+    }
+
+    foreach my $name (@names) {
+        unless ($name) {
+            $name = "#$i";
+        }
+
+        if ($total{$name} && $total{$name} > 1) {
+            $name = $name . "_" . ++$count{$name};
+        }
+
+        $i++;
+    }
+
+    return \@names;
+}
+
+sub phrase_to_ident {
+    my ($ident) = @_;
+
+    return undef unless defined $ident;
+
+    $ident =~ s/\(.*\s+.*\)//g;
+    $ident =~ s/\((\S+)\)/_$1_/g;
+    $ident =~ s/&/ and /g;
+    $ident =~ s/\W+/_/g;
+    $ident =~ s/_+$//;
+    $ident =~ s/^_+//;
+    $ident =~ s/_+/_/g;
+    $ident =~ s/([a-z])([A-Z])/$1_$2/g;
+
+    if ($ident =~ s/^(\d{4})_//) {
+        $ident .= "_$1";
+    }
+    return lc $ident;
+}
+
+__DATA__
+[% DEFAULT expr = 'emitr $ROW' %]
+package main;
+no strict;
+use feature 'say';
+
+[% FOREACH module IN modules; GET "$module;\n"; END %]
+
+my ($ROW, $REC);
+local ($_, @_, %_);
+
+ROW: while ($ROW = $CSV_IN->getline($FH)) {
+    $_   = do { no warnings 'uninitialized'; "@$ROW" };
+    *_   = $ROW;
+    if (@NAMES) {
+        $REC = {};
+        @$REC{ @NAMES } = @$ROW;
+        *_ = $REC;
+    }
+
+    [% IF file %]
+#line 1 "[% file %]"
+    [% INSERT $file %]
+    [% ELSIF expr %]
+#line 1 "-e"
+    [% expr %]
+    [% END %]
+}
