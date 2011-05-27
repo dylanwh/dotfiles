@@ -7,7 +7,7 @@
 # 
 XDG_DESKTOP_DIR="$HOME/Dropbox/Desktop"
 XDG_DOWNLOAD_DIR="$HOME/tmp"
-XDG_TEMPLATES_DIR="$HOME/Dropbox/Templates"
+XDG_TEMPLATES_DIR="$HOME/Dropbox"
 XDG_PUBLICSHARE_DIR="$HOME/Dropbox/Public"
 XDG_DOCUMENTS_DIR="$HOME/Dropbox/Documents"
 XDG_MUSIC_DIR="$HOME/Dropbox/Music"
