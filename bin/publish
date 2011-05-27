@@ -1,0 +1,49 @@
+#!/bin/zsh
+
+mode=stdin
+pubdir=$(xdg-user-dir PUBLICSHARE)
+
+newfile() {
+	TMPDIR="$pubdir" tempfile -d "$pubdir" -p clip_ -s .txt
+}
+
+while getopts "d:f:c" opt; do
+	case $opt in
+		d)
+			pubdir="$pubdir/$OPTARG"
+			mkdir -p $pubdir
+		;;
+		f)
+			file=$OPTARG
+			mode=file
+		;;
+		c)
+			mode=clip
+		;;
+		'?')
+			exit 1
+		;;
+	esac
+done
+
+case $mode in
+	stdin) 
+		pubfile=$(newfile)
+		> $pubfile
+	;;
+	clip)
+		pubfile=$(newfile)
+		xclip -o > $pubfile
+	;;
+	file)
+		pubfile="$pubdir/$(basename $file)"
+		cp $file $pubfile
+	;;
+esac
+
+until dropbox filestatus $pubfile | grep -Fq "$pubfile: up to date"
+do
+	sleep .1
+done
+
+dropbox puburl $pubfile | xclip -i
