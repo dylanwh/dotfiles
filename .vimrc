@@ -86,7 +86,7 @@ let c_gnu=1
 let c_comment_strings=1
 
 "-- Disable the annoying paren highlighter.
-"let loaded_matchparen = 1
+let loaded_matchparen = 1
 let g:inkpot_black_background = 1
 let g:bluez_transbg = 1
 
