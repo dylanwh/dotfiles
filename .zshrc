@@ -249,14 +249,10 @@ stty -ixon   # Disable the freeze-the-terminal-on-control-s thing.
 ttyctl -f    # Freeze terminal properties.
 
 namedir progfiles    ~/.wine/drive_c/Program\ Files
-namedir dropbox      ~/.local/Dropbox
-namedir docs         ~/.local/Dropbox/Documents
 namedir trash        ~/.local/share/Trash
-
+namedir dropbox      ~/Dropbox
 namedir moonshine    ~/code/moonshine
-
 namedir g2           ~/work/g2
-namedir hewitt       ~/work/hewitt
 namedir arc          ~/work/hewitt/arc
 namedir bes          ~/work/hewitt/bes
 namedir bes2010      ~bes/BES-2010
@@ -264,7 +260,14 @@ namedir bes2011      ~bes/BES-2011
 namedir bes2011_data ~bes/BES-2011-Data
 
 if have xdg-user-dir; then
-	[[ $PWD == $HOME ]] && pushd $(xdg-user-dir DESKTOP)
+	namedir docs   $(xdg-user-dir DOCUMENTS)
+	namedir desk   $(xdg-user-dir DESKTOP)
+	namedir pub    $(xdg-user-dir PUBLICSHARE)
+	namedir mus    $(xdg-user-dir MUSIC)
+	namedir pics   $(xdg-user-dir PICTURES)
+	namedir vids   $(xdg-user-dir VIDEOS)
+
+	[[ $PWD == $HOME ]] && pushd ~desk
 fi
 
 # vim: set sw=4 ts=4 foldmethod=marker path=.,~/.zsh:
