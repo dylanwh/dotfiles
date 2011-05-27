@@ -2,8 +2,6 @@
 
 zmodload zsh/terminfo 2> /dev/null
 
-[[ ${terminfo[hs]} == "yes" ]] || return 1
-
 def_title="%~"
 title=""
 mode="print"
@@ -21,6 +19,8 @@ done
 
 case $mode in
 	print)
+		[[ ${terminfo[hs]} == "yes" ]] || return 1
+
 		if [[ -z $title ]]; then
 			print -Pn "\e]2;$def_title\a"
 		else
@@ -32,7 +32,9 @@ case $mode in
 		if [[ -z $title ]]; then
 			title="$cmd"
 		fi
-		print -n "\e]2;$title\a"
+		if [[ ${terminfo[hs]} == "yes" ]]; then
+			print -n "\e]2;$title\a"
+		fi
 		$cmd
 	;;
 esac
