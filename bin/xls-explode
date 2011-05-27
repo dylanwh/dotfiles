@@ -14,40 +14,41 @@ use Try::Tiny;
 
 use List::MoreUtils 'none';
 
-my $file = file(shift);
-
-die "usage: $0 file.xls\n" unless $file or $file =~ /\.xls/;
-
 my $csv = Text::CSV->new({ binary => 1 });
 my $p   = Spreadsheet::ParseExcel->new;
-my $doc = $p->Parse($file->stringify);
 
-my $dir = $file->parent->subdir(phrase_to_ident(basename($file, ".xls")));
-warn "Directory: $dir\n";
-$dir->mkpath;
+foreach my $file (@ARGV) {
+    $file = file($file);
 
-for my $sheet ( $doc->worksheets ) {
-    my $file = $dir->file( phrase_to_ident( $sheet->get_name ) . ".csv" );
-    my $fh   = $file->openw;
-    binmode $fh, ':encoding(utf8)';
+    my $doc = $p->Parse($file->stringify);
 
-    my ( $row_min, $row_max ) = $sheet->row_range();
-    my ( $col_min, $col_max ) = $sheet->col_range();
+    my $dir = $file->parent->subdir(phrase_to_ident(basename($file, ".xls")));
+    warn "Directory: $dir\n";
+    $dir->mkpath;
 
-    warn "    File: $file\n";
-    for my $row ( $row_min .. $row_max ) {
-        my @row = map {
-            clean(
-                $sheet->get_cell( $row, $_ )
-            )
-        } $col_min .. $col_max;
+    for my $sheet ( $doc->worksheets ) {
+        my $file = $dir->file( phrase_to_ident( $sheet->get_name ) . ".csv" );
+        my $fh   = $file->openw;
+        binmode $fh, ':encoding(utf8)';
 
-        next if none { $_ } @row;
-        $csv->print($fh, \@row);
-        $fh->print("\n");
+        my ( $row_min, $row_max ) = $sheet->row_range();
+        my ( $col_min, $col_max ) = $sheet->col_range();
+
+        warn "    File: $file\n";
+        for my $row ( $row_min .. $row_max ) {
+            my @row = map {
+                clean(
+                    $sheet->get_cell( $row, $_ )
+                )
+            } $col_min .. $col_max;
+
+            next if none { $_ } @row;
+            $csv->print($fh, \@row);
+            $fh->print("\n");
+        }
+
+        $fh->close;
     }
-
-    $fh->close;
 }
 
 
@@ -119,7 +120,7 @@ sub clean {
 
     given ($v) {
         when (/^\d+$/) {
-            $v = clean_int($v);
+            $v = clean_int($u);
         }
         default {
             if ($e != 2 and $v) {

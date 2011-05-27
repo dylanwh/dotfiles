@@ -100,7 +100,7 @@
 .config/autostart/
 .config/desktop-couch/
 .config/enchant/
-.config/google-chrome/
+.config/google-chrome*
 .config/gtk-2.0/
 .config/indicators/
 .config/monitors.xml
