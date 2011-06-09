@@ -33,15 +33,7 @@ GetOptions(
 
 foreach (@modules) {
     s|^([\w:]+)=(.+)$|"$1 qw(" . join(" ", split(/,/, $2)) . ")"|ge;
-    if (s/^-//) {
-        $_ = "no $_";
-    }
-    else {
-        $_ = "use $_";
-    }
 }
-
-
 
 if (not $file and not $expr) {
     if ($ARGV[0] and not -f $ARGV[0]) {
@@ -70,7 +62,6 @@ my $func = eval_closure(
         '$CSV_OUT' => \$csv_out,
         '$CSV_IN'  => \$csv_in,
         '$FH'      => \*ARGV,
-        '@NAMES'   => $named ? get_names($csv_in, \*ARGV) : [],
     },
     source => "sub { $source }",
 );
@@ -142,7 +133,7 @@ sub get_names {
         $i++;
     }
 
-    return \@names;
+    return @names;
 }
 
 sub phrase_to_ident {
@@ -171,19 +162,23 @@ package main;
 no strict;
 use feature 'say';
 
-[% FOREACH module IN modules; GET "$module;\n"; END %]
+[% FOREACH module IN modules; GET "use $module;\n"; END %]
 
-my ($ROW, $REC);
+my ($ROW, $REC, @NAMES);
 local ($_, @_, %_);
+
+[% IF named -%]
+@NAMES = get_names($CSV_IN, $FH);
+[% END -%]
 
 ROW: while ($ROW = $CSV_IN->getline($FH)) {
     $_   = do { no warnings 'uninitialized'; "@$ROW" };
     *_   = $ROW;
-    if (@NAMES) {
-        $REC = {};
-        @$REC{ @NAMES } = @$ROW;
-        *_ = $REC;
-    }
+    [%- IF named %]
+    $REC = {};
+    @$REC{ @NAMES } = @$ROW;
+    *_ = $REC;
+    [% END -%]
 
     [% IF file %]
 #line 1 "[% file %]"

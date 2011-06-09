@@ -88,20 +88,22 @@ case $TERM in
         bindkey "^[[8~" end-of-line
         bindkey "^[[A" up-line-or-search ## up arrow for back-history-search
         bindkey "^[[B" down-line-or-search ## down arrow for fwd-history-search
-        bindkey " " magic-space ## do history expansion on space
         bindkey "^[OM" accept-line
     ;;
 esac
 
-bindkey -a q quote-line
-bindkey -a Q quote-region
-bindkey -a 'H' run-help
+bindkey -a Q quote-line
+bindkey -a q quote-region
 bindkey "^_" copy-prev-shell-word
-bindkey '^P' push-input
-bindkey '^[h' run-help
-bindkey '^r' vi-history-search-backward
+bindkey '^Q' push-input
+bindkey '^R' history-incremental-search-backward
 bindkey '^A' beginning-of-line
 bindkey '^E' end-of-line
+bindkey " " magic-space ## do history expansion on space
+bindkey '^X*' expand-word
+bindkey '^Xg' list-expand
+bindkey '^X^N' infer-next-history
+
 
 ## }}}
 ## {{{ FUNCTIONS
@@ -112,13 +114,11 @@ function mdc { mkdr -p $1 && cd $1 }
 function namedir { declare -g $1=$2; : ~$1 }
 function save_cwd { echo $PWD >! ~/.cache/zsh/last_cwd }
 chpwd_functions+=( save_cwd )
+
+
 ## }}}
 ## {{{ ALIASES
 alias have='whence -p ls &>/dev/null'
-alias -g ...='../..'
-alias -g ....='../../..'
-alias -g .....='../../../..'
-
 alias cp='cp -i'
 alias mv='mv -i'
 alias rm='rm -i'
@@ -153,8 +153,6 @@ alias x2go='noglob nyxmms2 jump'
 alias x2l='noglob nyxmms2 list'
 alias x2pls='nyxmms2 playlist'
 alias x2s='x2 list | grep -A10 -B10 -- "->"'
-alias ne='x2 next'
-alias pr='x2 prev'
 alias cnm='cnetworkmanager'
 alias vw='vim ~docs/wiki/index.wiki'
 alias gia='git add'
@@ -176,11 +174,21 @@ have todo.pl    && alias t=todo.pl
 have pinfo      && alias info=pinfo
 have ack-grep   && alias ack=ack-grep
 
-alias -g ...='../..'
-alias -g ....='../../..'
-alias -g .....='../../../..'
-
 mkdir -p ~/.cache/zsh
+
+# paste
+alias p='xclip -o'
+alias P='xclip -o |'
+
+# copy
+alias c='xclip -i'
+alias -g C='| xclip -i'
+
+alias pvc='p | vipe | c'
+alias ppc='p | publish | c'
+
+# less
+alias -g L='| less'
 
 if [[ ! -f ~/.cache/zsh/alias-ls ]]; then
 	# handle ls specially...
@@ -221,7 +229,6 @@ case $OSTYPE in
 esac
 
 ## }}}
-
 
 # Add sbin directories for sudo tab completion.
 zstyle ':completion:*:sudo:*' command-path $path /usr/sbin /sbin

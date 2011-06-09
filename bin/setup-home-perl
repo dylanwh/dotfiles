@@ -1,19 +1,26 @@
-#!/bin/bash
+#!/bin/zsh
 
 PERL_DIR=$HOME/.local/perl
 
+unset PERL_LOCAL_LIB_ROOT
+unset PERL_MB_OPT
+unset PERL_MM_OPT
 
-mkdir -p $PERL_DIR/bin
-wget --no-check-certificate http://cpanmin.us -O $PERL_DIR/bin/cpanm
-chmod +x $PERL_DIR/bin/cpanm
+if [[ ! -f $PERL_DIR/bin/cpanm ]]; then
+	mkdir -p $PERL_DIR/bin
+	wget --no-check-certificate http://cpanmin.us -O $PERL_DIR/bin/cpanm
+	chmod +x $PERL_DIR/bin/cpanm
+fi
 
 $PERL_DIR/bin/cpanm -L$PERL_DIR local::lib
-eval "$(perl -I $PERL_DIR/lib/perl5 -Mlocal::lib="$PERL_DIR")"
+perl -I "$PERL_DIR/lib/perl5" -Mlocal::lib="$PERL_DIR" > $PERL_DIR/env.sh
+source $PERL_DIR/env.sh
+
 $PERL_DIR/bin/cpanm -L$PERL_DIR App::perlbrew
 
 export PERLBREW_ROOT=$HOME/.local/perlbrew
-perl -I $PERL_DIR/lib/perl5 -Mlocal::lib="$PERL_DIR" | grep -v 'PERL_.*_OPT' > $PERL_DIR/env.sh
-echo 'export PERLBREW_ROOT=$HOME/.local/perlbrew'                           >> $PERL_DIR/env.sh
-echo 'source $PERLBREW_ROOT/etc/bashrc'                                     >> $PERL_DIR/env.sh
+
+echo 'export PERLBREW_ROOT=$HOME/.local/perlbrew'                              >> $PERL_DIR/env.sh
+echo 'source $PERLBREW_ROOT/etc/bashrc'                                        >> $PERL_DIR/env.sh
 
 $PERL_DIR/bin/perlbrew init

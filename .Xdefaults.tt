@@ -107,6 +107,4 @@ URxvt.underlineURLs: true
 [%# Fading, borrowed from Possum.
   # this makes unfocused windows fade out to very dark blue. %]
 URxvt.fading: 60
-URxvt.fadeColor: #000015
-
-chat*fading: 0
+URxvt.fadeColor: #101015

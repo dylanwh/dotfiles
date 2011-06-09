@@ -141,7 +141,7 @@ main = do
 -- {{{ myLogHook
 myLogHook = do home <- io $ getEnv "HOME"
                dynamicLogWithPP (panzenPP (home ++ "/.panzen"))
-               updatePointer (Relative 0.5 0.5)
+               -- updatePointer (Relative 0.5 0.5)
 --- }}}
 
 -- panzenPP {{{

@@ -1,0 +1,4 @@
+#!zsh
+
+files=($(find "$@"))
+vim -p $files

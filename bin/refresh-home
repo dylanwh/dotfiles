@@ -4,4 +4,4 @@ cd ${TMPDIR:-/tmp}             || exit 1
 git clone $HOME home           || exit 1
 tar -C home -zcf home.tar.gz . || exit 1
 rm -fr home                   || exit 1
-mv -v home.tar.gz $HOME/pub       || exit 1
+mv -v home.tar.gz $HOME/Dropbox/Public       || exit 1
