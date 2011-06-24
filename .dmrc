@@ -1,6 +1,6 @@
 
 
 [Desktop]
-Session=xsession
+Session=gnome
 Language=en_US.utf8
 Layout=us

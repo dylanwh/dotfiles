@@ -138,7 +138,7 @@ alias zrc='vim ~/.zshrc'
 alias zenv='vim ~/.zshenv' 
 alias zpro='vim ~/.zprofile'
 alias xrc='vim ~/.xinitrc'
-alias xmrc='vim ~/.xmonad/xmonad.hs'
+alias xmrc='vim ~/.xmonad/xmonad.hs && xmonad --recompile && xmonad --restart'
 alias xs=cd
 alias zreload='exec env SHLVL=0 $SHELL'
 alias help=run-help
@@ -274,7 +274,9 @@ if have xdg-user-dir; then
 	namedir pics   $(xdg-user-dir PICTURES)
 	namedir vids   $(xdg-user-dir VIDEOS)
 
-	[[ $PWD == $HOME ]] && pushd ~desk
+	if [[ $PWD == $HOME && -o login ]]; then
+		pushd ~desk
+	fi
 fi
 
 # vim: set sw=4 ts=4 foldmethod=marker path=.,~/.zsh:

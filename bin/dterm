@@ -13,6 +13,9 @@ foreach (@ARGV) {
         $_ = '--';
         last 
     }
+    elsif (/^-name/) {
+        $_ = '--name';
+    }
     elsif (/^-([rd]+)e$/ or /^-e(.+)$/) {
         unshift @ARGV, "-$1" if $1;
         $_ = '--';
@@ -60,7 +63,7 @@ chdir $chdir if $chdir;
 
 if (not $raw) {
     unshift @run, '-e' if @run;
-    $name = 'outside'  if -e "$ENV{HOME}/.outside";
+    $name = 'outside'  if !$name && -e "$ENV{HOME}/.outside";
 
     exec($TERM =>
         -ls =>

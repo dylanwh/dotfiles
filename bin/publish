@@ -4,6 +4,7 @@ pubdir=$(xdg-user-dir PUBLICSHARE)
 suffix=''
 name=''
 file=''
+integer verbose=0
 
 function newfile() {
 	if [[ -z $name ]]; then
@@ -17,7 +18,7 @@ if [[ -f $1 ]]; then
 	argv[1]=(-f $1)
 fi
 
-while getopts "d:n:s:f:" opt; do
+while getopts "d:n:s:f:v" opt; do
 	case $opt in
 		d) pubdir="$pubdir/$OPTARG" ;;
 		n) name=$OPTARG             ;;
@@ -26,6 +27,9 @@ while getopts "d:n:s:f:" opt; do
 			file=$OPTARG
 			suffix=${suffix:-.${file:e}}
 			name=${name:-${file:t:r}}
+		;;
+		v)
+			let verbose=1
 		;;
 		'?')
 			exit 1
@@ -40,8 +44,10 @@ else
 	> $pubfile
 fi
 
+integer count=1
 until dropbox filestatus $pubfile | grep -Fq "$pubfile: up to date"
 do
+	(( verbose && count++ % 10 == 0 )) && dropbox status >&2
 	sleep .1
 done
 

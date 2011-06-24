@@ -1,20 +1,10 @@
 #!/bin/zsh
 
-bgcolor='#330000'
-delay=200
-rate=40
-
-if [[ -n $DISPLAY ]]; then
-	# 01:16 <jcristau> setxkbmap -option terminate:ctrl_alt_bksp might help
-	# 01:16 <jcristau> dontzap was turned off again by default in the server, and terminate was made an option in xkeyboard-config
-	setxkbmap -option terminate:ctrl_alt_bksp
-	setxkbmap -option ctrl:nocaps
-
-	xsetroot -solid $bgcolor
-	xsetroot -cursor_name left_ptr
-
-	xset r rate $delay $rate
-fi
+host=$(hostname -s)
+bg_color='#000033'
+bg_file="$HOME/Dropbox/Photos/background/$host.jpg"
+kb_delay=200
+kb_rate=40
 
 # my xkb options
 altwin=''
@@ -26,30 +16,35 @@ gconftool -t list --list-type string \
     -s /desktop/gnome/peripherals/keyboard/kbd/options "$(echo -e $kb_options)"
 
 # no, I do not want per-window keymaps!
-gconftool -t boolean \
-    -s /desktop/gnome/peripherals/keyboard/general/groupPerWindow false
+gconftool -t boolean -s /desktop/gnome/peripherals/keyboard/general/groupPerWindow false
 
-gconftool -t int     -s /desktop/gnome/peripherals/keyboard/rate $rate
-gconftool -t int     -s /desktop/gnome/peripherals/keyboard/delay $delay
+# kb rate and delay
+gconftool -t int     -s /desktop/gnome/peripherals/keyboard/rate $kb_rate
+gconftool -t int     -s /desktop/gnome/peripherals/keyboard/delay $kb_delay
 
-# yes, xmonad is REALLY my window manager. gnome IGNORES $WINDOW_MANAGER at times.
 gconftool -t string  -s /desktop/gnome/applications/window_manager xmonad
+gconftool -t string  -s /desktop/gnome/session/required_components/windowmanager xmonad
+gconftool -t list --list-type string -s /desktop/gnome/session/required_components_list '["windowmanager"]'
 
 # the following lines make the desktop behave as I want.
 gconftool -t boolean -s /apps/nautilus/preferences/show_desktop false
 gconftool -t boolean -s /desktop/gnome/background/draw_background false
 gconftool -t boolean -s /desktop/gnome/background/disable_background true
 gconftool -t string  -s /desktop/gnome/interface/gtk_theme Dust
-gconftool -t string -s  /desktop/gnome/background/picture_filename ""
-gconftool -t string -s  /desktop/gnome/background/primary_color $bgcolor
-gconftool -t string -s  /desktop/gnome/background/secondary_color $bgcolor
+
+gconftool -t string  -s /desktop/gnome/background/picture_filename $bg_file
+gconftool -t string  -s /desktop/gnome/background/primary_color $bg_color
+gconftool -t string  -s /desktop/gnome/background/secondary_color $bg_color
 
 # sane placement of window border buttons (for metacity)
 #gconftool -t string -s /apps/metacity/general/button_layout "menu:minimize,maximize,close"
 
-#if [[ -e /lib/security/pam_ssh.so ]]; then
-# disable ssh keyring component.
-#	gconftool -t boolean -s /apps/gnome-keyring/daemon-components/ssh false
-#else
-#	gconftool -t boolean -s /apps/gnome-keyring/daemon-components/ssh true
-#fi
+#	# 01:16 <jcristau> setxkbmap -option terminate:ctrl_alt_bksp might help
+#	# 01:16 <jcristau> dontzap was turned off again by default in the server, and terminate was made an option in xkeyboard-config
+#	setxkbmap -option terminate:ctrl_alt_bksp
+#	setxkbmap -option ctrl:nocaps
+#
+#	xsetroot -solid $bgcolor
+#	xsetroot -cursor_name left_ptr
+#
+#	xset r rate $delay $rate

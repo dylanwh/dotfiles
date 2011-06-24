@@ -13,6 +13,8 @@ import XMonad.Actions.UpdatePointer
 import XMonad.Actions.DynamicWorkspaces
 import XMonad.Actions.FocusNth
 import XMonad.Actions.CycleWS
+import XMonad.Hooks.FadeInactive
+import qualified XMonad.Actions.PhysicalScreens as PS
 
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.EwmhDesktops
@@ -37,11 +39,13 @@ import XMonad.Layout.Tabbed
 import XMonad.Layout.SimpleFloat
 import XMonad.Layout.LayoutCombinators
 import XMonad.Layout.OneBig
-import XMonad.Layout.WorkspaceDir
 
 import XMonad.Util.EZConfig
+import XMonad.Util.Scratchpad
+import XMonad.Util.Run
 
 import Control.Arrow ((>>>), second)
+import Control.Monad (liftM, liftM2)
 import Data.Char
 import Data.List (isPrefixOf)
 import Data.Ratio ((%))
@@ -78,21 +82,22 @@ main = do
             , bgHLight    = "white"
             , fgHLight    = "black"
             }
-    let myXPConfig' = myXPConfig { height = 28 }
     let myGSConfig = (buildDefaultGSConfig fromClassName) 
             { gs_cellheight = 30
             , gs_cellwidth = 100 
             , gs_cellpadding = 5
             }
+
     let myConfig = ewmh $ defaultConfig
             { borderWidth        = 2
-            , terminal           = "dterm"
+            , terminal           = "rxvt-unicode"
             , normalBorderColor  = "#000033"
             , focusedBorderColor = "red"
             , workspaces         = ["chat", "web"]
             , modMask            = mod4Mask
             , layoutHook         = myLayoutHook
-            , manageHook         = myManageHook <+> manageDocks
+            , manageHook         = myManageHook
+            , startupHook        = myStartupHook
             , logHook            = myLogHook
             , focusFollowsMouse  = True
             }
@@ -102,17 +107,14 @@ main = do
             , ("M-<Escape>",       spawnExec $ terminal myConfig)
             , ("M-<Return>",       dwmpromote)
             , ("M-S-t",            withFocused $ windows . W.sink)
-            , ("M-S-b",            sendMessage ToggleStruts)
             , ("M-s",              sshPrompt      myXPConfig)
             , ("M-p",              scriptPrompt   myXPConfig)
             , ("M-S-p",            shellPrompt    myXPConfig)
             , ("M-o",              bookmarkPrompt myXPConfig)
-            , ("M-d",              changeDir myXPConfig)
-            , ("M-q",              return ())
             , ("M-S-q",            spawn "gnome-session-save --gui --logout-dialog")
             , ("M-S-l",            spawn "gnome-screensaver-command -l")
             , ("M-g",              goToSelected myGSConfig)
-            , ("M-b",              bringSelected myGSConfig)
+            , ("M-S-g",              bringSelected myGSConfig)
             , ("M-<Left>",         spawn "x2 prev")
             , ("M-<Right>",        spawn "x2 next")
             , ("M-x",              spawn "x2 toggle 2> /tmp/foo") 
@@ -123,26 +125,16 @@ main = do
             , ("M-r",              renameWorkspace myXPConfig)
             , ("M-S-r",            removeWorkspace)
             , ("M-S-c",            kill)
-            ] ++ [ ("M-" ++ show n, withNthWorkspace W.greedyView $ n - 1) | n <- [1..9] ]
+            , ("M-C-S-q",          spawn "be xcompmgr")
+            , ("M-w",              PS.viewScreen 0)
+            , ("M-e",              PS.viewScreen 1)
+            , ("M-S-w",            PS.sendToScreen 0)
+            , ("M-S-e",            PS.sendToScreen 1)
+            ] ++ [ ("M-" ++ show n, withNthWorkspace W.view $ n - 1) | n <- [1..9] ]
               ++ [ ("M-S-" ++ show n, withNthWorkspace W.shift $ n - 1) | n <- [1..9] ]
 
-{-
-   , ((modm .|. shiftMask, xK_BackSpace), removeWorkspace)
-   , ((modm .|. shiftMask, xK_v      ), selectWorkspace defaultXPConfig)
-   , ((modm, xK_m                    ), withWorkspace defaultXPConfig (windows . W.shift))
-   , ((modm .|. shiftMask, xK_m      ), withWorkspace defaultXPConfig (windows . copy))
-   , ((modm .|. shiftMask, xK_r      ), renameWorkspace defaultXPConfig)
--}
-
-    let myConf = myConfig { startupHook = startupHook myConfig >> setWMName "LG3D" }
-    xmonad $ myConf `additionalKeysP` myKeys
+    xmonad =<< xmobar (myConfig `additionalKeysP` myKeys)
 -- }}}
-
--- {{{ myLogHook
-myLogHook = do home <- io $ getEnv "HOME"
-               dynamicLogWithPP (panzenPP (home ++ "/.panzen"))
-               -- updatePointer (Relative 0.5 0.5)
---- }}}
 
 -- panzenPP {{{
 panzenPP f = defaultPP { ppTitle   = panzenColor "white" . shorten 50
@@ -174,46 +166,47 @@ panzenPP f = defaultPP { ppTitle   = panzenColor "white" . shorten 50
 -- > xprop | grep WM_CLASS
 -- and click on the client you're interested in.
 myManageHook = composeOne
-    [ transience
-    , myIsFullscreen                    -?> doFullFloat
-    , resource  =? "pwsafe_prompt"      -?> doFloat
-    , className =? "Glade-3"            -?> doFloat
-    , title     =? "Factor workspace"   -?> doFloat
-    , resource  =? "desktop_window"     -?> doIgnore
-    , className =? "WMClock"            -?> doIgnore
-    , className =? "stalonetray"        -?> doIgnore
-    , className =? "kxdocker"           -?> doIgnore
-    , resource  =? "gnome-panel"        -?> doFloat
-    , resource  =? "kdesktop"           -?> doIgnore
-    , resource  =? "kicker"             -?> doIgnore ]
+             [ transience
+             , myIsFullscreen                    -?> doFullFloat
+             , title     =? "Factor workspace"   -?> doFloat
+             , className =? "Glade-3"            -?> doFloat
+             , className =? "WMClock"            -?> doIgnore
+             , className =? "stalonetray"        -?> doIgnore
+             , className =? "kxdocker"           -?> doIgnore
+             , className =? "trayer"             -?> doIgnore
+             , className =? "Google-chrome"      -?> doShift "web"
+             , resource  =? "pwsafe_prompt"      -?> doFloat
+             , resource  =? "desktop_window"     -?> doIgnore
+             , resource  =? "gnome-panel"        -?> doIgnore
+             , resource  =? "tint2"              -?> doIgnore
+             , resource  =? "kdesktop"           -?> doIgnore
+             , resource  =? "panel"              -?> doIgnore
+             , resource  =? "chat"               -?> viewShift "chat"
+             , resource  =? "kicker"             -?> doIgnore
+             ]
+    where viewShift = doF . liftM2 (.) W.view W.shift
 -- }}}
 
 -- {{{ layout hook:
-myLayoutHook = avoidStruts
-             $ workspaceDir "~"
+myLayoutHook = lessBorders OnlyFloat
              $ (tall ||| Mirror tall ||| onebig ||| grid ||| simpleFloat ||| full)
   where
      -- default tiling algorithm partitions the screen into two panes
      tall = named "Tall" 
-          $ lessBorders OnlyFloat
-          $ layoutHints
+          $ layoutHintsToCenter
           $ Tall nmaster delta ratio
 
      -- default grid
      grid = named "Grid" 
-          $ lessBorders OnlyFloat
-          $ layoutHints
+          $ layoutHintsToCenter
           $ Grid
 
      -- full layout, renamed.
      full = named "Full" 
-          $ lessBorders OnlyFloat
-          $ layoutHints
           $ Full
 
      onebig = named "OneBig"
-            $ lessBorders OnlyFloat
-            $ layoutHints
+            $ layoutHints 
             $ OneBig (3/4) (3/4)
 
      -- The default number of windows in the master pane
@@ -225,6 +218,9 @@ myLayoutHook = avoidStruts
      -- Percent of screen to increment by when resizing panes
      delta   = 2/100
 -- }}}
+
+myLogHook = do updatePointer (Relative 0.5 0.5)
+               myFadeInactiveLogHook 0.6
 
 scriptPrompt conf = do-- {{{
     dir <- io $ home "/.xmonad/scripts"
@@ -265,3 +261,20 @@ myIsFullscreen = do w <- ask
                                           case p of 
                                                Just (flags:_:decorations:_) -> return ((flags .&. 2) /= 0 && decorations == 0)
                                                Nothing -> return False
+
+myIsUnfocused = do ok <- check rules
+                   if ok
+                      then isUnfocused
+                      else return False
+    where check = liftM or . sequence
+          rules = [ className =? "URxvt"
+                  , className =? "Google-chrome"
+                  ]
+
+myFadeInactiveLogHook :: Rational -> X ()
+myFadeInactiveLogHook = fadeOutLogHook . fadeIf myIsUnfocused
+
+myStartupHook = do setWMName "LG3D"
+                   spawn "be trayer & sleep 1; be xcompmgr"
+                   spawn "xrdb-reload"
+
