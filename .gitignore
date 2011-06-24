@@ -58,10 +58,7 @@
 !.wyrdrc
 !.xbindkeysrc.scm
 !.xinitrc
-!.xmobarrc
-!.xmobarrc@jord
-!.xmobarrc@njord
-!.xmobarrc@nott
+!.xmobarrc.tt
 !.xmonad
 !.xplanet
 !.xsession

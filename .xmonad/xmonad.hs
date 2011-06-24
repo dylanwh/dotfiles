@@ -133,7 +133,7 @@ main = do
             ] ++ [ ("M-" ++ show n, withNthWorkspace W.view $ n - 1) | n <- [1..9] ]
               ++ [ ("M-S-" ++ show n, withNthWorkspace W.shift $ n - 1) | n <- [1..9] ]
 
-    xmonad =<< xmobar (myConfig `additionalKeysP` myKeys)
+    xmonad =<< statusBar "be xmobar" xmobarPP (const (mod4Mask, xK_b)) (myConfig `additionalKeysP` myKeys)
 -- }}}
 
 -- panzenPP {{{

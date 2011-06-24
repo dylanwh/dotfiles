@@ -1,5 +1,12 @@
 #!/bin/zsh
 
+integer xmobar_width=94
+integer trayer_width=6
+
+if [[ $(hostname -s) == 'njord' ]]; then
+	(( trayer_width = trayer_width / 2 ))
+fi
+
 case $1 in
 	trayer)
 		pkill trayer
@@ -11,8 +18,8 @@ case $1 in
 			--SetPartialStrut true \
 			--expand true \
 			--widthtype percent \
-			--width 2.5 \
-			--height 23 \
+			--width $trayer_width \
+			--height 22 \
 			--transparent true \
 			--tint 0x0000000
 	;;
@@ -21,5 +28,10 @@ case $1 in
 		sleep .5
 		#exec xcompmgr -cfFC -o 0
 		exec xcompmgr -F
+	;;
+	xmobar)
+		pkill xmobar
+		ttpp -Dwidth=$xmobar_width < ~/.xmobarrc.tt >! ~/.xmobarrc
+		exec xmobar ~/.xmobarrc
 	;;
 esac

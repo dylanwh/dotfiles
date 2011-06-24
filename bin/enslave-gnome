@@ -24,7 +24,8 @@ gconftool -t int     -s /desktop/gnome/peripherals/keyboard/delay $kb_delay
 
 gconftool -t string  -s /desktop/gnome/applications/window_manager xmonad
 gconftool -t string  -s /desktop/gnome/session/required_components/windowmanager xmonad
-gconftool -t list --list-type string -s /desktop/gnome/session/required_components_list '["windowmanager"]'
+gconftool -t string  -s /desktop/gnome/session/required_components/panel ""
+gconftool -u /desktop/gnome/session/required_components_list 
 
 # the following lines make the desktop behave as I want.
 gconftool -t boolean -s /apps/nautilus/preferences/show_desktop false
