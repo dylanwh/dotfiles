@@ -1,7 +1,7 @@
 #!/bin/zsh
 
-integer xmobar_width=94
-integer trayer_width=6
+integer xmobar_width=92
+integer trayer_width=8
 
 if [[ $(hostname -s) == 'njord' ]]; then
 	(( trayer_width = trayer_width / 2 ))
@@ -19,7 +19,7 @@ case $1 in
 			--expand true \
 			--widthtype percent \
 			--width $trayer_width \
-			--height 22 \
+			--height 21 \
 			--transparent true \
 			--tint 0x0000000
 	;;
