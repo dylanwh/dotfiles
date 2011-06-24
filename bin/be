@@ -1,0 +1,25 @@
+#!/bin/zsh
+
+case $1 in
+	trayer)
+		pkill trayer
+		sleep .5
+		exec trayer \
+			--edge top \
+			--align right \
+			--SetDockType true \
+			--SetPartialStrut true \
+			--expand true \
+			--widthtype percent \
+			--width 2.5 \
+			--height 23 \
+			--transparent true \
+			--tint 0x0000000
+	;;
+	xcompmgr)
+		pkill xcompmgr
+		sleep .5
+		#exec xcompmgr -cfFC -o 0
+		exec xcompmgr -F
+	;;
+esac
