@@ -1,0 +1,5 @@
+#!zsh
+
+local cmd="$1"; shift
+
+command $cmd "$@" &> /dev/null &
