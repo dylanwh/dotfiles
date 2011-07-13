@@ -110,6 +110,7 @@ bindkey '^X^N' infer-next-history
 # Autoload various functions
 autoload run-help compinit promptinit colors
 autoload title shuffle perlpath prefix
+autoload runbg
 function mdc { mkdr -p $1 && cd $1 }
 function namedir { declare -g $1=$2; : ~$1 }
 function save_cwd { echo $PWD >! ~/.cache/zsh/last_cwd }
@@ -164,11 +165,11 @@ alias dbs='dropbox status'
 alias dbfs='dropbox filestatus'
 alias cdd='cd ~desk'
 alias mplayer="title -e -- mplayer"
-alias evince="title -e -- evince"
 alias ssh="title -e -- ssh"
 alias man="title -e -- man"
 alias aptitude='sudo aptitude'
 alias irssi-safe='title -t irssi -e dtach -A ~/.irssi/dtach -Ez irssi'
+alias evince='runbg evince'
 
 have todo.pl    && alias t=todo.pl
 have pinfo      && alias info=pinfo
@@ -277,6 +278,10 @@ if have xdg-user-dir; then
 	if [[ $PWD == $HOME && -o login ]]; then
 		pushd ~desk
 	fi
+fi
+
+if have trash; then
+	alias rm="trash"
 fi
 
 # vim: set sw=4 ts=4 foldmethod=marker path=.,~/.zsh:

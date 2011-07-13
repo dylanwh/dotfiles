@@ -1,4 +1,6 @@
 -- vim: set et ts=4 sw=4 foldmethod=marker:
+{-# LANGUAGE FlexibleContexts #-}
+
 -- {{{ Imports 
 import XMonad hiding ( (|||) )
 import System.Exit
@@ -29,6 +31,7 @@ import XMonad.Prompt.Shell
 import XMonad.Prompt.Ssh
 import XMonad.Prompt.AppLauncher
 
+import XMonad.Layout.LayoutModifier
 import XMonad.Layout.Grid
 import XMonad.Layout.IM
 import XMonad.Layout.LayoutHints
@@ -90,7 +93,7 @@ main = do
 
     let myConfig = ewmh $ defaultConfig
             { borderWidth        = 2
-            , terminal           = "rxvt-unicode"
+            , terminal           = "dterm"
             , normalBorderColor  = "#000033"
             , focusedBorderColor = "red"
             , workspaces         = ["chat", "web"]
@@ -133,7 +136,7 @@ main = do
             ] ++ [ ("M-" ++ show n, withNthWorkspace W.view $ n - 1) | n <- [1..9] ]
               ++ [ ("M-S-" ++ show n, withNthWorkspace W.shift $ n - 1) | n <- [1..9] ]
 
-    xmonad =<< statusBar "be xmobar" xmobarPP (const (mod4Mask, xK_b)) (myConfig `additionalKeysP` myKeys)
+    xmonad =<< myXmobar (myConfig `additionalKeysP` myKeys)
 -- }}}
 
 -- panzenPP {{{
@@ -175,7 +178,7 @@ myManageHook = composeOne
              , className =? "kxdocker"           -?> doIgnore
              , className =? "trayer"             -?> doIgnore
              , className =? "Google-chrome"      -?> doShift "web"
-             , resource  =? "pwsafe_prompt"      -?> doFloat
+             , resource  =? "pwsafe-prompt"      -?> doFloat
              , resource  =? "desktop_window"     -?> doIgnore
              , resource  =? "gnome-panel"        -?> doIgnore
              , resource  =? "tint2"              -?> doIgnore
@@ -218,6 +221,11 @@ myLayoutHook = lessBorders OnlyFloat
      -- Percent of screen to increment by when resizing panes
      delta   = 2/100
 -- }}}
+
+myXmobar :: LayoutClass l Window
+         => XConfig l -> IO (XConfig (ModifiedLayout AvoidStruts l))
+myXmobar conf = statusBar "be xmobar" xmobarPP toggleStrutsKey conf
+    where toggleStrutsKey XConfig{modMask = modm} = (modm, xK_b )
 
 myLogHook = do updatePointer (Relative 0.5 0.5)
                myFadeInactiveLogHook 0.6
