@@ -27,7 +27,7 @@ case $1 in
 		pkill xcompmgr
 		sleep .5
 		#exec xcompmgr -cfFC -o 0
-		exec xcompmgr -F
+		exec xcompmgr
 	;;
 	xmobar)
 		pkill xmobar

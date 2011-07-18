@@ -128,7 +128,7 @@ main = do
             , ("M-r",              renameWorkspace myXPConfig)
             , ("M-S-r",            removeWorkspace)
             , ("M-S-c",            kill)
-            , ("M-C-S-q",          spawn "be xcompmgr")
+--            , ("M-C-S-q",          spawn "be xcompmgr")
             , ("M-w",              PS.viewScreen 0)
             , ("M-e",              PS.viewScreen 1)
             , ("M-S-w",            PS.sendToScreen 0)
@@ -280,9 +280,11 @@ myIsUnfocused = do ok <- check rules
                   ]
 
 myFadeInactiveLogHook :: Rational -> X ()
-myFadeInactiveLogHook = fadeOutLogHook . fadeIf myIsUnfocused
+myFadeInactiveLogHook = const (return ())
+-- fadeOutLogHook . fadeIf myIsUnfocused
 
 myStartupHook = do setWMName "LG3D"
-                   spawn "be trayer & sleep 1; be xcompmgr"
                    spawn "xrdb-reload"
+                   spawn "be trayer"
+                   -- spawn "be trayer & sleep 1; be xcompmgr"
 
