@@ -12,7 +12,7 @@ LOGCHECK=30
 
 watch=(all)
 fignore=(.o .hi .pyc)
-cdpath=(~ ~/.local/Dropbox ~/code)
+cdpath=(~ ~/Dropbox /media)
 fpath=(~/.zsh/lib $fpath)
 
 export PS_PERSONALITY=linux
@@ -114,6 +114,7 @@ autoload runbg
 function mdc { mkdr -p $1 && cd $1 }
 function namedir { declare -g $1=$2; : ~$1 }
 function save_cwd { echo $PWD >! ~/.cache/zsh/last_cwd }
+function source_if { [[ -f $1 ]] && source $1 }
 chpwd_functions+=( save_cwd )
 
 
@@ -211,7 +212,7 @@ if [[ ! -f ~/.cache/zsh/alias-ls ]]; then
 fi
 
 source ~/.cache/zsh/alias-ls
-[[ -f ~/.local/perl/env.sh ]] && source ~/.local/perl/env.sh
+source_if /opt/perlbrew/etc/bashrc
 
 case $OSTYPE in
 	*gnu*)
