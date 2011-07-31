@@ -5,10 +5,15 @@
 ## {{{ VARIABLES
 
 HISTSIZE=3000
-SAVEHIST=3000
-HISTFILE=~/.zhistory
 READNULLCMD=${PAGER:-/usr/bin/pager}
 LOGCHECK=30
+SAVEHIST=3000
+if [[ -d ~/Dropbox ]]; then
+	HISTFILE=~/Dropbox/.zhistory
+else
+	HISTFILE=~/.zhistory
+fi
+
 
 watch=(all)
 fignore=(.o .hi .pyc)

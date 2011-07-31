@@ -7,7 +7,9 @@ use Getopt::Long qw(:config gnu_getopt);
 use Eval::Closure;
 use Set::Object;
 use Template;
+use Text::CSV_XS;
 use Text::CSV;
+use Carp::Always;
 
 my (@modules, $file, $expr, $encode);
 my $named = 0;
@@ -42,7 +44,7 @@ if (not $file and not $expr) {
 }
 
 my $csv_in   = new_csv( expand(%csv_in));
-my $csv_out  = new_csv( expand(%csv_in, %csv_out) );
+my $csv_out  = new_csv( expand(%csv_in), expand(%csv_out) );
 my $template = Template->new({INCLUDE_PATH => ["."]});
 
 my $source = "";
@@ -88,11 +90,11 @@ sub expand {
 
 sub emit(@) {
     $csv_out->print(\*STDOUT, [ @_ ]);
-};
+}
 
 sub emitr($) {
     $csv_out->print(\*STDOUT, $_[0])
-};
+}
 
 sub new_csv {
     my (%opt) = @_;
