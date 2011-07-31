@@ -8,11 +8,7 @@ HISTSIZE=3000
 READNULLCMD=${PAGER:-/usr/bin/pager}
 LOGCHECK=30
 SAVEHIST=3000
-if [[ -d ~/Dropbox ]]; then
-	HISTFILE=~/Dropbox/.zhistory
-else
-	HISTFILE=~/.zhistory
-fi
+HISTFILE=~/.zhistory
 
 
 watch=(all)
