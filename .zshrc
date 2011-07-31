@@ -213,7 +213,7 @@ if [[ ! -f ~/.cache/zsh/alias-ls ]]; then
 fi
 
 source ~/.cache/zsh/alias-ls
-source_if ~/Dropbox/perlbrew/env
+source_if /opt/perlbrew/etc/bashrc
 
 case $OSTYPE in
 	*gnu*)
