@@ -280,11 +280,10 @@ myIsUnfocused = do ok <- check rules
                   ]
 
 myFadeInactiveLogHook :: Rational -> X ()
-myFadeInactiveLogHook = const (return ())
--- fadeOutLogHook . fadeIf myIsUnfocused
+myFadeInactiveLogHook = fadeOutLogHook . fadeIf myIsUnfocused
 
 myStartupHook = do setWMName "LG3D"
                    spawn "xrdb-reload"
-                   spawn "be trayer"
-                   -- spawn "be trayer & sleep 1; be xcompmgr"
+                   spawn "be trayer & sleep 1; be xcompmgr"
+                   -- spawn "be trayer"
 

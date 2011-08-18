@@ -166,13 +166,13 @@ use feature 'say';
 
 [% FOREACH module IN modules; GET "use $module;\n"; END %]
 
-my ($ROW, $REC, @NAMES);
-local ($_, @_, %_);
+our ($ROW, $REC, @NAMES);
 
 [% IF named -%]
 @NAMES = get_names($CSV_IN, $FH);
 [% END -%]
 
+local ($_, @_, %_);
 ROW: while ($ROW = $CSV_IN->getline($FH)) {
     $_   = do { no warnings 'uninitialized'; "@$ROW" };
     *_   = $ROW;

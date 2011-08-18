@@ -1,5 +1,5 @@
 #!/bin/sh
-scp lofn:.pwsafe.dat pwsafe
-pwsafe --merge pwsafe
-rm pwsafe
-scp .pwsafe.dat lofn:
+scp lofn:.pwsafe.dat pwsafe.tmp
+pwsafe --merge pwsafe.tmp
+rm pwsafe.tmp
+scp ~/.pwsafe.dat lofn:

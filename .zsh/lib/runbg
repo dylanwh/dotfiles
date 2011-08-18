@@ -2,4 +2,4 @@
 
 local cmd="$1"; shift
 
-command $cmd "$@" &> /dev/null &
+command $cmd "$@" &> /dev/null & disown
