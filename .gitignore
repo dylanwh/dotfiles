@@ -1,12 +1,7 @@
+/Dropbox
 /code
-/desk
-/docs
 /logs
-/mus
-/pics
-/pub
 /tmp
-/vid
 /work
 .*
 !.config/
@@ -15,7 +10,6 @@
 !.Xdefaults.tt
 !.boring
 !.contacts
-!.cpanm
 !.dir_colors
 !.dmrc
 !.emacs
@@ -121,3 +115,11 @@
 .config/ubuntuone/
 .config/xbuild/
 .config/xmms2/
+.config/google-googletalkplugin/
+.config/google-musicmanager/
+.config/Thunar/
+.config/f-spot/
+.config/openbox/
+.config/pcmanfm/
+.config/tint2/
+.config/xfce4/

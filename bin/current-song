@@ -1,0 +1,7 @@
+#!/bin/zsh
+
+function url_decode() {
+    setopt extendedglob
+    local url=${1//\%(#b)([0-F][0-F])/\\\x$match[1]}
+    echo ${url//+/ }
+}

@@ -1,0 +1,22 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+use Text::CSV;
+use DBI;
+use SQL::Abstract;
+
+my ($db, $table) = @ARGV;
+my $dbh = DBI->connect("dbi:mysql:$db", undef, undef, { RaiseError => 1 });
+my $csv = Text::CSV->new({binary => 1, eol => "\n"});
+
+
+my $sth = $dbh->prepare( "SELECT * FROM $table" );
+
+$sth->execute;
+
+$csv->print(\*STDOUT, $sth->{NAME});
+
+while (my $row = $sth->fetchrow_arrayref) {
+    $csv->print(\*STDOUT, [ map { defined $_ ? $_ : '\\N' } @$row ]);
+}
+

@@ -1,0 +1,8 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+use JSON 'to_json';
+use YAML::XS 'Load';
+
+local $/ = undef;
+print to_json(Load(scalar readline ARGV));
