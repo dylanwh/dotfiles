@@ -223,6 +223,7 @@ if !exists('autocmds_loaded')
                     \ setl ft=remind
         autocmd BufEnter *.hs,*.lhs       compiler ghc
         autocmd BufEnter *.c,*.C,*.cc,*.h compiler gcc
+        autocmd BufNewFile,BufRead *.csv,*.tsv set ft=csv
 
         autocmd BufNewFile,BufRead *.cos setl ft=caos
         autocmd BufNewFile,BufRead *.red setl ft=redcode
@@ -232,6 +233,7 @@ if !exists('autocmds_loaded')
                     \ setl commentstring=--%s
     augroup END
 
+    autocmd FileType csv setl noet list
     autocmd FileType gitconfig setl noet nolist
     autocmd FileType gitcommit setl noet nolist
     autocmd FileType make setl noet nolist
