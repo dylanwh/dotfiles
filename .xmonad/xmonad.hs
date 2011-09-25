@@ -12,11 +12,14 @@ import XMonad.Actions.DwmPromote
 import XMonad.Actions.SinkAll
 import XMonad.Actions.GridSelect
 import XMonad.Actions.UpdatePointer
-import XMonad.Actions.DynamicWorkspaces
+-- import XMonad.Actions.DynamicWorkspaces
 import XMonad.Actions.FocusNth
 import XMonad.Actions.CycleWS
 import XMonad.Hooks.FadeInactive
 import qualified XMonad.Actions.PhysicalScreens as PS
+
+import XMonad.Config.Gnome
+import XMonad.Config.Desktop
 
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.EwmhDesktops
@@ -91,16 +94,17 @@ main = do
             , gs_cellpadding = 5
             }
 
-    let myConfig = ewmh $ defaultConfig
+    let gc       = gnomeConfig
+    let myConfig = gc
             { borderWidth        = 2
             , terminal           = "dterm"
             , normalBorderColor  = "#000033"
             , focusedBorderColor = "red"
-            , workspaces         = ["chat", "web"]
+            , workspaces         = map show [1..9]
             , modMask            = mod4Mask
-            , layoutHook         = myLayoutHook
-            , manageHook         = myManageHook
-            , startupHook        = myStartupHook
+            , layoutHook         = desktopLayoutModifiers myLayoutHook
+            , manageHook         = manageHook gc <+> myManageHook
+            , startupHook        = startupHook gc >> myStartupHook
             , logHook            = myLogHook
             , focusFollowsMouse  = True
             }
@@ -120,23 +124,18 @@ main = do
             , ("M-S-g",              bringSelected myGSConfig)
             , ("M-<Left>",         spawn "x2 prev")
             , ("M-<Right>",        spawn "x2 next")
-            , ("M-x",              spawn "x2 toggle 2> /tmp/foo") 
-            , ("M-0",              selectWorkspace myXPConfig)
-            , ("M-S-0",            withWorkspace myXPConfig (windows . W.shift))
-            , ("M-f",              selectWorkspace myXPConfig)
-            , ("M-S-f",            withWorkspace myXPConfig (windows . W.shift))
-            , ("M-r",              renameWorkspace myXPConfig)
-            , ("M-S-r",            removeWorkspace)
+            , ("M-x",              spawn "x2 toggle") 
             , ("M-S-c",            kill)
---            , ("M-C-S-q",          spawn "be xcompmgr")
             , ("M-w",              PS.viewScreen 0)
             , ("M-e",              PS.viewScreen 1)
             , ("M-S-w",            PS.sendToScreen 0)
             , ("M-S-e",            PS.sendToScreen 1)
-            ] ++ [ ("M-" ++ show n, withNthWorkspace W.view $ n - 1) | n <- [1..9] ]
-              ++ [ ("M-S-" ++ show n, withNthWorkspace W.shift $ n - 1) | n <- [1..9] ]
+            ] 
+              -- ++ [ ("M-" ++ show n, withNthWorkspace W.view $ n - 1) | n <- [1..9] ]
+              -- ++ [ ("M-S-" ++ show n, withNthWorkspace W.shift $ n - 1) | n <- [1..9] ]
 
-    xmonad =<< myXmobar (myConfig `additionalKeysP` myKeys)
+    xmonad $ myConfig `additionalKeysP` myKeys
+
 -- }}}
 
 -- panzenPP {{{
@@ -170,7 +169,8 @@ panzenPP f = defaultPP { ppTitle   = panzenColor "white" . shorten 50
 -- and click on the client you're interested in.
 myManageHook = composeOne
              [ transience
-             , myIsFullscreen                    -?> doFullFloat
+             , title     =? "Add to Panel"       -?> doFloat
+             , resource  =? "gnome-panel"        -?> doIgnore
              , title     =? "Factor workspace"   -?> doFloat
              , className =? "Glade-3"            -?> doFloat
              , className =? "WMClock"            -?> doIgnore
@@ -180,12 +180,12 @@ myManageHook = composeOne
              , className =? "Google-chrome"      -?> doShift "web"
              , resource  =? "pwsafe-prompt"      -?> doFloat
              , resource  =? "desktop_window"     -?> doIgnore
-             , resource  =? "gnome-panel"        -?> doIgnore
              , resource  =? "tint2"              -?> doIgnore
              , resource  =? "kdesktop"           -?> doIgnore
              , resource  =? "panel"              -?> doIgnore
              , resource  =? "chat"               -?> viewShift "chat"
              , resource  =? "kicker"             -?> doIgnore
+             , myIsFullscreen                    -?> doFullFloat
              ]
     where viewShift = doF . liftM2 (.) W.view W.shift
 -- }}}
@@ -222,13 +222,9 @@ myLayoutHook = lessBorders OnlyFloat
      delta   = 2/100
 -- }}}
 
-myXmobar :: LayoutClass l Window
-         => XConfig l -> IO (XConfig (ModifiedLayout AvoidStruts l))
-myXmobar conf = statusBar "be xmobar" xmobarPP toggleStrutsKey conf
-    where toggleStrutsKey XConfig{modMask = modm} = (modm, xK_b )
-
-myLogHook = do updatePointer (Relative 0.5 0.5)
-               myFadeInactiveLogHook 0.6
+myLogHook = do home <- io $ getEnv "HOME"
+               dynamicLogWithPP (panzenPP (home ++ "/.panzen"))
+               updatePointer (Relative 0.5 0.5)
 
 scriptPrompt conf = do-- {{{
     dir <- io $ home "/.xmonad/scripts"
@@ -270,20 +266,6 @@ myIsFullscreen = do w <- ask
                                                Just (flags:_:decorations:_) -> return ((flags .&. 2) /= 0 && decorations == 0)
                                                Nothing -> return False
 
-myIsUnfocused = do ok <- check rules
-                   if ok
-                      then isUnfocused
-                      else return False
-    where check = liftM or . sequence
-          rules = [ className =? "URxvt"
-                  , className =? "Google-chrome"
-                  ]
-
-myFadeInactiveLogHook :: Rational -> X ()
-myFadeInactiveLogHook = fadeOutLogHook . fadeIf myIsUnfocused
-
 myStartupHook = do setWMName "LG3D"
                    spawn "xrdb-reload"
-                   spawn "be trayer & sleep 1; be xcompmgr"
-                   -- spawn "be trayer"
 

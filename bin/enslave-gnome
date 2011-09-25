@@ -24,7 +24,7 @@ gconftool -t int     -s /desktop/gnome/peripherals/keyboard/delay $kb_delay
 
 gconftool -t string  -s /desktop/gnome/applications/window_manager xmonad
 gconftool -t string  -s /desktop/gnome/session/required_components/windowmanager xmonad
-gconftool -t string  -s /desktop/gnome/session/required_components/panel ""
+gconftool -u /desktop/gnome/session/required_components/panel
 gconftool -u /desktop/gnome/session/required_components_list 
 
 # the following lines make the desktop behave as I want.
@@ -33,7 +33,9 @@ gconftool -t boolean -s /desktop/gnome/background/draw_background false
 gconftool -t boolean -s /desktop/gnome/background/disable_background true
 gconftool -t string  -s /desktop/gnome/interface/gtk_theme Dust
 
-gconftool -t string  -s /desktop/gnome/background/picture_filename $bg_file
+if [[ -f $bg_file ]]; then
+	gconftool -t string  -s /desktop/gnome/background/picture_filename $bg_file
+fi
 gconftool -t string  -s /desktop/gnome/background/primary_color $bg_color
 gconftool -t string  -s /desktop/gnome/background/secondary_color $bg_color
 

@@ -172,6 +172,8 @@ alias man="title -e -- man"
 alias aptitude='sudo aptitude'
 alias irssi-safe='title -t irssi -e dtach -A ~/.irssi/dtach -Ez irssi'
 alias evince='runbg evince'
+alias cpanm='cpanm --notest'
+alias cpanm-test='command cpanm'
 
 have todo.pl    && alias t=todo.pl
 have pinfo      && alias info=pinfo
@@ -268,6 +270,9 @@ namedir bes          ~/work/hewitt/bes
 namedir bes2010      ~bes/BES-2010
 namedir bes2011      ~bes/BES-2011
 namedir bes2011_data ~bes/BES-2011-Data
+
+namedir bes2012      ~bes/hewitt-bes-2012
+namedir bes2012_data ~bes/hewitt-bes-2012-data
 
 if have xdg-user-dir; then
 	namedir docs   $(xdg-user-dir DOCUMENTS)
