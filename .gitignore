@@ -7,6 +7,7 @@
 !.config/
 !.config/user-dirs.dirs
 !.config/user-dirs.locale
+!.config/xmms2/xmms2.conf
 !.Xdefaults.tt
 !.boring
 !.contacts
@@ -114,7 +115,6 @@
 .config/transmission/
 .config/ubuntuone/
 .config/xbuild/
-.config/xmms2/
 .config/google-googletalkplugin/
 .config/google-musicmanager/
 .config/Thunar/
@@ -123,3 +123,7 @@
 .config/pcmanfm/
 .config/tint2/
 .config/xfce4/
+.config/xmms2/bindata/
+.config/xmms2/clients/
+.config/xmms2/medialib.db
+.config/xmms2/startup.d/
