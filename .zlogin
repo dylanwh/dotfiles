@@ -6,7 +6,6 @@
 if [[ -o interactive ]]; then
 	case $HOST in
 		lofn*)
-			: # nothing
 		;;
 		*)
 			uptime
