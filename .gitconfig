@@ -3,7 +3,7 @@
 
 [user]
 	email=dylan@hardison.net
-	name=Dylan William Hardison
+	name = Dylan William Hardison
 
 [alias]
 	co=checkout

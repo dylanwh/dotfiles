@@ -4,13 +4,14 @@ pubdir=$(xdg-user-dir PUBLICSHARE)
 suffix=''
 name=''
 file=''
+dir='tmp'
 integer verbose=0
 
 function newfile() {
 	if [[ -z $name ]]; then
-		TMPDIR="$pubdir" tempfile -d "$pubdir" -p clip_ -s ${suffix:-.txt}
+		TMPDIR="$pubdir/$dir" tempfile -d "$pubdir" -p clip_ -s ${suffix:-.txt}
 	else
-		echo "$pubdir/$name$suffix"
+		echo "$pubdir/$dir/$name$suffix"
 	fi
 }
 
@@ -20,9 +21,9 @@ fi
 
 while getopts "d:n:s:f:v" opt; do
 	case $opt in
-		d) pubdir="$pubdir/$OPTARG" ;;
-		n) name=$OPTARG             ;;
-		s) suffix=$OPTARG           ;;
+		d) dir=$OPTARG    ;; 
+		n) name=$OPTARG   ;;
+		s) suffix=$OPTARG ;;
 		f)
 			file=$OPTARG
 			suffix=${suffix:-.${file:e}}

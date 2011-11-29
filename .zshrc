@@ -115,7 +115,6 @@ autoload runbg
 function mdc { mkdr -p $1 && cd $1 }
 function namedir { declare -g $1=$2; : ~$1 }
 function save_cwd { echo $PWD >! ~/.cache/zsh/last_cwd }
-function source_if { [[ -f $1 ]] && source $1 }
 chpwd_functions+=( save_cwd )
 
 
@@ -158,11 +157,7 @@ alias x2pls='nyxmms2 playlist'
 alias x2s='x2 list | grep -A10 -B10 -- "->"'
 alias cnm='cnetworkmanager'
 alias vw='vim ~docs/wiki/index.wiki'
-alias gia='git add'
-alias gis='git status'
-alias gira='git rebase --amend'
-alias girc='git rebase --continue'
-alias gic='git commit'
+alias g='git'
 alias dbs='dropbox status'
 alias dbfs='dropbox filestatus'
 alias cdd='cd ~desk'
@@ -215,7 +210,6 @@ if [[ ! -f ~/.cache/zsh/alias-ls ]]; then
 fi
 
 source ~/.cache/zsh/alias-ls
-source_if /opt/perlbrew/etc/bashrc
 
 case $OSTYPE in
 	*gnu*)
@@ -281,6 +275,7 @@ if have xdg-user-dir; then
 	namedir mus    $(xdg-user-dir MUSIC)
 	namedir pics   $(xdg-user-dir PICTURES)
 	namedir vids   $(xdg-user-dir VIDEOS)
+	namedir files  $(xdg-user-dir DOWNLOAD)
 
 	if [[ $PWD == $HOME && -o login ]]; then
 		pushd ~desk

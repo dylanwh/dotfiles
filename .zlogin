@@ -13,3 +13,7 @@ if [[ -o interactive ]]; then
 		;;
 	esac
 fi
+
+if [[ -d /opt/perlbrew ]]; then
+	source /opt/perlbrew/etc/bashrc
+fi

@@ -45,12 +45,15 @@ unless ($name) {
 }
 
 chdir $chdir if $chdir;
-
 unshift @run, '-e' if @run;
 
-exec($TERM,
+run($TERM,
     $chdir ? () : ('-ls'),
     -name  => $name,
     -title => $title,
     @run
 );
+
+sub run { 
+    exec(@_);
+}

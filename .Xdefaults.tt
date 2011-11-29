@@ -78,6 +78,7 @@ outside*cursorColor:   black
 
 pwsafe-prompt.geometry:   60x5
 pwsafe-prompt.foreground: #00FF54
+pwsafe-prompt.hold: true
 
 [%-
 MACRO change_font(font) BLOCK;
