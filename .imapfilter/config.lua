@@ -21,18 +21,19 @@ function main()
 
     -- trash rules
     trash(home, "daily",        is_older(0))
-    trash(home, "unwanted",     is_older(7))
-    trash(home, "message",      is_older(1))
     trash(home, "security",     is_older(7))
     trash(home, "suckless",     is_older(7))
     trash(home, "poe",          is_older(7))
     trash(home, "templates",    is_older(7))
     trash(home, "caml",         is_older(7))
-    trash(home, "netflix",      is_older(5))
     trash(home, "haskell-cafe", is_older(1))
+    trash(home, "module-authors", is_older(1))
+    trash(home, "debian-news",  is_older(30))
+    trash(home, "smart/bulk",   is_older(15))
 
     -- archive rules
     archive(home, "INBOX", is_expired(7))
+    archive(home, "smart/notify", is_older(2))
     move(home,    "slug",    "slug/archive",    is_expired(7))
     move(home,    "billing", "billing/archive", is_expired(15))
 

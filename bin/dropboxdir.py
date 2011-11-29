@@ -19,7 +19,7 @@ cmdparser.add_option("-s","--setfolder", dest="folder",
   help="set dropbox folder")
 (options, args) = cmdparser.parse_args()
 
-db_path = os.path.expanduser("~/.dropbox/dropbox.db")
+db_path = os.path.expanduser("~/.dropbox/config.db")
 db = sqlite3.connect(db_path)
 cursor = db.cursor()
 
@@ -27,18 +27,15 @@ cursor = db.cursor()
 cursor.execute("select value from config where key='dropbox_path'")
 dropbox_path = "<default>"
 for entry in cursor:
-   dropbox_path_base64 = entry[0]
-   dropbox_path_raw = base64.decodestring(dropbox_path_base64)
-   dropbox_path = dropbox_path_raw[1:-5]
+   dropbox_path = entry[0]
 print "current dropbox path: %s" % dropbox_path
 
 if not options.folder is None:
-   new_path_raw = "V" + os.path.abspath(options.folder) + "\np1\n."
-   new_path_base64 = base64.encodestring(new_path_raw) 
+   new_path = os.path.abspath(options.folder)
    cursor.execute("delete from config where key='dropbox_path'")
    cursor.execute("insert into config (key,value) values (?,?)", \
-      ("dropbox_path", new_path_base64))
+      ("dropbox_path", new_path))
    db.commit()
    print "new dropbox path: %s" % options.folder
-   
+
 db.close()

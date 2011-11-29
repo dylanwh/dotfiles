@@ -49,6 +49,9 @@ sub sshpass {
         print "Root password in clipboard.\n";
         Clipboard->copy($host->{root_pass});
     }
+    else {
+        print "Root password is $host->{root_pass}\n";
+    }
     exec('sshpass', "-d$fd", 'ssh', '-oStrictHostKeyChecking=no', '-A', "$user\@$address");
 }
 
