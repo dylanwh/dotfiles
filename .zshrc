@@ -255,9 +255,9 @@ stty -ixon   # Disable the freeze-the-terminal-on-control-s thing.
 ttyctl -f    # Freeze terminal properties.
 
 namedir progfiles    ~/.wine/drive_c/Program\ Files
-namedir trash        ~/.local/share/Trash
 namedir dropbox      ~/Dropbox
 namedir moonshine    ~/code/moonshine
+
 namedir g2           ~/work/g2
 namedir arc          ~/work/hewitt/arc
 namedir bes          ~/work/hewitt/bes
@@ -276,14 +276,11 @@ if have xdg-user-dir; then
 	namedir pics   $(xdg-user-dir PICTURES)
 	namedir vids   $(xdg-user-dir VIDEOS)
 	namedir files  $(xdg-user-dir DOWNLOAD)
-
-	if [[ $PWD == $HOME && -o login ]]; then
-		pushd ~desk
-	fi
 fi
 
 if have trash; then
 	alias rm="trash"
+	namedir trash ~/.local/share/Trash
 fi
 
 # vim: set sw=4 ts=4 foldmethod=marker path=.,~/.zsh:

@@ -5,7 +5,7 @@ use File::Basename;
 use Getopt::Long qw( :config gnu_getopt );
 
 my $TERM  = 'urxvt';
-my ($title, $name, $eep, $chdir );
+my ($name, $eep, $chdir );
 
 foreach (@ARGV) {
     if ($_ eq '-e') {
@@ -15,7 +15,7 @@ foreach (@ARGV) {
     elsif (/^-name/) {
         $_ = '--name';
     }
-    elsif (/^-([rd]+)e$/ or /^-e(.+)$/) {
+    elsif (/^-e(.+)$/) {
         unshift @ARGV, "-$1" if $1;
         $_ = '--';
         last;
@@ -23,17 +23,12 @@ foreach (@ARGV) {
 }
 
 GetOptions(
-    'title|t=s' => \$title,
     'name|n=s'  => \$name,
     'e'         => \$eep,
     'chdir|C=s' => \$chdir,
 );
 
 my (@run) = @ARGV;
-
-if (@run) {
-    $title //= "$run[0]: @run[1..$#run]";
-}
 
 unless ($name) {
     if (-e "$ENV{HOME}/.outside") {
@@ -48,9 +43,7 @@ chdir $chdir if $chdir;
 unshift @run, '-e' if @run;
 
 run($TERM,
-    $chdir ? () : ('-ls'),
     -name  => $name,
-    -title => $title,
     @run
 );
 
