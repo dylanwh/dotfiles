@@ -1,0 +1,63 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+use feature 'switch';
+use Sys::Hostname;
+use Text::Xslate;
+use Path::Class;
+use utf8::all;
+
+my @include = ('.');
+my $type   = $ENV{TX_TYPE}   // 'text';
+my $syntax = $ENV{TX_SYNTAX} // 'TTerse';
+my %define = (
+    HOST => hostname,
+    HOME => $ENV{HOME},
+    ENV  => { %ENV },
+);
+my %option = (
+    D => sub { my ($k, $v) = split(/=/, $_, 2); $define{$k} = $v // 1 },
+    U => sub { delete $define{$_} },
+    I => sub { push @include, $_  },
+    T => sub { $type = $_ },
+    S => sub { $syntax = $_ },
+);
+
+# manually parse the arguments for cpp compatibility
+while (my $arg = shift @ARGV) {
+    given ($arg) {
+        when ('--')                { last }
+        when (/^-([a-zA-Z])(.*?)$/) { process_option(\%option, $1, $2) }
+        default                    { push @ARGV, $arg; last }
+    }
+}
+
+$define{HOST} = (split(/\./, $define{HOST}))[0];
+
+if (@ARGV) {
+    my $file = file(shift @ARGV);
+    my $tx = Text::Xslate->new(
+        type   => $type,
+        path   => [$file->parent->stringify, @include],
+        syntax => $syntax,
+    );
+    print $tx->render( $file->relative( $file->parent )->stringify, \%define );
+}
+else {
+    my $tx = Text::Xslate->new(
+        type   => $type,
+        path   => ['/dev',  @include],
+        syntax => $syntax,
+        cache  => 0,
+    );
+    print $tx->render( 'stdin', \%define );
+}
+
+sub process_option {
+    my ($option, $flag, $val) = @_;
+    die "Unknown option: -$flag" unless $option->{$flag};
+
+    local $_ = (defined $val && length $val > 0) ? $val : shift @ARGV;
+
+    $option->{$flag}->();
+}

@@ -112,12 +112,13 @@ bindkey '^X^N' infer-next-history
 autoload run-help compinit promptinit colors
 autoload title shuffle perlpath prefix
 autoload runbg
-function mdc { mkdr -p $1 && cd $1 }
-function namedir { declare -g $1=$2; : ~$1 }
+
+function mdc      { mkdr -p $1 && cd $1 }
+function namedir  { declare -g $1=$2; : ~$1 }
+function sudo     { title -t "sudo $@";  command sudo "$@" }
 function save_cwd { echo $PWD >! ~/.cache/zsh/last_cwd }
+
 chpwd_functions+=( save_cwd )
-
-
 ## }}}
 ## {{{ ALIASES
 alias have='whence -p ls &>/dev/null'
@@ -164,7 +165,7 @@ alias cdd='cd ~desk'
 alias mplayer="title -e -- mplayer"
 alias ssh="title -e -- ssh"
 alias man="title -e -- man"
-alias aptitude='sudo aptitude'
+alias aptitude='title -e -- aptitude'
 alias irssi-safe='title -t irssi -e dtach -A ~/.irssi/dtach -Ez irssi'
 alias evince='runbg evince'
 alias cpanm='cpanm --notest'
@@ -189,6 +190,12 @@ alias ppc='p | publish | c'
 
 # less
 alias -g L='| less'
+
+# scripts
+alias -s pl=perl
+alias -s py=python
+alias -s rb=ruby
+alias -s hs=runhaskell
 
 if [[ ! -f ~/.cache/zsh/alias-ls ]]; then
 	# handle ls specially...

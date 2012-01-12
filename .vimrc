@@ -12,6 +12,8 @@ else
   set t_Sb=[4%dm
 endif
 
+call pathogen#infect()
+
 syntax on
 filetype plugin on
 filetype indent on
