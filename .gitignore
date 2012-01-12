@@ -17,6 +17,7 @@
 !.git
 !.gitconfig
 !.gitignore
+!.gitmodules
 !.gitignore.swp
 !.guile
 !.gvimrc
