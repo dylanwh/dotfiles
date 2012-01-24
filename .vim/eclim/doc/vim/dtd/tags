@@ -1,0 +1,4 @@
+:Validate_dtd	validate.txt	/*:Validate_dtd*
+g:EclimDtdValidate	validate.txt	/*g:EclimDtdValidate*
+vim-dtd-index	index.txt	/*vim-dtd-index*
+vim-dtd-validate	validate.txt	/*vim-dtd-validate*

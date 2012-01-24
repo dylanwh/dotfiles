@@ -1,0 +1,5 @@
+:Validate_javascript	validate.txt	/*:Validate_javascript*
+g:EclimJavascriptLintConf	validate.txt	/*g:EclimJavascriptLintConf*
+g:EclimJavascriptValidate	validate.txt	/*g:EclimJavascriptValidate*
+vim-javascript-index	index.txt	/*vim-javascript-index*
+vim-javascript-validate	validate.txt	/*vim-javascript-validate*

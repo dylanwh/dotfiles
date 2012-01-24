@@ -4,3 +4,9 @@
 [submodule ".vim/bundle/fugitive"]
 	path = .vim/bundle/fugitive
 	url = git://github.com/tpope/vim-fugitive.git
+[submodule ".vim/bundle/racket"]
+	path = .vim/bundle/racket
+	url = git://github.com/wlangstroth/vim-racket.git
+[submodule ".vim/bundle/colorschemes"]
+	path = /home/dylan/.vim/bundle/colorschemes
+	url = git@github.com:flazz/vim-colorschemes.git

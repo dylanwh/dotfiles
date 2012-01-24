@@ -1,0 +1,5 @@
+:NewLibEntry	buildpath.txt	/*:NewLibEntry*
+:NewProjectEntry	buildpath.txt	/*:NewProjectEntry*
+:NewSrcEntry	buildpath.txt	/*:NewSrcEntry*
+vim-dltk-buildpath	buildpath.txt	/*vim-dltk-buildpath*
+vim-dltk-index	index.txt	/*vim-dltk-index*

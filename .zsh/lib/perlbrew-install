@@ -1,0 +1,27 @@
+#!/bin/zsh
+# vim: set ft=zsh
+
+if [[ -z $1 ]]; then
+	echo "usage: perlbrew-install some-dir" >&2
+	return 1
+fi
+
+export PERLBREW_ROOT=${1:a}
+export PERLBREW_HOME=$PERLBREW_ROOT
+unset PERLBREW_PATH
+
+if [[ ! -d $PERLBREW_ROOT ]]; then
+	if [[ -o interactive ]]; then
+		echo "Installing perlbrew..."
+		( curl -L http://xrl.us/perlbrewinstall | bash ) &> ~/.perlbrew.log
+		perlbrew init &>> ~/.perlbrew.log
+		mkdir -p $PERLBREW_HOME
+		echo "Perlbrew installed."
+	else
+		echo 'Perlbrew not installed and this is not na interactive shell!' >&2
+		return 1
+	fi
+fi
+
+
+[[ -f $PERLBREW_ROOT/etc/bashrc ]] && source $PERLBREW_ROOT/etc/bashrc

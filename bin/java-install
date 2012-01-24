@@ -1,0 +1,20 @@
+#!/bin/sh
+#should work on most unixes
+#Makes the /usr/lib/jvm in case...
+mkdir -p /usr/lib/jvm   || exit 1
+mkdir /tmp/java-install || exit 1
+cd /tmp/java-install
+
+#Update this line to reflect newer versions of JDK...
+wget http://download.oracle.com/otn-pub/java/jdk/7u1-b08/jdk-7u1-linux-i586.tar.gz || exit 1
+
+#Extract the download
+tar -xvf ./*gz || exit 1
+
+#Move it to where it can be found...
+mkdir -p /usr/lib/jvm/java-7-oracle || exit 1
+mv ./* /usr/lib/jvm/java-7-oracle
+
+rm -rf /tmp/java-install
+
+exit 0

@@ -1,0 +1,5 @@
+:Validate_css	validate.txt	/*:Validate_css*
+g:EclimCssValidate	validate.txt	/*g:EclimCssValidate*
+vim-css-complete	complete.txt	/*vim-css-complete*
+vim-css-index	index.txt	/*vim-css-index*
+vim-css-validate	validate.txt	/*vim-css-validate*

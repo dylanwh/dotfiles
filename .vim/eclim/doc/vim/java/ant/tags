@@ -1,0 +1,11 @@
+:Ant	execute.txt	/*:Ant*
+:AntDoc	doc.txt	/*:AntDoc*
+:AntUserDoc	doc.txt	/*:AntUserDoc*
+:Validate_ant	validate.txt	/*:Validate_ant*
+g:EclimAntCompilerAdditionalErrorFormat	execute.txt	/*g:EclimAntCompilerAdditionalErrorFormat*
+g:EclimAntValidate	validate.txt	/*g:EclimAntValidate*
+vim-java-ant-complete	complete.txt	/*vim-java-ant-complete*
+vim-java-ant-doc	doc.txt	/*vim-java-ant-doc*
+vim-java-ant-execute	execute.txt	/*vim-java-ant-execute*
+vim-java-ant-index	index.txt	/*vim-java-ant-index*
+vim-java-ant-validate	validate.txt	/*vim-java-ant-validate*

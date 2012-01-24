@@ -1,0 +1,4 @@
+:Validate_webxml	validate.txt	/*:Validate_webxml*
+g:EclimWebXmlValidate	validate.txt	/*g:EclimWebXmlValidate*
+vim-java-webxml-index	index.txt	/*vim-java-webxml-index*
+vim-java-webxml-validate	validate.txt	/*vim-java-webxml-validate*

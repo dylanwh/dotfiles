@@ -13,6 +13,7 @@ if [[ -o interactive ]]; then
 	esac
 fi
 
-if [[ -d /opt/perlbrew ]]; then
-	source /opt/perlbrew/etc/bashrc
-fi
+autoload perlbrew-install
+perlbrew-install ~/app/perlbrew
+
+# vim: set ft=zsh:

@@ -1,0 +1,10 @@
+:DtdDefinition	definition.txt	/*:DtdDefinition*
+:Validate_xml	validate.txt	/*:Validate_xml*
+:XmlFormat	format.txt	/*:XmlFormat*
+:XsdDefinition	definition.txt	/*:XsdDefinition*
+g:EclimXmlValidate	validate.txt	/*g:EclimXmlValidate*
+vim-xml-complete	complete.txt	/*vim-xml-complete*
+vim-xml-definition	definition.txt	/*vim-xml-definition*
+vim-xml-format	format.txt	/*vim-xml-format*
+vim-xml-index	index.txt	/*vim-xml-index*
+vim-xml-validate	validate.txt	/*vim-xml-validate*

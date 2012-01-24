@@ -7,7 +7,7 @@ export REALNAME="Dylan William Hardison"
 export EMAIL="dylan@hardison.net"
 export EDITOR="vim"
 export VISUAL="$EDITOR"
-export BROWSER="firefox"
+export BROWSER="chrome"
 export MANPAGER=less
 
 export HOST="${HOST/.*/}"

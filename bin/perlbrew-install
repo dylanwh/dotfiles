@@ -1,8 +1,0 @@
-#!/bin/zsh
-
-
-if [[ -n $1 ]]; then
-	export PERLBREW_ROOT=${1:a}
-fi
-
-curl -L http://xrl.us/perlbrewinstall | bash
