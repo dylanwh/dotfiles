@@ -10,3 +10,9 @@
 [submodule ".vim/bundle/pathogen"]
 	path = .vim/bundle/pathogen
 	url = git://github.com/tpope/vim-pathogen.git
+[submodule ".vim/bundles/supertab"]
+	path = .vim/bundle/supertab
+	url = git://github.com/ervandew/supertab.git
+[submodule ".vim/bundle/nerdtree"]
+	path = .vim/bundle/nerdtree
+	url = git://github.com/scrooloose/nerdtree.git

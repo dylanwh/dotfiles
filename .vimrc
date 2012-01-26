@@ -1,17 +1,7 @@
 " Dylan William Hardison's .vimrc file.
 " vim: set fdm=marker expandtab:
-if has("terminfo")
-    if &t_Co < 16
-        set t_Co=16
-        set t_AB=[%?%p1%{8}%<%t%p1%{40}%+%e%p1%{92}%+%;%dm
-        set t_AF=[%?%p1%{8}%<%t%p1%{30}%+%e%p1%{82}%+%;%dm
-    end
-else
-  set t_Co=16
-  set t_Sf=[3%dm
-  set t_Sb=[4%dm
-endif
 
+" INIT {{{
 runtime bundle/pathogen/autoload/pathogen.vim
 "call pathogen#infect()
 call pathogen#runtime_append_all_bundles()
@@ -31,7 +21,7 @@ else
     let g:inkpot_black_background = 1
     colorscheme inkpot
 endif
-
+" }}}
 
 " OPTIONS {{{
 set tabstop=4          " Number of spaces that a literal <Tab> in the file counts for.
@@ -49,7 +39,7 @@ set nobackup           " Do not keep backups.
 set hlsearch           " Highlight searches.
 set incsearch          " Incremental search; highlight as you type.
 set secure             " shell and write commands are not allowed in "./.vimrc".
-set exrc             " Read .vimrc from current dir (off)
+set exrc               " Read .vimrc from current dir (off)
 set modeline           " Allow modelines.
 set ruler              " Show cursor position at all times.
 set laststatus=2       " Always display a status bar.
@@ -58,6 +48,7 @@ set showbreak=+\       " Prefixed wrapped lines with "+ ".
 set shortmess=Ia       " Disable splash screen
 set cpoptions+=$       " Show '$' for change operations.
 set encoding=utf-8     " Keep things internally as utf-8.
+set hidden             " allow hidden edited buffers
 set fileencoding=utf-8 " Read/Write files using utf-8.
 set titlestring=vim:\ %F
 set title
@@ -109,8 +100,6 @@ let g:git_branch_status_around=":]"
 let g:vimwiki_list = [{'path': "~/.local/Dropbox/Documents/wiki"}]
 let g:vimwiki_hl_cb_checked = 1
 
-let autodate_format = "%Y-%m-%d"
-
 "-- matches hash and array subscripts, etc.
 let perl_extended_vars = 1
 
@@ -126,6 +115,10 @@ let perl_string_as_statement = 1
 
 "-- enable perl folding
 let perl_fold = 1
+
+"-- context-based supertabbing
+let g:SuperTabDefaultCompletionType = "context"
+let g:SuperTabContextDefaultCompletionType = "<c-x><c-u>"
 
 let redcode_highlight_numbers=1
 

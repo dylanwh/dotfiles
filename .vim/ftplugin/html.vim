@@ -1,8 +1,6 @@
 "-- do not hightlight <u>, etc.
 let html_no_rendering=1
 
-source ~/.vim/closetag.vim
-
 inoremap <buffer> <C-P> <p> </p><ESC>4hi
 nmap     <buffer> <C-P> a<p> </p><ESC>4hi
 
