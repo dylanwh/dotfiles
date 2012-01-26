@@ -1,5 +1,5 @@
 #!/bin/zsh
-# vim: set ft=zsh
+# vim: set ft=zsh:
 
 if [[ -z $1 ]]; then
 	echo "usage: perlbrew-install some-dir" >&2
@@ -18,7 +18,7 @@ if [[ ! -d $PERLBREW_ROOT ]]; then
 		mkdir -p $PERLBREW_HOME
 		echo "Perlbrew installed."
 	else
-		echo 'Perlbrew not installed and this is not na interactive shell!' >&2
+		echo 'Perlbrew not installed and this is not an interactive shell!' >&2
 		return 1
 	fi
 fi

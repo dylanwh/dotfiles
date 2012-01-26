@@ -12,9 +12,12 @@ else
   set t_Sb=[4%dm
 endif
 
-call pathogen#infect()
+runtime bundle/pathogen/autoload/pathogen.vim
+"call pathogen#infect()
+call pathogen#runtime_append_all_bundles()
 
 syntax on
+filetype on
 filetype plugin on
 filetype indent on
 
@@ -22,10 +25,13 @@ runtime! ftplugin/man.vim
 
 if $TERM == 'rxvt-unicode-outside'
     set bg=light
-    colorscheme default
+    let g:inkpot_black_background = 0
+    colorscheme inkpot
 else
-    colorscheme dylan2
+    let g:inkpot_black_background = 1
+    colorscheme inkpot
 endif
+
 
 " OPTIONS {{{
 set tabstop=4          " Number of spaces that a literal <Tab> in the file counts for.
@@ -89,7 +95,6 @@ let c_comment_strings=1
 
 "-- Disable the annoying paren highlighter.
 let loaded_matchparen = 1
-let g:inkpot_black_background = 1
 let g:bluez_transbg = 1
 
 "-- Chicken Scheme!

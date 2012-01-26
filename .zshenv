@@ -9,5 +9,9 @@ declare -U path perl5lib       # remove duplicates
 #(( SHLVL > 1 )) && return 0    # Stop here if subshell.
 
 path=(~/bin $path)
+fpath=(~/.zsh/lib $fpath)
+
+autoload perlbrew-install
+perlbrew-install ~/app/perlbrew
 
 # vim: set sw=4 ts=4 foldmethod=marker path=.,~/.zsh:

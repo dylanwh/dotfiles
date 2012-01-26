@@ -13,7 +13,4 @@ if [[ -o interactive ]]; then
 	esac
 fi
 
-autoload perlbrew-install
-perlbrew-install ~/app/perlbrew
-
 # vim: set ft=zsh:

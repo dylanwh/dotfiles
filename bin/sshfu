@@ -8,7 +8,6 @@ use Fcntl 'F_GETFD', 'F_SETFD', 'FD_CLOEXEC';
 use Getopt::Long qw(  :config pass_through gnu_compat bundling no_getopt_compat );
 use YAML::XS 'LoadFile', 'Dump';
 use POSIX 'pause';
-use XDS ':all';
 
 use constant DISPLAY => $ENV{DISPLAY};
 use constant WINDOWID => $ENV{WINDOWID};
@@ -18,7 +17,6 @@ my ($root, $type);
 
 GetOptions(
     'root|R|r' => \$root,
-    'type|T|t' => \$type,
 );
 
 my $name       = shift @ARGV;

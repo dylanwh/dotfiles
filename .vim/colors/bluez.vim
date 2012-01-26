@@ -1,6 +1,6 @@
 " Vim color file
 " Maintainer:   Shirk <shirk@gmx.net>
-" Last Change:  2009-10-16.1
+" Last Change:  2012-01-24.1
 " URL: trinity.linuxdevel.net
 
 " cool help screens
@@ -84,7 +84,7 @@ if exists("g:bluez_transbg")
 else
     hi Cursor       ctermfg=19 ctermbg=68
     hi lCursor      ctermfg=19 ctermbg=69
-    hi Normal       ctermfg=47 ctermbg=0
+    hi Normal       ctermfg=1 ctermbg=0
     hi Comment      ctermfg=37 ctermbg=0
     hi Constant     ctermfg=68 ctermbg=0
     hi String       ctermfg=61 ctermbg=0

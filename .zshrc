@@ -14,7 +14,6 @@ HISTFILE=~/.zhistory
 watch=(all)
 fignore=(.o .hi .pyc)
 cdpath=(~ ~/Dropbox /media)
-fpath=(~/.zsh/lib $fpath)
 
 export PS_PERSONALITY=linux
 export XMMS_PATH='tcp://:1985'

@@ -8,5 +8,8 @@
 	path = .vim/bundle/racket
 	url = git://github.com/wlangstroth/vim-racket.git
 [submodule ".vim/bundle/colorschemes"]
-	path = /home/dylan/.vim/bundle/colorschemes
+	path = .vim/bundle/colorschemes
 	url = git@github.com:flazz/vim-colorschemes.git
+[submodule ".vim/bundle/pathogen"]
+	path = .vim/bundle/pathogen
+	url = git://github.com/tpope/vim-pathogen.git
