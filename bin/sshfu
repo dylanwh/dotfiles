@@ -63,29 +63,7 @@ sub process {
     if ($pid) {
         set_title("sshfu: $host->{name}");
         my @local_cmd;
-        if (WINDOWID && $type) {
-            push @local_cmd, (
-                '-o' => "LocalCommand=kill -USR1 $pid",
-                '-o' => "PermitLocalCommand=yes",
-            );
-        }
         sshpass('ssh', $fd, @local_cmd, "$user\@$address");
-    }
-    else {
-        if (WINDOWID && $type) {
-            $SIG{USR1} = sub { print "typing password...\n" };
-            pause;
-            print "typing...\n";
-            sleep(1);
-            disable_input();
-            windowfocus WINDOWID;
-            type 'su';
-            key 'Return';
-            sleep(1);
-            type $host->{root_pass};
-            key 'Return';
-            enable_input();
-        }
     }
 }
 
