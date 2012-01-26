@@ -8,7 +8,7 @@ declare -U path perl5lib       # remove duplicates
 #setopt noglobalrcs             # Do not load any config files from /etc.
 #(( SHLVL > 1 )) && return 0    # Stop here if subshell.
 
-path=(~/bin $path)
+path=(~/bin ~/app/urxvt/bin $path)
 fpath=(~/.zsh/lib $fpath)
 
 autoload perlbrew-install

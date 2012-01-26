@@ -58,7 +58,7 @@ set backspace=eol,start,indent
 set grepprg=grep\ -nH\ \ --exclude='*.svn*'\ $*
 set foldopen=tag,search,quickfix,undo,jump,mark,percent
 set viminfo=!,'1000,%,h,f1,n~/.cache/viminfo
-set statusline=%<%f\ %h%m%r%{FF()}%{FENC()}%y%=0x%B\ %-14.(%l,%c%V%)\ %P
+set statusline=%<%f\ %h%m%r%{FF()}%{FENC()}%y\ %{fugitive#statusline()}%=0x%B\ %-14.(%l,%c%V%)\ %P
 set fillchars=fold:\ ,stl:\ ,stlnc:\  " borders
 set tags+=~/.tags,.tags
 set nowrap

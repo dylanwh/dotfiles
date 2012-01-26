@@ -1,8 +1,0 @@
-#!/bin/zsh
-
-integer i
-for (( i=1; i <= $#argv; i++ )); do
-    echo $argv[$i]
-done
-
-#exec urxvt -title $NAME -name $NAME $argv
