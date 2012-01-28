@@ -12,15 +12,6 @@ filetype plugin on
 filetype indent on
 
 runtime! ftplugin/man.vim
-
-if $TERM == 'rxvt-unicode-outside'
-    set bg=light
-    let g:inkpot_black_background = 0
-    colorscheme inkpot
-else
-    let g:inkpot_black_background = 1
-    colorscheme inkpot
-endif
 " }}}
 
 " OPTIONS {{{
@@ -71,31 +62,21 @@ set clipboard= " don't automatically put stuff in the clipboard.
 let mapleader      = "\\"
 let maplocalleader = ","
 
-"-- My name for adding chanelog entries.
-let changelog_username = $REALNAME " <".$EMAIL.">"
-
-"-- My name for adding debian changelog entries.
-let debianfullname = $REALNAME
-
 "-- Highlight builtins.
 let python_highlight_all = 1
 
-"-- gnu!
+"-- C-language settings.
 let c_gnu=1
 let c_comment_strings=1
 
 "-- Disable the annoying paren highlighter.
 let loaded_matchparen = 1
-let g:bluez_transbg = 1
-
-"-- Chicken Scheme!
-let is_chicken = 1
 
 let g:haddock_browser = "sensible-browser"
 
-let g:git_branch_status_head_current=1
-let g:git_branch_status_text="[git"
-let g:git_branch_status_around=":]"
+"let g:git_branch_status_head_current=1
+"let g:git_branch_status_text="[git"
+"let g:git_branch_status_around=":]"
 
 let g:vimwiki_list = [{'path': "~/.local/Dropbox/Documents/wiki"}]
 let g:vimwiki_hl_cb_checked = 1
@@ -121,6 +102,9 @@ let g:SuperTabDefaultCompletionType = "context"
 let g:SuperTabContextDefaultCompletionType = "<c-x><c-u>"
 
 let redcode_highlight_numbers=1
+
+let g:inkpot_black_background = 1
+colorscheme jellybeans
 
 " }}}
 

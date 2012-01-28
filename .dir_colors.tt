@@ -1,3 +1,4 @@
+# vim: set ft=dircolors:
 # FILE:	/etc/DIR_COLORS
 # 
 # Configuration file for the color ls utility.
@@ -30,6 +31,7 @@ TERM xterm
 TERM vt100
 TERM rxvt
 TERM rxvt-unicode
+TERM rxvt-unicode-256color
 TERM screen
 TERM screen-16color
 TERM screen-88color
@@ -82,7 +84,7 @@ NORMAL 00	# global default, although everything should be something.
 FILE 00 	# normal file
 DIR 01;34 	# directory
 LINK 01;36 	# symbolic link
-ORPHAN 01;05;31	# orphaned symbolic link - points to non-existent file
+ORPHAN 01;31	# orphaned symbolic link - points to non-existent file
 FIFO 40;33	# pipe
 SOCK 01;35	# socket
 BLK 40;33;01	# block device driver
@@ -94,22 +96,10 @@ EXEC 01;32 	# file with executable attribute set
 # as '*~' used with emacs backups).  Note that using the asterisk allows you
 # to specify extensions that are not necessarily preceeded by a period.
 #
-.EXE 01;32
-.cmd 01;32
-.exe 01;32
-.com 01;32
-.btm 01;32
-.bat 01;32
-.tar 01;31
-.bz2 01;31
-.tgz 01;31
-.arj 01;31
-.taz 01;31
-.lzh 01;31
-.zip 01;31
-.z   01;31
-.Z   01;31
-.gz  01;31
+[% SET archives = [ ".tar", ".bz2", ".tgz", ".arj", ".taz", ".lzh", ".zip", ".z", ".Z", ".gz", ".xz" ] -%]
+[% FOR ext IN archives -%]
+[% ext %] 01;31
+[% END %]
 .jpg 01;35
 .gif 01;35
 .png 01;35

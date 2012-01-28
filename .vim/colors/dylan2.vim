@@ -1,6 +1,6 @@
 " Vim color file
 " Maintainer:   Dylan Hardison <dylanwh@gmail.com>
-" Last Change:  2010-04-23.
+" Last Change:  2012-01-28.
 
 " Load the syntax highlighting defaults, if it's enabled.
 if exists("syntax_on")
@@ -11,7 +11,7 @@ let colors_name = "dylan2"
 set bg=dark
 
 hi StatusLine   cterm=none ctermbg=4
-hi StatusLineNC cterm=none ctermbg=4 ctermfg=darkgray
+hi StatusLineNC cterm=none ctermbg=4 ctermfg=white
 hi TabLine      ctermbg=4 ctermfg=7 cterm=none
 hi TabLineFill  ctermbg=4 cterm=none
 hi VertSplit    term=none cterm=none ctermbg=4

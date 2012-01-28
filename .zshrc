@@ -244,6 +244,7 @@ zstyle ':completion:*' cache-path ~/.cache/zsh
 
 if have dircolors; then
 	unset LS_COLORS
+	ttpp ~/.dir_colors.tt >! ~/.dir_colors
 	eval $(dircolors ~/.dir_colors)
 	# Colorize completions.
 	zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
