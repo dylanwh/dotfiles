@@ -2,14 +2,13 @@
 " vim: set fdm=marker expandtab:
 
 " INIT {{{
+
 runtime bundle/pathogen/autoload/pathogen.vim
 "call pathogen#infect()
 call pathogen#runtime_append_all_bundles()
 
 syntax on
-filetype on
-filetype plugin on
-filetype indent on
+filetype plugin indent on
 
 runtime! ftplugin/man.vim
 " }}}
@@ -19,8 +18,8 @@ set tabstop=4          " Number of spaces that a literal <Tab> in the file count
 set shiftwidth=4       " Number of spaces to use for each step of (auto)indent.
 set shiftround         " Round indent to multiple of 'shiftwidth'.
 set autoindent         " Auto indent from current line to new line.
-set copyindent         " Try to not change the indentation style.
-set preserveindent     " Ditto.
+"set copyindent         " Try to not change the indentation style.
+"set preserveindent     " Ditto.
 set smarttab           " Insert shiftwidth or tabstop as appropriate.
 set ignorecase         " Ignore case
 set smartcase          " Unless I use upper-case letters.
@@ -45,7 +44,7 @@ set titlestring=vim:\ %F
 set title
 set wildmode=longest,list,full " thanks nornagon!
 set wildignore=*.bak,~,*.o,*.info,*.swp,*.dvi,*.pdf,.*
-set backspace=eol,start,indent
+set backspace=eol,start
 set grepprg=grep\ -nH\ \ --exclude='*.svn*'\ $*
 set foldopen=tag,search,quickfix,undo,jump,mark,percent
 set viminfo=!,'1000,%,h,f1,n~/.cache/viminfo
@@ -95,16 +94,16 @@ let perl_include_pod = 1
 let perl_string_as_statement = 1
 
 "-- enable perl folding
-let perl_fold = 1
+"let perl_fold = 1
 
 "-- context-based supertabbing
 let g:SuperTabDefaultCompletionType = "context"
-let g:SuperTabContextDefaultCompletionType = "<c-x><c-u>"
+"let g:SuperTabContextDefaultCompletionType = "<c-x><c-u>"
 
 let redcode_highlight_numbers=1
 
 let g:inkpot_black_background = 1
-colorscheme jellybeans
+colorscheme inkpot
 
 " }}}
 

@@ -7,9 +7,25 @@
 
 # Second re-exec:
 # Ensure that this script evaluated as a login shell.
-[[ -z $REALNAME ]] && exec zsh -l $0
+[[ ! -o login ]] && exec zsh -l $0
 
-export OOO_FORCE_DESKTOP=gnome
-export WINDOW_MANAGER=xmonad
+host=$(hostname -s)
+bg_color='#000033'
+bg_image="$HOME/Dropbox/Photos/background/$host.jpg"
+kb_delay=200
+kb_rate=40
 
-exec gnome-session
+xset +fp /usr/share/fonts/local
+xset fp rehash
+
+setxkbmap -option terminate:ctrl_alt_bksp \
+	      -option altwin:swap_alt_win \
+		  -option ctrl:nocaps
+
+xsetroot -solid $bg_color
+xsetroot -cursor_name left_ptr
+xset r rate $kb_delay $kb_rate
+
+xrdb-reload
+
+exec xmonad

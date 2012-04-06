@@ -1,4 +1,4 @@
-#!/usr/bin/env perl
+#!/usr/bin/perl
 use strict;
 use warnings;
 
@@ -7,11 +7,9 @@ use IO::Handle;
 use Fcntl 'F_GETFD', 'F_SETFD', 'FD_CLOEXEC';
 use Getopt::Long qw(  :config pass_through gnu_compat bundling no_getopt_compat );
 use YAML::XS 'LoadFile', 'Dump';
-use POSIX 'pause';
 
 use constant DISPLAY => $ENV{DISPLAY};
 use constant WINDOWID => $ENV{WINDOWID};
-use if DISPLAY, 'Clipboard';
 
 my ($root, $type);
 
@@ -23,7 +21,7 @@ my $name       = shift @ARGV;
 my $hosts_file = "$ENV{HOME}/.sshfu";
 
 die "config file has dangerous perms" if stat($hosts_file)->mode & 0066;
-my @hosts = @{ LoadFile($hosts_file) };
+my @hosts = @{ LoadFile($hosts_file)->{hosts} };
 
 my @matches = grep { match($_, $name)  } @hosts;
 
@@ -51,26 +49,15 @@ sub process {
     my $address = $host->{ip_address} // $host->{hostname};
     print "Going to ssh to $user\@$address, using fd $fd for password (args: @args)\n";
 
-    if (DISPLAY) {
-        print "Root password in clipboard.\n";
-        Clipboard->copy($host->{root_pass});
-    }
-    else {
-        print "Root password is $host->{root_pass}\n";
-    }
+    print "Root password is $host->{root_pass}\n";
 
-    my $pid = fork;
-    if ($pid) {
-        set_title("sshfu: $host->{name}");
-        my @local_cmd;
-        sshpass('ssh', $fd, @local_cmd, "$user\@$address");
-    }
+    set_title("sshfu: $host->{name}");
+    sshpass('ssh', $fd, "$user\@$address");
 }
 
 sub sshpass {
     my ($cmd, $fd, @args) = @_;
     system('sshpass', "-d$fd", $cmd, '-oStrictHostKeyChecking=no', '-A', @args);
-    sleep 20;
 }
 
 sub match {

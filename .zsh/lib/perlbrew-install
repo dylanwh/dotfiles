@@ -6,22 +6,12 @@ if [[ -z $1 ]]; then
 	return 1
 fi
 
+export PERLBREW_HOME=${1:a}
 export PERLBREW_ROOT=${1:a}
-export PERLBREW_HOME=$PERLBREW_ROOT
 unset PERLBREW_PATH
 
-if [[ ! -d $PERLBREW_ROOT ]]; then
-	if [[ -o interactive ]]; then
-		echo "Installing perlbrew..."
-		( curl -L http://xrl.us/perlbrewinstall | bash ) &> ~/.perlbrew.log
-		perlbrew init &>> ~/.perlbrew.log
-		mkdir -p $PERLBREW_HOME
-		echo "Perlbrew installed."
-	else
-		echo 'Perlbrew not installed and this is not an interactive shell!' >&2
-		return 1
-	fi
-fi
+[[ ! -d $PERLBREW_HOME ]] && perlbrew init
 
+[[ -f $PERLBREW_HOME/etc/bashrc ]] && source $PERLBREW_HOME/etc/bashrc
 
-[[ -f $PERLBREW_ROOT/etc/bashrc ]] && source $PERLBREW_ROOT/etc/bashrc
+return 0

@@ -17,38 +17,34 @@ use List::MoreUtils 'none';
 my $csv = Text::CSV->new({ binary => 1 });
 my $p   = Spreadsheet::ParseExcel->new;
 
-foreach my $file (@ARGV) {
-    $file = file($file);
+my $file = file(shift);
+my $dir  = dir(shift) || $file->parent->subdir(phrase_to_ident(basename($file, ".xls")));
 
-    my $doc = $p->Parse($file->stringify);
+my $doc = $p->Parse($file->stringify);
+$dir->mkpath;
 
-    my $dir = $file->parent->subdir(phrase_to_ident(basename($file, ".xls")));
-    warn "Directory: $dir\n";
-    $dir->mkpath;
+for my $sheet ( $doc->worksheets ) {
+    my $file = $dir->file( phrase_to_ident( $sheet->get_name ) . ".csv" );
+    my $fh   = $file->openw;
+    binmode $fh, ':encoding(utf8)';
 
-    for my $sheet ( $doc->worksheets ) {
-        my $file = $dir->file( phrase_to_ident( $sheet->get_name ) . ".csv" );
-        my $fh   = $file->openw;
-        binmode $fh, ':encoding(utf8)';
+    my ( $row_min, $row_max ) = $sheet->row_range();
+    my ( $col_min, $col_max ) = $sheet->col_range();
 
-        my ( $row_min, $row_max ) = $sheet->row_range();
-        my ( $col_min, $col_max ) = $sheet->col_range();
+    warn "    File: $file\n";
+    for my $row ( $row_min .. $row_max ) {
+        my @row = map {
+            clean(
+                $sheet->get_cell( $row, $_ )
+            )
+        } $col_min .. $col_max;
 
-        warn "    File: $file\n";
-        for my $row ( $row_min .. $row_max ) {
-            my @row = map {
-                clean(
-                    $sheet->get_cell( $row, $_ )
-                )
-            } $col_min .. $col_max;
-
-            next if none { $_ } @row;
-            $csv->print($fh, \@row);
-            $fh->print("\n");
-        }
-
-        $fh->close;
+        next if none { $_ } @row;
+        $csv->print($fh, \@row);
+        $fh->print("\n");
     }
+
+    $fh->close;
 }
 
 

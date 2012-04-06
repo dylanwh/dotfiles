@@ -134,6 +134,12 @@ snippet has
 		is  => '${2:ro}',
 		isa => '${3:Str}',${4}
 	);
+snippet hasd
+	has '${1:attr}' => (
+		is      => '${2:ro}',
+		isa     => '${3:Str}',
+		default => sub { my $self = shift; ${4} },
+	);
 snippet hasl
 	has '${1:attr}' => (
 		is      => '${2:ro}',
@@ -172,4 +178,15 @@ snippet usegl
 snippet pos
 	my $self = shift;
 	my (${1:$x}) = pos_validated_list(\@_, { isa => ${2:Str} }${3});
-
+snippet action
+	with 'Verby::Action';
+	
+	sub do {
+		my ($self, $ctx) = @_;
+		${1}
+	}
+	
+	sub verify {
+		my ($self, $ctx) = @_;
+		return ${2};
+	}

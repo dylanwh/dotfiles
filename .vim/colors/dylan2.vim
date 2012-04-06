@@ -10,7 +10,7 @@ endif
 let colors_name = "dylan2"
 set bg=dark
 
-hi StatusLine   cterm=none ctermbg=4
+hi StatusLine   cterm=none ctermbg=4 ctermfg=white
 hi StatusLineNC cterm=none ctermbg=4 ctermfg=white
 hi TabLine      ctermbg=4 ctermfg=7 cterm=none
 hi TabLineFill  ctermbg=4 cterm=none

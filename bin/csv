@@ -162,7 +162,7 @@ __DATA__
 [% DEFAULT expr = 'emitr $ROW' %]
 package main;
 no strict;
-use feature 'say';
+use feature 'say', 'switch';
 
 [% FOREACH module IN modules; GET "use $module;\n"; END %]
 

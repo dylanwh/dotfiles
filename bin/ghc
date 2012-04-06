@@ -1,0 +1,22 @@
+#!/usr/bin/perl
+use warnings;
+use strict;
+use List::MoreUtils 'any', 'firstval';
+use FindBin;
+use Cwd 'realpath';
+
+my $bin = realpath $FindBin::Bin;
+
+if (any { /xmonad/ } @ARGV) {
+    unshift @ARGV, '-with-rtsopts=-V0';
+}
+
+my $ghc = (
+    firstval { -f $_ }
+    map  { "$_/ghc" }
+    grep { defined $_ && $_ ne $bin }
+    map  { realpath $_ }
+    split( /:/, $ENV{PATH} )
+);
+
+exec($ghc, @ARGV);

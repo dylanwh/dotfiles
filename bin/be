@@ -1,15 +1,20 @@
 #!/bin/zsh
 
 integer xmobar_width=92
-integer trayer_width=8
+integer trayer_width=7
+integer trayer_height=20
 
-if [[ $(hostname -s) == 'njord' ]]; then
-	(( trayer_width = trayer_width / 2 ))
+xmobar=/usr/bin/xmobar
+
+if [[ -f /tmp/be-$1 ]]; then
+	kill $(cat /tmp/be-$1)
+	rm /tmp/be-$1
 fi
+
+echo $$ > /tmp/be-$1
 
 case $1 in
 	trayer)
-		pkill trayer
 		sleep .5
 		exec trayer \
 			--edge top \
@@ -19,19 +24,13 @@ case $1 in
 			--expand true \
 			--widthtype percent \
 			--width $trayer_width \
-			--height 21 \
+			--height $trayer_height \
 			--transparent true \
-			--tint 0x0000000
-	;;
-	xcompmgr)
-		pkill xcompmgr
-		sleep .5
-		#exec xcompmgr -cfFC -o 0
-		exec xcompmgr
+			--tint '0x000000'
 	;;
 	xmobar)
-		pkill xmobar
+		sleep .5
 		ttpp -Dwidth=$xmobar_width < ~/.xmobarrc.tt >! ~/.xmobarrc
-		exec xmobar ~/.xmobarrc
+		exec $xmobar ~/.xmobarrc
 	;;
 esac

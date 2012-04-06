@@ -1,0 +1,86 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+use Text::CSV;
+use Getopt::Long qw(:config gnu_getopt);
+use SQL::Abstract;
+use DBI;
+
+
+my $table = 'data';
+my $null;
+GetOptions(
+    'table|t=s' => \$table,
+    'null=s'    => \$null,
+);
+
+my $dbi   = DBI->connect('dbi:SQLite:dbname=:memory:');
+my $csv   = Text::CSV->new( { binary => 1, blank_is_undef => 1 } );
+my @names = unique_names(map { phrase_to_ident($_) } @{ $csv->getline( \*ARGV ) });
+my $sa    = SQL::Abstract->new;
+
+my $columns = join(",\n\t", map { "$_ TEXT" } @names);
+print qq{BEGIN;\nCREATE TABLE $table (\n\t$columns\n);\n};
+
+$csv->column_names(@names);
+while (my $row = $csv->getline_hr(\*ARGV)) {
+    foreach my $key (keys %$row) {
+        if (defined $null && $row->{$key} && $row->{$key} eq $null) {
+            $row->{$key} = undef;
+        }
+    }
+    my ($sql, @bind) = $sa->insert($table, $row);
+    $sql =~ s/\?/$dbi->quote(shift @bind)/ge;
+    print "$sql;\n";
+}
+print "END;\n";
+
+sub unique_names {
+    my (@names) = @_;
+
+    my ( %total, %count );
+    my $i = 0;
+
+    foreach (@names) {
+        next unless defined $_;
+        $total{$_}++;
+    }
+
+    foreach my $name (@names) {
+        unless ($name) {
+            $name = "field_$i";
+        }
+
+        if ( $total{$name} && $total{$name} > 1 ) {
+            $name = $name . "_" . ++$count{$name};
+        }
+
+        $i++;
+    }
+
+    return @names;
+}
+
+sub phrase_to_ident {
+    my ($ident) = @_;
+    $ident =~ s/\(.*\s+.*\)//g;
+    $ident =~ s/\((\S+)\)/_$1_/g;
+    $ident =~ s/&/ and /g;
+    $ident =~ s/\W+/_/g;
+    $ident =~ s/([a-z])([A-Z])/$1_$2/g;
+    $ident =~ s/([A-Za-z])(\d)/$1_$2/g;
+    $ident =~ s/(\d)([A-Za-z])/$1_$2/g;
+    $ident =~ s/_+$//;
+    $ident =~ s/^_+//;
+    $ident =~ s/_+/_/g;
+    $ident =~ s/_v_(\d)/_v$1/g;
+    $ident =~ s/^v_(\d)/v$1/g;
+
+    if ($ident =~ s/^(\d{4})_//) {
+        $ident .= "_$1";
+    }
+    
+    $ident =~ s/v(\d+)_(\d{4})/$2_v$1/g;
+
+    return lc $ident;
+}

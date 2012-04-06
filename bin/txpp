@@ -5,6 +5,8 @@ use feature 'switch';
 use Sys::Hostname;
 use Text::Xslate;
 use Path::Class;
+use File::Temp 'tempfile';
+use File::Copy;
 use utf8::all;
 
 my @include = ('.');
@@ -46,11 +48,14 @@ if (@ARGV) {
 else {
     my $tx = Text::Xslate->new(
         type   => $type,
-        path   => ['/dev',  @include],
+        path   => [@include],
         syntax => $syntax,
         cache  => 0,
     );
-    print $tx->render( 'stdin', \%define );
+    my ($fh, $filename) = tempfile('stdin-XXXX', DIR => '.');
+    copy(\*STDIN, $fh);
+    close $fh;
+    print $tx->render( $filename, \%define );
 }
 
 sub process_option {

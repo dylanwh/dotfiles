@@ -1,7 +1,28 @@
-#!/bin/zsh
+#!/usr/bin/make -f
 
-cd ${TMPDIR:-/tmp}             || exit 1
-git clone $HOME home           || exit 1
-tar -C home -zcf home.tar.gz . || exit 1
-rm -fr home                   || exit 1
-mv -v home.tar.gz $HOME/Dropbox/Public       || exit 1
+SHELL  = bash
+TMPDIR ?= /tmp
+DIR    = $(TMPDIR)/dylan-home
+
+$(HOME)/Dropbox/Public/home.tar.gz: $(DIR)
+	tar -C $< -zcf $@ .
+	rm -rf $(DIR)
+
+$(DIR): $(HOME)
+	@echo "cloning $<..."
+	@git clone $< $@
+	@echo "cloning submodules..."
+	@cd $(DIR) && ( \
+		git submodule init; \
+		git submodule update; \
+	)
+
+# 
+# cd ${TMPDIR:-/tmp}             || exit 1
+# git clone $HOME home           || exit 1
+# cd home                        
+# git submodule init
+# git submodule update
+# tar -C home -zcf home.tar.gz . || exit 1
+# rm -fr home                   || exit 1
+# mv -v home.tar.gz $HOME/Dropbox/Public       || exit 1

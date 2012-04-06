@@ -1,4 +1,4 @@
-#!/usr/bin/env perl
+#!/usr/bin/perl
 use strict;
 use warnings;
 use Sys::Hostname;
@@ -21,6 +21,7 @@ while (my $opt = shift @ARGV) {
     elsif ($opt =~ /^-I(.+?)$/)         { push @include, $1 }
     elsif ($opt =~ /^-P(.+?)$/)         { push @pre_process, $1 }
     elsif ($opt =~ /^-W(.+?)$/)         { push @wrapper, $1 }
+    elsif ($opt =~ /^-P$/)              { next }
     elsif ($opt eq '--')                { last }
     elsif ($opt =~ /^-/)                { die "Unknown option: $opt\n" }
     else                                { push @ARGV, $opt; last }

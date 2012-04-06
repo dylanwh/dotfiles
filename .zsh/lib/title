@@ -8,6 +8,9 @@ mode="print"
 
 while getopts "et:" option; do
 	case $option in
+		(-)
+			break
+		;;
 		(t)
 			title="$OPTARG"
 		;;

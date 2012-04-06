@@ -18,12 +18,7 @@ export TZ=US/Eastern
 
 export LESSHISTFILE='-'
 
-if [[ -d /etc/profile.d ]]; then
-	for file in /etc/profile.d/*(.N); do
-		source $file
-	done
-fi
-
+path=(~/bin ~/app/urxvt/bin $path)
 perl5lib=(~/lib 'lib')
 
 case $HOST in

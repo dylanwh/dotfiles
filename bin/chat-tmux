@@ -1,0 +1,4 @@
+#!/bin/zsh
+name=chat
+[[ -e ~/.outside ]] && name=outside
+exec dterm -n $name -e ssh -qt lofn -- tmux -2u attach -t chat

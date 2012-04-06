@@ -9,7 +9,7 @@ xfont_tiny  = "-xos4-terminus-medium-r-*-*-*-120-75-75-*-*-iso8859-1"
 %]
 [% FOREACH term IN ['Rxvt', 'XTerm'] %]
 [% term %]*font: [% xfont %]
-[% term %]*boldFont: [% xfont %]
+[% term %]*boldFont:
 
 [% term %]*scrollBar: false
 [% term %]*meta8: false
@@ -54,7 +54,7 @@ XTerm*alwaysBoldMode: false
 XTerm*termName: xterm-256color
 
 outside.font: [% xfont_huge %]
-outside.boldFont: [% xfont_huge %]
+outside.boldFont:
 outside*background:    #eeeeee
 outside*foreground:    #000000
 outside*termName:       rxvt-unicode-outside
@@ -94,6 +94,7 @@ URxvt.keysym.M-C-3: command:[% change_font(xfont_huge) %]
 URxvt.keysym.M-C-4: command:[% change_font(xfont_other) %]
 URxvt.keysym.M-C-5: command:[% change_font(xfont_tiny) %]
 URxvt.keysym.S-Insert: builtin:
+URxvt.keysym.S-C: builtin:
 URxvt.searchable-scrollback: CM-s
 
 [%# mark-and-yank support. %]

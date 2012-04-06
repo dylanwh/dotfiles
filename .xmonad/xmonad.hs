@@ -18,11 +18,9 @@ import XMonad.Actions.CycleWS
 import XMonad.Hooks.FadeInactive
 import qualified XMonad.Actions.PhysicalScreens as PS
 
-import XMonad.Config.Gnome
 import XMonad.Config.Desktop
 
 import XMonad.Hooks.DynamicLog
-import XMonad.Hooks.EwmhDesktops
 import XMonad.Hooks.SetWMName
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.ManageHelpers
@@ -41,10 +39,10 @@ import XMonad.Layout.LayoutHints
 import XMonad.Layout.Named
 import XMonad.Layout.NoBorders
 import XMonad.Layout.Reflect (reflectHoriz)
-import XMonad.Layout.Tabbed
-import XMonad.Layout.SimpleFloat
 import XMonad.Layout.LayoutCombinators
 import XMonad.Layout.OneBig
+import XMonad.Layout.Fullscreen
+import qualified XMonad.Layout.Fullscreen as FS
 
 import XMonad.Util.EZConfig
 import XMonad.Util.Scratchpad
@@ -63,7 +61,6 @@ import XMonad.Util.WindowProperties (getProp32s)
 
 import System.Environment (getEnv)
 import System.IO (hPutStrLn, hClose, hFlush)
-import Text.XHtml (tag, strAttr, renderHtml, (<<), (!), primHtml)
 -- }}}
 
 -- Misc {{{
@@ -71,10 +68,21 @@ spawnExec str = spawn ("exec " ++ str ++ " &> /dev/null")
 
 home path = do dir <- io $ getEnv "HOME" `catch` const (return "/")
                return (dir ++ '/' : path)
--- }}}
 
-fromResource :: Window -> Bool -> X (String, String)
-fromResource w active = runQuery resource w >>= flip defaultColorizer active
+progs = [ "capture-screen"
+        , "chrome"
+        , "chrome -p work"
+        , "dterm"
+        , "eclipse"
+        , "firefox"
+        , "lofn-chat"
+        , "lofn-mail"
+        , "midori"
+        , "pwsafe-query"
+        , "skype"
+        , "xdo-paste"
+        ]
+-- }}}
 
 -- {{{ main
 main = do
@@ -88,75 +96,54 @@ main = do
             , bgHLight    = "white"
             , fgHLight    = "black"
             }
-    let myGSConfig = (buildDefaultGSConfig fromClassName) 
-            { gs_cellheight = 30
-            , gs_cellwidth = 100 
-            , gs_cellpadding = 5
-            }
 
-    let gc       = gnomeConfig
-    let myConfig = gc
+    let myGSConfig x = x { gs_cellheight = 30
+                         , gs_cellwidth = 150 
+                         , gs_cellpadding = 5
+                         }
+
+    let myGSConfigWin = myGSConfig $ buildDefaultGSConfig fromClassName
+    let myGSConfigStr = myGSConfig $ defaultGSConfig { gs_navigate = navNSearch }
+
+    let dc = desktopConfig
+    let myConfig = dc
             { borderWidth        = 2
             , terminal           = "dterm"
             , normalBorderColor  = "#000033"
             , focusedBorderColor = "red"
             , workspaces         = map show [1..9]
             , modMask            = mod4Mask
-            , layoutHook         = desktopLayoutModifiers myLayoutHook
-            , manageHook         = manageHook gc <+> myManageHook
-            , startupHook        = startupHook gc >> myStartupHook
-            , logHook            = myLogHook
+            , manageHook         = fullscreenManageHook <+>  myManageHook <+> manageHook dc
+            , logHook            = myLogHook <+> logHook desktopConfig
+            , handleEventHook    = fullscreenEventHook <+> handleEventHook dc
+            , layoutHook         = desktopLayoutModifiers (fullscreenFull myLayoutHook)
+            , startupHook        = myStartupHook >> startupHook dc
             , focusFollowsMouse  = True
             }
-
     let myKeys = 
             [ ("M-`",              spawnExec $ terminal myConfig)
             , ("M-<Escape>",       spawnExec $ terminal myConfig)
             , ("M-<Return>",       dwmpromote)
             , ("M-S-t",            withFocused $ windows . W.sink)
             , ("M-s",              sshPrompt      myXPConfig)
-            , ("M-p",              scriptPrompt   myXPConfig)
+            , ("M-p",              spawnSelected myGSConfigStr progs)
             , ("M-S-p",            shellPrompt    myXPConfig)
             , ("M-o",              bookmarkPrompt myXPConfig)
             , ("M-q",              spawn "true")
-            , ("M-S-q",            spawn "gnome-session-save --gui --logout-dialog")
-            , ("M-S-l",            spawn "gnome-screensaver-command -l")
-            , ("M-g",              goToSelected myGSConfig)
-            , ("M-S-g",            bringSelected myGSConfig)
-            , ("M-<Left>",         spawn "x2 prev")
-            , ("M-<Right>",        spawn "x2 next")
-            , ("M-x",              spawn "x2 toggle") 
+            , ("M-g",              goToSelected myGSConfigWin)
+            , ("M-b",            bringSelected myGSConfigWin)
             , ("M-S-c",            kill)
             , ("M-w",              PS.viewScreen 0)
             , ("M-e",              PS.viewScreen 1)
             , ("M-S-w",            PS.sendToScreen 0)
             , ("M-S-e",            PS.sendToScreen 1)
+            , ("M-0",              gridselectWorkspace myGSConfigStr W.greedyView)
+            , ("M-f",              sendMessage ToggleStruts)
             ] 
-              -- ++ [ ("M-" ++ show n, withNthWorkspace W.view $ n - 1) | n <- [1..9] ]
-              -- ++ [ ("M-S-" ++ show n, withNthWorkspace W.shift $ n - 1) | n <- [1..9] ]
 
-    xmonad $ myConfig `additionalKeysP` myKeys
+    let conf = myConfig `additionalKeysP` myKeys
+    xmonad =<< dzen conf
 
--- }}}
-
--- panzenPP {{{
-panzenPP f = defaultPP { ppTitle   = panzenColor "white" . shorten 50
-                       , ppVisible = panzenColor "orange"
-                       , ppLayout  = panzenColor "SteelBlue3"
-                       , ppCurrent = panzenColor "yellow"
-                       , ppHidden  = panzenColor "LightSlateBlue"
-                       , ppHiddenNoWindows = panzenColor "DarkSlateBlue"
-                       , ppWsSep   = " "
-                       , ppSep     = " | "
-                       , ppOutput  = writeFile f . oneline . panzenBar . primHtml
-                       }
-    where color   = strAttr "color"
-          font    = strAttr "font" "Terminus"
-          bold    = strAttr "weight" "bold"
-          span    = tag "span"
-          panzenColor   c = show . (span ! [color c, font, bold] <<)
-          panzenBar       = show . (span ! [font, bold] << )
-          oneline xs      = [ x | x <- xs, x /= '\n' ] ++ "\n"
 -- }}}
 
 -- {{{ manage hook:
@@ -192,8 +179,8 @@ myManageHook = composeOne
 -- }}}
 
 -- {{{ layout hook:
-myLayoutHook = lessBorders OnlyFloat
-             $ (tall ||| Mirror tall ||| onebig ||| grid ||| simpleFloat ||| full)
+myLayoutHook = lessBorders (Combine Difference Screen OnlyFloat)
+             $ (tall ||| Mirror tall ||| onebig ||| grid ||| full)
   where
      -- default tiling algorithm partitions the screen into two panes
      tall = named "Tall" 
@@ -224,7 +211,6 @@ myLayoutHook = lessBorders OnlyFloat
 -- }}}
 
 myLogHook = do home <- io $ getEnv "HOME"
-               dynamicLogWithPP (panzenPP (home ++ "/.panzen"))
                updatePointer (Relative 0.5 0.5)
 
 scriptPrompt conf = do-- {{{
@@ -267,6 +253,6 @@ myIsFullscreen = do w <- ask
                                                Just (flags:_:decorations:_) -> return ((flags .&. 2) /= 0 && decorations == 0)
                                                Nothing -> return False
 
-myStartupHook = do setWMName "LG3D"
-                   spawn "xrdb-reload"
 
+myStartupHook = do setWMName "LG3D"
+                   spawn "be trayer"

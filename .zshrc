@@ -13,7 +13,7 @@ HISTFILE=~/.zhistory
 
 watch=(all)
 fignore=(.o .hi .pyc)
-cdpath=(~ ~/Dropbox /media)
+cdpath=(~ ~/code ~/Dropbox /media)
 
 export PS_PERSONALITY=linux
 export XMMS_PATH='tcp://:1985'
@@ -110,11 +110,11 @@ bindkey '^X^N' infer-next-history
 # Autoload various functions
 autoload run-help compinit promptinit colors
 autoload title shuffle perlpath prefix
-autoload runbg
+autoload runbg fname mcp
 
 function mdc      { mkdr -p $1 && cd $1 }
 function namedir  { declare -g $1=$2; : ~$1 }
-function sudo     { title -t "sudo $@";  command sudo "$@" }
+function sudo     { title -t "sudo $*";  command sudo "$@" }
 function save_cwd { echo $PWD >! ~/.cache/zsh/last_cwd }
 
 chpwd_functions+=( save_cwd )
@@ -169,6 +169,7 @@ alias irssi-safe='title -t irssi -e dtach -A ~/.irssi/dtach -Ez irssi'
 alias evince='runbg evince'
 alias cpanm='cpanm --notest'
 alias cpanm-test='command cpanm'
+alias gcd='cd $(git top)'
 
 have todo.pl    && alias t=todo.pl
 have pinfo      && alias info=pinfo
@@ -191,7 +192,7 @@ alias ppc='p | publish | c'
 alias -g L='| less'
 
 # scripts
-alias -s pl=perl
+alias -s pl='perl -S'
 alias -s py=python
 alias -s rb=ruby
 alias -s hs=runhaskell
@@ -239,7 +240,7 @@ esac
 zstyle ':completion:*:sudo:*' command-path $path /usr/sbin /sbin
 
 # cache the output of completion functions.
-zstyle ':completion:*' use-cache off
+zstyle ':completion:*' use-cache on
 zstyle ':completion:*' cache-path ~/.cache/zsh
 
 if have dircolors; then
@@ -274,6 +275,7 @@ namedir bes2011_data ~bes/BES-2011-Data
 
 namedir bes2012      ~bes/hewitt-bes-2012
 namedir bes2012_data ~bes/hewitt-bes-2012-data
+namedir bes_setup    ~bes/hewitt-bes-setup
 
 if have xdg-user-dir; then
 	namedir docs   $(xdg-user-dir DOCUMENTS)

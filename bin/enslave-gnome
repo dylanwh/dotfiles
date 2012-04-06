@@ -47,7 +47,3 @@ gconftool -t string  -s /desktop/gnome/background/secondary_color $bg_color
 #	setxkbmap -option terminate:ctrl_alt_bksp
 #	setxkbmap -option ctrl:nocaps
 #
-#	xsetroot -solid $bgcolor
-#	xsetroot -cursor_name left_ptr
-#
-#	xset r rate $delay $rate
