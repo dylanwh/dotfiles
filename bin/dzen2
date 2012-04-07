@@ -1,6 +1,0 @@
-#!/bin/zsh
-
-exec /usr/bin/dzen2 "$@" \
-	-fn '-xos4-terminus-bold-r-*-*-*-120-100-100-*-*-iso8859-1' \
-	-w 1472
-

@@ -1,36 +1,27 @@
 #!/bin/zsh
 
-integer xmobar_width=92
-integer trayer_width=7
-integer trayer_height=20
-
-xmobar=/usr/bin/xmobar
-
-if [[ -f /tmp/be-$1 ]]; then
-	kill $(cat /tmp/be-$1)
-	rm /tmp/be-$1
+if [[ -z $1 ]]; then
+	echo "usage: be cmd [args...]" >&2
+	exit 1
 fi
 
-echo $$ > /tmp/be-$1
+tmp=${TMPDIR:-/tmp}
+dir=${BE_DIR:-"$tmp/be"}
+cmd=$1; shift
+cmdfile=$(which $cmd)
+base=$(basename $cmdfile)
+pidfile="$dir/$LOGNAME-$base.pid"
 
-case $1 in
-	trayer)
-		sleep .5
-		exec trayer \
-			--edge top \
-			--align right \
-			--SetDockType true \
-			--SetPartialStrut true \
-			--expand true \
-			--widthtype percent \
-			--width $trayer_width \
-			--height $trayer_height \
-			--transparent true \
-			--tint '0x000000'
-	;;
-	xmobar)
-		sleep .5
-		ttpp -Dwidth=$xmobar_width < ~/.xmobarrc.tt >! ~/.xmobarrc
-		exec $xmobar ~/.xmobarrc
-	;;
-esac
+args=(
+	--make-pidfile
+	--pidfile $pidfile
+	--retry 2
+	--name $base
+)
+
+mkdir -p $dir
+
+start-stop-daemon $args -K
+echo $?
+start-stop-daemon --background --startas $cmdfile $args -S
+echo $?

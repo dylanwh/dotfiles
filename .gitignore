@@ -8,6 +8,7 @@
 !.config/user-dirs.dirs
 !.config/user-dirs.locale
 !.config/xmms2/xmms2.conf
+!.config/autostart/gnome-keyring-ssh.desktop
 !.Xdefaults.tt
 !.boring
 !.contacts
@@ -91,7 +92,6 @@
 .newsbeuter/cache.db
 .newsbeuter/queue
 .config/Empathy/
-.config/autostart/
 .config/desktop-couch/
 .config/enchant/
 .config/google-chrome*

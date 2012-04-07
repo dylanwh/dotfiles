@@ -27,5 +27,10 @@ xsetroot -cursor_name left_ptr
 xset r rate $kb_delay $kb_rate
 
 xrdb-reload
+/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 &
+parcellite &
+nm-applet &
+be xmonad-log &
+be xmonda-tray &
 
-exec xmonad
+exec dterm

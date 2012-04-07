@@ -1,0 +1,29 @@
+#!/bin/zsh
+
+host=$(hostname -s)
+bg_image="$HOME/Dropbox/Photos/background/$host.jpg"
+bg_color=('#000033' '#000033')
+kb_delay=200
+kb_rate=30
+
+gsettings set org.gnome.desktop.interface gtk-theme 'Dust'
+gsettings set org.gnome.desktop.interface cursor-theme 'Dust'
+gsettings set org.gnome.desktop.interface icon-theme 'gnome'
+gsettings set org.gnome.settings-daemon.peripherals.keyboard repeat true
+gsettings set org.gnome.settings-daemon.peripherals.keyboard delay $kb_delay
+gsettings set org.gnome.settings-daemon.peripherals.keyboard repeat-interval $kb_rate
+gsettings set org.gnome.libgnomekbd.keyboard layouts "['us']"
+gsettings set org.gnome.libgnomekbd.keyboard options \
+	"['terminate\tterminate:ctrl_alt_bksp', 'altwin\taltwin:swap_alt_win', 'ctrl\tctrl:nocaps']"
+gsettings set org.gnome.desktop.background picture-uri "file://$bg_image"
+gsettings set org.gnome.desktop.background primary-color $bg_color[1]
+gsettings set org.gnome.desktop.background secondary-color $bg_color[2]
+
+xset +fp /usr/share/fonts/local
+xset fp rehash
+
+xrdb-reload
+be xmonad-log
+be xmonad-tray
+
+

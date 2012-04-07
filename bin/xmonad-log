@@ -1,0 +1,21 @@
+#!/bin/zsh
+
+fg='#a8a3f7'
+bg='#3f3c6d'
+flags=(
+	-e 'onstart=lower'
+	-w 1472
+	-ta l
+	-fg $fg
+	-bg $bg
+	-fn '-xos4-terminus-bold-r-*-*-*-120-100-100-*-*-iso8859-1'
+)
+
+trap 'kill -TERM 0; exit 0' TERM INT KILL
+
+xprop -notype -spy -root -f _XMONAD_LOG '8s' '\n$0\n' _XMONAD_LOG \
+	| sed -nu '2~2 { s/^"//; s/"$//; p; }' \
+    | dzen2 $flags &
+
+wait $!
+

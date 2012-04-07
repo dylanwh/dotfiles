@@ -77,7 +77,7 @@ outside*color15:       #ffffff
 outside*cursorColor:   black
 
 pwsafe-prompt.title: pwsafe
-pwsafe-prompt.geometry:   60x6
+pwsafe-prompt.geometry:   60x6+550+350
 pwsafe-prompt.foreground: #00FF54
 pwsafe-prompt.hold: true
 
