@@ -3,5 +3,8 @@
 account=''
 vared -p 'account: ' account 
 if [[ -n $account ]]; then
-    pwsafe -p $account
+   while ! pwsafe -p $account; do
+	   echo "try again"
+   done
+   sleep 10
 fi

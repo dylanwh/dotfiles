@@ -15,6 +15,7 @@ xfont_tiny  = "-xos4-terminus-medium-r-*-*-*-120-75-75-*-*-iso8859-1"
 [% term %]*meta8: false
 [% term %]*modifier: mod1
 [% term %]*reverseVideo: false
+[% term %]*visualBell: true
 
 [% term %]*color0: #000000
 [% term %]*color1: #A80000
@@ -79,6 +80,7 @@ outside*cursorColor:   black
 pwsafe-prompt.title: pwsafe
 pwsafe-prompt.geometry:   60x6+550+350
 pwsafe-prompt.foreground: #00FF54
+pwsafe-prompt.background: #222222
 pwsafe-prompt.hold: true
 
 [%-

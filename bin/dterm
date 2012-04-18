@@ -29,21 +29,17 @@ GetOptions(
 );
 
 my (@run) = @ARGV;
-
-unless ($name) {
-    if (-e "$ENV{HOME}/.outside") {
-        $name = 'outside';
-    }
-    else {
-        $name = $run[0];
-    }
-}
-
 chdir $chdir if $chdir;
 unshift @run, '-e' if @run;
 
+unless ($name) {
+    if (@ARGV) {
+        $name = $ARGV[0];
+    }
+}
+
 run($TERM,
-    -name  => $name,
+    $name ? (-name => $name) : (),
     @run
 );
 

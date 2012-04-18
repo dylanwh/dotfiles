@@ -1,5 +1,3 @@
-# Sample minimal config file.  Copy this to ~/.offlineimaprc and edit to
-# suit to get started fast.
 # vim: set ft=desktop foldmethod=marker cms=#%s:
 
 [general]#{{{
@@ -12,28 +10,9 @@ holdconnectionopen = yes
 ui = Noninteractive.Basic
 #}}}
 
-[Account home]#{{{
-localrepository  = local-home
-remoterepository = remote-home
-autorefresh      = 3
-quick            = 3
-socktimeout      = 60
-#}}}
+[Repository hardison.net]
+type         = Gmail
+remoteuserval   = get_username("hardison.net")
+remotepassval   = get_password("hardison.net")
+folderfilter = lambda folder: folder not in '[Gmail]/All Mail'
 
-[Repository local-home]#{{{
-type         = IMAP
-remotehost   = imap.gmail.com
-remoteuser   = dylan@hardison.net
-remotepass   = tJHNq6eBCUn
-folderfilter = lambda foldername: foldername.find("[Gmail]") != -1
-ssl          = yes
-#}}}
-
-[Repository remote-home]#{{{
-type         = IMAP
-remotehost    = imap.gmail.com
-remoteuser    = dylanwh@gmail.com
-remotepass    = biendort
-folderfilter = lambda foldername: foldername.find("[Gmail]") != -1
-ssl           = yes
-#}}}

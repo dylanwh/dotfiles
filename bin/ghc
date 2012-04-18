@@ -9,6 +9,7 @@ my $bin = realpath $FindBin::Bin;
 
 if (any { /xmonad/ } @ARGV) {
     unshift @ARGV, '-with-rtsopts=-V0';
+    #unshift @ARGV, '-threaded';
 }
 
 my $ghc = (

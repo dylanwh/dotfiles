@@ -8,15 +8,13 @@ export EMAIL="dylan@hardison.net"
 export EDITOR="vim"
 export VISUAL="$EDITOR"
 export BROWSER="chrome"
-export MANPAGER=less
+export MANPAGER='less -s'
 
 export HOST="${HOST/.*/}"
 export OSTYPE="$OSTYPE"
 
 export LC_COLLATE=POSIX # sort in POSIX order.
 export TZ=US/Eastern
-
-export LESSHISTFILE='-'
 
 path=(~/bin ~/app/urxvt/bin $path)
 perl5lib=(~/lib 'lib')

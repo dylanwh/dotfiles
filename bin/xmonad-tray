@@ -1,19 +1,14 @@
 #!/bin/zsh
 
-integer trayer_width=128
-integer trayer_height=18
 
-pkill trayer 
-sleep .5
-exec trayer \
-	--edge top \
-	--align right \
+trap 'kill -TERM 0; exit 0' TERM INT KILL
+
+trayer \
 	--SetDockType true \
 	--SetPartialStrut true \
 	--expand true \
-	--widthtype pixel \
-	--width $trayer_width \
-	--height $trayer_height \
 	--transparent true \
 	--alpha 0 \
-	--tint '0x3f3c6d'
+	"$@" &
+
+wait $!

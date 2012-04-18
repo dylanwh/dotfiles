@@ -165,7 +165,6 @@ alias mplayer="title -e -- mplayer"
 alias ssh="title -e -- ssh"
 alias man="title -e -- man"
 alias aptitude='title -e -- aptitude'
-alias irssi-safe='title -t irssi -e dtach -A ~/.irssi/dtach -Ez irssi'
 alias evince='runbg evince'
 alias cpanm='cpanm --notest'
 alias cpanm-test='command cpanm'
@@ -184,12 +183,15 @@ alias P='xclip -o |'
 # copy
 alias c='xclip -i'
 alias -g C='| xclip -i'
+alias -g @='$( xclip -o )'
+alias -g '"@"'='"$( xclip -o )"'
+
 
 alias pvc='p | vipe | c'
 alias ppc='p | publish | c'
 
 # less
-alias -g L='| less'
+alias -g L='| less -F'
 
 # scripts
 alias -s pl='perl -S'

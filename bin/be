@@ -15,13 +15,12 @@ pidfile="$dir/$LOGNAME-$base.pid"
 args=(
 	--make-pidfile
 	--pidfile $pidfile
-	--retry 2
+	--retry 5
 	--name $base
 )
 
 mkdir -p $dir
 
+#set -x
 start-stop-daemon $args -K
-echo $?
-start-stop-daemon --background --startas $cmdfile $args -S
-echo $?
+start-stop-daemon --background $args --startas $cmdfile -S -- "$@"
