@@ -1,0 +1,2 @@
+#!/bin/zsh
+exec dterm -n irssi-lofn -e ssh-tmux lofn attach -t chat
