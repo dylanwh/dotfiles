@@ -1,6 +1,6 @@
 #!/bin/zsh
 
-desktop_image="$HOME/Dropbox/Photos/background/$(hostname -s).jpg"
+desktop_image="$HOME/var/pics/background/$(hostname -s).jpg"
 desktop_color=('#000033' '#000033')
 
 bar_fg='#a8a3f7'
@@ -37,6 +37,7 @@ xrdb-reload
 
 be xmonad-log \
 	-ta l \
+	-xs 1 \
 	-w $log_width \
 	-fg $bar_fg \
 	-bg $bar_bg \
@@ -50,4 +51,5 @@ be xmonad-tray \
 	--widthtype pixel \
 	--width $tray_width \
 	--height $tray_height \
-	--tint ${bar_bg/\#/0x}
+	--tint ${bar_bg/\#/0x} \
+	--monitor 0
