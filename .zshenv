@@ -13,4 +13,6 @@ fpath=(~/.zsh/lib $fpath)
 autoload perlbrew-install
 perlbrew-install ~/app/perlbrew
 
+export GOPATH=$HOME/code/go
+
 # vim: set sw=4 ts=4 foldmethod=marker path=.,~/.zsh:

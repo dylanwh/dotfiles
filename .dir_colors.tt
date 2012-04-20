@@ -1,4 +1,6 @@
 # vim: set ft=dircolors:
+[% SET archives = [ ".tar", ".bz2", ".tgz", ".arj", ".taz", ".lzh", ".zip", ".z", ".Z", ".gz", ".xz" ] -%]
+[% SET images   = [ ".png", ".gif", ".jpg", ".jpeg", ".pdf", ".bmp", ".xpm", ".xbm", ".tif", ".dvi" ] -%]
 # FILE:	/etc/DIR_COLORS
 # 
 # Configuration file for the color ls utility.
@@ -25,17 +27,18 @@ OPTIONS -F -T 0
 # TERM specifies which terminal types are to be colorized.  There can
 #	be multiple entries.
 #
-TERM linux
 TERM console
-TERM xterm
-TERM vt100
+TERM linux
 TERM rxvt
 TERM rxvt-unicode
 TERM rxvt-unicode-256color
 TERM screen
 TERM screen-16color
-TERM screen-88color
 TERM screen-256color
+TERM screen-88color
+TERM vt100
+TERM xterm
+TERM xterm-256color
 # EIGHTBIT specifies whether to enable display of eight-bit ISO 8859
 #	characters.  This is set to either:
 #
@@ -95,20 +98,13 @@ EXEC 01;32 	# file with executable attribute set
 # either be in the form '.ext' (such as '.gz' or '.tar') or '*ext' (such
 # as '*~' used with emacs backups).  Note that using the asterisk allows you
 # to specify extensions that are not necessarily preceeded by a period.
-#
-[% SET archives = [ ".tar", ".bz2", ".tgz", ".arj", ".taz", ".lzh", ".zip", ".z", ".Z", ".gz", ".xz" ] -%]
+[% IF 0 %]
 [% FOR ext IN archives -%]
 [% ext %] 01;31
+[% END -%]
+[% FOR ext IN images -%]
+[% ext %] 01;35
+[% END -%]
 [% END %]
-.jpg 01;35
-.gif 01;35
-.png 01;35
-.bmp 01;35
-.xbm 01;35
-.xpm 01;35
-.tif 01;35
-.ps  01;35
-.dvi  01;35
-.pdf  01;35
 #.htm 04;37
 #.html 04;37

@@ -11,7 +11,7 @@ keyboard_rate=30
 
 # math bits
 integer desktop_width=1600
-integer tray_width=160
+integer tray_width=200
 integer tray_height=18 
 integer bar_height=18
 

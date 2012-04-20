@@ -1,2 +1,3 @@
-#!/bin/sh
+#!/bin/zsh
+
 dterm vim ~/.xmonad/programs
