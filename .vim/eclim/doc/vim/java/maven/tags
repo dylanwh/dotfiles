@@ -1,7 +1,0 @@
-:Maven	execute.txt	/*:Maven*
-:MavenDependencySearch	dependencies.txt	/*:MavenDependencySearch*
-:Mvn	execute.txt	/*:Mvn*
-:MvnDependencySearch	dependencies.txt	/*:MvnDependencySearch*
-vim-java-maven-dependencies	dependencies.txt	/*vim-java-maven-dependencies*
-vim-java-maven-execute	execute.txt	/*vim-java-maven-execute*
-vim-java-maven-index	index.txt	/*vim-java-maven-index*

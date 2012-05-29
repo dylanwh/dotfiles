@@ -1,7 +1,0 @@
-:BrowserOpen	util.txt	/*:BrowserOpen*
-:Validate_html	validate.txt	/*:Validate_html*
-g:EclimHtmlValidate	validate.txt	/*g:EclimHtmlValidate*
-vim-html-complete	complete.txt	/*vim-html-complete*
-vim-html-index	index.txt	/*vim-html-index*
-vim-html-util	util.txt	/*vim-html-util*
-vim-html-validate	validate.txt	/*vim-html-validate*

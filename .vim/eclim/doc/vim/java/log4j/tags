@@ -1,4 +1,0 @@
-:Validate_log4j	validate.txt	/*:Validate_log4j*
-g:EclimLog4jValidate	validate.txt	/*g:EclimLog4jValidate*
-vim-java-log4j-index	index.txt	/*vim-java-log4j-index*
-vim-java-log4j-validate	validate.txt	/*vim-java-log4j-validate*

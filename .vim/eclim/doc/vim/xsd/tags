@@ -1,4 +1,0 @@
-:Validate_xsd	validate.txt	/*:Validate_xsd*
-g:EclimXsdValidate	validate.txt	/*g:EclimXsdValidate*
-vim-xsd-index	index.txt	/*vim-xsd-index*
-vim-xsd-validate	validate.txt	/*vim-xsd-validate*
