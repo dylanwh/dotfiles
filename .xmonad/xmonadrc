@@ -17,8 +17,8 @@ integer bar_height=18
 
 (( log_width = desktop_width - tray_width ))
 
-gsettings set org.gnome.desktop.interface gtk-theme 'Dust'
-gsettings set org.gnome.desktop.interface cursor-theme 'Dust'
+gsettings set org.gnome.desktop.interface gtk-theme 'Adwaita'
+gsettings set org.gnome.desktop.interface cursor-theme 'Adwaita'
 gsettings set org.gnome.desktop.interface icon-theme 'gnome'
 gsettings set org.gnome.settings-daemon.peripherals.keyboard repeat true
 gsettings set org.gnome.settings-daemon.peripherals.keyboard delay $keyboard_delay
@@ -52,4 +52,4 @@ be xmonad-tray \
 	--width $tray_width \
 	--height $tray_height \
 	--tint ${bar_bg/\#/0x} \
-	--monitor 0
+	--monitor 1

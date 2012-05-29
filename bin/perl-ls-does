@@ -11,5 +11,3 @@ PERL
 
 print join ("\n", map("$_->{class}->$_->{name}",
         $pkg->meta->compute_all_applicable_methods())), "\n";
-
-

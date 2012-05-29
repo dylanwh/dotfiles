@@ -127,9 +127,14 @@ sub clean {
     }
 
     if ("$v" eq 'NaN') {
-        printf "GOT NAN: %d, %s vs. %s\n", $e, $v, $u;
-        string_info($v);
-        exit 1;
+        if ("$u" ne 'NaN') {
+            warn "got NaN, using $u instead\n";
+            $v = $u;
+        }
+        else {
+            printf "GOT NAN: %d, %s vs. %s\n", $e, $v, $u;
+            die string_info($v);
+        }
     }
 
     return $v;

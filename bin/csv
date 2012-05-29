@@ -107,6 +107,8 @@ sub new_csv {
             sep_char    => $opt{sep},
             escape_char => $opt{esc} // $opt{escape},
             blank_is_undef => 1,
+            allow_whitespace => $opt{allow_whitespace} // 0,
+            always_quote     => $opt{always_quote} // 0,
         }
     ) or die Text::CSV->error_diag;
 }

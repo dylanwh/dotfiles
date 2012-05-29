@@ -114,16 +114,18 @@ main = do
             , ("M-g",              goToSelected gsWindows)
             , ("M-b",              bringSelected gsWindows)
             , ("M-S-c",            kill)
-            , ("M-q",              return ())
-            , ("M-w",              PS.viewScreen 0)
-            , ("M-e",              PS.viewScreen 1)
-            , ("M-S-w",            PS.sendToScreen 0)
-            , ("M-S-e",            PS.sendToScreen 1)
+            , ("M-q",              PS.viewScreen 0)
+            , ("M-w",              PS.viewScreen 1)
+            , ("M-e",              PS.viewScreen 2)
+            , ("M-r",              PS.viewScreen 3)
+            , ("M-S-q",            PS.sendToScreen 0)
+            , ("M-S-w",            PS.sendToScreen 1)
+            , ("M-S-e",            PS.sendToScreen 2)
+            , ("M-S-r",            PS.sendToScreen 3)
             , ("M-f",              sendMessage ToggleStruts)
-            , ("M-S-q",            spawn "gnome-session-quit --no-prompt")
+            , ("M-S-C-q",          spawn "gnome-session-quit --no-prompt")
             , ("M-m",              withFocused (sendMessage . maximizeRestore))
             , ("M-x",              spawn "mpc toggle")
-            , ("M-S-r",            renameWorkspace myXPConfig)
             ]
 
         conf = ewmh (myConfig `additionalKeysP` myKeys)
@@ -162,7 +164,7 @@ myManageHook = fullscreenManageHook <+> manageDocks <+> rules
 myLayoutHook = smartBorders 
              $ fullscreenFull
              $ avoidStruts
-             $ onWorkspaces ["8", "9"] (chromeLayout 1.2)
+             $ onWorkspaces ["8", "9"] (chromeLayout 1.2 ||| layoutHintsToCenter Full)
              $ tiledLayout Tall ||| tiledLayout Wide ||| layoutHintsToCenter Full ||| floatLayout ||| gimpLayout
 
 gimpLayout = renamed [CutWordsLeft 5, PrependWords "Gimp"] 

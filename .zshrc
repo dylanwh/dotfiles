@@ -99,11 +99,14 @@ bindkey '^Q' push-input
 bindkey '^R' history-incremental-search-backward
 bindkey '^A' beginning-of-line
 bindkey '^E' end-of-line
-bindkey " " magic-space ## do history expansion on space
-bindkey '^X*' expand-word
-bindkey '^Xg' list-expand
-bindkey '^X^N' infer-next-history
+bindkey -a " " magic-space ## do history expansion on space
+bindkey -a '^X*' expand-word
+bindkey -a '^Xg' list-expand
+bindkey -a '^X^N' infer-next-history
 
+#bindkey '^X^A' fasd-complete    # C-x C-a to do fasd-complete (fils and directories)
+#bindkey '^X^F' fasd-complete-f  # C-x C-f to do fasd-complete-f (only files)
+#bindkey '^X^D' fasd-complete-d  # C-x C-d to do fasd-complete-d (only directories)
 
 ## }}}
 ## {{{ FUNCTIONS
@@ -111,6 +114,13 @@ bindkey '^X^N' infer-next-history
 autoload run-help compinit promptinit colors
 autoload title shuffle perlpath prefix
 autoload runbg fname mcp
+
+# initialize advanced tab completion.
+compinit -d ~/.cache/zsh/zcompdump
+
+colors
+promptinit   # Setup prompt theming 
+prompt dylan # Set the prompt.
 
 function mdc      { mkdr -p $1 && cd $1 }
 function namedir  { declare -g $1=$2; : ~$1 }
@@ -169,10 +179,12 @@ alias evince='runbg evince'
 alias cpanm='cpanm --notest'
 alias cpanm-test='command cpanm'
 alias gcd='cd $(git top)'
+alias nl0="tr '\n' '\0'"
 
 have todo.pl    && alias t=todo.pl
 have pinfo      && alias info=pinfo
 have ack-grep   && alias ack=ack-grep
+have hub        && eval "$(hub alias -s)"
 
 mkdir -p ~/.cache/zsh
 
@@ -185,6 +197,7 @@ alias c='xclip -i'
 alias -g C='| xclip -i'
 alias -g @='$( xclip -o )'
 alias -g '"@"'='"$( xclip -o )"'
+alias -g 'G'='|grep '
 
 
 alias pvc='p | vipe | c'
@@ -252,13 +265,6 @@ if have dircolors; then
 	# Colorize completions.
 	zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
 fi
-
-# initialize advanced tab completion.
-compinit -d ~/.cache/zsh/zcompdump
-
-colors
-promptinit   # Setup prompt theming 
-prompt dylan # Set the prompt.
 
 umask  077   # Create files that are readable only by moi
 stty -ixon   # Disable the freeze-the-terminal-on-control-s thing.
