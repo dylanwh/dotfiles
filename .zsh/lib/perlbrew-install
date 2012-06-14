@@ -10,6 +10,8 @@ export PERLBREW_HOME=${1:a}
 export PERLBREW_ROOT=${1:a}
 unset PERLBREW_PATH
 
+which perlbrew &> /dev/null || return 1
+
 [[ ! -d $PERLBREW_HOME ]] && perlbrew init
 
 [[ -f $PERLBREW_HOME/etc/bashrc ]] && source $PERLBREW_HOME/etc/bashrc
