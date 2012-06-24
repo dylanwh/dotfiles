@@ -11,7 +11,7 @@ keyboard_rate=30
 
 # math bits
 integer desktop_width=1600
-integer tray_width=200
+integer tray_width=300
 integer tray_height=18 
 integer bar_height=18
 
@@ -25,7 +25,9 @@ gsettings set org.gnome.settings-daemon.peripherals.keyboard delay $keyboard_del
 gsettings set org.gnome.settings-daemon.peripherals.keyboard repeat-interval $keyboard_rate
 gsettings set org.gnome.libgnomekbd.keyboard layouts "['us']"
 gsettings set org.gnome.libgnomekbd.keyboard options \
-	"['terminate\tterminate:ctrl_alt_bksp', 'altwin\taltwin:swap_alt_win', 'ctrl\tctrl:nocaps']"
+	"['terminate\tterminate:ctrl_alt_bksp', 'ctrl\tctrl:nocaps']"
+
+#'altwin\taltwin:swap_alt_win'
 gsettings set org.gnome.desktop.background picture-uri "file://$desktop_image"
 gsettings set org.gnome.desktop.background primary-color $desktop_color[1]
 gsettings set org.gnome.desktop.background secondary-color $desktop_color[2]
