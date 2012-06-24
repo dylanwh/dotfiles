@@ -1,0 +1,3 @@
+#!/bin/zsh
+
+exec ~/app/eclipse/eclipse
