@@ -1,0 +1,29 @@
+#!/bin/zsh
+
+word="$1"
+pkill optirun
+
+case $word in
+	d|desktop)
+		xrandr --output VGA1 --auto --above LVDS1 --primary
+		xrandr --output VIRTUAL --mode 1600x900 --left-of VGA1
+		optirun env DISPLAY=:0 screenclone -d :8 -x 2 &
+		~/.xmonad/xmonadrc
+	;;
+	vga)
+		xrandr --output VIRTUAL --off
+		xrandr --output VGA1 --primary --auto --above LVDS1
+		~/.xmonad/xmonadrc
+	;;
+	tv)
+		xrandr --output VIRTUAL --mode 1920x1080 --above LVDS1 
+		optirun env DISPLAY=:0 screenclone -d :8 -x 1 &
+		~/.xmonad/xmonadrc
+	;;
+	none|off)
+		xrandr --output VGA1 --off
+		xrandr --output VIRTUAL --off
+		xrandr --output LVDS1 --primary --auto
+		~/.xmonad/xmonadrc
+	;;
+esac

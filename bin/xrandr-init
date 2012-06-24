@@ -1,0 +1,7 @@
+#!/bin/zsh
+
+xrandr --newmode "1920x1080" \
+	148.5 1920 2008 2052 2200 1080 1089 1095 1125 +hsync +vsync
+	
+xrandr --addmode VIRTUAL 1920x1080
+xrandr --addmode VIRTUAL 1600x900
