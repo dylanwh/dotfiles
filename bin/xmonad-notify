@@ -1,0 +1,7 @@
+#!/bin/zsh
+
+flags=(
+	-e 'onstart=lower'
+	-ta l
+)
+
