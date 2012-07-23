@@ -1,3 +1,13 @@
 #!/usr/bin/env zsh
+# Dylan William Hardison\'s .xsession file.
 
-exec ~/.xsession
+# First re-exec:
+# Ensure that this script is evaluated by zsh
+[ "x$ZSH_NAME" = "x" ] && exec zsh -l $0
+
+# Second re-exec:
+# Ensure that this script evaluated as a login shell.
+[[ ! -o login ]] && exec zsh -l $0
+
+
+xmonad

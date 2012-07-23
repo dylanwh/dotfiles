@@ -123,7 +123,6 @@ main = do
             , ("M-S-e",            PS.sendToScreen 2)
             , ("M-S-r",            PS.sendToScreen 3)
             , ("M-f",              sendMessage ToggleStruts)
-            , ("M-S-C-q",          spawn "gnome-session-quit --no-prompt")
             , ("M-m",              withFocused (sendMessage . maximizeRestore))
             , ("M-x",              spawn "mpc toggle")
             ]
@@ -145,7 +144,8 @@ main = do
 -- and click on the client you're interested in.
 myManageHook = fullscreenManageHook <+> manageDocks <+> rules
     where rules = composeOne
-                [ transience
+                [ appName   =? "pnmixer"            -?> doFloat
+                , transience
                 , myIsFullscreen                    -?> doFullFloat
                 , className =? "Glade-3"            -?> doFloat
                 , className =? "WMClock"            -?> doIgnore

@@ -3,27 +3,34 @@ emulate -RL zsh
 
 # math bits
 integer desktop_width=1600
-
-integer tray_width=200
-integer tray_height=18 
-
-integer notify_width=334
-
 integer bar_height=18
 
-(( log_width = desktop_width - notify_width - tray_width ))
+integer tray_width=200
+integer notify_width=334
 
-echo $log_width
+declare font='-xos4-terminus-bold-r-*-*-*-120-100-100-*-*-iso8859-1'
+
+(( status_width = desktop_width - notify_width - tray_width ))
 
 bar_fg='#a8a3f7'
 bar_bg='#3f3c6d'
 
-be xmonad-log \
+be xmonad-status \
 	-xs 1 \
-	-w $log_width \
+	-w $status_width \
 	-fg $bar_fg \
 	-bg $bar_bg \
-	-fn '-xos4-terminus-bold-r-*-*-*-120-100-100-*-*-iso8859-1'
+	-fn $font
+
+be xmonad-notify \
+	-xs 1 \
+	-x $status_width \
+	-w $(( notify_width + $tray_width )) \
+	-tw $notify_width \
+	-fg $bar_fg \
+	-bg $bar_bg \
+	-l 10 \
+	-fn $font
 
 #--distance -$clock_width 
 #--distancefrom left 
@@ -32,7 +39,7 @@ be xmonad-tray \
 	--align right \
 	--widthtype pixel \
 	--width $tray_width \
-	--height $tray_height \
+	--height $bar_height \
 	--tint ${bar_bg/\#/0x} \
 	--monitor 1
 

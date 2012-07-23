@@ -4,7 +4,7 @@ SHELL  = bash
 TMPDIR ?= /tmp
 DIR    = $(TMPDIR)/dylan-home
 
-$(HOME)/Dropbox/Public/home.tar.gz: $(DIR)
+$(HOME)/pub/home.tar.gz: $(DIR)
 	tar -C $< -zcf $@ .
 	rm -rf $(DIR)
 

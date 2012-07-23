@@ -2,56 +2,23 @@
 
 desktop_image="$HOME/var/pics/background/$(hostname -s).jpg"
 desktop_color=('#000033' '#000033')
-
-bar_fg='#a8a3f7'
-bar_bg='#3f3c6d'
+desktop_width=1600
 
 keyboard_delay=200
 keyboard_rate=30
 
-# math bits
-integer desktop_width=1600
-integer tray_width=300
-integer tray_height=18 
-integer bar_height=18
-
-(( log_width = desktop_width - tray_width ))
-
-gsettings set org.gnome.desktop.interface gtk-theme 'Adwaita'
-gsettings set org.gnome.desktop.interface cursor-theme 'Adwaita'
-gsettings set org.gnome.desktop.interface icon-theme 'gnome'
-gsettings set org.gnome.settings-daemon.peripherals.keyboard repeat true
-gsettings set org.gnome.settings-daemon.peripherals.keyboard delay $keyboard_delay
-gsettings set org.gnome.settings-daemon.peripherals.keyboard repeat-interval $keyboard_rate
-gsettings set org.gnome.libgnomekbd.keyboard layouts "['us']"
-gsettings set org.gnome.libgnomekbd.keyboard options \
-	"['terminate\tterminate:ctrl_alt_bksp', 'ctrl\tctrl:nocaps']"
-
-#'altwin\taltwin:swap_alt_win'
-gsettings set org.gnome.desktop.background picture-uri "file://$desktop_image"
-gsettings set org.gnome.desktop.background primary-color $desktop_color[1]
-gsettings set org.gnome.desktop.background secondary-color $desktop_color[2]
-
 xset +fp /usr/share/fonts/local
 xset fp rehash
+xset r rate $keyboard_delay $keyboard_rate
 
 xrdb-reload
+xsetroot -cursor_name left_ptr
+setxkbmap -option terminate:ctrl_alt_bksp \
+	      -option altwin:swap_alt_win \
+		  -option ctrl:nocaps
 
-be xmonad-log \
-	-ta l \
-	-xs 1 \
-	-w $log_width \
-	-fg $bar_fg \
-	-bg $bar_bg \
-	-fn '-xos4-terminus-bold-r-*-*-*-120-100-100-*-*-iso8859-1'
-
-#--distance -$clock_width 
-#--distancefrom left 
-be xmonad-tray \
-	--edge top \
-	--align right \
-	--widthtype pixel \
-	--width $tray_width \
-	--height $tray_height \
-	--tint ${bar_bg/\#/0x} \
-	--monitor 1
+feh --bg-center $desktop_image
+parcellite &
+batti &
+xmonad-bar &
+blueman-applet &

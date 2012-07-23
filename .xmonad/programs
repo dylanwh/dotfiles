@@ -6,7 +6,6 @@ pwsafe-query
 capture-screen
 lowriter
 localc
-nm-connection-editor
 edit-proglist
 minecraft
 gmpc
@@ -16,3 +15,5 @@ chrome -p work
 pavucontrol
 paprefs
 technic-launcher
+tinyca2
+dterm
