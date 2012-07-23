@@ -122,6 +122,7 @@ main = do
             , ("M-S-w",            PS.sendToScreen 1)
             , ("M-S-e",            PS.sendToScreen 2)
             , ("M-S-r",            PS.sendToScreen 3)
+            , ("M-C-S-q",          io (exitWith ExitSuccess))
             , ("M-f",              sendMessage ToggleStruts)
             , ("M-m",              withFocused (sendMessage . maximizeRestore))
             , ("M-x",              spawn "mpc toggle")
