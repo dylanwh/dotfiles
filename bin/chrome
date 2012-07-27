@@ -12,7 +12,7 @@ my ($url) = @ARGV;
 
 if (not defined $profile) {
     given ($url) {
-        when (/iinteractive.com/) {
+        when (/iinteractive/) {
             $profile = 'work';
         }
     }
