@@ -98,13 +98,11 @@ EXEC 01;32 	# file with executable attribute set
 # either be in the form '.ext' (such as '.gz' or '.tar') or '*ext' (such
 # as '*~' used with emacs backups).  Note that using the asterisk allows you
 # to specify extensions that are not necessarily preceeded by a period.
-[% IF 0 %]
 [% FOR ext IN archives -%]
 [% ext %] 01;31
 [% END -%]
 [% FOR ext IN images -%]
 [% ext %] 01;35
 [% END -%]
-[% END %]
 #.htm 04;37
 #.html 04;37
