@@ -24,7 +24,8 @@ setopt autocd                  # change to dirs without cd
 setopt autopushd               # automatically append dirs to the push/pop list
 setopt pushd_ignore_dups       # and do not duplicate them
 setopt pushd_to_home           # pushd with no args is like cd with no args.
-setopt cdablevars            # the need for an explicit $
+setopt cdablevars              # the need for an explicit $
+setopt autonamedirs            # any var that contains a full path is a named dir
 setopt listpacked              # compact completion lists
 setopt nolisttypes             # show types in completion
 setopt extended_glob           # weird & wacky pattern matching - yay zsh!
@@ -52,6 +53,8 @@ setopt nohup                   # and do not kill them, either
 setopt auto_continue           # automatically continue disowned jobs.
 setopt auto_resume             # automatically resume jobs from commands
 setopt transient_rprompt       # only show rprompt for current line.
+setopt no_list_beep            
+setopt nobeep
 ## }}}
 ## {{{ KEY BINDINGS
 bindkey -v
@@ -100,7 +103,7 @@ bindkey '^R' history-incremental-search-backward
 bindkey '^A' beginning-of-line
 bindkey '^E' end-of-line
 bindkey -a " " magic-space ## do history expansion on space
-bindkey -a '^X*' expand-word
+bindkey -a '^Xe' expand-word
 bindkey -a '^Xg' list-expand
 bindkey -a '^X^N' infer-next-history
 
@@ -123,7 +126,7 @@ promptinit   # Setup prompt theming
 prompt dylan # Set the prompt.
 
 function mdc      { mkdr -p $1 && cd $1 }
-function namedir  { declare -g $1=$2; : ~$1 }
+function namedir  { declare -g $1=$2  }
 function sudo     { title -t "sudo $*";  command sudo "$@" }
 function save_cwd { echo $PWD >! ~/.cache/zsh/last_cwd }
 
@@ -260,7 +263,10 @@ zstyle ':completion:*' cache-path ~/.cache/zsh
 
 if have dircolors; then
 	unset LS_COLORS
-	ttpp ~/.dir_colors.tt >! ~/.dir_colors
+	if [[ ! -f ~/.dir_colors ]]; then
+		ttpp ~/.dir_colors.tt >! ~/.dir_colors
+	fi
+
 	eval $(dircolors ~/.dir_colors)
 	# Colorize completions.
 	zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
@@ -271,19 +277,19 @@ stty -ixon   # Disable the freeze-the-terminal-on-control-s thing.
 ttyctl -f    # Freeze terminal properties.
 
 namedir progfiles    ~/.wine/drive_c/Program\ Files
-namedir dropbox      ~/Dropbox
-namedir moonshine    ~/code/moonshine
+namedir moonshine    ~/src/moonshine
 
-namedir g2           ~/work/g2
-namedir arc          ~/work/hewitt/arc
-namedir bes          ~/work/hewitt/bes
+namedir g2           ~/src/g2
+namedir arc          ~/src/hewitt/arc
+namedir bes          ~/src/hewitt/bes
 namedir bes2010      ~bes/BES-2010
 namedir bes2011      ~bes/BES-2011
 namedir bes2011_data ~bes/BES-2011-Data
-
-namedir bes2012      ~bes/hewitt-bes-2012
-namedir bes2012_data ~bes/hewitt-bes-2012-data
-namedir bes_setup    ~bes/hewitt-bes-setup
+namedir bes2012       ~bes/hewitt-bes-2012
+namedir bes2012_data  ~bes/hewitt-bes-2012-data
+namedir bes_setup     ~bes/hewitt-bes-setup
+namedir bes_workspace ~bes/hewitt-bes-workspace
+namedir bes_import ~bes/hewitt-bes-import
 
 if have xdg-user-dir; then
 	namedir docs   $(xdg-user-dir DOCUMENTS)
@@ -292,7 +298,7 @@ if have xdg-user-dir; then
 	namedir mus    $(xdg-user-dir MUSIC)
 	namedir pics   $(xdg-user-dir PICTURES)
 	namedir vids   $(xdg-user-dir VIDEOS)
-	namedir files  $(xdg-user-dir DOWNLOAD)
+	namedir dl     $(xdg-user-dir DOWNLOAD)
 fi
 
 if have trash; then
