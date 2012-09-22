@@ -11,10 +11,11 @@ use File::Basename 'basename';
 use Encode;
 use Encode::Guess 'ascii', 'latin1', 'utf8';
 use Try::Tiny;
+use Devel::Peek;
 
 use List::MoreUtils 'none';
 
-my $csv = Text::CSV->new({ binary => 1 });
+my $csv = Text::CSV->new({ binary => 1, eol => "\n" });
 my $p   = Spreadsheet::ParseExcel->new;
 
 my $file = file(shift);
@@ -40,8 +41,15 @@ for my $sheet ( $doc->worksheets ) {
         } $col_min .. $col_max;
 
         next if none { $_ } @row;
-        $csv->print($fh, \@row);
-        $fh->print("\n");
+
+        $csv->combine(@row);
+        my $line = $csv->string;
+
+        if ($row[0] == 310033 || $row[0] == 310032) {
+            string_info($line);
+        }
+
+        $fh->print($line);
     }
 
     $fh->close;
@@ -85,23 +93,10 @@ sub clean_decode {
     my ($str) = @_;
 
     try {
-        $str = decode( 'Guess', $str );
+        #$str = decode( 'utf-8', $str );
     }
     catch {
-        unless ( utf8::is_utf8($str) ) {
-            if ( utf8::valid($str) ) {
-                try {
-                    $str = decode( 'utf8', $str );
-                }
-                catch {
-                    string_info($str);
-                    die "evil";
-                };
-            }
-            else {
-                die "invalid: $str\n";
-            }
-        }
+        #die "invalid: $str\n";
     };
 
     return $str;
@@ -111,29 +106,12 @@ sub clean {
     my ($cell) = @_;
     return '' unless $cell;
     my $v = $cell->value;
-    my $u = $cell->unformatted;
-    my $e = $cell->encoding;
+    my $u = $cell->unformatted; # for org id stuff
+    my $e = $cell->encoding;    # not used
 
     given ($v) {
-        when (/^\d+$/) {
+        when (/^\d{10,}$/) {
             $v = clean_int($u);
-        }
-        default {
-            if ($e != 2 and $v) {
-                $v = clean_decode($v);
-            }
-            $v = remove_utf8_punctuation($v);
-        }
-    }
-
-    if ("$v" eq 'NaN') {
-        if ("$u" ne 'NaN') {
-            warn "got NaN, using $u instead\n";
-            $v = $u;
-        }
-        else {
-            printf "GOT NAN: %d, %s vs. %s\n", $e, $v, $u;
-            die string_info($v);
         }
     }
 
