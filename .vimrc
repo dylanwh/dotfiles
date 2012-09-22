@@ -4,8 +4,8 @@
 " INIT {{{
 
 runtime bundle/pathogen/autoload/pathogen.vim
-"call pathogen#infect()
-call pathogen#runtime_append_all_bundles()
+call pathogen#infect()
+"call pathogen#runtime_append_all_bundles()
 
 syntax on
 filetype plugin indent on
@@ -57,6 +57,7 @@ set listchars=tab:>.,trail:_,precedes:<,extends:>
 set nolist     " This and the above line make for visible whitespace.
 set mouse=     " disable mouse
 set clipboard= " don't automatically put stuff in the clipboard.
+set vb
 
 let mapleader      = "\\"
 let maplocalleader = ","
@@ -102,7 +103,7 @@ let g:SuperTabDefaultCompletionType = "context"
 
 let redcode_highlight_numbers=1
 
-let g:inkpot_black_background = 1
+let g:inkpot_black_background = 0
 colorscheme inkpot
 
 " }}}
@@ -118,6 +119,7 @@ map K \K
 map <c-w><c-t> :WMToggle<cr>
 map <c-w><c-f> :FirstExplorerWindow<cr>
 map <c-w><c-b> :BottomExplorerWindow<cr>
+map Y y$
 
 noremap <Space> <PageDown>
 noremap -       <PageUp>
@@ -125,19 +127,24 @@ noremap -       <PageUp>
 nmap <silent><Leader>wf <Plug>VimwikiFollowWord
 nmap <silent><Leader>wb <Plug>VimwikiGoBackWord
 nmap <silent><Leader>wn <Plug>VimwikiGoBackWord
-nmap <Up>   gk
-nmap <Down> gj
 
+nnoremap <Left> <C-w>h
+nnoremap <Down> <C-w>j
+nnoremap <Up>   <C-w>k
+nnoremap <Right> <C-w>l
+
+inoremap <Left> <C-o><C-w>h
+inoremap <Down> <C-o><C-w>j
+inoremap <Up>   <C-o><C-w>k
+inoremap <Right> <C-o><C-w>l
+
+imap <C-w>h  <C-o><C-w>h
 imap <C-w>j  <C-o><C-w>j
 imap <C-w>k  <C-o><C-w>k
 imap <C-w>l  <C-o><C-w>l
-imap <C-w>h  <C-o><C-w>h
 imap <C-w>_  <C-o><C-w>_
 imap <C-w>\| <C-o><C-w>\|
 imap <C-w>=  <C-o><C-w>=
-imap <Up>    <C-o>gk
-imap <Down>  <C-o>gj
-
 " }}}
 
 " ABBREVS {{{
