@@ -1,35 +1,66 @@
-#!/usr/bin/env perl
-use strict;
-use feature 'switch';
+#!/bin/zsh
+emulate zsh
 
-use Getopt::Long qw(:config gnu_getopt);
+config_home=${XDG_CONFIG_HOME:-$HOME/.config}
+user_data_dir=$config_home/google-chrome
 
-my $browser = 'google-chrome';
-my (@options, $profile);
+profile=auto
 
-GetOptions('profile|p=s' => \$profile, 'browser|b=s' => \$browser);
-my ($url) = @ARGV;
+while getopts "p:u:" option; do
+	case $option in
+		(p) profile=$OPTARG ;;
+		(u) user_data_dir="$config_home/$OPTARG" ;;
+	esac
+done
 
-if (not defined $profile) {
-    given ($url) {
-        when (/iinteractive/) {
-            $profile = 'work';
-        }
-    }
-}
-elsif ($profile eq 'default') {
-    $profile = undef;
-}
+url=$1
 
-if ($profile) {
-    push @options, '--user-data-dir=' . user_data_dir($profile);
+function auto_profile {
+	case $url in
+		(*iinteractive*) echo "work" ;;
+		(*) last_used_profile ;;
+	esac
 }
 
-fork or exec($browser, @options, $url);
-
-sub user_data_dir {
-    my $profile = shift;
-    my $base = $ENV{XDG_CONFIG_HOME} || "$ENV{HOME}/.config";
-
-    return "$base/google-chrome-$profile";
+function last_used_profile {
+	local last_used
+	last_used=$(jshon -e profile -e last_used -u < "$user_data_dir/Local State")
+	jshon -e profile -e info_cache -e $last_used -e name -u < "$user_data_dir/Local State"
 }
+
+function resolve_profile {
+	case $profile in
+		([Aa]uto)
+			auto_profile
+		;;
+		([Ll]ast|last_used)
+			last_used_profile
+		;;
+		([Dd]efault) ;;
+		(*) echo $profile ;;
+	esac
+}
+
+function find_profile_dir {
+	local name=$(resolve_profile $1)
+	local profile_pref profile_name
+
+	if [[ -z $name ]]; then
+		echo Default
+		return 0
+	fi
+
+	for profile_pref in $user_data_dir/*/Preferences; do
+		profile_name=$(jshon -e profile -e name -u < $profile_pref)
+		if [[ ${name:l} == ${profile_name:l} ]]; then
+			echo ${profile_pref:h:t}
+			return 0
+		fi
+	done
+
+	return 1
+}
+
+profile_dir=$(find_profile_dir $profile)
+
+exec google-chrome --profile-directory=$profile_dir $url
