@@ -1,2 +1,2 @@
 #!/bin/zsh
-exec dterm -n irssi-lofn -e mosh -- lofn tmux attach -t chat
+exec dterm -n irssi-lofn -e mosh lofn -- tmux -u2 attach -t chat
