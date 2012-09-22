@@ -1,0 +1,5 @@
+#!/bin/zsh
+
+dir=${1:-.}
+
+find "$dir" -type f -name MANIFEST.GAT -printf "%p\0" | xargs -0 gat-list-dir

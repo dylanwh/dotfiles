@@ -1,0 +1,11 @@
+#!/bin/zsh
+
+rules=(
+	-type d
+	\( -name .git -o -name '*.GAT' \) -prune
+	-o
+	-print0
+)
+
+
+find "$@" $rules | xargs -P4 -0 gat-scan-dir
