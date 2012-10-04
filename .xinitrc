@@ -9,19 +9,24 @@
 # Ensure that this script evaluated as a login shell.
 [[ ! -o login ]] && exec zsh -l $0
 
-keyboard_delay=200
-keyboard_rate=30
-
 xset +fp /usr/share/fonts/local
 xset fp rehash
-xset r rate $keyboard_delay $keyboard_rate
 
 xrdb-reload
-setxkbmap -option terminate:ctrl_alt_bksp \
-	      -option altwin:swap_alt_win \
-		  -option ctrl:nocaps
+
+xset r rate 200 35
+
+setxkbmap -option
+setxkbmap -option terminate:ctrl_alt_bksp
+setxkbmap -option ctrl:nocaps
+
+case $HOST in
+	odin)
+		dev=$(xinput list --id-only 'AT Translated Set 2 keyboard')
+		[[ -n $dev ]] && setxkbmap -device $dev -option altwin:swap_alt_win 
+	;;
+esac
 
 source ~/.fehbg
-
 
 exec i3

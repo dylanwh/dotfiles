@@ -28,8 +28,11 @@ bindsym $mod+Escape exec dterm
 # kill focused window
 bindsym $mod+Shift+C kill
 
-# start dmenu (a program launcher)
+# start gmrun (a program launcher)
 bindsym $mod+p exec gmrun
+
+bindsym XF86Sleep exec --no-startup-id dbus-suspend
+bindsym $mod+Shift+S exec --no-startup-id dbus-suspend
 
 # change focus
 bindsym $mod+h focus left
@@ -37,23 +40,13 @@ bindsym $mod+j focus down
 bindsym $mod+k focus up
 bindsym $mod+l focus right
 
-# alternatively, you can use the cursor keys:
-bindsym $mod+Left focus left
-bindsym $mod+Down focus down
-bindsym $mod+Up focus up
-bindsym $mod+Right focus right
+bindsym $mod+u focus [urgent
 
 # move focused window
 bindsym $mod+Shift+H move left
 bindsym $mod+Shift+J move down
 bindsym $mod+Shift+K move up
 bindsym $mod+Shift+L move right
-
-# alternatively, you can use the cursor keys:
-bindsym $mod+Shift+Left  move left
-bindsym $mod+Shift+Down  move down
-bindsym $mod+Shift+Up    move up
-bindsym $mod+Shift+Right move right
 
 # split in horizontal orientation
 bindsym $mod+z split h
@@ -63,18 +56,19 @@ bindsym $mod+v split v
 
 # enter fullscreen mode for the focused container
 bindsym $mod+f fullscreen
-bindsym $mod+t floating toggle
+bindsym $mod+t floating toggle 
 
-# change container layout (stacked, tabbed, default)
+# change container layout (stacking, tabbed, default)
+bindsym $mod+e layout toggle split
 bindsym $mod+s layout stacking
 bindsym $mod+w layout tabbed
-bindsym $mod+e layout default
+bindsym $mod+space layout toggle all
 
 # toggle tiling / floating
-bindsym $mod+Shift+space floating toggle
+bindsym $mod+Shift+space layout default
 
 # change focus between tiling / floating windows
-bindsym $mod+space focus mode_toggle
+bindsym $mod+Tab focus mode_toggle
 
 # focus the parent container
 bindsym $mod+a focus parent
@@ -109,19 +103,22 @@ bindsym $mod+Shift+parenright move container to workspace 10
 bindsym $mod+XF86Back    workspace prev
 bindsym $mod+XF86Forward workspace next
 
-# reload the configuration file
-bindsym $mod+Shift+R reload
-# restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
-bindsym $mod+Shift+U restart
 # exit i3 (logs you out of your X session)
 bindsym $mod+Shift+Q exit
 
+# restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
+bindsym $mod+Shift+W restart
+
+# reload the configuration file
+bindsym $mod+Shift+R reload
+
 for_window [class="URxvt"] border 1pixel
 for_window [class="Gmrun"] floating enable
+for_window [class="Pinentry"] floating enable
+for_window [title="^Event Tester$"] floating enable
+
 assign [class="Google-chrome"] 9
-
-workspace_auto_back_and_forth yes
-
+for_window [class="Google-chrome"] layout tabbed
 
 # resize window (you can also use the mouse for that)
 mode "resize" {
@@ -157,8 +154,7 @@ bar {
         status_command i3status
 }
 
-exec batti
-exec parcellite
-exec blueman-applet
+exec --no-startup-id batti
+exec --no-startup-id parcellite
+exec --no-startup-id blueman-applet
 exec chrome -p home
-

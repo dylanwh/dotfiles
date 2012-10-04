@@ -53,7 +53,7 @@ set fillchars=fold:\ ,stl:\ ,stlnc:\  " borders
 set tags+=~/.tags,.tags
 set nowrap
 set sidescroll=5
-set listchars=tab:>.,trail:_,precedes:<,extends:>
+set listchars=tab:>.,trail:_,precedes:<,extends:>,nbsp:~
 set nolist     " This and the above line make for visible whitespace.
 set mouse=     " disable mouse
 set clipboard= " don't automatically put stuff in the clipboard.

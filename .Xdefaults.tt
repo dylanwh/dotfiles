@@ -1,15 +1,34 @@
-[%# vim: set ft=template: %]
-[% DEFAULT
-xfont       = "-xos4-terminus-bold-r-*-*-*-120-100-100-*-*-iso8859-1"
-xfont_big   = "-xos4-terminus-bold-r-*-*-*-280-*-*-*-*-*-*"
-xfont_huge  = "-xos4-terminus-bold-r-*-*-*-320-*-*-*-*-*-*"
-xfont_other = "-xos4-terminus-bold-r-normal--14-140-72-72-c-80-iso8859-1"
-xfont_tiny  = "-xos4-terminus-medium-r-*-*-*-120-75-75-*-*-iso8859-1"
+[%# vim: set ft=template et: %]
+[%
 
-%]
-[% FOREACH term IN ['Rxvt', 'XTerm'] %]
-[% term %]*font: [% xfont %]
-[% term %]*boldFont:
+
+MACRO cmd(code, body) BLOCK;
+    GET "\\033]$code;$body\\007";
+END;
+
+MACRO change_font(font, bold_font) BLOCK;
+    UNLESS bold_font; 
+        bold_font = font;
+    END;
+    # "\\033]710;$font\\007\\033]711;$font\\007";
+    # GET "\\033]710;$font\\007";
+    cmd(710, font);
+    cmd(711, bold_font);
+END;
+
+SET font_name    = 'Inconsolata';
+SET font_size    = 12;
+SET font_sizes   = [12, 14, 16, 18, 20, 22];
+
+MACRO font(size, style) BLOCK;
+    GET "-xos4-terminus-medium-r-*-*-*-120-100-100-*-*-iso8859-1";
+END;
+
+-%]
+
+[% FOREACH term IN ['URxvt', 'XTerm'] %]
+[% term %]*font:     [% font(font_size) %]
+[% term %]*boldFont: [% font(font_size, "bold") %]
 
 [% term %]*scrollBar: false
 [% term %]*meta8: false
@@ -54,11 +73,9 @@ XTerm*boldMode: false
 XTerm*alwaysBoldMode: false
 XTerm*termName: xterm-256color
 
-outside.font: [% xfont_huge %]
-outside.boldFont:
 outside*background:    #eeeeee
 outside*foreground:    #000000
-outside*termName:       rxvt-unicode-outside
+outside*termName:      rxvt-unicode-outside
 outside*color0:        #000000
 outside*color1:        #cc0000
 outside*color2:        #009900
@@ -83,20 +100,15 @@ pwsafe-prompt.foreground: #00FF54
 pwsafe-prompt.background: #222222
 pwsafe-prompt.hold: true
 
-[%-
-MACRO change_font(font) BLOCK;
-    "\\033]710;$font\\007\\033]711;$font\\007";
-END;
--%]
 
 [%# Keyboard bindings %]
-URxvt.keysym.M-C-1: command:[% change_font(xfont) %]
-URxvt.keysym.M-C-2: command:[% change_font(xfont_big) %]
-URxvt.keysym.M-C-3: command:[% change_font(xfont_huge) %]
-URxvt.keysym.M-C-4: command:[% change_font(xfont_other) %]
-URxvt.keysym.M-C-5: command:[% change_font(xfont_tiny) %]
-URxvt.keysym.S-Insert: builtin:
-URxvt.keysym.S-C: builtin:
+URxvt.keysym.C-M-d: command: [% change_font(font(font_size), font(font_size, "bold")) %]
+URxvt.keysym.C-M-z: command: [% change_font("fixed") %]
+
+[% FOREACH size IN font_sizes %]
+URxvt.keysym.C-M-[% loop.count %]: command: [% change_font(font(size), font(size, "bold")) %] 
+[% END %]
+
 URxvt.searchable-scrollback: CM-s
 
 [%# mark-and-yank support. %]
@@ -106,7 +118,7 @@ URxvt.keysym.C-M-u: perl:mark-and-yank:activate_mark_url_mode
 URxvt.perl-lib: [% HOME %]/.urxvt/
 URxvt.perl-ext: mark-and-yank
 URxvt.urlLauncher: url-handler
-URxvt.underlineURLs: true
+URxvt.underlineURLs: false
 [%- END -%]
 
 [%# Fading, borrowed from Possum.
