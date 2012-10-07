@@ -6,6 +6,10 @@ user_data_dir=$config_home/google-chrome
 
 profile=auto
 
+if [[ ! -d $user_data_dir ]]; then
+	exec google-chrome $url
+fi
+
 while getopts "p:u:" option; do
 	case $option in
 		(p) profile=$OPTARG ;;
