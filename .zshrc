@@ -123,7 +123,7 @@ compinit -d ~/.cache/zsh/zcompdump
 
 colors
 promptinit   # Setup prompt theming 
-prompt dylan # Set the prompt.
+prompt solarized # Set the prompt.
 
 function mdc      { mkdr -p $1 && cd $1 }
 function namedir  { declare -g $1=$2  }

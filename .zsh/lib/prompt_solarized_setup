@@ -1,0 +1,51 @@
+#!zsh
+
+local RESET="%{$reset_color%}"
+local YELLOW="%{${fg[yellow]}%}"
+local GREEN="%{${fg[green]}%}"
+local MAGENTA="%{${fg[magenta]}%}"
+local BOLD_GREEN="%{${fg_bold[green]}%}"
+local RED="%{${fg[red]}%}"
+local GREY="%{${fg_bold[grey]}%}"
+local BLUE="%{${fg[blue]}%}"
+local BOLD_BLUE="%{${fg_bold[blue]}%}"
+local BOLD_CYAN="%{${fg_bold[cyan]}%}"
+
+PR_TIME="$BOLD_BLUE%D{%H:%M}$RESET"
+PR_DATE="$BOLD_BLUE%D{%Y-%m-%d}$RESET"
+PR_DIR="$GREEN%~$RESET"
+PR_NAME="$BLUE%n$RESET"
+PR_HOST="$BLUE%m$RESET"
+#PR_JOBS="%2(j.[${MAGENTA}jobs:%j$RESET].%1(j.[${MAGENTA}job:%j$RESET].))"
+PR_JOBS="%1(j.[${MAGENTA}jobs:%j$RESET].)"
+PR_VCS='${vcs_info_msg_0_}'
+#PR_DBOX="%1(V.[$BOLD_CYAN%1v$RESET].)"
+
+autoload -Uz vcs_info title 
+#autoload -Uz dropbox_info
+zstyle ':vcs_info:*' enable svn svk git
+zstyle ':vcs_info:*' actionformats \
+    '[%F{2}%s:%b, %a%f]'
+zstyle ':vcs_info:*' formats       \
+    '[%F{2}%s:%b%f]'
+zstyle ':vcs_info:(sv[nk]|bzr):*' branchformat '%b:%r'
+zstyle ':vcs_info:git:*' check-for-changes true
+zstyle ':vcs_info:svn:*' check-for-changes true
+
+PROMPT="$PR_TIME $PR_NAME@$PR_HOST:$PR_DIR%# "
+PS2='%_: '
+RPS2=''
+
+precmd_functions+=( title )
+#precmd_functions+=( dropbox_info )
+
+if vcs_info &>/dev/null; then
+    precmd_functions+=( vcs_info )
+    RPROMPT="$PR_VCS$PR_DBOX$PR_JOBS"
+else
+    RPROMPT="$PR_DBOX$PR_JOBS"
+fi
+
+alias norp='unset RPROMPT'
+
+prompt_opts=( cr percent subst )

@@ -103,8 +103,8 @@ let g:SuperTabDefaultCompletionType = "context"
 
 let redcode_highlight_numbers=1
 
-let g:inkpot_black_background = 0
-colorscheme inkpot
+set background=dark
+colorscheme solarized
 
 " }}}
 

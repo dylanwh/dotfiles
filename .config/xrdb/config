@@ -1,0 +1,13 @@
+[%
+# vim: set ft=template:
+
+SET config = {
+	font       => 'Inconsolata',
+	font_size  => 12,
+	font_sizes => [12, 14, 16, 18, 20, 22],
+	theme      => "dylan",
+};
+
+
+
+%]

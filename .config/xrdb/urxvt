@@ -1,0 +1,28 @@
+[%# vim: set ft=template: %]
+[%# Keyboard bindings %]
+URxvt.font:     [% font(config.font_size) %]
+URxvt.boldFont: [% font(config.font_size, "bold") %]
+
+URxvt.keysym.C-M-d: [% change_font(font(config.font_size), font(config.font_size, "bold")) %]
+URxvt.keysym.C-M-z: [% change_font("fixed") %]
+
+[% FOREACH size IN config.font_sizes %]
+URxvt.keysym.C-M-[% loop.count %]: [% change_font(font(size), font(size, "bold")) -%] 
+[% END -%]
+
+URxvt.searchable-scrollback: CM-s
+URxvt.scrollBar: false
+URxvt.meta8: false
+URxvt.modifier: mod1
+URxvt.visualBell: true
+URxvt.depth: 32
+
+[%# mark-and-yank support. %]
+[%- IF HOME -%]
+URxvt.keysym.C-M-y: perl:mark-and-yank:activate_mark_mode
+URxvt.keysym.C-M-u: perl:mark-and-yank:activate_mark_url_mode
+URxvt.perl-lib: [% HOME %]/.urxvt/
+URxvt.perl-ext: mark-and-yank
+URxvt.urlLauncher: url-handler
+URxvt.underlineURLs: false
+[%- END -%]

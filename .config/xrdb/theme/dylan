@@ -1,0 +1,18 @@
+[% # vim: set ft=template:
+
+resource("*reverseVideo", "false");
+resource("*foreground", "#A8A8A8");
+resource("*background", "#000000");
+resource("*cursorColor", "#A8A8A8");
+resource("*fading", 60);
+resource("*fadeColor", "#101015");
+color(0, "#000000", "#2e2e2e");
+color(1, "#A80000", "#FF0054");
+color(2, "#00A800", "#00FF54");
+color(3, "#ffae00", "#FFFF54");
+color(4, "#000078", "#0000FF");
+color(5, "#8b00cd", "#FF00FF");
+color(6, "#008bff", "#8a8add");
+color(7, "#A8A8A8", "#FFFFFF");
+
+%]

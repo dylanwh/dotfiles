@@ -1,0 +1,11 @@
+[%- # vim: set ft=template:
+PROCESS config;
+PROCESS util;
+
+INCLUDE urxvt;
+
+INCLUDE theme name="solarized";
+INCLUDE theme name="solarized" outside=1 term="outside";
+
+
+-%]

@@ -3,11 +3,12 @@ use strict;
 use warnings;
 use Sys::Hostname;
 use Template;
+use File::Basename;
 use encoding 'utf8';
 
 my @pre_process;
 my @wrapper;
-my @include=(".");
+my @include=();
 my %define = (
     HOST => hostname,
     HOME => $ENV{HOME},
@@ -28,6 +29,16 @@ while (my $opt = shift @ARGV) {
 }
 
 $define{HOST} = (split(/\./, $define{HOST}))[0];
+
+if (@ARGV) {
+    for my $file (@ARGV) {
+        if (-f $file) {
+            push @include, dirname($file);
+        }
+    }
+} else {
+    push @include, ".";
+}
 
 my $template = new Template {
     INCLUDE_PATH => \@include,     # or list ref
