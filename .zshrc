@@ -119,16 +119,15 @@ autoload title shuffle perlpath prefix
 autoload runbg fname mcp
 
 # initialize advanced tab completion.
-compinit -d ~/.cache/zsh/zcompdump
+compinit -d $ZCACHE/zcompdump
 
 colors
 promptinit   # Setup prompt theming 
 prompt solarized # Set the prompt.
 
-function mdc      { mkdr -p $1 && cd $1 }
+function mdc      { mkdir -p $1 && cd $1 }
 function namedir  { declare -g $1=$2  }
-function sudo     { title -t "sudo $*";  command sudo "$@" }
-function save_cwd { echo $PWD >! ~/.cache/zsh/last_cwd }
+function save_cwd { echo $PWD >! $ZCACHE/last_cwd }
 
 chpwd_functions+=( save_cwd )
 ## }}}
@@ -185,8 +184,6 @@ have pinfo      && alias info=pinfo
 have ack-grep   && alias ack=ack-grep
 have hub        && eval "$(hub alias -s)"
 
-mkdir -p ~/.cache/zsh
-
 # paste
 alias p='xclip -o'
 alias P='xclip -o |'
@@ -211,13 +208,13 @@ alias -s py=python
 alias -s rb=ruby
 alias -s hs=runhaskell
 
-if [[ ! -f ~/.cache/zsh/alias-ls ]]; then
+if [[  ~/.zshrc -nt $ZCACHE/alias-ls || ! -f $ZCACHE/alias-ls ]]; then
 	# handle ls specially...
 	local ls_cmd=ls
 	local -a ls_args
 
 	if have gls; then ls_cmd=gls; fi
-	ls_args=('-Fh' '--color=auto' '--group-directories-first')
+	ls_args=('-Fh' '--color=auto' '--group-directories-first' '-X')
 
 	while (( $#ls_args > 0 )); do
 		if $ls_cmd $ls_args ~/.zsh &> /dev/null; then
@@ -226,11 +223,11 @@ if [[ ! -f ~/.cache/zsh/alias-ls ]]; then
 			ls_args[-1]=()
 		fi
 	done
-	echo "alias ls=\"$ls_cmd $ls_args\"" > ~/.cache/zsh/alias-ls 
+	echo "alias ls=\"$ls_cmd $ls_args\"" >! $ZCACHE/alias-ls 
 	unset ls_cmd ls_args
 fi
 
-source ~/.cache/zsh/alias-ls
+source $ZCACHE/alias-ls
 
 case $OSTYPE in
 	*gnu*)
@@ -255,7 +252,7 @@ zstyle ':completion:*:sudo:*' command-path $path /usr/sbin /sbin
 
 # cache the output of completion functions.
 zstyle ':completion:*' use-cache on
-zstyle ':completion:*' cache-path ~/.cache/zsh
+zstyle ':completion:*' cache-path $ZCACHE
 
 if have dircolors; then
 	unset LS_COLORS

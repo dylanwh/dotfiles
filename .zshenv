@@ -15,4 +15,8 @@ perlbrew-install ~/app/perlbrew
 
 export GOPATH=$HOME/code/go
 
+declare -g ZCACHE
+ZCACHE=$HOME/.cache/zsh
+[[ -d $ZCACHE ]] || mkdir -p $ZCACHE
+
 # vim: set sw=4 ts=4 foldmethod=marker path=.,~/.zsh:
