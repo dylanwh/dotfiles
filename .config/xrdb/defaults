@@ -5,6 +5,7 @@ PROCESS util;
 INCLUDE urxvt;
 
 INCLUDE theme name="solarized";
+INCLUDE theme name="dylan" term="plain";
 INCLUDE theme name="solarized" outside=1 term="outside";
 
 

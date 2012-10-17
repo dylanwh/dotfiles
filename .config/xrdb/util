@@ -13,7 +13,7 @@ MACRO change_font(font, bold_font) BLOCK;
     cmd(711, bold_font);
 END;
 
-MACRO font(size, style) GET "-xos4-terminus-medium-r-*-*-*-120-100-100-*-*-iso8859-1";
+MACRO font(size, style) GET "-xos4-terminus-bold-r-*-*-*-120-100-100-*-*-iso8859-1";
 
 MACRO resource(key, value) BLOCK;
 	SET key = "$prefix$key" IF key.match('^[*.]');

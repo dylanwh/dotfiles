@@ -256,12 +256,9 @@ zstyle ':completion:*' cache-path $ZCACHE
 
 if have dircolors; then
 	unset LS_COLORS
-	if [[ ! -f ~/.dir_colors ]]; then
-		ttpp ~/.dir_colors.tt >! ~/.dir_colors
-	fi
 
-	eval $(dircolors ~/.dir_colors)
-	# Colorize completions.
+	eval $(dircolors ~/.dir_colors.d/dircolors.ansi-dark )
+
 	zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
 fi
 

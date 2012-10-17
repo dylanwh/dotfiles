@@ -19,3 +19,6 @@
 [submodule ".vim/bundle/repeat"]
 	path = .vim/bundle/repeat
 	url = git://github.com/tpope/vim-repeat.git
+[submodule ".dir_colors.d"]
+	path = .dir_colors.d
+	url = ./.dir_colors.d

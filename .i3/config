@@ -147,11 +147,26 @@ mode "resize" {
 
 bindsym $mod+r mode "resize"
 
+# solarized
+client.focused   #93a1a1 #073642 #93a1a1
+client.focused_inactive #586e75 #002b36 #586e75
+client.unfocused #657b83 #002b36 #657b83
+client.urgent  #d33682 #073642 #d33682
+
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
 bar {
-		tray_output primary
-        status_command i3status
+	tray_output primary
+	status_command i3status
+
+	colors {
+		background #002b36
+		statusline #93a1a1
+		focused_workspace #fdf6e3 #073642
+		active_workspace #587e75 #002b36
+		inactive_workspace #657b83 #002b36
+		urgent_workspace #d33682 #073642
+	}
 }
 
 exec --no-startup-id batti
