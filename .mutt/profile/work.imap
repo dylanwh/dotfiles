@@ -1,0 +1,11 @@
+# vim: set ft=muttrc:
+source ~/.mutt/google
+source ~/.mutt/profile/work
+
+set folder="imaps://dylan.hardison%40iinteractive.com@imap.gmail.com"
+set smtp_url="smtps://dylan.hardison%40iinteractive.com@smtp.gmail.com"
+
+unmailboxes *
+mailboxes +INBOX +daily +issue +arc +bes +linode
+
+source ~/.mutt/theme

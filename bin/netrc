@@ -1,45 +1,23 @@
-#!/usr/bin/python
-from netrc import netrc
-from optparse import OptionParser
-from sys import argv
-from os import getenv
+#!/usr/bin/perl
+use strict;
+use warnings;
+use Net::Netrc;
+use Getopt::Long qw( :config gnu_getopt );
 
-parser = OptionParser()
-parser.add_option("-f", "--file", dest="filename",
-        help="read netrc FILE", metavar="FILE",
-        default = getenv("HOME") + "/.netrc")
-parser.add_option("-m", "--machine", dest="machine",
-        help="select machine MACHINE", metavar="MACHINE")
-parser.add_option("-u", "--username", dest="username",
-        help="display username",
-        action='store_true', default=False)
-parser.add_option("-p", "--password", dest="password",
-        help="display password",
-        action='store_true', default=False)
+my ($machine, $login);
 
-(opt, args) = parser.parse_args()
+GetOptions(
+    'machine|m=s' => \$machine,
+    'login|l=s'   => \$login,
+);
 
+die "$0: machine identifier is required!\n" unless $machine;
 
-n = netrc(opt.filename)
-hosts = n.hosts
-
-if opt.machine:
-    machines = [ opt.machine ]
-else:
-    machines = hosts.keys()
-
-if opt.username and opt.password:
-    def show(name, host):
-        print "%s:%s" % (host[0], host[2])
-elif opt.username:
-    def show(name, host):
-        print host[0]
-elif opt.password:
-    def show(name, host):
-        print host[2]
-else:
-    def show(name, host):
-        print name
-
-for m in machines:
-    show(m, hosts[m])
+if ($login) {
+    my $rec = Net::Netrc->lookup($machine);
+    print $rec->password, "\n";
+}
+else {
+    my $rec = Net::Netrc->lookup($machine);
+    print $rec->login,"\t",$rec->password, "\n";
+}

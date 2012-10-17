@@ -1,18 +1,33 @@
 # vim: set ft=desktop foldmethod=marker cms=#%s:
 
 [general]#{{{
-accounts        = home
-pythonfile      = ~/.offlineimap.py
-maxconnections  = 3
-maxsyncaccounts = 3
+accounts           = home
+pythonfile         = ~/.offlineimap.py
+maxconnections     = 3
+maxsyncaccounts    = 3
 holdconnectionopen = yes
-
-ui = Noninteractive.Basic
 #}}}
 
-[Repository hardison.net]
-type         = Gmail
-remoteuserval   = get_username("hardison.net")
-remotepassval   = get_password("hardison.net")
-folderfilter = lambda folder: folder not in '[Gmail]/All Mail'
+[Account home]
+remoterepository = hardison.net
+localrepository  = home
+status_backend   = sqlite
 
+[Repository hardison.net]
+type          = Gmail
+remoteuser    = dylan@hardison.net 
+folderfilter  = lambda folder: folder not in ['[Gmail]/Spam']
+sslcacertfile = /etc/ssl/certs/ca-certificates.crt
+maxconnections = 3
+
+[Repository home]
+type         = Maildir
+localfolders = ~/mail/home
+
+[mbnames]
+enabled = yes
+filename = ~/.mutt/mailboxes
+header = "mailboxes "
+peritem = "+%(accountname)s/%(foldername)s"
+sep = " "
+footer = "\n"

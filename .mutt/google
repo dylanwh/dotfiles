@@ -1,5 +1,9 @@
 set spoolfile="+INBOX/"
 set postponed='+[Gmail]/Drafts'
 set mbox="+[Gmail]/All Mail"
-set trash="+[Gmail]/Trash"
 unset record
+
+set imap_idle=yes
+set imap_passive=yes
+set imap_servernoise=yes
+set imap_headers="X-Spam-Status"
