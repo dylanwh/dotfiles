@@ -19,17 +19,23 @@
 # cyan      #2aa198  6/6 cyan      37 #00afaf 60 -35 -05  42 161 152 175  74  63
 # green     #859900  2/2 green     64 #5f8700 60 -20  65 133 153   0  68 100  60
 
-IF outside;
+DEFAULT flavor = "dark";
+
+PROCESS "solarized_$flavor";
+
+BLOCK solarized_light;
 	SET 
-		S_base0  = "#657b83"
-		S_base1  = "#586e75"
-		S_base2  = "#073642"
-		S_base3  = "#002b36"
 		S_base00   = "#839496"
 		S_base01   = "#93a1a1"
 		S_base02   = "#eee8d5"
-		S_base03   = "#fdf6e3";
-ELSE;
+		S_base03   = "#fdf6e3"
+		S_base0  = "#657b83"
+		S_base1  = "#586e75"
+		S_base2  = "#073642"
+		S_base3  = "#002b36";
+END;
+
+BLOCK solarized_dark;
 	SET 
 		S_base00  = "#657b83"
 		S_base01  = "#586e75"
@@ -39,6 +45,11 @@ ELSE;
 		S_base1   = "#93a1a1"
 		S_base2   = "#eee8d5"
 		S_base3   = "#fdf6e3";
+END;
+
+BLOCK solarized_night;
+	PROCESS solarized_dark;
+	SET S_base03 = "black";
 END;
 
 SET
@@ -52,7 +63,7 @@ SET
     S_green   = "#859900";
 
 resource("*background",              S_base03 );
-resource("*foreground",              S_base00 );
+resource("*foreground",              S_base0 );
 resource("*fading",                 40);
 resource("*fadeColor",               S_base03 );
 resource("*cursorColor",             S_base1  );

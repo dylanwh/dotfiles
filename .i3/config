@@ -148,10 +148,10 @@ mode "resize" {
 bindsym $mod+r mode "resize"
 
 # solarized
-client.focused   #93a1a1 #073642 #93a1a1
+client.focused          #93a1a1 #073642 #93a1a1
 client.focused_inactive #586e75 #002b36 #586e75
-client.unfocused #657b83 #002b36 #657b83
-client.urgent  #d33682 #073642 #d33682
+client.unfocused        #657b83 #002b36 #657b83
+client.urgent           kkkkkkk#d33682 #073642 #d33682
 
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)

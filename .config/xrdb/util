@@ -26,10 +26,17 @@ MACRO color(i, dark, light) BLOCK;
 	resource("*color$i", light);
 END;
 
+SET theme_cache  = {};
+
 BLOCK theme;
 	DEFAULT term='URxvt';
 	GET "\n";
+	IF theme_cache.${term};
+		name=theme_cache.${term};
+		THROW "Cannot load theme for $term, it is already using $name!\n";
+	END;
 	INCLUDE "theme/$name" prefix=term;
+	theme_cache.${term} = name;
 END;
 
 -%]

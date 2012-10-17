@@ -5,8 +5,9 @@ PROCESS util;
 INCLUDE urxvt;
 
 INCLUDE theme name="solarized";
+INCLUDE theme name="solarized" term="night" flavor="night";
+INCLUDE theme name="solarized" term="outside" flavor="light"; 
 INCLUDE theme name="dylan" term="plain";
-INCLUDE theme name="solarized" outside=1 term="outside";
 
 
 -%]
