@@ -21,4 +21,7 @@
 	url = git://github.com/tpope/vim-repeat.git
 [submodule ".dir_colors.d"]
 	path = .dir_colors.d
-	url = git://github.com/seebi/dircolors-solarized.git
+	url = git@github.com:dylanwh/dircolors-solarized.git
+[submodule ".zsh/antigen"]
+	path = .zsh/antigen
+	url = https://github.com/zsh-users/antigen.git

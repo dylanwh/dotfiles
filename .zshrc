@@ -41,7 +41,7 @@ setopt sharehistory            # share history between all running instances.
 setopt hist_find_no_dups       # ignore dups in history search.
 setopt extended_history        # store time info in history.
 setopt interactive_comments    # escape commands so i can use them later
-setopt print_exit_value        # alert me if something has failed
+setopt no_print_exit_value     # prompt takes care of this
 setopt nomatch                 # #fooo!
 setopt noclobber               # do not overwrite files with >
 setopt noflow_control          # disable control-q/control-s
