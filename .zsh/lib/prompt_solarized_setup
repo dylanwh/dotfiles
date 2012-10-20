@@ -1,12 +1,14 @@
 #!zsh
 
-local PR_TIME PR_DATE PR_USER PR_DIR PR_JOBS PR_CHAR PR_VCS
+local PR_TIME PR_DATE PR_USER PR_DIR PR_JOBS PR_CHAR PR_VCS PR_NAME PR_HOST PR_AT
 PR_TIME="%F{10}%D{%H:%M}%f"
 PR_DATE="%D{%Y-%m-%d}"
-PR_USER="%F{blue}%n@%m%f"
+PR_NAME="%F{blue}%n%f"
+PR_HOST="%F{blue}%m%f"
 PR_DIR="%F{cyan}%2c%f"
 PR_JOBS="%1(j.%F{10}[%F{9}%j%F{10}]%f.)"
 PR_CHAR="%0(?.%F{10}%#%f.%F{1}%??%f)"
+PR_AT="%F{10}@%f"
 PR_VCS='${vcs_info_msg_0_}'
 
 autoload -Uz vcs_info title 
@@ -23,11 +25,12 @@ zstyle ':vcs_info:git:*' check-for-changes true
 zstyle ':vcs_info:svn:*' check-for-changes true
 
 #PROMPT="$PR_TIME $PR_NAME@$PR_HOST:$PR_DIR%# "
-PROMPT="$PR_DIR$PR_VCS $PR_JOBS$PR_CHAR "
 
-if [[ $USERNAME != "dylan" || -n $SSH_CLIENT ]]; then
-	PROMPT="$PR_USER $PROMPT"
+if [[ -n $SSH_CLIENT || $USERNAME != dylan ]]; then
+	PR_USER="$PR_NAME$PR_AT$PR_HOST "
 fi
+
+PROMPT="$PR_USER$PR_DIR$PR_VCS $PR_JOBS$PR_CHAR "
 RPROMPT="$PR_TIME"
 
 PS2='%_: '
@@ -35,6 +38,5 @@ RPS2=''
 
 precmd_functions+=( title vcs_info )
 prompt_opts=( cr percent subst )
-
 
 alias norp='unset RPROMPT'
