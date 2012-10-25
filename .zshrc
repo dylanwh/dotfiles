@@ -102,7 +102,8 @@ bindkey '^Q' push-input
 bindkey '^R' history-incremental-search-backward
 bindkey '^A' beginning-of-line
 bindkey '^E' end-of-line
-bindkey -a " " magic-space ## do history expansion on space
+bindkey ' ' magic-space ## do history expansion on space
+bindkey -a ' ' magic-space ## do history expansion on space
 bindkey -a '^Xe' expand-word
 bindkey -a '^Xg' list-expand
 bindkey -a '^X^N' infer-next-history
