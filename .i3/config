@@ -119,6 +119,7 @@ for_window [title="^Event Tester$"] floating enable
 
 assign [class="Google-chrome"] 9
 for_window [class="Google-chrome"] layout tabbed
+for_window [class="MPlayer"] floating enable
 
 # resize window (you can also use the mouse for that)
 mode "resize" {

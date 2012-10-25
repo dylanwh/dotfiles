@@ -8,24 +8,57 @@ use encoding 'utf8';
 
 my @pre_process;
 my @wrapper;
-my @include=();
+my @include=(".");
+
 my %define = (
     HOST => hostname,
     HOME => $ENV{HOME},
     ENV  => { %ENV },
 );
 
+my %config = (
+    INCLUDE_PATH => \@include,     # or list ref
+    PRE_PROCESS  => \@pre_process, # prefix each template
+    WRAPPER      => \@wrapper,     # wrappers
+);
+
+my @tt_features = qw[ INTERPOLATE EVAL_PERL STRICT ];
+my %feature = (
+    wrapper     => sub { push @wrapper, $_[0] },
+    pre_process => sub { push @pre_process, $_[0] },
+    map { my $k = $_; lc($_) => sub { $config{$k} = $_[0] // 1 } } @tt_features,
+);
+
+sub ARGVAL { 
+    return length($_[0]) ? $_[0] : shift @ARGV;
+}
+
 # manually parse the arguments for cpp compatibility
-while (my $opt = shift @ARGV) {
-    if ($opt =~ /^-D(\w+)(?:=(.+?))?$/) { $define{$1} = $2 || 1; }
-    elsif ($opt =~ /^-U(\w+)$/)         { delete $define{$1} }
-    elsif ($opt =~ /^-I(.+?)$/)         { push @include, $1 }
-    elsif ($opt =~ /^-P(.+?)$/)         { push @pre_process, $1 }
-    elsif ($opt =~ /^-W(.+?)$/)         { push @wrapper, $1 }
-    elsif ($opt =~ /^-P$/)              { next }
-    elsif ($opt eq '--')                { last }
-    elsif ($opt =~ /^-/)                { die "Unknown option: $opt\n" }
-    else                                { push @ARGV, $opt; last }
+while ( my $opt = shift @ARGV ) {
+    if ( $opt =~ /^-D(.*)$/ ) {
+        my ( $k, $v ) = split( /=/, ARGVAL($1), 2 );
+        $define{$k} = $v || 1;
+    }
+    elsif ( $opt =~ /^-f(.*)$/ ) {
+        my ( $k, $v ) = split( /=/, ARGVAL($1), 2 );
+        $k = lc $k;
+        $k =~ s/\W/_/g;
+
+        if ( $feature{$k} ) {
+            $feature{$k}->($v);
+        }
+        else {
+            die "Unknown feature: $k";
+        }
+    }
+    elsif ( $opt =~ /^-include$/ ) { $feature{pre_process}->( shift @ARGV ) }
+    elsif ( $opt =~ /^-U(.*)$/ )   { delete $define{ ARGVAL($1) } }
+    elsif ( $opt =~ /^-I(.+)$/ )   { push @include, ARGVAL($1) }
+    elsif ( $opt =~ /^-P$/ )       { next }
+
+    elsif ( $opt eq '--' ) {last}
+    elsif ( $opt =~ /^-/ ) { die "Unknown option: $opt\n" }
+    else                   { push @ARGV, $opt; last }
 }
 
 $define{HOST} = (split(/\./, $define{HOST}))[0];
@@ -36,15 +69,8 @@ if (@ARGV) {
             push @include, dirname($file);
         }
     }
-} else {
-    push @include, ".";
 }
 
-my $template = new Template {
-    INCLUDE_PATH => \@include,     # or list ref
-    PRE_PROCESS  => \@pre_process, # prefix each template
-    WRAPPER      => \@wrapper,     # wrappers
-    EVAL_PERL    => 1,             # evaluate Perl code blocks
-};
+my $template = Template->new(\%config);
 
 $template->process(\*ARGV, \%define) or die $template->error;

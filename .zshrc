@@ -178,6 +178,7 @@ alias cpanm='cpanm --notest'
 alias cpanm-test='command cpanm'
 alias gcd='cd $(git top)'
 alias nl0="tr '\n' '\0'"
+alias please='sudo !!'
 
 have todo.pl    && alias t=todo.pl
 have pinfo      && alias info=pinfo

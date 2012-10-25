@@ -1,5 +1,0 @@
-#!/bin/zsh
-#
-xrdb -load "$@" -cpp =ttpp  ~/.config/xrdb/defaults 
-#>! ~/.Xdefaults
-#xrdb -load ~/.Xdefaults

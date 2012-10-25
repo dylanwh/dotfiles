@@ -1,28 +1,49 @@
-[%# vim: set ft=template: %]
-[%# Keyboard bindings %]
-URxvt.font:     [% font(config.font_size) %]
-URxvt.boldFont: [% font(config.font_size, "bold") %]
+[% # vim: set ft=template:
+MACRO cmd(code, body) GET "\\033]$code;$body\\007";
 
-URxvt.keysym.C-M-d: [% change_font(font(config.font_size), font(config.font_size, "bold")) %]
+MACRO change_font(font, bold_font) BLOCK;
+    UNLESS bold_font; 
+        bold_font = font;
+    END;
+	GET "command:";
+    cmd(710, font);
+    cmd(711, bold_font);
+END;
+
+-%]
+
+URxvt.font:     [% config.fonts.0 %]
+URxvt.boldFont: [% config.fonts.0 %]
+URxvt.italicFont: [% config.fonts.0 %]
+
 URxvt.keysym.C-M-z: [% change_font("fixed") %]
 
-[% FOREACH size IN config.font_sizes %]
-URxvt.keysym.C-M-[% loop.count %]: [% change_font(font(size), font(size, "bold")) -%] 
-[% END -%]
+[% FOREACH font IN config.fonts %]
+URxvt.keysym.C-M-[% loop.count %]: [% change_font(font) %]
+[% END %]
 
-URxvt.searchable-scrollback: CM-s
+URxvt.searchable-scrollback: C-M-s
 URxvt.scrollBar: false
 URxvt.meta8: false
 URxvt.modifier: mod1
 URxvt.visualBell: true
 URxvt.depth: 32
 
-[%# mark-and-yank support. %]
-[%- IF HOME -%]
-URxvt.keysym.C-M-y: perl:mark-and-yank:activate_mark_mode
-URxvt.keysym.C-M-u: perl:mark-and-yank:activate_mark_url_mode
-URxvt.perl-lib: [% HOME %]/.urxvt/
-URxvt.perl-ext: mark-and-yank
+URxvt.perl-ext-common: mark-and-yank,font-size
 URxvt.urlLauncher: url-handler
 URxvt.underlineURLs: false
-[%- END -%]
+
+URxvt.keysym.C-M-y:    perl:mark-and-yank:activate_mark_mode
+URxvt.keysym.C-M-u:    perl:mark-and-yank:activate_mark_url_mode
+URxvt.keysym.C-M-Up:     perl:font-size:increase
+URxvt.keysym.C-M-Down:   perl:font-size:decrease
+
+[% 
+INCLUDE theme/solarized;
+INCLUDE theme/solarized prefix='outside.' option="invert";
+INCLUDE theme/solarized prefix='night.' option="black";
+INCLUDE theme/dylan     prefix="dylan";
+INCLUDE theme/base      prefix="std";
+
+#INCLUDE theme name="solarized" prefix="outside" flavor="light"; 
+%]

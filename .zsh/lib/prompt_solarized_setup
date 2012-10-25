@@ -6,8 +6,8 @@ PR_DATE="%D{%Y-%m-%d}"
 PR_NAME="%F{blue}%n%f"
 PR_HOST="%F{blue}%m%f"
 PR_DIR="%F{cyan}%2c%f"
-PR_JOBS="%1(j.%F{10}[%F{9}%j%F{10}]%f.)"
-PR_CHAR="%0(?.%F{10}%#%f.%F{1}%??%f)"
+PR_JOBS="%1(j.%F{10}[%F{13}%j%F{10}]%f.)"
+PR_CHAR="%0(?.%F{10}%#%f.%F{1}%?%F{10}?%f)"
 PR_AT="%F{10}@%f"
 PR_VCS='${vcs_info_msg_0_}'
 
@@ -30,7 +30,7 @@ if [[ -n $SSH_CLIENT || $USERNAME != dylan ]]; then
 	PR_USER="$PR_NAME$PR_AT$PR_HOST "
 fi
 
-PROMPT="$PR_USER$PR_DIR$PR_VCS $PR_JOBS$PR_CHAR "
+PROMPT="$PR_USER$PR_DIR$PR_VCS$PR_JOBS$PR_CHAR "
 RPROMPT="$PR_TIME"
 
 PS2='%_: '
