@@ -12,7 +12,7 @@
 xset +fp /usr/share/fonts/local
 xset fp rehash
 
-xrdb-reload
+xrdb-tt -load
 
 xset r rate 200 35
 

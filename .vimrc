@@ -221,6 +221,7 @@ if !exists('autocmds_loaded')
         autocmd BufNewFile,BufRead *.lua setl foldmethod=marker |
                     \ setl comments=sO:-\ -,mO:-\ \ ,exO:]],s1:--[[,mb:-,ex:]],:-- |
                     \ setl commentstring=--%s
+        autocmd BufNewFile,BufRead */.i3/config set ft=i3
     augroup END
 
     autocmd FileType csv setl noet list

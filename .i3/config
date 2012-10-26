@@ -31,7 +31,6 @@ bindsym $mod+Shift+C kill
 # start gmrun (a program launcher)
 bindsym $mod+p exec gmrun
 
-bindsym XF86Sleep exec --no-startup-id dbus-suspend
 bindsym $mod+Shift+S exec --no-startup-id dbus-suspend
 
 # change focus
@@ -40,7 +39,7 @@ bindsym $mod+j focus down
 bindsym $mod+k focus up
 bindsym $mod+l focus right
 
-bindsym $mod+u focus [urgent
+bindsym $mod+u [urgent="last"] focus
 
 # move focused window
 bindsym $mod+Shift+H move left
@@ -69,6 +68,8 @@ bindsym $mod+Shift+space layout default
 
 # change focus between tiling / floating windows
 bindsym $mod+Tab focus mode_toggle
+
+bindsym $mod+b border toggle
 
 # focus the parent container
 bindsym $mod+a focus parent
@@ -134,12 +135,6 @@ mode "resize" {
         bindsym k resize shrink height 5 px or 5 ppt
         bindsym l resize shrink width 5 px or 5 ppt
 
-        # same bindings, but for the arrow keys
-        bindsym 113 resize shrink width 5 px or 5 ppt
-        bindsym 116 resize grow height 5 px or 5 ppt
-        bindsym 111 resize shrink height 5 px or 5 ppt
-        bindsym 114 resize grow width 5 px or 5 ppt
-
         # back to normal: Enter or Escape
         bindsym Return mode "default"
         bindsym Escape mode "default"
@@ -148,11 +143,31 @@ mode "resize" {
 
 bindsym $mod+r mode "resize"
 
+# SOLARIZED HEX    
+# --------- -------
+# base03    #002b36
+# base02    #073642
+# base01    #586e75
+# base00    #657b83
+# base0     #839496
+# base1     #93a1a1
+# base2     #eee8d5
+# base3     #fdf6e3
+# red       #dc322f
+# yellow    #b58900
+# orange    #cb4b16
+# green     #859900
+# cyan      #2aa198
+# blue      #268bd2
+# magenta   #d33682
+# violet    #6c71c4
+
 # solarized
-client.focused          #93a1a1 #073642 #93a1a1
-client.focused_inactive #586e75 #002b36 #586e75
-client.unfocused        #657b83 #002b36 #657b83
-client.urgent           kkkkkkk#d33682 #073642 #d33682
+client.background       #002b36
+client.focused          #93a1a1 #073642 #93a1a1 #cb4b16
+client.focused_inactive #586e75 #002b36 #586e75 #cb4b16
+client.unfocused        #657b83 #002b36 #657b83 #cb4b16
+client.urgent           #657b83 #dc322f #eee8d5
 
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
@@ -161,12 +176,23 @@ bar {
 	status_command i3status
 
 	colors {
-		background #002b36
+		# base02
+		background #073642
+
+		# base1
 		statusline #93a1a1
+
+		# base3, #base02
 		focused_workspace #fdf6e3 #073642
-		active_workspace #587e75 #002b36
+
+		# base01, #base03	
+		active_workspace #586e75 #002b36
+
+		# base00, base02
 		inactive_workspace #657b83 #002b36
-		urgent_workspace #d33682 #073642
+
+		# red, base02
+		urgent_workspace #eee8d5 #dc322f
 	}
 }
 

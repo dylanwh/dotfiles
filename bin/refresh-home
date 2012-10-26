@@ -4,18 +4,14 @@ SHELL  = bash
 TMPDIR ?= /tmp
 DIR    = $(TMPDIR)/dylan-home
 
-$(HOME)/pub/home.tar.gz: $(DIR)
+$(HOME)/home.tar.gz: $(DIR)
 	tar -C $< -zcf $@ .
 	rm -rf $(DIR)
 
 $(DIR): $(HOME)
+	@mkdir -vp $(DIR)
 	@echo "cloning $<..."
-	@git clone $< $@
-	@echo "cloning submodules..."
-	@cd $(DIR) && ( \
-		git submodule init; \
-		git submodule update; \
-	)
+	@git clone --recursive $< $@
 
 # 
 # cd ${TMPDIR:-/tmp}             || exit 1
