@@ -64,6 +64,7 @@
 !.zshenv
 !.zshrc
 !.i3
+!.udisks-glue.conf
 .config/Rygel
 .config/akonadi
 .config/bashrun
