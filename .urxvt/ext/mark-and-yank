@@ -1,0 +1,488 @@
+#! perl
+# ------------------------------------------------------------------------
+# Author: Bart Trojanowski <bart@jukie.net>
+#
+# This script intends to provide functionality similar to screen's 
+# copy-mode, but instead copy to the X clipboard.  In order to copy to
+# the clipboard we need either the Clipboard.pm from CPAN or the xclip
+# command line utility.
+#
+# More details here: http://www.jukie.net/~bart/blog/tag/urxvt
+# 
+# This script is based on the mark-urls script from the rxvt-unicode
+# distribution.
+#
+# ------------------------------------------------------------------------
+# configuration
+#
+# Put this in your .Xdefaults
+#
+# URxvt.keysym.M-y: perl:mark-and-yank:activate_mark_mode
+# URxvt.keysym.M-u: perl:mark-and-yank:activate_mark_url_mode
+# URxvt.perl-lib: /home/jukie/bart/.urxvt/
+# URxvt.perl-ext: mark-and-yank
+# URxvt.urlLauncher: firefox
+#
+# you might have to edit the perl-lib line.
+#
+# ------------------------------------------------------------------------
+
+# same url as used in "selection"
+my $url_matcher =
+   qr{(
+      (?:https?://|ftp://|news://|mailto:|file://)[ab-zA-Z0-9\-\@;\/?:&=%\$_.+!*\x27(),~#]+
+      [ab-zA-Z0-9\-\@;\/?:&=%\$_+!*\x27()~]   # exclude some trailing characters (heuristic)
+   )}x;
+
+sub on_start {
+    my ($term) = @_;
+
+    $term->{have_Clipboard} = eval { require Clipboard; };
+    if ($term->{have_Clipboard}) {
+        import Clipboard;
+    }
+
+    $term->{browser} = $term->x_resource ("urlLauncher") || "x-www-browser";
+
+    ()
+}
+
+sub on_line_update {
+    my ($term, $row) = @_;
+
+    # fetch the line that has changed
+    my $line = $term->line ($row);
+    my $text = $line->t;
+
+    # find all urls (if any)
+    while ($text =~ /$url_matcher/g) {
+        my $rend = $line->r;
+
+        # mark all characters as underlined. we _must_ not toggle underline,
+        # as we might get called on an already-marked url.
+        if ($term->x_resource ("underlineURLs") eq "true") {
+            $_ |= urxvt::RS_Uline
+            for @{$rend}[ $-[1] .. $+[1] - 1];
+
+            $line->r ($rend);
+        }
+    }
+
+    ()
+}
+
+sub on_button_release {
+    my ($term, $event) = @_;
+
+    my $mask = $term->ModLevel3Mask | $term->ModMetaMask
+    | urxvt::ShiftMask | urxvt::ControlMask;
+
+    if ($event->{button} == 2 && ($event->{state} & $mask) == 0) {
+        my $row = $event->{row};
+        my $col = $event->{col};
+
+        my $line = $term->line ($row);
+        my $text = $line->t;
+
+        while ($text =~ /$url_matcher/g) {
+            if ($-[1] <= $col && $+[1] >= $col) {
+                $term->exec_async ($term->{browser}, $1);
+                return 1;
+            }
+        }
+    }
+
+    ()
+}
+
+# ------------------------------------------------------------------------
+
+my %key2mod = (
+    65505 => urxvt::ShiftMask,
+    65507 => urxvt::ControlMask,
+    65513 => urxvt::Mod1Mask,   # Alt
+    65514 => urxvt::Mod1Mask,   # Alt
+    65515 => urxvt::Mod4Mask,   # Super
+    65516 => urxvt::Mod4Mask,   # Super
+);
+my $mod = 0;
+
+#my %mod = ( 'control' => 0, 'shift' => 0 );
+
+my $mark_mode_active = 0;
+my @backup_cursor = ();
+my @visual_start = ();
+my $visual_mode = 0;        # 'v', 'V', or '^v'
+my %visual_backup = ();
+my @cursor = ();
+my $url_selected = -1;
+my @url_db = ();
+
+# ------------------------------------------------------------------------
+
+sub do_scan_for_urls {
+    my ($term) = @_;
+
+    @url_db = ();
+
+    my $row_start = $term->top_row;
+    my $row_end = $term->nrow;
+
+    for (my $row=$row_start; $row<=$row_end; $row++) {
+
+        # fetch the line that has changed
+        my $line = $term->line ($row);
+        my $text = $line->t;
+
+        # find all urls (if any)
+        while ($text =~ /$url_matcher/g) {
+            my $rend = $line->r;
+            my $url = $1;
+
+            my %h = ( 'row'      => $row,
+                      'col_from' => $-[1], 
+                      'col_to'   => $+[1] - 1,
+                      'url'      => $url);
+            push @url_db, \%h;
+        }
+    }
+
+    # 0 for none, positive count otherwise
+    return $#url_db + 1;
+}
+
+sub on_user_command {
+    my ($term, $cmd) = @_;
+
+    if ($cmd eq "mark-and-yank:activate_mark_mode") {
+        activate_mark_mode($term);
+
+    } elsif ($cmd eq "mark-and-yank:activate_mark_url_mode") {
+        activate_mark_url_mode($term);
+    }
+
+    ()
+}
+
+# ------------------------------------------------------------------------
+
+sub on_key_press {
+    my ($term, $event, $keysym, $octets) = @_;
+
+    foreach my $key (keys %key2mod) {
+        if ($keysym == $key) {
+            $mod |= $key2mod{$key};
+            return ();
+        }
+    }
+
+    # ignore all input when we are active
+    $mark_mode_active && return 1;
+
+    ()
+}
+
+sub on_key_release {
+    my ($term, $event, $keysym, $octets) = @_;
+
+    foreach my $key (keys %key2mod) {
+        if ($keysym == $key) {
+            $mod &= ~$key2mod{$key};
+            return ();
+        }
+    }
+
+    if ($mark_mode_active) {
+        my $ch = chr($keysym);
+
+        if (!$mod && $keysym == 65307) {                     # <esc>
+            deactivate_mark_mode ($term);
+            visual_mode_disable ($term);
+            return 1;
+
+        } elsif (!$mod && $keysym == 65293) {                # <enter>
+            my $url = get_active_url($term);
+            $url =~ s/\(["|><&()]\)/\\$1/;
+            $term->exec_async ($term->{browser}, $url);
+            deactivate_mark_mode ($term);
+            visual_mode_disable ($term);
+            return 1;
+
+        } elsif (!$mod && $ch eq 'y') {                      # y - yank selected
+            do_copy ($term);
+            deactivate_mark_mode ($term);
+            visual_mode_disable ($term);
+            return 1;
+
+        } elsif (($mod & urxvt::ControlMask) && (($ch eq 'n') || ($ch eq 'p'))) {
+                                                    # ^n and ^p to cycle list
+            my $dir = ($ch eq 'n') ? 1 : -1;
+            move_url_highlight ($term, $dir);
+            visual_mode_disable ($term);
+
+        } elsif (($mod & urxvt::ControlMask) && (($ch eq 'f') || ($ch eq 'b'))) {
+                                                    # ^f and ^b to scroll
+            my $ofs = ($ch eq 'f') ? 1 : -1;
+            my $row = $term->view_start + $ofs;
+            $term->view_start ( $row );
+
+        } elsif (!$mod && $ch =~ m/^[hjkl]$/ ) {    # hjkl - move left/down/up/right
+
+            my @dest = @cursor;
+
+            if ($ch eq 'h') {                       # left
+                if ($dest[1] > 0) {
+                    $dest[1] -= 1;
+                }
+            } elsif ($ch eq 'j') {                  # down
+                if ($dest[0] < $term->nrow) {
+                    $dest[0] += 1;
+                }
+            } elsif ($ch eq 'k') {                  # up
+                if ($dest[0] > $term->top_row) {
+                    $dest[0] -= 1;
+                }
+            } elsif ($ch eq 'l') {                  # right
+                if ($dest[1] < ($term->ncol - 1)) {
+                    $dest[1] += 1;
+                }
+            }
+
+            visual_mode_update ($term, \@cursor, \@dest);
+
+            @cursor = @dest;
+            $term->screen_cur (@dest);
+            $term->want_refresh;
+
+            my $row = $term->view_start;
+            if ($cursor[0] < $row) {
+                $term->view_start ( $row - 1 );
+            } elsif ($cursor[1] > ($row + $term->nrow)) {
+                $term->view_start ( $row + 1 );
+            }
+
+
+        } elsif (!$mod && $ch eq 'v') {             # characterwise-visual mode
+
+            visual_mode_disable ($term);
+            visual_mode_enable ($term, 'v', @cursor);
+        }
+
+        return 1;
+    }
+
+    ()
+}
+
+# ------------------------------------------------------------------------
+
+sub get_active_url {
+    my ($term) = @_;
+    my $max = $#url_db + 1;
+
+    return if $url_selected < 0 || $url_selected >= $max;
+    return if not defined $url_db[$url_selected];
+    my $o = $url_db[$url_selected];
+    my %h = %$o;
+
+    return $h{url};
+}
+
+sub do_copy {
+    my ($term) = @_;
+
+    my $text = get_active_url ($term);
+
+    if ($term->{have_Clipboard}) {
+        Clipboard->copy($text);
+    } else {
+        $text =~ s/\(["|><&()]\)/\\$1/;
+        system ("echo -n \"$text\" | xclip -i");
+    }
+}
+
+# ------------------------------------------------------------------------
+
+sub move_url_highlight {
+    my ($term, $dir) = @_;
+    my $max = $#url_db + 1;
+
+    do_highlight ($term, 0);
+    
+    $url_selected = ($max + $url_selected + $dir) % $max;
+        
+    do_highlight ($term, 1);
+
+    $term->want_refresh;
+}
+
+sub do_highlight {
+    my ($term, $enable) = @_;
+    my $max = $#url_db + 1;
+
+    return if $url_selected < 0 || $url_selected >= $max;
+    return if not defined $url_db[$url_selected];
+
+    my $o = $url_db[$url_selected];
+    my %h = %$o;
+
+    my $row = $h{row};
+    my $line = $term->line ($row);
+    my $text = $line->t;
+    my $rend = $line->r;
+
+    if ($enable) {
+        $_ |= urxvt::RS_RVid
+        for @{$rend}[ $h{col_from} .. $h{col_to}];
+
+        # make it visible
+        $term->view_start ( $row < 0 ? $row : 0 );
+
+    } else {
+        $_ &= ~urxvt::RS_RVid
+        for @{$rend}[ $h{col_from} .. $h{col_to}];
+    }
+
+    $line->r ($rend);
+}
+
+# ------------------------------------------------------------------------
+
+sub draw_visual_highlight {
+
+    my ($term, $row, $start, $end) = @_;
+
+    print "  fill $row $start $end\n";
+
+    my $line = $term->line ($row);
+
+    # backup this line the first time we see it
+    $visual_backup{$row} = $line->r if not defined $visual_backup{$row};
+
+    my $rend = $line->r;
+
+    $_ |= urxvt::RS_RVid
+    for @{$rend}[ $start .. $end ];
+
+    $line->r ($rend);
+}
+
+sub visual_mode_enable {
+    my ($term, $mode, @cur) = @_;
+
+    $visual_mode = $mode;
+    @visual_start = @cur;
+}
+
+sub visual_mode_disable {
+    my ($term) = @_;
+
+    if ($visual_mode) {
+
+        for my $row (keys %visual_backup) {
+            my $line = $term->line ($row);
+            $line->r ($visual_backup{$row});
+            undef $visual_backup{$row};
+        }
+        
+        $visual_mode = 0;
+
+        $term->want_refresh;
+    }
+}
+
+sub visual_mode_update {
+    my ($term, $oldref, $newref) = @_;
+    my @old = @$oldref;
+    my @new = @$newref;
+
+    my @fill_rows = ();
+
+    if ($visual_mode eq 'v') {
+
+        print "v: (" . $visual_start[0] . ","
+                     . $visual_start[1] . ") -> ("
+                     . $new[0] . ","
+                     . $new[1] . ")\n";
+
+        if ($visual_start[0] == $new[0]) {
+            draw_visual_highlight ($term, $new[0], $visual_start[1], $new[1]);
+        } else {
+            my @one = ();
+            my @two = ();
+
+            if ($visual_start[0] < $new[0]) {
+                @one = @visual_start;
+                @two = @new;
+            } else {
+                @one = @new;
+                @two = @visual_start;
+            }
+
+            draw_visual_highlight ($term, $one[0], $one[1], $term->ncol);
+            draw_visual_highlight ($term, $two[0], 0, $two[1]);
+
+            if ($one[0] + 1 < $two[0]) {
+                @fill_rows = ($one[0] + 1, $two[0] - 1);
+            }
+        }
+    }
+
+    if (@fill_rows) {
+        for ( my $row = $fill_rows[0]; $row <= $fill_rows[1]; $row ++) {
+            draw_visual_highlight ($term, $row, 0, $term->ncol);
+        }
+    }
+}
+
+# ------------------------------------------------------------------------
+
+sub activate_mark_mode {
+    my ($term) = @_;
+
+    print "title:     " . ($term->resource("title")) . "\n";
+    print "name:      " . ($term->resource("name")) . "\n";
+    print "term_name: " . ($term->resource("term_name")) . "\n";
+    print "color:     " . ($term->resource("color")) . "\n";
+
+    my ($row, $col) = $term->screen_cur;
+    print "cursor:    $row / $col \n";
+
+    $mark_mode_active = 1;
+    @backup_cursor = @cursor = $term->screen_cur;
+}
+
+sub activate_mark_url_mode {
+    my ($term) = @_;
+
+    if ($mark_mode_active) {
+
+        move_url_highlight ($term, -1);
+
+    } elsif ( do_scan_for_urls ($term) ) {
+
+        $term->{save_view_start} = $term->view_start;
+
+        move_url_highlight ($term, 0);
+
+        if ($url_selected > -1) {
+            $mark_mode_active = 1;
+            @backup_cursor = @cursor = $term->screen_cur;
+        }
+    }
+}
+
+sub deactivate_mark_mode {
+    my ($term) = @_;
+
+    do_highlight ($term, 0);
+
+    $mark_mode_active = 0;
+    $term->screen_cur (@backup_cursor);
+    $url_selected = -1;
+
+    $term->view_start ($term->{save_view_start});
+    $term->want_refresh;
+}
+
+# vim: set et ts=4 sw=4:

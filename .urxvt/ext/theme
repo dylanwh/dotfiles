@@ -1,0 +1,15 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+#use JSON;
+
+sub on_user_command {
+    my ($self, $cmd) = @_;
+
+    my $background = $self->resource("+background");
+    $self->scr_add_lines("\r\nbg=$background\n");
+    $urxvt::RESCLASS = 'plain';
+    $background = $self->resource("+background");
+    $self->scr_add_lines("\r\nbg=$background\n");
+}
+
