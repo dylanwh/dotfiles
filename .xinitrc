@@ -22,8 +22,7 @@ setxkbmap -option ctrl:nocaps
 
 case $HOST in
 	odin)
-		dev=$(xinput list --id-only 'AT Translated Set 2 keyboard')
-		[[ -n $dev ]] && setxkbmap -device $dev -option altwin:swap_alt_win 
+		syndaemon -k -i 1 -d 
 	;;
 esac
 

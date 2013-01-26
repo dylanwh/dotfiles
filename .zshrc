@@ -277,8 +277,8 @@ namedir bes          ~/src/hewitt/bes
 namedir bes2010      ~bes/BES-2010
 namedir bes2011      ~bes/BES-2011
 namedir bes2011_data ~bes/BES-2011-Data
-namedir bes2012       ~bes/hewitt-bes-2012
 namedir bes2012_data  ~bes/hewitt-bes-2012-data
+namedir bes_eers      ~bes/hewitt-bes-eers
 namedir bes_setup     ~bes/hewitt-bes-setup
 namedir bes_workspace ~bes/hewitt-bes-workspace
 namedir bes_import ~bes/hewitt-bes-import
@@ -296,6 +296,10 @@ fi
 if have trash; then
 	alias rm="trash"
 	namedir trash ~/.local/share/Trash
+fi
+
+if (( LINES > 0 )); then
+	yes '' | head -n $LINES
 fi
 
 # vim: set sw=4 ts=4 foldmethod=marker path=.,~/.zsh:

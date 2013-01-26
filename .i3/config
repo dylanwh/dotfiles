@@ -17,13 +17,12 @@ font $font
 
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
-floating_minimum_size 75 x 50
 floating_maximum_size 1600 x 900
+floating_minimum_size 10 x 10
 
 # start a terminal
 #bindsym $mod+Return exec i3-sensible-terminal
 bindsym $mod+grave exec dterm
-bindsym $mod+Escape exec dterm
 
 # kill focused window
 bindsym $mod+Shift+C kill
@@ -72,7 +71,7 @@ bindsym $mod+Tab focus mode_toggle
 bindsym $mod+b border toggle
 
 # focus the parent container
-bindsym $mod+a focus parent
+bindsym $mod+Escape focus parent
 
 # focus the child container
 bindsym $mod+d focus child
@@ -88,6 +87,7 @@ bindsym $mod+7 workspace 7
 bindsym $mod+8 workspace 8
 bindsym $mod+9 workspace 9
 bindsym $mod+0 workspace 10
+bindsym $mod+minus scratchpad show
 
 # move focused container to workspace
 bindsym $mod+Shift+exclam move container to workspace 1
@@ -100,6 +100,8 @@ bindsym $mod+Shift+ampersand move container to workspace 7
 bindsym $mod+Shift+asterisk move container to workspace 8
 bindsym $mod+Shift+parenleft move container to workspace 9
 bindsym $mod+Shift+parenright move container to workspace 10
+
+bindsym $mod+Shift+minus move scratchpad
 
 bindsym $mod+XF86Back    workspace prev
 bindsym $mod+XF86Forward workspace next
@@ -115,8 +117,11 @@ bindsym $mod+Shift+R reload
 
 for_window [class="URxvt"] border 1pixel
 for_window [class="Gmrun"] floating enable
+for_window [class="feh"] floating enable
 for_window [class="Pinentry"] floating enable
+for_window [class="Pavucontrol"] floating enable
 for_window [title="^Event Tester$"] floating enable
+for_window [window_role="^pop-up$"] floating enable
 
 assign [class="Google-chrome"] 9
 for_window [class="Google-chrome"] layout tabbed
@@ -196,7 +201,6 @@ bar {
 	}
 }
 
-exec --no-startup-id batti
-exec --no-startup-id parcellite
+exec --no-startup-id nm-applet
 exec --no-startup-id blueman-applet
-exec chrome -p home
+exec --no-startup-id parcellite

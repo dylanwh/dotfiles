@@ -207,8 +207,8 @@ if !exists('autocmds_loaded')
     augroup filetypedetect
         autocmd BufNewFile,BufReadPost *.tt,*.ttml,*.html,*.tt2
                     \ setl ft=html syn=template
-        autocmd BufNewFile,BufRead *.mkd,*.mdwn
-                    \ setl ai formatoptions=tcroqn2 comments=n:>
+        autocmd BufNewFile,BufRead *.mkd,*.mdwn,*.md
+                    \ setl ft=markdown ai formatoptions=tcroqn2 comments=n:>
         autocmd BufNewFile,BufRead *.rem
                     \ setl ft=remind
         autocmd BufEnter *.hs,*.lhs       compiler ghc

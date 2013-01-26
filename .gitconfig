@@ -19,3 +19,6 @@
 	diff = auto
 	status = auto
 	branch = auto
+[github]
+	user = dylanwh
+	gist-oauth-token = 83f6b99780b55f83857c1e4cabc8b34f0351292a

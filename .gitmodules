@@ -27,4 +27,4 @@
 	url = https://github.com/zsh-users/antigen.git
 [submodule ".vim/bundle/i3-syntax"]
 	path = .vim/bundle/i3-syntax
-	url = git://github.com/PotatoesMaster/i3-vim-syntax.git
+	url = git@github.com:dylanwh/i3-vim-syntax.git

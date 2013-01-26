@@ -98,8 +98,10 @@ BLOCK solarized_base;
 		color14    = S.base1
 		color15    = S.base3;
 
-	INCLUDE "theme/base" ;
-END;
 
+	PROCESS "theme/base" ;
+%]
+[% prefix %]keysym.C-Mod4-n: command:[% cmd(11, 'black'); cmd(708, 'black'); %]
+[% prefix %]keysym.C-Mod4-s: command:[% cmd(11, S.base03); cmd(708, S.base03); %]
 
--%]
+[% END -%]

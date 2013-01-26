@@ -45,8 +45,8 @@ for my $sheet ( $doc->worksheets ) {
         $csv->combine(@row);
         my $line = $csv->string;
 
-        if ($row[0] == 310033 || $row[0] == 310032) {
-            string_info($line);
+        if ($row[0] == 514825 || $row[0] == 507839) {
+            #warn $sheet->get_cell($row, 3)->encoding, "\n";
         }
 
         $fh->print($line);
@@ -90,16 +90,14 @@ sub clean_int {
 }
 
 sub clean_decode {
-    my ($str) = @_;
+    my ($v, $e) = @_;
 
-    try {
-        #$str = decode( 'utf-8', $str );
-    }
-    catch {
-        #die "invalid: $str\n";
-    };
-
-    return $str;
+    #if ($e == 1) {
+        #return decode( 'latin-1', $v );
+        #}
+        #else {
+        return $v;
+        #}
 }
 
 sub clean {
@@ -115,8 +113,10 @@ sub clean {
         }
     }
 
-    return $v;
+    return remove_utf8_punctuation(clean_decode( $v, $e ));
 }
+
+
 
 sub remove_utf8_punctuation {
     local $_ = shift;
