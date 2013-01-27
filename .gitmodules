@@ -28,3 +28,6 @@
 [submodule ".vim/bundle/i3-syntax"]
 	path = .vim/bundle/i3-syntax
 	url = git@github.com:dylanwh/i3-vim-syntax.git
+[submodule ".tmux/colors-solarized"]
+	path = .tmux/colors-solarized
+	url = git://github.com/seebi/tmux-colors-solarized.git
