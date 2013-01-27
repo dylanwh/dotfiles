@@ -33,6 +33,8 @@ fi
 PROMPT="$PR_USER$PR_DIR$PR_VCS$PR_JOBS$PR_CHAR "
 RPROMPT="$PR_TIME"
 
+setopt transient_rprompt # only show rprompt for current line.
+
 PS2='%_: '
 RPS2=''
 

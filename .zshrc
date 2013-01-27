@@ -52,7 +52,6 @@ setopt checkjobs               # warn me about bg processes when exiting
 setopt nohup                   # and do not kill them, either
 setopt auto_continue           # automatically continue disowned jobs.
 setopt auto_resume             # automatically resume jobs from commands
-setopt transient_rprompt       # only show rprompt for current line.
 setopt no_list_beep            
 setopt nobeep
 ## }}}

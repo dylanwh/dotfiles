@@ -41,6 +41,7 @@
 !.surfraw.conf
 !.terminfo
 !.tmux.conf
+!.tmux/
 !.todorc
 !.urlview
 !.urxvt
