@@ -1,0 +1,20 @@
+#!/bin/zsh
+
+profile=$1
+
+
+if [[ -n $profile ]]; then
+	script=$HOME/.screenlayout/$profile@$HOST.sh
+
+	if [[ -x $script ]]; then
+		exec $script
+	else
+		echo "no such layout"
+	fi
+else
+	profiles=( $HOME/.screenlayout/*.sh )
+	for profile in $profiles; do
+		echo ${profile:t}
+	done
+
+fi

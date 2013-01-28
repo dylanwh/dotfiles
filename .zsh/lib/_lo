@@ -1,0 +1,8 @@
+#compdef lo
+typeset -A opt_args
+local context state line
+local layout_dir=$HOME/.screenlayout
+
+_files -W $layout_dir -g "*@$HOST.sh(:t:r:s/@$HOST/)" && return 0
+
+return 1

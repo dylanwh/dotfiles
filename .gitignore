@@ -42,6 +42,7 @@
 !.terminfo
 !.tmux.conf
 !.tmux/
+!.screenlayout/
 !.todorc
 !.urlview
 !.urxvt
