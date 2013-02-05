@@ -13,9 +13,6 @@
 [submodule ".vim/bundle/nerdtree"]
 	path = .vim/bundle/nerdtree
 	url = git://github.com/scrooloose/nerdtree.git
-[submodule ".vim/bundle/jellybeans"]
-	path = .vim/bundle/jellybeans
-	url = git://github.com/nanotech/jellybeans.vim.git
 [submodule ".vim/bundle/repeat"]
 	path = .vim/bundle/repeat
 	url = git://github.com/tpope/vim-repeat.git
