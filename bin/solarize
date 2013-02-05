@@ -56,4 +56,4 @@ echo -ne "\e]Pd$violet"
 echo -ne "\e]Pe$base1"
 echo -ne "\e]Pf$base3"
 		
-
+clear

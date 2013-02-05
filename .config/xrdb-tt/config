@@ -2,11 +2,11 @@
 # vim: set ft=template:
 
 SET config = {
-	fonts => [
-		"-xos4-terminus-bold-r-*-*-14-*-*-*-*-*-iso8859-1",
-		"-xos4-terminus-bold-r-*-*-16-*-*-*-*-*-iso8859-1",
-		"-xos4-terminus-bold-r-*-*-20-*-*-*-*-*-iso8859-1",
-	],
+    fonts => [
+        "-xos4-terminus-bold-r-*-*-14-*-*-*-*-*-iso8859-1",
+        "-xos4-terminus-bold-r-*-*-16-*-*-*-*-*-iso8859-1",
+        "-xos4-terminus-bold-r-*-*-20-*-*-*-*-*-iso8859-1",
+    ],
 };
 
 

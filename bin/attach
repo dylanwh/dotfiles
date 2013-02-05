@@ -1,7 +1,0 @@
-#!/usr/bin/env zsh
-
-view=$1
-host=lofn.hardison.net
-
-
-exec ssh $host -t screen -U -A -x -p $view

@@ -29,6 +29,7 @@ URxvt.modifier: mod1
 URxvt.depth: 32
 URxvt.urgentOnBell: true
 URxvt.visualBell: true
+URxvt.cursorBlink: false
 
 URxvt.perl-ext-common: mark-and-yank,font-size
 URxvt.urlLauncher: url-handler

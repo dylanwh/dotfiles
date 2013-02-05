@@ -24,8 +24,11 @@ DEFAULT
 	background = color0
 	foreground = color7
 
+	underline_color = color7
+
 	ptr_background = foreground
 	ptr_foreground = background;
+
 
 UNLESS prefix.match("[.*]$");
 	prefix = prefix _ "*";
@@ -44,6 +47,7 @@ END;
 [% prefix %]pointerColorBackground: [% ptr_background %] 
 [% prefix %]pointerColorForeground: [% ptr_foreground %]
 
+[% prefix %]underlineColor: [% underline_color %]
 
 [% prefix %]color0: [% color0 %]
 [% prefix %]color1: [% color1 %]

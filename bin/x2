@@ -1,3 +1,0 @@
-#!/bin/zsh
-export XMMS_PATH='tcp://:1985'
-exec nyxmms2 "$@"

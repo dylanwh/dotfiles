@@ -10,7 +10,7 @@ call pathogen#infect()
 syntax on
 filetype plugin indent on
 
-runtime! ftplugin/man.vim
+runtime! ftplugin/man.vim                  
 " }}}
 
 " OPTIONS {{{
@@ -18,8 +18,8 @@ set tabstop=4          " Number of spaces that a literal <Tab> in the file count
 set shiftwidth=4       " Number of spaces to use for each step of (auto)indent.
 set shiftround         " Round indent to multiple of 'shiftwidth'.
 set autoindent         " Auto indent from current line to new line.
-"set copyindent         " Try to not change the indentation style.
-"set preserveindent     " Ditto.
+set copyindent         " Try to not change the indentation style.
+set preserveindent     " Ditto.
 set smarttab           " Insert shiftwidth or tabstop as appropriate.
 set ignorecase         " Ignore case
 set smartcase          " Unless I use upper-case letters.
@@ -40,24 +40,77 @@ set cpoptions+=$       " Show '$' for change operations.
 set encoding=utf-8     " Keep things internally as utf-8.
 set hidden             " allow hidden edited buffers
 set fileencoding=utf-8 " Read/Write files using utf-8.
-set titlestring=vim:\ %F
-set title
+set nowrap
+set sidescroll=5       "
+set mouse=             " disable mouse
+set clipboard=         " don't automatically put stuff in the clipboard.
+set vb                 " visual bell
+set cursorline 
+set number
+
+
+
+set viewoptions=cursor,folds,slash,unix
 set wildmode=longest,list,full " thanks nornagon!
 set wildignore=*.bak,~,*.o,*.info,*.swp,*.dvi,*.pdf,.*
 set backspace=eol,start
 set grepprg=grep\ -nH\ \ --exclude='*.svn*'\ $*
 set foldopen=tag,search,quickfix,undo,jump,mark,percent
-set viminfo=!,'1000,%,h,f1,n~/.viminfo
-set statusline=%<%f\ %h%m%r%{FF()}%{FENC()}%y\ %{fugitive#statusline()}%=0x%B\ %-14.(%l,%c%V%)\ %P
+set viminfo=!,'1000,%,h,f1,n~/.cache/vim/info
+set viewdir=~/.cache/vim/view
 set fillchars=fold:\ ,stl:\ ,stlnc:\  " borders
 set tags+=~/.tags,.tags
-set nowrap
-set sidescroll=5
+
 set listchars=tab:>.,trail:_,precedes:<,extends:>,nbsp:~
-set nolist     " This and the above line make for visible whitespace.
-set mouse=     " disable mouse
-set clipboard= " don't automatically put stuff in the clipboard.
-set vb
+
+"statusline setup
+set statusline =%#UserFile#
+set statusline+=%f    " tail of the filename
+set statusline+=%(%#UserMisc#(%#UserGit#%{GITSTAT()}%#UserMisc#)%)\ 
+set statusline+=%*
+
+"modified flag
+set statusline+=%#UserNotice#
+set statusline+=%(%m\ %)
+set statusline+=%*
+
+set statusline+=%#UserWarn#
+set statusline+=%(\%{FF()}\ %)
+set statusline+=%*
+
+set statusline+=%#UserWarn#
+set statusline+=%(%{BOMB()}\ %)
+set statusline+=%*
+
+set statusline+=%#UserWarn#
+set statusline+=%(%{FENC()}\ %)
+set statusline+=%*
+
+set statusline+=%#UserFT#
+set statusline+=%(%y\ %)     "filetype
+set statusline+=%*
+
+
+set statusline+=%#UserWarn#
+set statusline+=%(%{StatuslineTabWarning()}\ %)
+set statusline+=%*
+
+"display a warning if &paste is set
+set statusline+=%#UserWarn#
+set statusline+=%(%{&paste?'[paste]':''}\ %)
+set statusline+=%*
+
+" quiet stuff
+set statusline+=%#UserMisc#
+set statusline+=%=      "left/right separator
+set statusline+=0x%B
+set statusline+=%(\ %{StatuslineCurrentHighlight()}%) "current highlight
+set statusline+=%(\ %a%)
+
+"percent through file
+set statusline+=%#UserNotice#
+set statusline+=\ %P
+set statusline+=%*
 
 let mapleader      = "\\"
 let maplocalleader = ","
@@ -103,8 +156,22 @@ let g:SuperTabDefaultCompletionType = "context"
 
 let redcode_highlight_numbers=1
 
+let g:solarized_bold = 0
+let g:solarized_underline = 0
+let g:solarized_itali = 1
+let g:solarized_visibility = "high" 
+
 set background=dark
 colorscheme solarized
+
+highlight StatusLine cterm=none ctermfg=none ctermbg=0
+
+highlight UserFile ctermfg=4 ctermbg=0
+highlight UserGit ctermfg=2 ctermbg=0
+highlight UserWarn ctermfg=9  ctermbg=0
+highlight UserMisc ctermfg=10  ctermbg=0
+highlight UserNotice ctermfg=7 ctermbg=0
+highlight UserFT    ctermfg=3 ctermbg=0
 
 " }}}
 
@@ -138,6 +205,10 @@ inoremap <Down> <C-o><C-w>j
 inoremap <Up>   <C-o><C-w>k
 inoremap <Right> <C-o><C-w>l
 
+"make <c-l> clear the highlight as well as redraw
+nnoremap <C-L> :nohls<CR><C-L>
+inoremap <C-L> <C-O>:nohls<CR>
+
 imap <C-w>h  <C-o><C-w>h
 imap <C-w>j  <C-o><C-w>j
 imap <C-w>k  <C-o><C-w>k
@@ -158,22 +229,40 @@ iab  btw by the way
 
 " FUNCTIONS {{{
 function! FF()
-    let val = "[" . &ff . "]"
-    if val != "[unix]"
-        return val
+    if &ff != "unix"
+        return "[" . &ff . "]"
+    else
+        return ""
+    endif
+endfunction
+
+function! BOMB()
+    if &bomb
+        return "[bomb]"
     else
         return ""
     endif
 endfunction
 
 function! FENC()
-    let val = "[" . &fenc . "]"
-    if val != "[utf-8]"
-        return val
+    if &fenc != "utf-8"
+        return "[" . &fenc . "]"
     else
         return ""
     endif
 endfunction
+
+function GITSTAT()
+  if !exists('b:git_dir')
+    return ''
+  endif
+  let status = ''
+  if fugitive#buffer().commit() != ''
+    let status .= ':' .fugitive#buffer().commit()[0:7]
+  endif
+  return fugitive#head(7)
+endfunction
+
 
 function! NativeTraits() range
     if match(getline(a:firstline), "has") == -1
@@ -192,6 +281,43 @@ function! NativeTraits() range
 
     exec range_prov . "sm/\\(\\w\\+\\)\\s*=>\\s*'\\(\\w\\+\\)'/\\2 => '\\1'/"
     exec range_prov . "s/provides/handles/"
+endfunction
+
+function! StatuslineCurrentHighlight()
+    let name = synIDattr(synID(line('.'),col('.'),1),'name')
+    if name == ''
+        return ''
+    else
+        return '[' . name . ']'
+    endif
+endfunction
+
+"recalculate the tab warning flag when idle and after writing
+autocmd cursorhold,bufwritepost * unlet! b:statusline_tab_warning
+
+"return '[&et]' if &et is set wrong
+"return '[mixed-indenting]' if spaces and tabs are used to indent
+"return an empty string if everything is fine
+function! StatuslineTabWarning()
+    if !exists("b:statusline_tab_warning")
+        let b:statusline_tab_warning = ''
+
+        if !&modifiable
+            return b:statusline_tab_warning
+        endif
+
+        let tabs = search('^\t', 'nw') != 0
+
+        "find spaces that arent used as alignment in the first indent column
+        let spaces = search('^ \{' . &ts . ',}[^\t]', 'nw') != 0
+
+        if tabs && spaces
+            let b:statusline_tab_warning =  '[mixed-indenting]'
+        elseif (spaces && !&et) || (tabs && &et)
+            let b:statusline_tab_warning = '[&et]'
+        endif
+    endif
+    return b:statusline_tab_warning
 endfunction
 
 " }}}
@@ -229,9 +355,13 @@ if !exists('autocmds_loaded')
     autocmd FileType gitcommit setl noet nolist
     autocmd FileType make setl noet nolist
     autocmd FileType man  setl nolist
-    autocmd BufReadPost *
-                \ if line("'\"") > 0 && line("'\"") <= line("$") |
-                \   exe "normal g`\"" |
+
+    " set nomodifiable if the file is read-only
+    autocmd BufReadPost ?* 
+                \ if &readonly |
+                \   setlocal nomodifiable |
+                \ else | 
+                \   setlocal modifiable |
                 \ endif
 endif
 " }}}
