@@ -11,6 +11,11 @@ syntax on
 filetype plugin indent on
 
 runtime! ftplugin/man.vim                  
+
+if has("*mkdir")
+    call mkdir($HOME . "/.cache/vim", "p")
+endif
+
 " }}}
 
 " OPTIONS {{{
