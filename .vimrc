@@ -23,14 +23,11 @@ set tabstop=4          " Number of spaces that a literal <Tab> in the file count
 set shiftwidth=4       " Number of spaces to use for each step of (auto)indent.
 set shiftround         " Round indent to multiple of 'shiftwidth'.
 set autoindent         " Auto indent from current line to new line.
-set copyindent         " Try to not change the indentation style.
-set preserveindent     " Ditto.
 set smarttab           " Insert shiftwidth or tabstop as appropriate.
 set ignorecase         " Ignore case
 set smartcase          " Unless I use upper-case letters.
 set showmatch          " Show matching brackets.
 set showcmd            " show (partial) command in last line.
-set nobackup           " Do not keep backups.
 set hlsearch           " Highlight searches.
 set incsearch          " Incremental search; highlight as you type.
 set secure             " shell and write commands are not allowed in "./.vimrc".
@@ -40,39 +37,47 @@ set ruler              " Show cursor position at all times.
 set laststatus=2       " Always display a status bar.
 set history=1000       " Remember last N :commands and /searches.
 set showbreak=+\       " Prefixed wrapped lines with "+ ".
-set shortmess=Ia       " Disable splash screen
+set shortmess+=I       " Disable splash screen
+set shortmess+=A       " Don't bug me about existing swapfiles
 set cpoptions+=$       " Show '$' for change operations.
 set encoding=utf-8     " Keep things internally as utf-8.
-set hidden             " allow hidden edited buffers
 set fileencoding=utf-8 " Read/Write files using utf-8.
+set hidden             " allow hidden edited buffers
 set nowrap
 set sidescroll=5       "
 set mouse=             " disable mouse
 set clipboard=         " don't automatically put stuff in the clipboard.
 set vb                 " visual bell
-set cursorline 
+set backup             " Do keep backups.
+set autowrite          " write files if they have been modified, if we use :next, :prev, etc.
+set autoread           " read in files that have changes outside of vim, if they haven't changed in vim
+set cursorline         " highlight cursor line
 set number
-
-
-
+set backspace=eol,start
+set tags+=~/.tags,.tags
+set nrformats=alpha,hex
+set fileformats=unix,dos,mac
 set viewoptions=cursor,folds,slash,unix
 set wildmode=longest,list,full " thanks nornagon!
 set wildignore=*.bak,~,*.o,*.info,*.swp,*.dvi,*.pdf,.*
-set backspace=eol,start
 set grepprg=grep\ -nH\ \ --exclude='*.svn*'\ $*
+set viewdir=~/.cache/vim/view
+
 set foldopen=tag,search,quickfix,undo,jump,mark,percent
 set viminfo=!,'1000,%,h,f1,n~/.cache/vim/info
-set viewdir=~/.cache/vim/view
 set fillchars=fold:\ ,stl:\ ,stlnc:\  " borders
-set tags+=~/.tags,.tags
 
-set listchars=tab:>.,trail:_,precedes:<,extends:>,nbsp:~
+set listchars=tab:>\ ,trail:-,extends:>,precedes:<,nbsp:+
+if &termencoding ==# 'utf-8' || &encoding ==# 'utf-8'
+    let &listchars = "tab:\u21e5 ,trail:\u2423,extends:\u21c9,precedes:\u21c7,nbsp:\u26ad"
+endif
 
-"statusline setup
+" {{{ fancy statusline 
 set statusline =%#UserFile#
-set statusline+=%f    " tail of the filename
-set statusline+=%(%#UserMisc#(%#UserGit#%{GITSTAT()}%#UserMisc#)%)\ 
-set statusline+=%*
+set statusline+=%f  " tail of the filename
+set statusline+=%#UserMisc#
+set statusline+=%((%#UserGit#%{GITSTAT()}%#UserMisc#)%)
+set statusline+=\ %*
 
 "modified flag
 set statusline+=%#UserNotice#
@@ -95,7 +100,6 @@ set statusline+=%#UserFT#
 set statusline+=%(%y\ %)     "filetype
 set statusline+=%*
 
-
 set statusline+=%#UserWarn#
 set statusline+=%(%{StatuslineTabWarning()}\ %)
 set statusline+=%*
@@ -108,15 +112,19 @@ set statusline+=%*
 " quiet stuff
 set statusline+=%#UserMisc#
 set statusline+=%=      "left/right separator
+set statusline+=%(%{StatuslineCurrentHighlight()}\ %) "current highlight
 set statusline+=0x%B
-set statusline+=%(\ %{StatuslineCurrentHighlight()}%) "current highlight
 set statusline+=%(\ %a%)
 
 "percent through file
 set statusline+=%#UserNotice#
 set statusline+=\ %P
 set statusline+=%*
+" }}}
+"
+" }}}
 
+" {{{ PLUGIN OPTIONS
 let mapleader      = "\\"
 let maplocalleader = ","
 
@@ -164,20 +172,20 @@ let redcode_highlight_numbers=1
 let g:solarized_bold = 0
 let g:solarized_underline = 0
 let g:solarized_itali = 1
-let g:solarized_visibility = "high" 
+"let g:solarized_visibility = "high" 
+" }}}
 
+" {{{ COLORS
 set background=dark
 colorscheme solarized
 
 highlight StatusLine cterm=none ctermfg=none ctermbg=0
-
 highlight UserFile ctermfg=4 ctermbg=0
 highlight UserGit ctermfg=2 ctermbg=0
 highlight UserWarn ctermfg=9  ctermbg=0
 highlight UserMisc ctermfg=10  ctermbg=0
 highlight UserNotice ctermfg=7 ctermbg=0
 highlight UserFT    ctermfg=3 ctermbg=0
-
 " }}}
 
 " MAPPINGS {{{
@@ -335,6 +343,7 @@ command -range NativeTraits :<line1>,<line2>call NativeTraits()
 " AUTO BOTS, TRANSFORM AND ROLL OUT {{{
 if !exists('autocmds_loaded')
     let autocmds_loaded=1
+    " filetypedetect {{{
     augroup filetypedetect
         autocmd BufNewFile,BufReadPost *.tt,*.ttml,*.html,*.tt2
                     \ setl ft=html syn=template
@@ -354,12 +363,16 @@ if !exists('autocmds_loaded')
                     \ setl commentstring=--%s
         autocmd BufNewFile,BufRead */.i3/config set ft=i3
     augroup END
+    " }}}
 
     autocmd FileType csv setl noet list
     autocmd FileType gitconfig setl noet nolist
     autocmd FileType gitcommit setl noet nolist
     autocmd FileType make setl noet nolist
     autocmd FileType man  setl nolist
+
+    au WinLeave * set nocursorline 
+    au WinEnter * set cursorline 
 
     " set nomodifiable if the file is read-only
     autocmd BufReadPost ?* 
