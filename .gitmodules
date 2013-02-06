@@ -34,3 +34,9 @@
 [submodule ".vim/bundle/eunuch"]
 	path = .vim/bundle/eunuch
 	url = git://github.com/tpope/vim-eunuch.git
+[submodule ".vim/bundle/nerdtree-tabs"]
+	path = .vim/bundle/nerdtree-tabs
+	url = https://github.com/jistr/vim-nerdtree-tabs.git
+[submodule ".vim/bundle/snipMate"]
+	path = .vim/bundle/snipMate
+	url = git://github.com/vim-scripts/snipMate.git

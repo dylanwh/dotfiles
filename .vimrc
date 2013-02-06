@@ -110,18 +110,14 @@ set statusline+=%(%{&paste?'[paste]':''}\ %)
 set statusline+=%*
 
 " quiet stuff
-set statusline+=%#UserMisc#
 set statusline+=%=      "left/right separator
+
+set statusline+=%#UserMisc#
 set statusline+=%(%{StatuslineCurrentHighlight()}\ %) "current highlight
 set statusline+=0x%B
 set statusline+=%(\ %a%)
 
-"percent through file
-set statusline+=%#UserNotice#
-set statusline+=\ %P
-set statusline+=%*
-" }}}
-"
+:
 " }}}
 
 " {{{ PLUGIN OPTIONS
@@ -136,16 +132,10 @@ let c_gnu=1
 let c_comment_strings=1
 
 "-- Disable the annoying paren highlighter.
-let loaded_matchparen = 1
+"let loaded_matchparen = 1
 
-let g:haddock_browser = "sensible-browser"
-
-"let g:git_branch_status_head_current=1
-"let g:git_branch_status_text="[git"
-"let g:git_branch_status_around=":]"
-
-let g:vimwiki_list = [{'path': "~/.local/Dropbox/Documents/wiki"}]
-let g:vimwiki_hl_cb_checked = 1
+let vimwiki_list = [{'path': "~/.local/Dropbox/Documents/wiki"}]
+let vimwiki_hl_cb_checked = 1
 
 "-- matches hash and array subscripts, etc.
 let perl_extended_vars = 1
@@ -160,32 +150,32 @@ let perl_include_pod = 1
 "-- different from string contents.
 let perl_string_as_statement = 1
 
-"-- enable perl folding
-"let perl_fold = 1
-
 "-- context-based supertabbing
-let g:SuperTabDefaultCompletionType = "context"
-"let g:SuperTabContextDefaultCompletionType = "<c-x><c-u>"
+let SuperTabDefaultCompletionType = "context"
 
 let redcode_highlight_numbers=1
 
-let g:solarized_bold = 0
-let g:solarized_underline = 0
-let g:solarized_itali = 1
-"let g:solarized_visibility = "high" 
+let solarized_bold = 0
+let solarized_underline = 0
+let solarized_italic = 1
+
+let snippets_dir="$HOME/.vim/snippets"
 " }}}
 
 " {{{ COLORS
 set background=dark
 colorscheme solarized
 
-highlight StatusLine cterm=none ctermfg=none ctermbg=0
-highlight UserFile ctermfg=4 ctermbg=0
-highlight UserGit ctermfg=2 ctermbg=0
-highlight UserWarn ctermfg=9  ctermbg=0
-highlight UserMisc ctermfg=10  ctermbg=0
-highlight UserNotice ctermfg=7 ctermbg=0
-highlight UserFT    ctermfg=3 ctermbg=0
+highlight StatusLine   ctermfg=7  ctermbg=0    guibg=#002b36 gui=none
+highlight StatusLine   ctermfg=10 ctermbg=0    guibg=#002b36 gui=none
+
+highlight UserFile     ctermfg=4  ctermbg=0    guifg=#268bd2 guibg=#002b36 gui=none
+highlight UserFile     ctermfg=4  ctermbg=0    guifg=#268bd2 guibg=#002b36 gui=none
+highlight UserGit      ctermfg=2  ctermbg=0    guifg=#859900 guibg=#002b36 gui=none
+highlight UserWarn     ctermfg=9  ctermbg=0    guifg=#cb4b16 guibg=#002b36 gui=none
+highlight UserMisc     ctermfg=10 ctermbg=0    guifg=#586e75 guibg=#002b36 gui=none
+highlight UserNotice   ctermfg=7  ctermbg=0    guifg=#eee8d5 guibg=#002b36 gui=none
+highlight UserFT       ctermfg=3  ctermbg=0    guifg=#b58900 guibg=#002b36 gui=none
 " }}}
 
 " MAPPINGS {{{

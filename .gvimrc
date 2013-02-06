@@ -1,2 +1,2 @@
-set guifont=Terminus\ 12
+set guifont=Consolas\ 10
 set guioptions=a
