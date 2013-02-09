@@ -298,7 +298,7 @@ if have trash; then
 fi
 
 if (( LINES > 0 )); then
-	yes '' | head -n $LINES
+	#yes '' | head -n $LINES
 fi
 
 # vim: set sw=4 ts=4 foldmethod=marker path=.,~/.zsh:

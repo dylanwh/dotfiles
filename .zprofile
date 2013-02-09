@@ -16,7 +16,7 @@ export OSTYPE="$OSTYPE"
 export LC_COLLATE=POSIX # sort in POSIX order.
 export TZ=US/Eastern
 
-path=(~/bin ~/app/urxvt/bin $path)
+path=(~/bin ~/app/*/bin(N) $path)
 perl5lib=(~/lib 'lib')
 
 case $HOST in
@@ -25,5 +25,13 @@ case $HOST in
         export LANG=en_US.UTF-8
     ;; 
 esac
+
+if have keychain; then
+	quiet='-q'
+	if [[ -o interactive ]]; then
+		quiet=''
+	fi
+	eval $(keychain $quiet --eval)
+fi
 
 # vim: set sw=4 ts=4 foldmethod=marker path=.,~/.zsh:
