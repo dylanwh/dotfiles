@@ -16,9 +16,6 @@
 [submodule ".vim/bundle/repeat"]
 	path = .vim/bundle/repeat
 	url = git://github.com/tpope/vim-repeat.git
-[submodule ".dir_colors.d"]
-	path = .dir_colors.d
-	url = git@github.com:dylanwh/dircolors-solarized.git
 [submodule ".zsh/antigen"]
 	path = .zsh/antigen
 	url = https://github.com/zsh-users/antigen.git
@@ -40,3 +37,6 @@
 [submodule ".vim/bundle/snipMate"]
 	path = .vim/bundle/snipMate
 	url = git://github.com/vim-scripts/snipMate.git
+[submodule ".config/dircolors-solarized"]
+	path = .config/dircolors-solarized
+	url = git@github.com:dylanwh/dircolors-solarized.git
