@@ -12,8 +12,14 @@ filetype plugin indent on
 
 runtime! ftplugin/man.vim                  
 
-if has("*mkdir")
-    call mkdir($HOME . "/.cache/vim", "p")
+if exists("*mkdir")
+    for dir in ["undo", "view", "backup", "swap"]
+        try
+            call mkdir($XDG_CACHE_HOME . "/vim/" . dir, "p")
+        catch /^Vim\%((\a\+)\)\=:E739/ 
+            " do nothing
+        endtry
+    endfor
 endif
 
 " }}}
@@ -38,7 +44,6 @@ set laststatus=2       " Always display a status bar.
 set history=1000       " Remember last N :commands and /searches.
 set showbreak=+\       " Prefixed wrapped lines with "+ ".
 set shortmess+=I       " Disable splash screen
-set shortmess+=A       " Don't bug me about existing swapfiles
 set cpoptions+=$       " Show '$' for change operations.
 set encoding=utf-8     " Keep things internally as utf-8.
 set fileencoding=utf-8 " Read/Write files using utf-8.
@@ -61,10 +66,14 @@ set viewoptions=cursor,folds,slash,unix
 set wildmode=longest,list,full " thanks nornagon!
 set wildignore=*.bak,~,*.o,*.info,*.swp,*.dvi,*.pdf,.*
 set grepprg=grep\ -nH\ \ --exclude='*.svn*'\ $*
-set viewdir=~/.cache/vim/view
+
+set directory=$XDG_CACHE_HOME/vim/swap//
+set backupdir=$XDG_CACHE_HOME/vim/backup//
+set undodir=$XDG_CACHE_HOME/vim/undo//
+set viewdir=$XDG_CACHE_HOME/vim/view
+set viminfo=!,'1000,%,h,f1,n$XDG_CACHE_HOME/vim/info
 
 set foldopen=tag,search,quickfix,undo,jump,mark,percent
-set viminfo=!,'1000,%,h,f1,n~/.cache/vim/info
 set fillchars=fold:\ ,stl:\ ,stlnc:\  " borders
 
 set listchars=tab:>\ ,trail:-,extends:>,precedes:<,nbsp:+
@@ -72,53 +81,7 @@ if &termencoding ==# 'utf-8' || &encoding ==# 'utf-8'
     let &listchars = "tab:\u21e5 ,trail:\u2423,extends:\u21c9,precedes:\u21c7,nbsp:\u26ad"
 endif
 
-" {{{ fancy statusline 
-set statusline =%#UserFile#
-set statusline+=%f  " tail of the filename
-set statusline+=%#UserMisc#
-set statusline+=%((%#UserGit#%{GITSTAT()}%#UserMisc#)%)
-set statusline+=\ %*
-
-"modified flag
-set statusline+=%#UserNotice#
-set statusline+=%(%m\ %)
-set statusline+=%*
-
-set statusline+=%#UserWarn#
-set statusline+=%(\%{FF()}\ %)
-set statusline+=%*
-
-set statusline+=%#UserWarn#
-set statusline+=%(%{BOMB()}\ %)
-set statusline+=%*
-
-set statusline+=%#UserWarn#
-set statusline+=%(%{FENC()}\ %)
-set statusline+=%*
-
-set statusline+=%#UserFT#
-set statusline+=%(%y\ %)     "filetype
-set statusline+=%*
-
-set statusline+=%#UserWarn#
-set statusline+=%(%{StatuslineTabWarning()}\ %)
-set statusline+=%*
-
-"display a warning if &paste is set
-set statusline+=%#UserWarn#
-set statusline+=%(%{&paste?'[paste]':''}\ %)
-set statusline+=%*
-
-" quiet stuff
-set statusline+=%=      "left/right separator
-
-set statusline+=%#UserMisc#
-set statusline+=%(%{StatuslineCurrentHighlight()}\ %) "current highlight
-set statusline+=0x%B
-set statusline+=%(\ %a%)
-
-:
-" }}}
+"}}}
 
 " {{{ PLUGIN OPTIONS
 let mapleader      = "\\"
@@ -166,16 +129,16 @@ let snippets_dir="$HOME/.vim/snippets"
 set background=dark
 colorscheme solarized
 
-highlight StatusLine   ctermfg=7  ctermbg=0    guibg=#002b36 gui=none
-highlight StatusLine   ctermfg=10 ctermbg=0    guibg=#002b36 gui=none
+" highlight StatusLine   ctermfg=7  ctermbg=0    guibg=#002b36 gui=none
+" highlight StatusLine   ctermfg=10 ctermbg=0    guibg=#002b36 gui=none
 
-highlight UserFile     ctermfg=4  ctermbg=0    guifg=#268bd2 guibg=#002b36 gui=none
-highlight UserFile     ctermfg=4  ctermbg=0    guifg=#268bd2 guibg=#002b36 gui=none
-highlight UserGit      ctermfg=2  ctermbg=0    guifg=#859900 guibg=#002b36 gui=none
-highlight UserWarn     ctermfg=9  ctermbg=0    guifg=#cb4b16 guibg=#002b36 gui=none
-highlight UserMisc     ctermfg=10 ctermbg=0    guifg=#586e75 guibg=#002b36 gui=none
-highlight UserNotice   ctermfg=7  ctermbg=0    guifg=#eee8d5 guibg=#002b36 gui=none
-highlight UserFT       ctermfg=3  ctermbg=0    guifg=#b58900 guibg=#002b36 gui=none
+" highlight UserFile     ctermfg=4  ctermbg=0    guifg=#268bd2 guibg=#002b36 gui=none
+" highlight UserFile     ctermfg=4  ctermbg=0    guifg=#268bd2 guibg=#002b36 gui=none
+" highlight UserGit      ctermfg=2  ctermbg=0    guifg=#859900 guibg=#002b36 gui=none
+" highlight UserWarn     ctermfg=9  ctermbg=0    guifg=#cb4b16 guibg=#002b36 gui=none
+" highlight UserMisc     ctermfg=10 ctermbg=0    guifg=#586e75 guibg=#002b36 gui=none
+" highlight UserNotice   ctermfg=7  ctermbg=0    guifg=#eee8d5 guibg=#002b36 gui=none
+" highlight UserFT       ctermfg=3  ctermbg=0    guifg=#b58900 guibg=#002b36 gui=none
 " }}}
 
 " MAPPINGS {{{
@@ -231,42 +194,6 @@ iab  btw by the way
 " }}}
 
 " FUNCTIONS {{{
-function! FF()
-    if &ff != "unix"
-        return "[" . &ff . "]"
-    else
-        return ""
-    endif
-endfunction
-
-function! BOMB()
-    if &bomb
-        return "[bomb]"
-    else
-        return ""
-    endif
-endfunction
-
-function! FENC()
-    if &fenc != "utf-8"
-        return "[" . &fenc . "]"
-    else
-        return ""
-    endif
-endfunction
-
-function GITSTAT()
-  if !exists('b:git_dir')
-    return ''
-  endif
-  let status = ''
-  if fugitive#buffer().commit() != ''
-    let status .= ':' .fugitive#buffer().commit()[0:7]
-  endif
-  return fugitive#head(7)
-endfunction
-
-
 function! NativeTraits() range
     if match(getline(a:firstline), "has") == -1
         throw "This does not look like a has block"
@@ -286,44 +213,7 @@ function! NativeTraits() range
     exec range_prov . "s/provides/handles/"
 endfunction
 
-function! StatuslineCurrentHighlight()
-    let name = synIDattr(synID(line('.'),col('.'),1),'name')
-    if name == ''
-        return ''
-    else
-        return '[' . name . ']'
-    endif
-endfunction
 
-"recalculate the tab warning flag when idle and after writing
-autocmd cursorhold,bufwritepost * unlet! b:statusline_tab_warning
-
-"return '[&et]' if &et is set wrong
-"return '[mixed-indenting]' if spaces and tabs are used to indent
-"return an empty string if everything is fine
-function! StatuslineTabWarning()
-    if !exists("b:statusline_tab_warning")
-        let b:statusline_tab_warning = ''
-
-        if !&modifiable
-            return b:statusline_tab_warning
-        endif
-
-        let tabs = search('^\t', 'nw') != 0
-
-        "find spaces that arent used as alignment in the first indent column
-        let spaces = search('^ \{' . &ts . ',}[^\t]', 'nw') != 0
-
-        if tabs && spaces
-            let b:statusline_tab_warning =  '[mixed-indenting]'
-        elseif (spaces && !&et) || (tabs && &et)
-            let b:statusline_tab_warning = '[&et]'
-        endif
-    endif
-    return b:statusline_tab_warning
-endfunction
-
-" }}}
 
 " COMMANDS {{{
 command MakePath silent call mkdir(expand("%:p:h"), "p")
