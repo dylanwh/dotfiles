@@ -18,6 +18,8 @@ URxvt.italicFont: [% config.fonts.0 %]
 
 URxvt.keysym.C-M-z: [% change_font("fixed") %]
 
+URxvt.perl-lib: [% ENV.XDG_CONFIG_HOME %]/urxvt/ext
+
 [% FOREACH font IN config.fonts %]
 URxvt.keysym.C-M-[% loop.count %]: [% change_font(font) %]
 [% END %]
