@@ -127,6 +127,7 @@
 .config/xmms2/medialib.db
 .config/xmms2/startup.d/
 .config/youtube-viewer/
+.config/Skype/
 .cpanm/build.log
 .cpanm/latest-build
 .cpanm/work/
@@ -143,5 +144,3 @@
 .ssh/id_rsa
 .ssh/id_rsa.pub
 .ssh/tmux.env
-.w3m/cookie
-.w3m/history
