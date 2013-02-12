@@ -1,4 +1,0 @@
-zsh : ~/.zshenv ~/.zprofile ~/.zshrc ~/.zlogin ~/.zlogout
-vim : ~/.vimrc
-X   : ~/.xinitrc ~/.Xdefaults.in ~/.xmodmap
-rem : ~/.reminders
