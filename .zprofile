@@ -20,10 +20,6 @@ export XDG_DATA_HOME=$HOME/.data
 export XDG_CONFIG_HOME=$HOME/.config
 export XDG_CACHE_HOME=$HOME/.cache
 
-declare -g ZCACHE
-ZCACHE=$XDG_CACHE_HOME
-[[ -d $ZCACHE ]] || mkdir -p $ZCACHE
-
 path=(~/bin ~/app/*/bin(N) $path)
 perl5lib=(~/lib 'lib')
 

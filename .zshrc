@@ -3,12 +3,15 @@
 # See also: ~/.zshenv ~/.zprofile [~/.zshrc] ~/.zlogin ~/.zlogout
 
 ## {{{ VARIABLES
+declare -g ZCACHE
+ZCACHE=$XDG_CACHE_HOME/zsh
+[[ -d $ZCACHE ]] || mkdir -p $ZCACHE
 
 HISTSIZE=3000
 READNULLCMD=${PAGER:-/usr/bin/pager}
 LOGCHECK=30
 SAVEHIST=3000
-HISTFILE=~/.zhistory
+HISTFILE=$ZCACHE/history
 
 
 watch=(all)
