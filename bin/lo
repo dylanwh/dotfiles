@@ -7,7 +7,8 @@ if [[ -n $profile ]]; then
 	script=$HOME/.screenlayout/$profile@$HOST.sh
 
 	if [[ -x $script ]]; then
-		exec $script
+		 $script
+		 . ~/.fehbg
 	else
 		echo "no such layout"
 	fi

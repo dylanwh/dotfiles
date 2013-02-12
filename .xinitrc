@@ -13,6 +13,8 @@ xset +fp /usr/share/fonts/local
 xset fp rehash
 
 xrdb-tt -load
+ttpp ~/.i3/config.tt > ~/.i3/config
+chmod a-w ~/.i3/config
 
 xset r rate 200 35
 

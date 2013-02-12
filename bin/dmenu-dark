@@ -1,0 +1,3 @@
+#!/bin/sh
+source ${XDG_CONFIG_HOME:-$HOME/.config}/solarized/colors.ini
+exec dmenu -nb $base03 -nf $base0 -sb $base02 -sf $yellow "$@"
