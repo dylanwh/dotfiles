@@ -10,8 +10,6 @@
 /ws
 .*
 !.config
-!.contacts
-!.dir_colors.d
 !.dmrc
 !.emacs
 !.git
@@ -144,7 +142,6 @@
 .ssh/agent-*
 .ssh/id_rsa
 .ssh/id_rsa.pub
-.ssh/known_hosts
 .ssh/tmux.env
 .w3m/cookie
 .w3m/history
