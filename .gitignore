@@ -143,4 +143,4 @@
 .ssh/agent-*
 .ssh/id_rsa
 .ssh/id_rsa.pub
-.ssh/tmux.env
+.config/i3/config
