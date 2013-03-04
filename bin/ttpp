@@ -8,7 +8,7 @@ use encoding 'utf8';
 
 my @pre_process;
 my @wrapper;
-my @include=(".");
+my @include=();
 
 my %define = (
     HOST => hostname,

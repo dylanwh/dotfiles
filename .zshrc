@@ -13,13 +13,11 @@ LOGCHECK=30
 SAVEHIST=3000
 HISTFILE=$ZCACHE/history
 
-
 watch=(all)
 fignore=(.o .hi .pyc)
 cdpath=(~ ~/code ~/Dropbox /media)
 
 export PS_PERSONALITY=linux
-export XMMS_PATH='tcp://:1985'
 
 ## }}}
 ## {{{ OPTIONS
@@ -293,11 +291,6 @@ if have xdg-user-dir; then
 	namedir pics   $(xdg-user-dir PICTURES)
 	namedir vids   $(xdg-user-dir VIDEOS)
 	namedir dl     $(xdg-user-dir DOWNLOAD)
-fi
-
-if have trash; then
-	alias rm="trash"
-	namedir trash ~/.local/share/Trash
 fi
 
 if (( LINES > 0 )); then

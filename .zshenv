@@ -2,15 +2,43 @@
 # .zshenv should not contain commands that produce output or require a tty.
 # See also: [~/.zshenv] ~/.zprofile ~/.zshrc ~/.zlogin ~/.zlogout
 
+emulate zsh
+
 declare -gxT PERL5LIB perl5lib # declare array
 declare -U path perl5lib       # remove duplicates
 
-#setopt noglobalrcs             # Do not load any config files from /etc.
-#(( SHLVL > 1 )) && return 0    # Stop here if subshell.
+if [[ -o rcs ]]; then
+	export REALNAME="Dylan William Hardison"
+	export EMAIL="dylan@hardison.net"
+	export EDITOR="vim"
+	export VISUAL="$EDITOR"
+	export BROWSER="chrome"
+	export MANPAGER='less -s'
 
-fpath=(~/.zsh/lib $fpath)
+	export HOST="${HOST/.*/}"
+	export OSTYPE="$OSTYPE"
 
-autoload perlbrew-install
-perlbrew-install ~/app/perlbrew
+	export LC_COLLATE=POSIX # sort in POSIX order.
+	export TZ=US/Eastern
+
+	export XDG_DATA_HOME=$HOME/.data
+	export XDG_CONFIG_HOME=$HOME/.config
+	export XDG_CACHE_HOME=$HOME/.cache
+
+	path=(~/bin ~/app/*/bin(N) /usr/local/bin /usr/bin /bin /usr/local/sbin /usr/sbin /sbin $path)
+	fpath=(~/.zsh/lib $fpath)
+	perl5lib=(~/lib 'lib')
+
+	export SSH_ASKPASS=$(which qt4-ssh-askpass)
+
+	export PERLBREW_HOME=$HOME/app/perlbrew
+	export PERLBREW_ROOT=$PERLBREW_HOME
+	unset PERLBREW_PATH
+
+	if which perlbrew &> /dev/null; then
+		[[ ! -d $PERLBREW_HOME ]] && perlbrew init
+		[[ -f $PERLBREW_HOME/etc/bashrc ]] && source $PERLBREW_HOME/etc/bashrc
+	fi
+fi
 
 # vim: set sw=4 ts=4 foldmethod=marker path=.,~/.zsh:

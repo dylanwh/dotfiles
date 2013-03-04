@@ -1,21 +1,22 @@
 #!/usr/bin/env zsh
 # Dylan William Hardison\'s .xsession file.
 
-# First re-exec:
 # Ensure that this script is evaluated by zsh
 [ "x$ZSH_NAME" = "x" ] && exec zsh -l $0
 
-# Second re-exec:
 # Ensure that this script evaluated as a login shell.
 [[ ! -o login ]] && exec zsh -l $0
 
 xset +fp /usr/share/fonts/local
 xset fp rehash
 
-xrdb-tt -load
-ttpp ~/.i3/config.tt > ~/.i3/config
-chmod a-w ~/.i3/config
+if ! which xrdb-tt &>/dev/null; then
+	xmessage -center "environment is broken"
+	env > ~/BROKEN-ENV.sh
+fi
 
+xrdb-tt -load
+make
 xset r rate 200 35
 
 setxkbmap -option
@@ -27,6 +28,10 @@ case $HOST in
 		syndaemon -k -i 1 -d 
 	;;
 esac
+
+if have xcalib && [[ -f $XDG_CONFIG_HOME/xcalib/$HOST.icm ]]; then
+	xcalib $XDG_CONFIG_HOME/xcalib/$HOST.icm
+fi
 
 source ~/.fehbg
 

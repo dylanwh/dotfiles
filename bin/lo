@@ -10,12 +10,11 @@ if [[ -n $profile ]]; then
 		 $script
 		 . ~/.fehbg
 	else
-		echo "no such layout"
+		echo "no such layout" >&2
 	fi
 else
-	profiles=( $HOME/.screenlayout/*.sh )
+	profiles=( $HOME/.screenlayout/*@$HOST.sh(:t:r:s/@$HOST/) )
 	for profile in $profiles; do
-		echo ${profile:t}
-	done
-
+		echo $profile
+	done | sort
 fi
