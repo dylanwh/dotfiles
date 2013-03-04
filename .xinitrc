@@ -35,4 +35,6 @@ fi
 
 source ~/.fehbg
 
+lo default
+sleep .5
 exec i3

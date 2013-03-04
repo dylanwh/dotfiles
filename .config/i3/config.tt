@@ -124,6 +124,7 @@ for_window [class="Pavucontrol"] floating enable
 for_window [class="Paprefs"] floating enable
 for_window [title="^Event Tester$"] floating enable
 for_window [window_role="^pop-up$"] floating enable
+for_window [class="Blueman-services"] floating enable
 
 assign [class="Google-chrome"] 9
 for_window [class="Google-chrome"] layout tabbed
