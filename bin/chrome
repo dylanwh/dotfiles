@@ -22,6 +22,7 @@ url=$1
 function auto_profile {
 	case $url in
 		(*iinteractive*) echo "work" ;;
+		(*adminitrack*) echo "work" ;;
 		(*t.co*) echo "home" ;;
 		(*) last_used_profile ;;
 	esac
