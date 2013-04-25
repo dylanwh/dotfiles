@@ -1,7 +1,7 @@
 "-- Pretty folding.
 setlocal foldtext=PerlFoldTextNoLines()
-setlocal textwidth=100
-setlocal equalprg=perltidy\ -pbp\ -l=100
+setlocal textwidth=120
+setlocal equalprg=perltidy\ -pbp\ -l=120
 setlocal expandtab
 setlocal isfname=@,48-57,/,.,_,+,,,#,$,%,~,=,:
 

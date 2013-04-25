@@ -198,3 +198,26 @@ snippet action
 		my ($self, $ctx) = @_;
 		return ${2};
 	}
+snippet result
+	package ${1:`substitute(matchstr(expand("%"), '^lib/\zs.*\ze\.pm'), '/', '::', 'g')`};
+	use strictures 1;
+	use base qw/DBIx::Class::Core/;
+
+	my $P = __PACKAGE__;
+
+	$P->table('${2:`tolower(substitute( expand("%:t:r"), "\\C\\v([a-z])([A-Z])", "\\1_\\2", "g"))`}');
+
+
+	$P->load_components(qw[ InflateColumn::DateTime ]);
+
+	$P->add_columns(
+		id => {
+			data_type         => 'bigint',
+			is_nullable       => 0,
+			is_auto_increment => 1,
+		},
+
+		$3
+	);
+
+	1;
