@@ -134,54 +134,45 @@ chpwd_functions+=( save_cwd )
 ## }}}
 ## {{{ ALIASES
 alias have='whence -p ls &>/dev/null'
+
+alias cdd='cd ~desk'
 alias cp='cp -i'
-alias mv='mv -i'
-alias rm='rm -i'
-alias md="mkdir -p"
-alias rd="rmdir"
+alias cpanm-test='command cpanm'
+alias cpanm='cpanm --notest'
+alias dbfs='dropbox filestatus'
+alias dbs='dropbox status'
 alias df="df -h"
+alias evince='runbg evince'
+alias find="noglob find"
 alias free="free -m"
+alias g='git'
+alias gcd='cd $(git top)'
+alias gvi=gvim
+alias help=run-help
+alias l='ls -L'
 alias la='ls -ax'
 alias ll='ls -l'
 alias lsd='ls -d *(/)'
-alias l='ls -L'
-alias vi=vim
-alias gvi=gvim
-alias vimrc="$EDITOR ~/.vimrc"
+alias md="mkdir -p"
 alias muttrc="$EDITOR ~/.mutt/muttrc"
-alias zrc='vim ~/.zshrc'
+alias mv='mv -i'
+alias nl0="tr '\n' '\0'"
+alias pd=popd
+alias pdoc=perldoc
+alias please='sudo !!'
+alias pu=pushd
+alias rd="rmdir"
+alias rm='rm -i'
+alias vi=vim
+alias vimrc="$EDITOR ~/.vimrc"
+alias xmrc='vim ~/.xmonad/xmonad.hs && xmonad --recompile && xmonad --restart'
+alias xrc='vim ~/.xinitrc'
+alias xs=cd
 alias zenv='vim ~/.zshenv' 
 alias zpro='vim ~/.zprofile'
-alias xrc='vim ~/.xinitrc'
-alias xmrc='vim ~/.xmonad/xmonad.hs && xmonad --recompile && xmonad --restart'
-alias xs=cd
+alias zrc='vim ~/.zshrc'
 alias zreload='exec env SHLVL=0 $SHELL'
-alias help=run-help
-alias pdoc=perldoc
-alias g="sr google"
-alias pd=popd
-alias pu=pushd
-alias find="noglob find"
-alias menu="vim ~/.menu"
-alias x2=nyxmms2
-alias x2go='noglob nyxmms2 jump'
-alias x2l='noglob nyxmms2 list'
-alias x2pls='nyxmms2 playlist'
-alias x2s='x2 list | grep -A10 -B10 -- "->"'
-alias cnm='cnetworkmanager'
-alias vw='vim ~docs/wiki/index.wiki'
-alias g='git'
-alias dbs='dropbox status'
-alias dbfs='dropbox filestatus'
-alias cdd='cd ~desk'
-alias evince='runbg evince'
-alias cpanm='cpanm --notest'
-alias cpanm-test='command cpanm'
-alias gcd='cd $(git top)'
-alias nl0="tr '\n' '\0'"
-alias please='sudo !!'
 
-have todo.pl    && alias t=todo.pl
 have pinfo      && alias info=pinfo
 have ack-grep   && alias ack=ack-grep
 have hub        && eval "$(hub alias -s)"
@@ -197,7 +188,6 @@ alias -g @='$( xclip -o )'
 alias -g '"@"'='"$( xclip -o )"'
 alias -g 'G'='|grep '
 
-
 alias pvc='p | vipe | c'
 alias ppc='p | publish | c'
 
@@ -211,40 +201,40 @@ alias -s rb=ruby
 alias -s hs=runhaskell
 
 if [[  ~/.zshrc -nt $ZCACHE/alias-ls || ! -f $ZCACHE/alias-ls ]]; then
-	# handle ls specially...
-	local ls_cmd=ls
-	local -a ls_args
+    # handle ls specially...
+    local ls_cmd=ls
+    local -a ls_args
 
-	if have gls; then ls_cmd=gls; fi
-	ls_args=('-Fh' '--color=auto' '--group-directories-first')
+    if have gls; then ls_cmd=gls; fi
+    ls_args=('-Fh' '--color=auto' '--group-directories-first')
 
-	while (( $#ls_args > 0 )); do
-		if $ls_cmd $ls_args ~/.zsh &> /dev/null; then
-			break
-		else
-			ls_args[-1]=()
-		fi
-	done
-	echo "alias ls=\"$ls_cmd $ls_args\"" >! $ZCACHE/alias-ls 
-	unset ls_cmd ls_args
+    while (( $#ls_args > 0 )); do
+        if $ls_cmd $ls_args ~/.zsh &> /dev/null; then
+            break
+        else
+            ls_args[-1]=()
+        fi
+    done
+    echo "alias ls=\"$ls_cmd $ls_args\"" >! $ZCACHE/alias-ls 
+    unset ls_cmd ls_args
 fi
 
 source $ZCACHE/alias-ls
 
 case $OSTYPE in
-	*gnu*)
-		# use colors on gnu systems.
-		alias grep='grep --color=auto'
-		alias egrep='egrep --color=auto'
-		alias fgrep='fgrep --color=auto'
-	;;
-	*bsd*)
-		have gdircolors && alias dircolors=gdircolors
-		if have gmake; then
-    		alias make=gmake
-    		alias bsdmake='command make'
-		fi
-	;;
+    *gnu*)
+        # use colors on gnu systems.
+        alias grep='grep --color=auto'
+        alias egrep='egrep --color=auto'
+        alias fgrep='fgrep --color=auto'
+    ;;
+    *bsd*)
+        have gdircolors && alias dircolors=gdircolors
+        if have gmake; then
+            alias make=gmake
+            alias bsdmake='command make'
+        fi
+    ;;
 esac
 
 ## }}}
@@ -257,46 +247,41 @@ zstyle ':completion:*' use-cache on
 zstyle ':completion:*' cache-path $ZCACHE
 
 if have dircolors; then
-	unset LS_COLORS
+    unset LS_COLORS
 
-	eval $(dircolors ~/.config/dircolors-solarized/dircolors.ansi-dark )
+    eval $(dircolors ~/.config/dircolors-solarized/dircolors.ansi-dark )
 
-	zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
+    zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
 fi
 
 umask  077   # Create files that are readable only by moi
 stty -ixon   # Disable the freeze-the-terminal-on-control-s thing.
 ttyctl -f    # Freeze terminal properties.
 
-namedir progfiles    ~/.wine/drive_c/Program\ Files
-namedir moonshine    ~/src/moonshine
+namedir progfiles     ~/.wine/drive_c/Program\ Files
+namedir moonshine     ~/src/moonshine
 
-namedir g2           ~/src/g2
-namedir hewitt       ~/src/hewitt
+namedir g2            ~/src/g2
+namedir hewitt        ~/src/hewitt
 namedir mar_alignment ~hewitt/hewitt-marriott-alignment
-namedir arc          ~/src/hewitt/arc
-namedir bes          ~/src/hewitt/bes
-namedir bes2010      ~bes/BES-2010
-namedir bes2011      ~bes/BES-2011
-namedir bes2011_data ~bes/BES-2011-Data
+namedir bes           ~/src/hewitt/bes
+namedir bes2010       ~bes/BES-2010
+namedir bes2011       ~bes/BES-2011
+namedir bes2011_data  ~bes/BES-2011-Data
 namedir bes2012_data  ~bes/hewitt-bes-2012-data
 namedir bes_eers      ~bes/hewitt-bes-eers
 namedir bes_setup     ~bes/hewitt-bes-setup
 namedir bes_workspace ~bes/hewitt-bes-workspace
-namedir bes_import ~bes/hewitt-bes-import
+namedir bes_import    ~bes/hewitt-bes-import
 
 if have xdg-user-dir; then
-	namedir docs   $(xdg-user-dir DOCUMENTS)
-	namedir desk   $(xdg-user-dir DESKTOP)
-	namedir pub    $(xdg-user-dir PUBLICSHARE)
-	namedir mus    $(xdg-user-dir MUSIC)
-	namedir pics   $(xdg-user-dir PICTURES)
-	namedir vids   $(xdg-user-dir VIDEOS)
-	namedir dl     $(xdg-user-dir DOWNLOAD)
-fi
-
-if (( LINES > 0 )); then
-	#yes '' | head -n $LINES
+    namedir docs   $(xdg-user-dir DOCUMENTS)
+    namedir desk   $(xdg-user-dir DESKTOP)
+    namedir pub    $(xdg-user-dir PUBLICSHARE)
+    namedir mus    $(xdg-user-dir MUSIC)
+    namedir pics   $(xdg-user-dir PICTURES)
+    namedir vids   $(xdg-user-dir VIDEOS)
+    namedir dl     $(xdg-user-dir DOWNLOAD)
 fi
 
 # vim: set sw=4 ts=4 foldmethod=marker path=.,~/.zsh:

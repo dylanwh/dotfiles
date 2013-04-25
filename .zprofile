@@ -12,12 +12,4 @@ esac
 
 source ~/.zshenv
 
-if have keychain; then
-	quiet='-q'
-	if [[ -o interactive ]]; then
-		quiet=''
-	fi
-	eval $(keychain $quiet --inherit any --eval)
-fi
-
 # vim: set sw=4 ts=4 foldmethod=marker path=.,~/.zsh:
