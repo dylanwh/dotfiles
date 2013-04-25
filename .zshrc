@@ -15,7 +15,7 @@ HISTFILE=$ZCACHE/history
 
 watch=(all)
 fignore=(.o .hi .pyc)
-cdpath=(~ ~/code ~/Dropbox /media)
+cdpath=(~ ~/src/hewitt ~/Dropbox /media)
 
 export PS_PERSONALITY=linux
 
@@ -216,7 +216,7 @@ if [[  ~/.zshrc -nt $ZCACHE/alias-ls || ! -f $ZCACHE/alias-ls ]]; then
 	local -a ls_args
 
 	if have gls; then ls_cmd=gls; fi
-	ls_args=('-Fh' '--color=auto' '--group-directories-first' '-X')
+	ls_args=('-Fh' '--color=auto' '--group-directories-first')
 
 	while (( $#ls_args > 0 )); do
 		if $ls_cmd $ls_args ~/.zsh &> /dev/null; then
@@ -272,6 +272,8 @@ namedir progfiles    ~/.wine/drive_c/Program\ Files
 namedir moonshine    ~/src/moonshine
 
 namedir g2           ~/src/g2
+namedir hewitt       ~/src/hewitt
+namedir mar_alignment ~hewitt/hewitt-marriott-alignment
 namedir arc          ~/src/hewitt/arc
 namedir bes          ~/src/hewitt/bes
 namedir bes2010      ~bes/BES-2010
