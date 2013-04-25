@@ -54,6 +54,7 @@ set mouse=             " disable mouse
 set clipboard=         " don't automatically put stuff in the clipboard.
 set vb                 " visual bell
 set backup             " Do keep backups.
+set undofile           " persistent undo
 set autowrite          " write files if they have been modified, if we use :next, :prev, etc.
 set autoread           " read in files that have changes outside of vim, if they haven't changed in vim
 set cursorline         " highlight cursor line
@@ -124,6 +125,10 @@ let solarized_italic = 1
 
 let snippets_dir="$HOME/.vim/snippets"
 " }}}
+
+
+
+
 
 " {{{ COLORS
 set background=dark
@@ -250,6 +255,7 @@ if !exists('autocmds_loaded')
     autocmd FileType gitcommit setl noet nolist
     autocmd FileType make setl noet nolist
     autocmd FileType man  setl nolist
+    autocmd FileType python setl et
 
     au WinLeave * set nocursorline 
     au WinEnter * set cursorline 
