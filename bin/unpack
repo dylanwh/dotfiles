@@ -23,10 +23,8 @@ mkdir $dir.tmp || exit 1
 
 case $ext in
     zip)
-        mkdir $dir.tmp
         unzip -q -d $dir.tmp $file ;;
     tar.*|*.tgz|*.tbz2|*.txz)
-        mkdir $dir.tmp
         tar -C $dir.tmp -xf $file  ;;
     xls)
         xls-explode $file ;;
