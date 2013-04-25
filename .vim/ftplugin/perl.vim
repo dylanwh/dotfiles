@@ -25,7 +25,6 @@ iab mx MooseX
 "inoremap { { }<C-o>3h
 "inoremap [ [ ]<C-o>3h
 
-
 command! -range=% PerlTidy <line1>,<line2>!perltidy
 
 function! TogglePerlFold()

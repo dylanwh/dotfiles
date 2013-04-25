@@ -230,7 +230,7 @@ if !exists('autocmds_loaded')
     let autocmds_loaded=1
     " filetypedetect {{{
     augroup filetypedetect
-        autocmd BufNewFile,BufReadPost *.tt,*.ttml,*.html,*.tt2
+        autocmd BufNewFile,BufReadPost *.tt,*.ttml,*.tt2,*.tmpl
                     \ setl ft=html syn=template
         autocmd BufNewFile,BufRead *.mkd,*.mdwn,*.md
                     \ setl ft=markdown ai formatoptions=tcroqn2 comments=n:>
