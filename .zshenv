@@ -29,8 +29,6 @@ if [[ -o rcs ]]; then
 	fpath=(~/.zsh/lib $fpath)
 	perl5lib=(~/lib 'lib')
 
-	export SSH_ASKPASS=$(which qt4-ssh-askpass)
-
 	export PERLBREW_HOME=$HOME/app/perlbrew
 	export PERLBREW_ROOT=$PERLBREW_HOME
 	unset PERLBREW_PATH

@@ -33,8 +33,17 @@ if have xcalib && [[ -f $XDG_CONFIG_HOME/xcalib/$HOST.icm ]]; then
 	xcalib $XDG_CONFIG_HOME/xcalib/$HOST.icm
 fi
 
+if have keychain; then
+	keys=( $( egrep -l -- '^-{5}BEGIN .* PRIVATE KEY-{5}$' .ssh/*(.) ) )
+
+	eval $(keychain --eval $keys)
+fi
+
 source ~/.fehbg
 
 lo default
 sleep .5
+
+
+
 exec i3
