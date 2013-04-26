@@ -13,11 +13,25 @@ ENSURE_DIRS = $(XDG_DATA_HOME) \
 			  $(XDG_CACHE_HOME)/vim/backup \
 			  $(XDG_CACHE_HOME)/vim/swap \
 			  $(XDG_CACHE_HOME)/vim/undo \
-			  $(XDG_CACHE_HOME)/vim/view 
+			  $(XDG_CACHE_HOME)/vim/view \
+			  $(XDG_DESKTOP_DIR) \
+			  $(XDG_DOCUMENTS_DIR) \
+			  $(XDG_DOWNLOAD_DIR) \
+			  $(XDG_MUSIC_DIR) \
+			  $(XDG_PICTURES_DIR) \
+			  $(XDG_PUBLICSHARE_DIR) \
+			  $(XDG_TEMPLATES_DIR) \
+			  $(XDG_VIDEOS_DIR)
+
+-include $(XDG_CACHE_HOME)/user-dirs.mk
+
 
 all: .config/i3/config .config/i3status/config dirs
 
 dirs: $(ENSURE_DIRS)
+
+$(XDG_CACHE_HOME)/user-dirs.mk: $(XDG_CONFIG_HOME)/user-dirs.dirs
+	sed 's/$$HOME/$$(HOME)/g; s/"//g;' $< > $@
 
 %: %.tt
 	@if [[ -f $@ ]]; then chmod u+w $@; fi
