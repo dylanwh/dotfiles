@@ -9,6 +9,7 @@ use encoding 'utf8';
 my @pre_process;
 my @wrapper;
 my @include=();
+my $output;
 
 my %define = (
     HOST => hostname,
@@ -54,8 +55,8 @@ while ( my $opt = shift @ARGV ) {
     elsif ( $opt =~ /^-include$/ ) { $feature{pre_process}->( shift @ARGV ) }
     elsif ( $opt =~ /^-U(.*)$/ )   { delete $define{ ARGVAL($1) } }
     elsif ( $opt =~ /^-I(.+)$/ )   { push @include, ARGVAL($1) }
+    elsif ( $opt =~ /^-o(.*)$/ )   { $output = ARGVAL($1) }
     elsif ( $opt =~ /^-P$/ )       { next }
-
     elsif ( $opt eq '--' ) {last}
     elsif ( $opt =~ /^-/ ) { die "Unknown option: $opt\n" }
     else                   { push @ARGV, $opt; last }
@@ -73,4 +74,4 @@ if (@ARGV) {
 
 my $template = Template->new(\%config);
 
-$template->process(\*ARGV, \%define) or die $template->error;
+$template->process(\*ARGV, \%define, $output // \*STDOUT) or die $template->error;
