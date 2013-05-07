@@ -24,7 +24,7 @@
 	url = git@github.com:dylanwh/i3-vim-syntax.git
 [submodule ".tmux/colors-solarized"]
 	path = .tmux/colors-solarized
-	url = git://github.com/dylanwh/tmux-colors-solarized.git
+	url = git@github.com:dylanwh/tmux-colors-solarized.git
 [submodule ".vim/bundle/commentary"]
 	path = .vim/bundle/commentary
 	url = git://github.com/tpope/vim-commentary.git
