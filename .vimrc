@@ -137,6 +137,7 @@ let NERDTreeShowBookmarks=1
 let NERDTreeHightlightCursorline=1
 let NERDTreeBookmarksFile=".NERDTreeBookmarks"
 
+let g:jedi#squelch_py_warning = 1
 " }}}
 
 
