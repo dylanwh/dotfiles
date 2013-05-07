@@ -1,5 +1,5 @@
 [%
-# vim: set ft=template:
+# vim: set ft=tt2:
 
 SET config = {
     fonts => [

@@ -1,4 +1,4 @@
-[%# vim: set ft=template: %]
+[%# vim: set ft=tt2: %]
 [% 
 
 DEFAULT

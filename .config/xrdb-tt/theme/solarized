@@ -1,4 +1,4 @@
-[% # vim: set ft=template fdm=marker cms=#%s:
+[% # vim: set ft=tt2 fdm=marker cms=#%s:
 
 # SOLARIZED HEX     16/8 TERMCOL  XTERM/HEX   L*A*B      RGB         HSB
 # --------- ------- ---- -------  ----------- ---------- ----------- -----------
