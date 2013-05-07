@@ -10,13 +10,13 @@ call pathogen#infect()
 syntax on
 filetype plugin indent on
 
-runtime! ftplugin/man.vim                  
+runtime! ftplugin/man.vim
 
 if exists("*mkdir")
     for dir in ["undo", "view", "backup", "swap"]
         try
             call mkdir($XDG_CACHE_HOME . "/vim/" . dir, "p")
-        catch /^Vim\%((\a\+)\)\=:E739/ 
+        catch /^Vim\%((\a\+)\)\=:E739/
             " do nothing
         endtry
     endfor
@@ -59,7 +59,7 @@ set autowrite          " write files if they have been modified, if we use :next
 set autoread           " read in files that have changes outside of vim, if they haven't changed in vim
 set cursorline         " highlight cursor line
 set number
-set backspace=eol,start
+set backspace=indent,eol,start
 set tags+=~/.tags,.tags
 set nrformats=alpha,hex
 set fileformats=unix,dos,mac
@@ -85,8 +85,8 @@ endif
 "}}}
 
 " {{{ PLUGIN OPTIONS
-let mapleader      = "\\"
-let maplocalleader = ","
+let mapleader      = "-"
+let maplocalleader = "_"
 
 "-- Highlight builtins.
 let python_highlight_all = 1
@@ -116,6 +116,10 @@ let perl_string_as_statement = 1
 
 "-- context-based supertabbing
 let SuperTabDefaultCompletionType = "context"
+let SuperTabCompletionContexts = ['s:ContextText', 's:ContextDiscover']
+let SuperTabContextTextOmniPrecedence = ['&omnifunc', '&completefunc']
+let SuperTabContextDiscoverDiscovery =
+    \ ["&completefunc:<c-x><c-u>", "&omnifunc:<c-x><c-o>"]
 
 let redcode_highlight_numbers=1
 
@@ -124,10 +128,16 @@ let solarized_underline = 0
 let solarized_italic = 1
 
 let snippets_dir="$HOME/.vim/snippets"
+
+" NERDTree config
+let NERDTreeChDirMode=2
+"let NERDTreeIgnore=['\env','\.vim$', '\~$', '\.pyc$', '\.swp$', '\.egg-info$', '^dist$', '^build$']
+"let NERDTreeSortOrder=['^__\.py$', '\/$', '*', '\.swp$', '\~$']
+let NERDTreeShowBookmarks=1
+let NERDTreeHightlightCursorline=1
+let NERDTreeBookmarksFile=".NERDTreeBookmarks"
+
 " }}}
-
-
-
 
 
 " {{{ COLORS
@@ -147,7 +157,7 @@ colorscheme solarized
 " }}}
 
 " MAPPINGS {{{
-map <F1> :tab help<CR>
+map <F1> :set spell!<BAR>set spell?<CR>
 map <F2> :nohlsearch<CR>
 map <F3> :set nu!<BAR>set nu?<CR>
 map <F4> :%s/\s\+$//<CR>
@@ -159,12 +169,13 @@ map <c-w><c-f> :FirstExplorerWindow<cr>
 map <c-w><c-b> :BottomExplorerWindow<cr>
 map Y y$
 
-noremap <Space> <PageDown>
-noremap -       <PageUp>
-
 nmap <silent><Leader>wf <Plug>VimwikiFollowWord
 nmap <silent><Leader>wb <Plug>VimwikiGoBackWord
 nmap <silent><Leader>wn <Plug>VimwikiGoBackWord
+
+nmap <Leader>t :NERDTreeToggle<cr>
+nmap <Leader>n :NERDTreeFocus<cr>
+nmap <Leader>f :NERDTreeFind<cr>
 
 nnoremap <Left> <C-w>h
 nnoremap <Down> <C-w>j
@@ -198,31 +209,8 @@ iab  nad and
 iab  btw by the way
 " }}}
 
-" FUNCTIONS {{{
-function! NativeTraits() range
-    if match(getline(a:firstline), "has") == -1
-        throw "This does not look like a has block"
-    endif
-
-    let range_has = a:firstline . "," . a:lastline
-    exec range_has . "sm/metaclass.*=>.*Collection::\\(\\w\\+\\).*,/traits => ['\\1'],/"
-
-    call cursor(a:firstline, 0)
-    let pfirst = search('provides\s*=>\s*{', "nW", a:lastline)
-
-    call cursor(pfirst, 0)
-    let plast = search('^\s*}', "nW", a:lastline)
-    let range_prov = pfirst . "," . plast
-
-    exec range_prov . "sm/\\(\\w\\+\\)\\s*=>\\s*'\\(\\w\\+\\)'/\\2 => '\\1'/"
-    exec range_prov . "s/provides/handles/"
-endfunction
-
-
-
 " COMMANDS {{{
 command MakePath silent call mkdir(expand("%:p:h"), "p")
-command -range NativeTraits :<line1>,<line2>call NativeTraits()
 " }}}
 
 " AUTO BOTS, TRANSFORM AND ROLL OUT {{{
@@ -230,8 +218,6 @@ if !exists('autocmds_loaded')
     let autocmds_loaded=1
     " filetypedetect {{{
     augroup filetypedetect
-        autocmd BufNewFile,BufReadPost *.tt,*.ttml,*.tt2,*.tmpl
-                    \ setl ft=html syn=template
         autocmd BufNewFile,BufRead *.mkd,*.mdwn,*.md
                     \ setl ft=markdown ai formatoptions=tcroqn2 comments=n:>
         autocmd BufNewFile,BufRead *.rem
@@ -256,15 +242,16 @@ if !exists('autocmds_loaded')
     autocmd FileType make setl noet nolist
     autocmd FileType man  setl nolist
     autocmd FileType python setl et
+    autocmd FileType yaml   setl et
 
-    au WinLeave * set nocursorline 
-    au WinEnter * set cursorline 
+    au WinLeave * set nocursorline
+    au WinEnter * set cursorline
 
     " set nomodifiable if the file is read-only
-    autocmd BufReadPost ?* 
+    autocmd BufReadPost ?*
                 \ if &readonly |
                 \   setlocal nomodifiable |
-                \ else | 
+                \ else |
                 \   setlocal modifiable |
                 \ endif
 endif
