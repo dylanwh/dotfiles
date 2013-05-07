@@ -185,6 +185,7 @@ client.urgent           [% base00 %] [% red %] [% base2 %]
 bar {
     tray_output primary
     status_command i3status
+    position top
 
     colors {
         # base02

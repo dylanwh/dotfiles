@@ -171,6 +171,7 @@ alias xs=cd
 alias zenv='vim ~/.zshenv' 
 alias zpro='vim ~/.zprofile'
 alias zrc='vim ~/.zshrc'
+alias i3rc='vim ~/.config/i3/config.tt'
 alias zreload='exec env SHLVL=0 $SHELL'
 
 have pinfo      && alias info=pinfo

@@ -41,9 +41,9 @@ fi
 
 source ~/.fehbg
 
+start-pulseaudio-x11 
+
 lo default
 sleep .5
 
-
-
-exec i3
+i3
