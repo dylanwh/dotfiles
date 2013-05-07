@@ -22,6 +22,9 @@ map <silent> z; :silent call TogglePerlFold()<CR>
 map <silent> z/ :silent setlocal foldtext<<CR>
 iab mx MooseX
 
+let tlist_perl_settings='perl;u:use;p:package;r:role;e:extends;c:constant;a:attribute;s:subroutine;l:label'
+"let Tlist_Show_One_File = 1
+
 "inoremap { { }<C-o>3h
 "inoremap [ [ ]<C-o>3h
 
