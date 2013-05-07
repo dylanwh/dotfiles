@@ -49,3 +49,9 @@
 [submodule ".vim/bundle/play2vim"]
 	path = .vim/bundle/play2vim
 	url = git://github.com/gre/play2vim.git
+[submodule ".vim/bundle/jedi-vim"]
+	path = .vim/bundle/jedi-vim
+	url = git://github.com/davidhalter/jedi-vim.git
+[submodule ".vim/bundle/vim-perl"]
+	path = .vim/bundle/vim-perl
+	url = git://github.com/vim-perl/vim-perl.git
