@@ -63,6 +63,14 @@ while ( my $opt = shift @ARGV ) {
 }
 
 $define{HOST} = (split(/\./, $define{HOST}))[0];
+$define{have} = sub {
+    my ($prog, $opt) = @_;
+    my @path = split(/:/, $opt->{path} // $ENV{PATH});
+    for my $dir (@path) {
+        return 1 if -x "$dir/$prog";
+    }
+    return 0;
+};
 
 if (@ARGV) {
     for my $file (@ARGV) {

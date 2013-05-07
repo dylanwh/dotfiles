@@ -1,4 +1,4 @@
-.PHONY: all dirs
+.PHONY: all dirs clean
 
 XDG_DATA_HOME   ?= $(HOME)/.data
 XDG_CONFIG_HOME ?= $(HOME)/.config
@@ -40,3 +40,6 @@ $(XDG_CACHE_HOME)/user-dirs.mk: $(XDG_CONFIG_HOME)/user-dirs.dirs
 
 $(ENSURE_DIRS):
 	mkdir -p $@
+	
+clean:
+	rm -f .config/i3/config .config/i3status/config
