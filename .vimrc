@@ -5,7 +5,6 @@
 
 runtime bundle/pathogen/autoload/pathogen.vim
 call pathogen#infect()
-"call pathogen#runtime_append_all_bundles()
 
 syntax on
 filetype plugin indent on
@@ -30,6 +29,7 @@ set shiftwidth=4       " Number of spaces to use for each step of (auto)indent.
 set shiftround         " Round indent to multiple of 'shiftwidth'.
 set autoindent         " Auto indent from current line to new line.
 set smarttab           " Insert shiftwidth or tabstop as appropriate.
+set expandtab          " expand tabs
 set ignorecase         " Ignore case
 set smartcase          " Unless I use upper-case letters.
 set showmatch          " Show matching brackets.
@@ -66,7 +66,7 @@ set fileformats=unix,dos,mac
 set viewoptions=cursor,folds,slash,unix
 set wildmode=longest,list,full " thanks nornagon!
 set wildignore=*.bak,~,*.o,*.info,*.swp,*.dvi,*.pdf,.*
-set grepprg=grep\ -nH\ \ --exclude='*.svn*'\ $*
+set grepprg=ag
 
 set directory=$XDG_CACHE_HOME/vim/swap//
 set backupdir=$XDG_CACHE_HOME/vim/backup//
@@ -138,8 +138,14 @@ let NERDTreeHightlightCursorline=1
 let NERDTreeBookmarksFile=".NERDTreeBookmarks"
 
 let g:jedi#squelch_py_warning = 1
-" }}}
 
+let g:ctrlp_z_nerdtree = 1
+
+let g:ctrlp_extensions = ['Z', 'F']
+
+let g:ctrlp_custom_ignore = '\v[\/]\.(git|hg|svn)$'
+
+" }}}
 
 " {{{ COLORS
 set background=dark
@@ -159,9 +165,9 @@ colorscheme solarized
 
 " MAPPINGS {{{
 map <F1> :set spell!<BAR>set spell?<CR>
-map <F2> :nohlsearch<CR>
+map <F2> :set cul!<BAR>set cul?<CR>
 map <F3> :set nu!<BAR>set nu?<CR>
-map <F4> :%s/\s\+$//<CR>
+map <F4> :set nonu nocul<BAR>set nu? cul?<CR>
 
 map gn <C-o>:tab new<CR>
 map K \K
@@ -177,6 +183,12 @@ nmap <silent><Leader>wn <Plug>VimwikiGoBackWord
 nmap <Leader>t :NERDTreeToggle<cr>
 nmap <Leader>n :NERDTreeFocus<cr>
 nmap <Leader>f :NERDTreeFind<cr>
+nmap <Leader>s  :shell<cr>
+nmap _d         :CtrlPZ<cr>
+nmap _e         :CtrlPF<cr>
+nmap sf         :CtrlPF<cr>
+nmap sz         :CtrlPZ<cr>
+
 
 nnoremap <Left> <C-w>h
 nnoremap <Down> <C-w>j
@@ -233,7 +245,8 @@ if !exists('autocmds_loaded')
         autocmd BufNewFile,BufRead *.lua setl foldmethod=marker |
                     \ setl comments=sO:-\ -,mO:-\ \ ,exO:]],s1:--[[,mb:-,ex:]],:-- |
                     \ setl commentstring=--%s
-        autocmd BufNewFile,BufRead */.i3/config set ft=i3
+        autocmd BufNewFile,BufRead */.i3/config* set ft=i3
+        autocmd BufNewFile,BufRead */.config/i3/config* set ft=i3
     augroup END
     " }}}
 
