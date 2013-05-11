@@ -1,0 +1,4 @@
+#!/bin/zsh
+
+echo -n "" > ~/.techniclauncher/rtemp
+optirun technic-launcher
