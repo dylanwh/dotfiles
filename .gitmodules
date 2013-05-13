@@ -43,9 +43,6 @@
 [submodule ".vim/bundle/html5"]
 	path = .vim/bundle/html5
 	url = git://github.com/othree/html5.vim.git
-[submodule ".vim/bundle/vim-scala"]
-	path = .vim/bundle/vim-scala
-	url = git://github.com/derekwyatt/vim-scala.git
 [submodule ".vim/bundle/play2vim"]
 	path = .vim/bundle/play2vim
 	url = git://github.com/gre/play2vim.git
@@ -64,3 +61,6 @@
 [submodule ".vim/bundle/ctrlp.vim"]
 	path = .vim/bundle/ctrlp.vim
 	url = https://github.com/kien/ctrlp.vim.git
+[submodule ".vim/bundle/scala"]
+	path = .vim/bundle/scala
+	url = git://github.com/derekwyatt/vim-scala.git
