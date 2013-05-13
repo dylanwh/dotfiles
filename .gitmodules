@@ -49,9 +49,6 @@
 [submodule ".vim/bundle/jedi-vim"]
 	path = .vim/bundle/jedi-vim
 	url = git://github.com/davidhalter/jedi-vim.git
-[submodule ".vim/bundle/vim-perl"]
-	path = .vim/bundle/vim-perl
-	url = git://github.com/vim-perl/vim-perl.git
 [submodule ".vim/bundle/ag"]
 	path = .vim/bundle/ag
 	url = git://github.com/epmatsw/ag.vim.git
@@ -64,3 +61,6 @@
 [submodule ".vim/bundle/scala"]
 	path = .vim/bundle/scala
 	url = git://github.com/derekwyatt/vim-scala.git
+[submodule ".vim/bundle/perl"]
+	path = .vim/bundle/perl
+	url = git://github.com/vim-perl/vim-perl.git
