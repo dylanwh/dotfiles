@@ -64,3 +64,6 @@
 [submodule ".vim/bundle/jedi"]
 	path = .vim/bundle/jedi
 	url = git://github.com/davidhalter/jedi-vim.git
+[submodule ".vim/bundle/project"]
+	path = .vim/bundle/project
+	url = git://github.com/amiorin/vim-project.git

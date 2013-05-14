@@ -44,6 +44,8 @@ set laststatus=2       " Always display a status bar.
 set history=1000       " Remember last N :commands and /searches.
 set showbreak=+\       " Prefixed wrapped lines with "+ ".
 set shortmess+=I       " Disable splash screen
+set shortmess+=T       " Truncate messages
+set shortmess+=s       " Disable the "search hit bottom/top" messages
 set cpoptions+=$       " Show '$' for change operations.
 set encoding=utf-8     " Keep things internally as utf-8.
 set fileencoding=utf-8 " Read/Write files using utf-8.
@@ -184,8 +186,8 @@ nmap <Leader>t :NERDTreeToggle<cr>
 nmap <Leader>n :NERDTreeFocus<cr>
 nmap <Leader>f :NERDTreeFind<cr>
 nmap <Leader>s  :shell<cr>
-nmap _d         :CtrlPZ<cr>
-nmap _e         :CtrlPF<cr>
+nmap <Leader>e  :CtrlPF<cr>
+nmap <Leader>d  :CtrlPZ<cr>
 nmap sf         :CtrlPF<cr>
 nmap sz         :CtrlPZ<cr>
 
@@ -270,3 +272,7 @@ if !exists('autocmds_loaded')
                 \ endif
 endif
 " }}}
+
+"if filereadable(expand("~/.vimrc.local"))
+  source ~/.vimrc.local
+"ndif
