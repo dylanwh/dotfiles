@@ -1,7 +1,7 @@
 " Dylan William Hardison's .vimrc file.
 " vim: set fdm=marker expandtab:
 
-" INIT {{{
+" INIT {{{1
 
 runtime bundle/pathogen/autoload/pathogen.vim
 call pathogen#infect()
@@ -32,7 +32,7 @@ endfor
 " }}}
 " }}}
 
-" OPTIONS {{{
+" OPTIONS {{{1
 set tabstop=4          " Number of spaces that a literal <Tab> in the file counts for.
 set shiftwidth=4       " Number of spaces to use for each step of (auto)indent.
 set shiftround         " Round indent to multiple of 'shiftwidth'.
@@ -51,7 +51,6 @@ set modeline           " Allow modelines.
 set ruler              " Show cursor position at all times.
 set laststatus=2       " Always display a status bar.
 set history=1000       " Remember last N :commands and /searches.
-set showbreak=+\       " Prefixed wrapped lines with "+ ".
 set shortmess+=I       " Disable splash screen
 set shortmess+=T       " Truncate messages
 set shortmess+=s       " Disable the "search hit bottom/top" messages
@@ -59,9 +58,12 @@ set cpoptions+=$       " Show '$' for change operations.
 set encoding=utf-8     " Keep things internally as utf-8.
 set fileencoding=utf-8 " Read/Write files using utf-8.
 set hidden             " allow hidden edited buffers
-set nowrap
-set sidescroll=5       "
-set mouse=             " disable mouse
+set wrap               " wrap lines
+set linebreak          " break on words
+set number             " number lines. If this is turned off, showbreak should be turned on.
+set sidescroll=1       " when 'nowrap' is set, this line and the next prevent the cursor from ever reaching the prcededing char.
+set sidescrolloff=1    " see above
+set scrolloff=5        " always show 5 lines of context when scrolling j/k
 set clipboard=         " don't automatically put stuff in the clipboard.
 set vb                 " visual bell
 set backup             " Do keep backups.
@@ -69,7 +71,6 @@ set undofile           " persistent undo
 set autowrite          " write files if they have been modified, if we use :next, :prev, etc.
 set autoread           " read in files that have changes outside of vim, if they haven't changed in vim
 set cursorline         " highlight cursor line
-set number
 set backspace=indent,eol,start
 set tags+=~/.tags,.tags
 set nrformats=alpha,hex
@@ -95,9 +96,9 @@ endif
 
 "}}}
 
-" {{{ PLUGIN OPTIONS
-let mapleader      = "-"
-let maplocalleader = "_"
+" PLUGIN OPTIONS {{{1
+let mapleader      = "\\"
+let maplocalleader = "-"
 
 "-- Highlight builtins.
 let python_highlight_all = 1
@@ -158,7 +159,7 @@ let g:ctrlp_custom_ignore = '\v[\/]\.(git|hg|svn)$'
 
 " }}}
 
-" {{{ COLORS
+" COLORS {{{1
 set background=dark
 colorscheme solarized
 
@@ -174,7 +175,7 @@ colorscheme solarized
 " highlight UserFT       ctermfg=3  ctermbg=0    guifg=#b58900 guibg=#002b36 gui=none
 " }}}
 
-" MAPPINGS {{{
+" MAPPINGS {{{1
 map <F1> :set spell!<BAR>set spell?<CR>
 map <F2> :set cul!<BAR>set cul?<CR>
 map <F3> :set nu!<BAR>set nu?<CR>
@@ -224,7 +225,7 @@ imap <C-w>\| <C-o><C-w>\|
 imap <C-w>=  <C-o><C-w>=
 " }}}
 
-" ABBREVS {{{
+" ABBREVS {{{1
 iab  dwh Dylan William Hardison
 iab <expr> dmail $EMAIL
 iab  teh the
@@ -233,14 +234,14 @@ iab  nad and
 iab  btw by the way
 " }}}
 
-" COMMANDS {{{
-command MakePath silent call mkdir(expand("%:p:h"), "p")
+" COMMANDS {{{1
+command! MakePath silent call mkdir(expand("%:p:h"), "p")
 " }}}
 
-" AUTO BOTS, TRANSFORM AND ROLL OUT {{{
+" AUTO BOTS, TRANSFORM AND ROLL OUT {{{1
 if !exists('autocmds_loaded')
     let autocmds_loaded=1
-    " filetypedetect {{{
+    " filetypedetect {{{2
     augroup filetypedetect
         autocmd BufNewFile,BufRead *.mkd,*.mdwn,*.md
                     \ setl ft=markdown ai formatoptions=tcroqn2 comments=n:>
