@@ -64,6 +64,7 @@ set number             " number lines. If this is turned off, showbreak should b
 set sidescroll=1       " when 'nowrap' is set, this line and the next prevent the cursor from ever reaching the prcededing char.
 set sidescrolloff=1    " see above
 set scrolloff=5        " always show 5 lines of context when scrolling j/k
+set mouse=a            " enable mouse
 set clipboard=         " don't automatically put stuff in the clipboard.
 set vb                 " visual bell
 set backup             " Do keep backups.
@@ -72,7 +73,7 @@ set autowrite          " write files if they have been modified, if we use :next
 set autoread           " read in files that have changes outside of vim, if they haven't changed in vim
 set cursorline         " highlight cursor line
 set backspace=indent,eol,start
-set tags+=~/.tags,.tags
+set tags+=~/.tags
 set nrformats=alpha,hex
 set fileformats=unix,dos,mac
 set viewoptions=cursor,folds,slash,unix
@@ -126,12 +127,14 @@ let perl_include_pod = 1
 "-- different from string contents.
 let perl_string_as_statement = 1
 
+let perl_fold = 1
+
 "-- context-based supertabbing
 let SuperTabDefaultCompletionType = "context"
-let SuperTabCompletionContexts = ['s:ContextText', 's:ContextDiscover']
-let SuperTabContextTextOmniPrecedence = ['&omnifunc', '&completefunc']
-let SuperTabContextDiscoverDiscovery =
-    \ ["&completefunc:<c-x><c-u>", "&omnifunc:<c-x><c-o>"]
+" let SuperTabCompletionContexts = ['s:ContextText', 's:ContextDiscover']
+" let SuperTabContextTextOmniPrecedence = ['&omnifunc', '&completefunc']
+" let SuperTabContextDiscoverDiscovery =
+"     \ ["&completefunc:<c-x><c-u>", "&omnifunc:<c-x><c-o>"]
 
 let redcode_highlight_numbers=1
 
@@ -212,7 +215,7 @@ inoremap <Down> <C-o><C-w>j
 inoremap <Up>   <C-o><C-w>k
 inoremap <Right> <C-o><C-w>l
 
-"make <c-l> clear the highlight as well as redraw
+" make <c-l> clear the highlight as well as redraw
 nnoremap <C-L> :nohls<CR><C-L>
 inoremap <C-L> <C-O>:nohls<CR>
 
@@ -283,6 +286,6 @@ if !exists('autocmds_loaded')
 endif
 " }}}
 
-"if filereadable(expand("~/.vimrc.local"))
+if filereadable(expand("~/.vimrc.local", 1))
   source ~/.vimrc.local
-"ndif
+endif
