@@ -22,7 +22,7 @@ fi
 mkdir $dir.tmp || exit 1
 
 case $ext in
-    zip)
+    zip|jar|war)
         unzip -q -d $dir.tmp $file ;;
     tar.*|*.tgz|*.tbz2|*.txz)
         tar -C $dir.tmp -xf $file  ;;
