@@ -11,16 +11,25 @@ filetype plugin indent on
 
 runtime! ftplugin/man.vim
 
-if exists("*mkdir")
-    for dir in ["undo", "view", "backup", "swap"]
+" mkdir "$XDG_CACHE_HOME/vim/*" {{{2
+if !$XDG_CACHE_HOME
+    let $XDG_CACHE_HOME=$HOME . "/.cache"
+endif
+
+for dir in ["undo", "view", "backup", "swap"]
+    let path = $XDG_CACHE_HOME . "/vim/" . dir
+    if exists("*mkdir")
         try
-            call mkdir($XDG_CACHE_HOME . "/vim/" . dir, "p")
+            call mkdir(path, "p")
         catch /^Vim\%((\a\+)\)\=:E739/
             " do nothing
         endtry
-    endfor
-endif
-
+    else
+        let cmd = "mkdir -p " . shellescape(path)
+        call system(cmd)
+    endif
+endfor
+" }}}
 " }}}
 
 " OPTIONS {{{
