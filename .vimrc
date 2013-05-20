@@ -1,8 +1,7 @@
 " Dylan William Hardison's .vimrc file.
-" vim: set fdm=marker expandtab:
+" vim: set fdm=marker:
 
 " INIT {{{1
-
 runtime bundle/pathogen/autoload/pathogen.vim
 call pathogen#infect()
 
@@ -10,82 +9,71 @@ syntax on
 filetype plugin indent on
 
 runtime! ftplugin/man.vim
-
-" mkdir "$XDG_CACHE_HOME/vim/*" {{{2
-if !$XDG_CACHE_HOME
-    let $XDG_CACHE_HOME=$HOME . "/.cache"
-endif
-
-for dir in ["undo", "view", "backup", "swap"]
-    let path = $XDG_CACHE_HOME . "/vim/" . dir
-    if exists("*mkdir")
-        try
-            call mkdir(path, "p")
-        catch /^Vim\%((\a\+)\)\=:E739/
-            " do nothing
-        endtry
-    else
-        let cmd = "mkdir -p " . shellescape(path)
-        call system(cmd)
-    endif
-endfor
-" }}}
 " }}}
 
 " OPTIONS {{{1
-set tabstop=4          " Number of spaces that a literal <Tab> in the file counts for.
-set shiftwidth=4       " Number of spaces to use for each step of (auto)indent.
-set shiftround         " Round indent to multiple of 'shiftwidth'.
-set autoindent         " Auto indent from current line to new line.
-set smarttab           " Insert shiftwidth or tabstop as appropriate.
-set expandtab          " expand tabs
-set ignorecase         " Ignore case
-set smartcase          " Unless I use upper-case letters.
-set showmatch          " Show matching brackets.
-set showcmd            " show (partial) command in last line.
-set hlsearch           " Highlight searches.
-set incsearch          " Incremental search; highlight as you type.
-set secure             " shell and write commands are not allowed in "./.vimrc".
-set exrc               " Read .vimrc from current dir (off)
-set modeline           " Allow modelines.
-set ruler              " Show cursor position at all times.
-set laststatus=2       " Always display a status bar.
-set history=1000       " Remember last N :commands and /searches.
-set shortmess+=I       " Disable splash screen
-set shortmess+=T       " Truncate messages
-set shortmess+=s       " Disable the "search hit bottom/top" messages
-set cpoptions+=$       " Show '$' for change operations.
-set encoding=utf-8     " Keep things internally as utf-8.
-set fileencoding=utf-8 " Read/Write files using utf-8.
-set hidden             " allow hidden edited buffers
-set wrap               " wrap lines
-set linebreak          " break on words
-set number             " number lines. If this is turned off, showbreak should be turned on.
-set sidescroll=1       " when 'nowrap' is set, this line and the next prevent the cursor from ever reaching the prcededing char.
-set sidescrolloff=1    " see above
-set scrolloff=5        " always show 5 lines of context when scrolling j/k
-set mouse=a            " enable mouse
-set clipboard=         " don't automatically put stuff in the clipboard.
-set vb                 " visual bell
-set backup             " Do keep backups.
-set undofile           " persistent undo
-set autowrite          " write files if they have been modified, if we use :next, :prev, etc.
-set autoread           " read in files that have changes outside of vim, if they haven't changed in vim
-set cursorline         " highlight cursor line
-set backspace=indent,eol,start
-set tags+=~/.tags
-set nrformats=alpha,hex
-set fileformats=unix,dos,mac
-set viewoptions=cursor,folds,slash,unix
-set wildmode=longest,list,full " thanks nornagon!
-set wildignore=*.bak,~,*.o,*.info,*.swp,*.dvi,*.pdf,.*
-set grepprg=ag
+set tabstop=4              " number of spaces that a literal <Tab> in the file counts for.
+set shiftwidth=4           " number of spaces to use for each step of (auto)indent.
+set shiftround             " round indent to multiple of 'shiftwidth'.
+set autoindent             " auto indent from current line to new line.
+set smarttab               " insert shiftwidth or tabstop as appropriate.
+set expandtab              " expand tabs
+set ignorecase             " ignore case
+set smartcase              " unless I use upper-case letters.
+set hlsearch               " highlight searches.
+set incsearch              " incremental search; highlight as you type.
+set showmatch              " jump to matching brackets.
+set showcmd                " show (partial) command in last line.
+set secure                 " shell and write commands are not allowed in "./.vimrc" or modelines
+set exrc                   " read .vimrc from current dir
+set modeline               " allow modelines.
+set ruler                  " use the ruler when statusline is off.
+set laststatus=2           " always display a status bar.
+set number                 " show line numbers.
+set nocursorline           " highlight cursor line
+set history=1000           " remember last N :commands and /searches.
+set shortmess+=I           " disable splash screen
+set shortmess+=T           " truncate messages
+set shortmess+=s           " disable the "search hit bottom/top" messages
+set cpoptions+=$           " show '$' for change operations.
+set encoding=utf-8         " keep things internally as utf-8.
+set fileencoding=utf-8     " read/Write files using utf-8.
+set wrap                   " wrap lines
+set linebreak              " break on words
+set sidescroll=1           " when 'nowrap' is set, this line and the next prevent the cursor from ever reaching the prcededing char.
+set sidescrolloff=1        " see above
+set scrolloff=5            " always show 5 lines of context when scrolling j/k
+set mouse=a                " enable mouse
+set cb=autoselectplus      " don't automatically put stuff in the clipboard.
+set visualbell             " visual bell
+set backup                 " do keep backups.
+set undofile               " persistent undo
+set hidden                 " allow hidden edited buffers
+set autowrite              " write files if they have been modified, if we use :next, :prev, etc.
+set autoread               " read in files that have changes outside of vim, if they haven't changed in vim
+set bs=indent,eol,start    " backspace over identation, end-of-line, and start-of-line.
+set tags+=~/.tags          " use a global tags file in $HOME
+set nrformats=alpha,hex    " allow vim to increment letters and hex numbers with Ctrl-A and Ctrl-X
+set viewoptions+=unix      " view files use unix EOL, even on Windows.
+set wim=longest,list,full  " thanks nornagon!
+set grepprg=ag             " use ag for grep
+set viminfo='1000          " store last 1000 marks
+set viminfo+=!             " save any variables that begin with a capital letter to viminfo
+set viminfo+=%             " save and restore buffer list
+set viminfo+=h             " nohlsearch previous search pattern when vim starts.
+set viminfo+=f1            " store all file marks
+set viminfo+=r/tmp         " no viminfo for /tmp/*
+set viminfo+=r/mnt         " ...
+set viminfo+=r/media       " ...
 
-set directory=$XDG_CACHE_HOME/vim/swap//
-set backupdir=$XDG_CACHE_HOME/vim/backup//
-set undodir=$XDG_CACHE_HOME/vim/undo//
-set viewdir=$XDG_CACHE_HOME/vim/view
-set viminfo=!,'1000,%,h,f1,n$XDG_CACHE_HOME/vim/info
+" Ignore these filenames during enhanced command line completion.
+set wildignore+=*.aux,*.out,*.toc " LaTeX intermediate files
+set wildignore+=*.jpg,*.bmp,*.gif " binary images
+set wildignore+=*.luac " Lua byte code
+set wildignore+=*.o,*.obj,*.exe,*.dll,*.manifest,*.class " compiled object files
+set wildignore+=*.pyc " Python byte code
+set wildignore+=*.spl " compiled spelling word lists
+set wildignore+=*.sw? " Vim swap files
 
 set foldopen=tag,search,quickfix,undo,jump,mark,percent
 set fillchars=fold:\ ,stl:\ ,stlnc:\  " borders
@@ -184,11 +172,7 @@ map <F2> :set cul!<BAR>set cul?<CR>
 map <F3> :set nu!<BAR>set nu?<CR>
 map <F4> :set nonu nocul<BAR>set nu? cul?<CR>
 
-map gn <C-o>:tab new<CR>
 map K \K
-map <c-w><c-t> :WMToggle<cr>
-map <c-w><c-f> :FirstExplorerWindow<cr>
-map <c-w><c-b> :BottomExplorerWindow<cr>
 map Y y$
 
 nmap <silent><Leader>wf <Plug>VimwikiFollowWord
