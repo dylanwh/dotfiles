@@ -1,8 +1,8 @@
 "          FILE: restore_view.vim
 "      Language: vim script
-"    Maintainer: Yichao Zhou (broken.zhou AT gmail dot com)
+"    Maintainer: Dylan William Hardison <dylan@hardison.net>
 "       Created: 2012-02-27 16:12:12
-" Last Modified: 2012 Apr 18 14:06:11
+" Last Modified: 2013 May 20 13:52:48
 "   Description: 
 "       This is a simple script to autosave cursor position and fold
 "       information using vim's mkview.  Although you can easily do this job by
@@ -29,22 +29,21 @@
 if exists("g:loaded_restore_view")
     finish
 endif
+
 let g:loaded_restore_view = 1
 
-
-if !exists("g:skipview_files")
-    let g:skipview_files = []
+if !exists("g:restore_view_ignore")
+    let g:restore_view_ignore = [ "^/tmp", ".git/COMMIT_EDITMSG$" ]
 endif
 
-function! MakeViewCheck()
+function! RestoreViewAllowed()
+    if empty(expand("%")) | return 0 | endif
     if has('quickfix') && &buftype =~ 'nofile' | return 0 | endif
     if &modifiable == 0 | return 0 | endif
-    if len($TEMP) && expand('%:p:h') == $TEMP | return 0 | endif
-    if len($TMP) && expand('%:p:h') == $TMP | return 0 | endif
 
-    let file_name = expand('%:p')
-    for ifiles in g:skipview_files
-        if file_name =~ ifiles
+    let path = expand('%:p')
+    for regexp in g:restore_view_ignore
+        if path =~# regexp
             return 0
         endif
     endfor
@@ -52,9 +51,8 @@ function! MakeViewCheck()
     return 1
 endfunction
 
-augroup AutoView
+augroup RestoreView
     autocmd!
-    " Autosave & Load Views.
-    autocmd BufWritePost,WinLeave,BufWinLeave ?* if MakeViewCheck() == 1 | mkview | endif
-    autocmd BufWinEnter ?* if MakeViewCheck() == 1 | silent loadview | endif
+    autocmd BufWritePost,WinLeave,BufWinLeave ?* if RestoreViewAllowed() == 1 | mkview | endif
+    autocmd BufWinEnter ?* if RestoreViewAllowed() == 1 | silent loadview | endif
 augroup END
