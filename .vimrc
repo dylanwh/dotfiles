@@ -55,6 +55,7 @@ set bs=indent,eol,start    " backspace over identation, end-of-line, and start-o
 set tags+=~/.tags          " use a global tags file in $HOME
 set nrformats=alpha,hex    " allow vim to increment letters and hex numbers with Ctrl-A and Ctrl-X
 set viewoptions+=unix      " view files use unix EOL, even on Windows.
+set viewoptions-=options   " options in views can cause unexpected behavior.
 set wim=longest,list,full  " thanks nornagon!
 set grepprg=ag             " use ag for grep
 set viminfo='1000          " store last 1000 marks
@@ -171,6 +172,7 @@ map <F1> :set spell!<BAR>set spell?<CR>
 map <F2> :set cul!<BAR>set cul?<CR>
 map <F3> :set nu!<BAR>set nu?<CR>
 map <F4> :set nonu nocul<BAR>set nu? cul?<CR>
+map <F5> :Welcome<CR>
 
 map K \K
 map Y y$
@@ -256,9 +258,21 @@ if !exists('autocmds_loaded')
     autocmd FileType man  setl nolist
     autocmd FileType python setl et
     autocmd FileType yaml   setl et
+    autocmd FileType lua setl foldmethod=marker |
+                \ setl comments=sO:-\ -,mO:-\ \ ,exO:]],s1:--[[,mb:-,ex:]],:-- |
+                \ setl commentstring=--%s
 
-    au WinLeave * set nocursorline
-    au WinEnter * set cursorline
+    
+    au WinLeave * if &g:cursorline | 
+                \ setl nocursorline | 
+                \ endif
+
+    au WinEnter * if &g:cursorline | 
+                \ setl cursorline   | 
+                \ endif
+
+    au BufWritePre /tmp/*,*/.git/COMMIT_EDITMSG setlocal noundofile
+    au BufWritePost,FileWritePost */.config/i3/config.tt make -C $HOME .config/i3/config
 
     " set nomodifiable if the file is read-only
     autocmd BufReadPost ?*
