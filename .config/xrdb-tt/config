@@ -3,9 +3,10 @@
 
 SET config = {
     fonts => [
-        "-xos4-terminus-bold-r-*-*-14-*-*-*-*-*-iso8859-1",
-        "-xos4-terminus-bold-r-*-*-16-*-*-*-*-*-iso8859-1",
-        "-xos4-terminus-bold-r-*-*-20-*-*-*-*-*-iso8859-1",
+        "-xos4-terminus-*-r-*-*-12-*-*-*-*-*-iso8859-1",
+        "-xos4-terminus-*-r-*-*-14-*-*-*-*-*-iso8859-1",
+        "-xos4-terminus-*-r-*-*-20-*-*-*-*-*-iso8859-1",
+        "-xos4-terminus-*-r-*-*-24-*-*-*-*-*-iso8859-1",
     ],
 };
 

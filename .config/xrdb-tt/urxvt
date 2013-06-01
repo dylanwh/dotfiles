@@ -5,16 +5,16 @@ MACRO change_font(font, bold_font) BLOCK;
     UNLESS bold_font; 
         bold_font = font;
     END;
-	GET "command:";
+    GET "command:";
     cmd(710, font);
     cmd(711, bold_font);
 END;
 
 -%]
 
-URxvt.font:     [% config.fonts.0 %]
-URxvt.boldFont: [% config.fonts.0 %]
-URxvt.italicFont: [% config.fonts.0 %]
+URxvt.font:     [% config.fonts.1 %]
+URxvt.boldFont: [% config.fonts.1 %]
+URxvt.italicFont: [% config.fonts.1 %]
 
 URxvt.keysym.C-M-z: [% change_font("fixed") %]
 

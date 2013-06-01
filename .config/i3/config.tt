@@ -3,7 +3,7 @@
 # Please see http://i3wm.org/docs/userguide.html for a complete reference!
 
 set $mod Mod4
-set $font -misc-fixed-medium-r-normal--14-120-75-75-C-70-iso10646-1
+set $font -xos4-terminus-bold-r-*-*-12-*-*-*-*-*-iso8859-1
 
 # font for window titles. ISO 10646 = Unicode
 font $font
