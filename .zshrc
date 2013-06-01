@@ -102,9 +102,6 @@ bindkey -a Q quote-line
 bindkey -a q quote-region
 bindkey "^_" copy-prev-shell-word
 bindkey '^Q' push-input
-bindkey '^R' history-incremental-search-backward
-bindkey '^A' beginning-of-line
-bindkey '^E' end-of-line
 bindkey ' ' magic-space ## do history expansion on space
 bindkey -a ' ' magic-space ## do history expansion on space
 bindkey -a '^Xe' expand-word
