@@ -34,7 +34,7 @@ URxvt.visualBell: true
 URxvt.cursorBlink: false
 URxvt.geometry: 80x25
 
-URxvt.perl-ext-common: mark-and-yank,font-size
+URxvt.perl-ext-common: mark-and-yank,font-size,vtwheel
 URxvt.urlLauncher: url-handler
 URxvt.underlineURLs: false
 
@@ -43,12 +43,13 @@ URxvt.keysym.C-M-u:    perl:mark-and-yank:activate_mark_url_mode
 URxvt.keysym.C-M-Up:     perl:font-size:increase
 URxvt.keysym.C-M-Down:   perl:font-size:decrease
 
+URxvt.iso14755: false
+URxvt.iso14755_52: false
+
 [% 
 INCLUDE theme/solarized;
 INCLUDE theme/solarized prefix='outside.' option="invert";
 INCLUDE theme/solarized prefix='night.' option="black";
 INCLUDE theme/dylan     prefix="dylan";
 INCLUDE theme/base      prefix="std";
-
-#INCLUDE theme name="solarized" prefix="outside" flavor="light"; 
 %]
