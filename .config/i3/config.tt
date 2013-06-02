@@ -31,6 +31,9 @@ bindsym $mod+k focus up
 bindsym $mod+l focus right
 
 bindsym $mod+u [urgent="last"] focus
+bindsym $mod+m exec i3-input -F 'mark %s' -P 'mark: ' -f '$font'
+bindsym $mod+apostrophe exec i3-input -F '[con_mark="%s"] focus' -P 'goto: ' -f '$font'
+
 
 # move focused window
 bindsym $mod+Shift+H move left
