@@ -9,11 +9,11 @@ ENSURE_DIRS = $(XDG_DATA_HOME) \
 			  $(XDG_CACHE_HOME) \
 			  $(XDG_CACHE_HOME)/ssh \
 			  $(XDG_CACHE_HOME)/zsh \
-			  $(XDG_CACHE_HOME)/vim \
-			  $(XDG_CACHE_HOME)/vim/backup \
-			  $(XDG_CACHE_HOME)/vim/swap \
-			  $(XDG_CACHE_HOME)/vim/undo \
-			  $(XDG_CACHE_HOME)/vim/view \
+			  $(XDG_DATA_HOME)/vim \
+			  $(XDG_DATA_HOME)/vim/backup \
+			  $(XDG_DATA_HOME)/vim/swap \
+			  $(XDG_DATA_HOME)/vim/undo \
+			  $(XDG_DATA_HOME)/vim/view \
 			  $(XDG_DESKTOP_DIR) \
 			  $(XDG_DOCUMENTS_DIR) \
 			  $(XDG_DOWNLOAD_DIR) \
