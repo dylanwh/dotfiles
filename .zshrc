@@ -98,19 +98,23 @@ case $TERM in
     ;;
 esac
 
+
+bindkey -a ' ' magic-space ## do history expansion on space
+bindkey -a '#' vi-pound-insert
 bindkey -a Q quote-line
 bindkey -a q quote-region
+
 bindkey "^_" copy-prev-shell-word
 bindkey '^Q' push-input
+bindkey '^X^N' infer-next-history
+bindkey '^E' expand-word
+bindkey '^F' fasd-complete-f
+bindkey '^X^A' fasd-complete
+bindkey '^X^F' fasd-complete-f
+bindkey '^X^D' fasd-complete-d
 bindkey ' ' magic-space ## do history expansion on space
-bindkey -a ' ' magic-space ## do history expansion on space
-bindkey -a '^Xe' expand-word
-bindkey -a '^Xg' list-expand
-bindkey -a '^X^N' infer-next-history
 
-#bindkey '^X^A' fasd-complete    # C-x C-a to do fasd-complete (fils and directories)
-#bindkey '^X^F' fasd-complete-f  # C-x C-f to do fasd-complete-f (only files)
-#bindkey '^X^D' fasd-complete-d  # C-x C-d to do fasd-complete-d (only directories)
+bindkey -r '^X'
 
 ## }}}
 ## {{{ FUNCTIONS
