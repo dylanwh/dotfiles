@@ -31,6 +31,8 @@ bindsym $mod+k focus up
 bindsym $mod+l focus right
 
 bindsym $mod+u [urgent="last"] focus
+bindsym $mod+i [con_mark="irssi"] focus
+
 bindsym $mod+m exec i3-input -F 'mark %s' -P 'mark: ' -f '$font'
 bindsym $mod+apostrophe exec i3-input -F '[con_mark="%s"] focus' -P 'goto: ' -f '$font'
 
@@ -206,7 +208,7 @@ SET applets = ["nm-applet", "blueman-applet", "parcellite"];
 
 FOREACH applet IN applets;
     IF have(applet); 
-        GET "exec --no-startup-id $applet";
+        GET "exec --no-startup-id $applet\n";
     END;
 END;
 %]
