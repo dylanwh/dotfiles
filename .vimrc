@@ -141,13 +141,13 @@ let NERDTreeShowBookmarks=1
 let NERDTreeHightlightCursorline=1
 let NERDTreeBookmarksFile=".NERDTreeBookmarks"
 
-let g:jedi#squelch_py_warning = 1
+let jedi#squelch_py_warning = 1
 
-let g:ctrlp_z_nerdtree = 1
+let ctrlp_z_nerdtree = 1
 
-let g:ctrlp_extensions = ['Z', 'F']
+let ctrlp_extensions = ['Z', 'F']
 
-let g:ctrlp_custom_ignore = '\v[\/]\.(git|hg|svn)$'
+let ctrlp_custom_ignore = '\v[\/]\.(git|hg|svn)$'
 
 " }}}
 
