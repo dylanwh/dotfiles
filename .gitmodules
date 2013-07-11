@@ -76,3 +76,9 @@
 [submodule ".vim/bundle/ultisnips"]
 	path = .vim/bundle/ultisnips
 	url = git://github.com/SirVer/ultisnips.git
+[submodule "var/documents"]
+	path = var/documents
+	url = git@git.hardison.net:dylan/docs.git
+[submodule ".vim/bundle/ferm"]
+	path = .vim/bundle/ferm
+	url = git://github.com/cometsong/ferm.vim.git
