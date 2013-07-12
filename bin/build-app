@@ -1,0 +1,160 @@
+#!/bin/bash
+
+APP_DIR=$HOME/app
+
+build_zsh() {
+    this=${1:-${FUNCNAME/#build_/}}
+    name=${FUNCNAME/#build_/}
+    built=$APP_DIR/$this/.built_$name
+
+    if [[ -f $built ]]; then
+        return 0
+    else
+
+        [[ -f zsh-5.0.2.tar.bz2 ]] || wget -O zsh-5.0.2.tar.bz2 \
+            'http://sourceforge.net/projects/zsh/files/zsh/5.0.2/zsh-5.0.2.tar.bz2/download'
+
+        tar -jxf zsh-5.0.2.tar.bz2          || return 1
+        cd zsh-5.0.2                        || return 1
+        ./configure --prefix=$APP_DIR/$this || return 1
+        make                                || return 1
+        make install                        || return 1
+        touch $built
+    fi
+}
+
+build_vim() {
+    this=${1:-${FUNCNAME/#build_/}}
+    name=${FUNCNAME/#build_/}
+    built=$APP_DIR/$this/.built_$name
+
+    if [[ -f $built ]]; then
+        return 0
+    else
+
+        build_python $this
+
+        PATH=$APP_DIR/$this/bin:$PATH
+
+        [[ -f vim-7.3.tar.bz2 ]] || wget ftp://ftp.vim.org/pub/vim/unix/vim-7.3.tar.bz2
+
+        tar -jxf vim-7.3.tar.bz2 || return 1
+        cd vim73                 || return 1
+
+        LDFLAGS="-Wl,-rpath=$APP_DIR/$this/lib"
+        export LDFLAGS
+
+        ./configure \
+            --prefix=$APP_DIR/$this \
+            --with-features=huge \
+            --with-compiledby=$USER \
+            --enable-gpm \
+            --enable-acl \
+            --with-x=no \
+            --disable-gui \
+            --enable-multibyte \
+            --enable-cscope \
+            --disable-netbeans \
+            --disable-perlinterp \
+            --enable-pythoninterp \
+            --disable-python3interp \
+            --disable-rubyinterp \
+            --disable-luainterp || return 1
+        make                    || return 1
+        make install            || return 1
+        touch $built
+    fi
+}
+
+build_libevent() {
+    this=${1:-${FUNCNAME/#build_/}}
+    name=${FUNCNAME/#build_/}
+    built=$APP_DIR/$this/.built_$name
+
+    if [[ -f $built ]]; then
+        return 0
+    else
+
+        [[ -f libevent-2.0.21-stable.tar.gz ]] || wget https://github.com/downloads/libevent/libevent/libevent-2.0.21-stable.tar.gz
+        tar -zxf libevent-2.0.21-stable.tar.gz || return 1
+        cd libevent-2.0.21-stable              || return 1
+        ./configure --prefix=$APP_DIR/$this    || return 1
+        make                                   || return 1
+        make install                           || return 1
+        touch $built
+    fi
+}
+
+build_tmux() {
+    this=${1:-${FUNCNAME/#build_/}}
+    name=${FUNCNAME/#build_/}
+    built=$APP_DIR/$this/.built_$name
+
+    if [[ -f $built ]]; then
+        return 0
+    else
+
+        ( build_libevent $this )
+
+        PKG_CONFIG_PATH=$APP_DIR/$this/lib/pkgconfig
+
+        [[ -f tmux-1.8.tar.gz ]] || wget -O tmux-1.8.tar.gz \
+            'http://downloads.sourceforge.net/project/tmux/tmux/tmux-1.8/tmux-1.8.tar.gz?r=http%3A%2F%2Ftmux.sourceforge.net%2F&ts=1373569981&use_mirror=superb-dca3'
+        tar -zxf tmux-1.8.tar.gz  || return 1
+        cd tmux-1.8               || return 1
+
+        LDFLAGS=-Wl,-rpath=$APP_DIR/$this/lib
+        export LDFLAGS
+
+        ./configure --prefix=$APP_DIR/$this || return 1
+        make                                || return 1
+        make install                        || return 1
+        touch $built
+    fi
+}
+
+build_python() {
+    this=${1:-${FUNCNAME/#build_/}}
+    name=${FUNCNAME/#build_/}
+    built=$APP_DIR/$this/.built_$name
+
+    if [[ -f $built ]]; then
+        return 0
+    else
+        [[ -f Python-2.7.5.tar.bz2 ]] || wget http://www.python.org/ftp/python/2.7.5/Python-2.7.5.tar.bz2
+
+        tar -jxf Python-2.7.5.tar.bz2         || return 1
+        cd Python-2.7.5/                      || return 1
+        ./configure --prefix=$APP_DIR/$this   || return 1
+        make                                  || return 1
+        make install                          || return 1
+
+        touch $built
+    fi
+}
+
+build_tools() {
+    this=${1:-${FUNCNAME/#build_/}}
+    name=${FUNCNAME/#build_/}
+    built=$APP_DIR/$this/.built_$name
+
+    if [[ -f $built ]]; then
+        return 0
+    else
+        ( build_tmux $this ) || return 1
+        ( build_vim  $this ) || return 1
+        ( build_zsh  $this ) || return 1
+
+        touch $built
+    fi
+}
+
+cmd=$1; shift
+
+case $cmd in
+    install)
+        pkg=$1
+        build_$pkg
+    ;;
+esac
+
