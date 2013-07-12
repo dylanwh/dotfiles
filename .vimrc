@@ -120,10 +120,6 @@ let perl_fold = 1
 
 "-- context-based supertabbing
 let SuperTabDefaultCompletionType = "context"
-" let SuperTabCompletionContexts = ['s:ContextText', 's:ContextDiscover']
-" let SuperTabContextTextOmniPrecedence = ['&omnifunc', '&completefunc']
-" let SuperTabContextDiscoverDiscovery =
-"     \ ["&completefunc:<c-x><c-u>", "&omnifunc:<c-x><c-o>"]
 
 let redcode_highlight_numbers=1
 

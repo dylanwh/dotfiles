@@ -4,7 +4,6 @@ use warnings;
 use Sys::Hostname;
 use Template;
 use File::Basename;
-use encoding 'utf8';
 
 my @pre_process;
 my @wrapper;
