@@ -1,3 +1,3 @@
 #!/bin/zsh
 
-xrdb "$@" -cpp =ttpp ~/.config/xrdb-tt/defaults 
+xrdb "$@" -cpp =ttpp ~/.config/xrdb-tt/defaults.tt
