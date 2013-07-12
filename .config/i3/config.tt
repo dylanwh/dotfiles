@@ -123,6 +123,8 @@ for_window [window_role="^pop-up$"] floating enable
 for_window [class="Blueman-services"] floating enable
 
 assign [class="Google-chrome"] 9
+assign [class="Eclipse"] 8
+
 for_window [class="Google-chrome"] layout tabbed
 for_window [class="MPlayer"] floating enable
 
