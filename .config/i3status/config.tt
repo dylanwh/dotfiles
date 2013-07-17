@@ -1,12 +1,36 @@
+[% SET
+# SOLARIZED HEX 
+# --------- -------
+    base03   = "#002b36"
+    base02   = "#073642"
+    base01   = "#586e75"
+    base00   = "#657b83"
+    base0    = "#839496"
+    base1    = "#93a1a1"
+    base2    = "#eee8d5"
+    base3    = "#fdf6e3"
+    red      = "#dc322f"
+    yellow   = "#b58900"
+    orange   = "#cb4b16"
+    green    = "#859900"
+    cyan     = "#2aa198"
+    blue     = "#268bd2"
+    magenta  = "#d33682"
+    violet   = "#6c71c4"
+%]
+
 general {
-        colors = true
-        interval = 5
+    colors = true
+    interval = 5
+    color_good = "[% green %]"
+    color_degraded = "[% yellow  %]"
+    color_bad = "[% red %]"
 }
 
 order += "ipv6"
 order += "disk /"
 order += "run_watch DHCP"
-order += "run_watch VPN"
+#order += "run_watch VPN"
 order += "wireless wlan0"
 order += "ethernet eth0"
 order += "battery 0"
@@ -14,36 +38,42 @@ order += "load"
 order += "time"
 
 wireless wlan0 {
-        format_up = "W: (%quality at %essid) %ip"
-        format_down = "W: down"
+    format_up = "W: %ip (%quality at %essid)"
+    format_down = "W: down"
 }
 
 ethernet eth0 {
-        # if you use %speed, i3status requires root privileges
-        format_up = "E: %ip (%speed)"
-        format_down = "E: down"
+    color_bad = "[% base01 %]"
+# if you use %speed, i3status requires root privileges
+    format_up = "E: %ip (%speed)"
+    format_down = "E: down"
 }
 
 battery 0 {
-        format = "%status %percentage %remaining"
+    format = "%status %percentage %remaining"
 }
 
 run_watch DHCP {
-        pidfile = "/var/run/dhclient*.pid"
+    pidfile = "/var/run/dhclient*.pid"
 }
 
 run_watch VPN {
-        pidfile = "/var/run/vpnc/pid"
+    pidfile = "/var/run/vpnc/pid"
 }
 
 time {
-        format = "%Y-%m-%d %H:%M:%S"
+    format = "%Y-%m-%d %H:%M:%S"
 }
 
 load {
-        format = "%1min"
+    format = "%1min"
+}
+
+ipv6 {
+# foo
 }
 
 disk "/" {
-        format = "%free (or: %percentage_used used, %percentage_used_of_avail used of avail, %percentage_free free, %percentage_avail avail)"
+    #format = "%free (or: %percentage_used used, %percentage_used_of_avail used of avail, %percentage_free free, %percentage_avail avail)"
+    format = "%free"
 }
