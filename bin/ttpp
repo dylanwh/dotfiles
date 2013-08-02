@@ -4,6 +4,7 @@ use warnings;
 use Sys::Hostname;
 use Template;
 use File::Basename;
+use autodie;
 
 my @pre_process;
 my @wrapper;
@@ -52,13 +53,14 @@ while ( my $opt = shift @ARGV ) {
         }
     }
     elsif ( $opt =~ /^-include$/ ) { $feature{pre_process}->( shift @ARGV ) }
-    elsif ( $opt =~ /^-U(.*)$/ )   { delete $define{ ARGVAL($1) } }
-    elsif ( $opt =~ /^-I(.+)$/ )   { push @include, ARGVAL($1) }
-    elsif ( $opt =~ /^-o(.*)$/ )   { $output = ARGVAL($1) }
-    elsif ( $opt =~ /^-P$/ )       { next }
-    elsif ( $opt eq '--' ) {last}
-    elsif ( $opt =~ /^-/ ) { die "Unknown option: $opt\n" }
-    else                   { push @ARGV, $opt; last }
+    elsif ( $opt =~ /^-U(.*)$/ )   { delete $define{ ARGVAL($1) }           }
+    elsif ( $opt =~ /^-I(.+)$/ )   { push @include, ARGVAL($1)              }
+    elsif ( $opt =~ /^-o(.*)$/ )   { $output = ARGVAL($1)                   }
+    elsif ( $opt =~ /^-P$/ )       { next                                   }
+    elsif ( $opt =~ /^-T(.*)$/ )   { $config{TAG_STYLE} = ARGVAL($1)        }
+    elsif ( $opt eq '--' )         { last                                   }
+    elsif ( $opt =~ /^-/ )         { die "Unknown option: $opt\n"           }
+    else                           { push @ARGV, $opt; last                 }
 }
 
 $define{HOST} = (split(/\./, $define{HOST}))[0];
@@ -81,4 +83,12 @@ if (@ARGV) {
 
 my $template = Template->new(\%config);
 
+if (defined $output and -f $output) {
+    unlink($output);
+}
+
 $template->process(\*ARGV, \%define, $output // \*STDOUT) or die $template->error;
+
+if (defined $output) {
+    system('chmod', 'a-w', $output);
+}

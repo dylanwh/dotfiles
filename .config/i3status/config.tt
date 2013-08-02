@@ -1,4 +1,4 @@
-[% SET
+[* SET
 # SOLARIZED HEX 
 # --------- -------
     base03   = "#002b36"
@@ -17,14 +17,14 @@
     blue     = "#268bd2"
     magenta  = "#d33682"
     violet   = "#6c71c4"
-%]
+*]
 
 general {
     colors = true
     interval = 5
-    color_good = "[% green %]"
-    color_degraded = "[% yellow  %]"
-    color_bad = "[% red %]"
+    color_good = "[* green *]"
+    color_degraded = "[* yellow  *]"
+    color_bad = "[* red *]"
 }
 
 order += "ipv6"
@@ -43,7 +43,7 @@ wireless wlan0 {
 }
 
 ethernet eth0 {
-    color_bad = "[% base01 %]"
+    color_bad = "[* base01 *]"
 # if you use %speed, i3status requires root privileges
     format_up = "E: %ip (%speed)"
     format_down = "E: down"

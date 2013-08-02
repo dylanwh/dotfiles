@@ -1,0 +1,20 @@
+#!/bin/zsh
+
+cmd=(dmenu-dark -p "run program: ")
+
+cachedir=${XDG_CACHE_HOME:-"$HOME/.cache"}
+if [ -d "$cachedir" ]; then
+    cache=$cachedir/i3-menu
+else
+    cache=$HOME/.i3-menu # if no xdg dir, fall back to dotfile in ~
+fi
+
+(
+    if stest -dqr -n "$cache" $path 2>/dev/null ; then
+        stest -flx $path | sort -u | tee $cache | $cmd "$@"
+    elif [[ -f $cache ]]; then
+        $cmd "$@" < $cache
+    else
+        echo "PANTS!"
+    fi
+) | ${SHELL:-"/bin/sh"} &

@@ -1,0 +1,3 @@
+#!/bin/zsh
+
+exec i3-input -F '[title=(?i:%s)] focus' -P 'query: '
