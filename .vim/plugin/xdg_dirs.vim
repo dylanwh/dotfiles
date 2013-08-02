@@ -41,7 +41,7 @@ function s:MakePath(path) "{{{
     endif
 endfunction "}}}
 
-set directory=$XDG_CACHE_HOME/vim/swap//
+set directory=$XDG_DATA_HOME/vim/swap//
 set backupdir=$XDG_DATA_HOME/vim/backup//
 set undodir=$XDG_DATA_HOME/vim/undo//
 set viewdir=$XDG_DATA_HOME/vim/view
