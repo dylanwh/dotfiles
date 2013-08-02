@@ -1,8 +1,12 @@
-.PHONY: all dirs clean
+.PHONY: all dirs clean show-dirs show-files
 
 XDG_DATA_HOME   ?= $(HOME)/.data
 XDG_CONFIG_HOME ?= $(HOME)/.config
 XDG_CACHE_HOME  ?= $(HOME)/.cache
+
+XDG_CONFIG_HOME := $(patsubst $(HOME)/%,%,$(XDG_CONFIG_HOME))
+XDG_CACHE_HOME  := $(patsubst $(HOME)/%,%,$(XDG_CACHE_HOME))
+XDG_DATA_HOME   := $(patsubst $(HOME)/%,%,$(XDG_DATA_HOME))
 
 ENSURE_DIRS = $(XDG_DATA_HOME) \
 			  $(XDG_CONFIG_HOME) \
@@ -23,23 +27,35 @@ ENSURE_DIRS = $(XDG_DATA_HOME) \
 			  $(XDG_TEMPLATES_DIR) \
 			  $(XDG_VIDEOS_DIR)
 
+
+GEN_FILES = $(XDG_CONFIG_HOME)/i3/config \
+			$(XDG_CONFIG_HOME)/i3status/config
+
+
 -include $(XDG_CACHE_HOME)/user-dirs.mk
 
-
-all: .config/i3/config .config/i3status/config dirs
+all:  $(GEN_FILES) dirs
 
 dirs: $(ENSURE_DIRS)
 
-$(XDG_CACHE_HOME)/user-dirs.mk: $(XDG_CONFIG_HOME)/user-dirs.dirs
-	sed 's/$$HOME/$$(HOME)/g; s/"//g;' $< > $@
+show-dirs:
+	@for dir in $(ENSURE_DIRS) $(GEN_DIRS); do echo $$dir; done
+	
+show-files:
+	@for dir in $(GEN_FILES); do echo $$dir; done
 
-%: %.tt
-	@if [[ -f $@ ]]; then chmod u+w $@; fi
-	ttpp -o $@ $<
-	@chmod a-w $@
+$(XDG_CACHE_HOME)/user-dirs.mk: $(XDG_CONFIG_HOME)/user-dirs.dirs $(XDG_CACHE_HOME) Makefile
+	sed '/^#/ d; s|$$HOME/||g; s/"//g;' $< > $@
+
+
+$(XDG_CONFIG_HOME)/i3/config: $(XDG_CONFIG_HOME)/i3/config.tt
+	ttpp -Tstar -o $@ $<
+
+$(XDG_CONFIG_HOME)/i3status/config: $(XDG_CONFIG_HOME)/i3status/config.tt
+	ttpp -Tstar -o $@ $<
 
 $(ENSURE_DIRS):
 	mkdir -p $@
 	
 clean:
-	rm -f .config/i3/config .config/i3status/config
+	rm -f $(GEN_FILES)
