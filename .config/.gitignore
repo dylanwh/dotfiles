@@ -70,3 +70,4 @@ xmms2/clients/
 xmms2/medialib.db
 xmms2/startup.d/
 youtube-viewer/
+user-dirs.mk
