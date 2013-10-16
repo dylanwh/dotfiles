@@ -2,14 +2,17 @@
 " vim: set fdm=marker:
 
 " INIT {{{1
-runtime bundle/pathogen/autoload/pathogen.vim
-call pathogen#infect()
+if !exists("did_vimrc_init")
+    let did_vimrc_init=1
+    runtime bundle/pathogen/autoload/pathogen.vim
+    call pathogen#infect()
 
-syntax on
-filetype plugin indent on
+    syntax on
+    filetype plugin indent on
 
-runtime! ftplugin/man.vim
-runtime macros/matchit.vim
+    runtime ftplugin/man.vim
+    runtime macros/matchit.vim
+end
 " }}}
 
 " OPTIONS {{{1
@@ -273,6 +276,8 @@ if !exists('autocmds_loaded')
                 \ else |
                 \   setlocal modifiable |
                 \ endif
+
+    autocmd! BufWritePost */.vimrc source $MYVIMRC
 endif
 " }}}
 
