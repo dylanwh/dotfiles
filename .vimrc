@@ -32,6 +32,7 @@ set ruler                  " use the ruler when statusline is off.
 set laststatus=2           " always display a status bar.
 set number                 " show line numbers.
 set nocursorline           " highlight cursor line
+set ttimeoutlen=50         " amount of time to wait to complete a key sequence.
 set history=1000           " remember last N :commands and /searches.
 set shortmess+=I           " disable splash screen
 set shortmess+=T           " truncate messages
@@ -146,22 +147,15 @@ let ctrlp_extensions = ['Z', 'F']
 
 let ctrlp_custom_ignore = '\v[\/]\.(git|hg|svn)$'
 
+let airline_powerline_fonts            = 0
+let airline_inactive_collapse          = 1
+let airline#extensions#tabline#enabled = 1
+
 " }}}
 
 " COLORS {{{1
 set background=dark
 colorscheme solarized
-
-" highlight StatusLine   ctermfg=7  ctermbg=0    guibg=#002b36 gui=none
-" highlight StatusLine   ctermfg=10 ctermbg=0    guibg=#002b36 gui=none
-
-" highlight UserFile     ctermfg=4  ctermbg=0    guifg=#268bd2 guibg=#002b36 gui=none
-" highlight UserFile     ctermfg=4  ctermbg=0    guifg=#268bd2 guibg=#002b36 gui=none
-" highlight UserGit      ctermfg=2  ctermbg=0    guifg=#859900 guibg=#002b36 gui=none
-" highlight UserWarn     ctermfg=9  ctermbg=0    guifg=#cb4b16 guibg=#002b36 gui=none
-" highlight UserMisc     ctermfg=10 ctermbg=0    guifg=#586e75 guibg=#002b36 gui=none
-" highlight UserNotice   ctermfg=7  ctermbg=0    guifg=#eee8d5 guibg=#002b36 gui=none
-" highlight UserFT       ctermfg=3  ctermbg=0    guifg=#b58900 guibg=#002b36 gui=none
 " }}}
 
 " MAPPINGS {{{1
