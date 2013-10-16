@@ -36,9 +36,13 @@ if [[ -o rcs ]]; then
         /usr/sbin
         /sbin
         $path
-     )
+    )
     fpath=(~/.zsh/lib $fpath)
     perl5lib=(~/lib 'lib')
+
+    for file in $HOME/app/*/zshenv(N); do
+        source $file
+    done
 
     export PERLBREW_HOME=$HOME/app/perlbrew
     export PERLBREW_ROOT=$PERLBREW_HOME
