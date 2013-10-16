@@ -1,12 +1,13 @@
 [%
 # vim: set ft=tt2:
-
+#-*-terminesspowerline-*-*-*-*-*-*-*-*-*-*-*-*
 SET config = {
     fonts => [
-        "-xos4-terminus-*-r-*-*-12-*-*-*-*-*-iso8859-1",
-        "-xos4-terminus-*-r-*-*-14-*-*-*-*-*-iso8859-1",
-        "-xos4-terminus-*-r-*-*-20-*-*-*-*-*-iso8859-1",
-        "-xos4-terminus-*-r-*-*-24-*-*-*-*-*-iso8859-1",
+        "-*-terminesspowerline-*-r-*-*-12-*-*-*-*-*-*-*",
+        "-*-terminesspowerline-*-r-*-*-14-*-*-*-*-*-*-*",
+        "-*-terminesspowerline-*-r-*-*-20-*-*-*-*-*-*-*",
+        "-*-terminesspowerline-*-r-*-*-24-*-*-*-*-*-*-*",
+        "xft:Droid Sans Mono:size=10",
     ],
 };
 

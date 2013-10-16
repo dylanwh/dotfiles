@@ -230,9 +230,9 @@ sub font_change_size_x11
     $fontstring =~ s/^-//;  # Strip leading - before split
     @font{@fields} = split(/-/, $fontstring);
 
-    if ($font{registry} eq '*') {
-        $font{registry} ='iso8859';
-    }
+    # if ($font{registry} eq '*') {
+    #     $font{registry} ='iso8859';
+    # }
 
     # Blank out the size for the pattern
     my %pattern = %font;

@@ -150,7 +150,7 @@ let ctrlp_extensions = ['Z', 'F']
 
 let ctrlp_custom_ignore = '\v[\/]\.(git|hg|svn)$'
 
-let airline_powerline_fonts            = 0
+let airline_powerline_fonts            = 1
 let airline_inactive_collapse          = 1
 let airline#extensions#tabline#enabled = 1
 
