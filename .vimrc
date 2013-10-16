@@ -73,13 +73,13 @@ set viminfo+=r/mnt         " ...
 set viminfo+=r/media       " ...
 
 " Ignore these filenames during enhanced command line completion.
-set wildignore+=*.aux,*.out,*.toc " LaTeX intermediate files
-set wildignore+=*.jpg,*.bmp,*.gif " binary images
-set wildignore+=*.luac " Lua byte code
+set wildignore+=*.aux,*.out,*.toc                        " LaTeX intermediate files
+set wildignore+=*.jpg,*.bmp,*.gif                        " binary images
+set wildignore+=*.luac                                   " Lua byte code
 set wildignore+=*.o,*.obj,*.exe,*.dll,*.manifest,*.class " compiled object files
-set wildignore+=*.pyc " Python byte code
-set wildignore+=*.spl " compiled spelling word lists
-set wildignore+=*.sw? " Vim swap files
+set wildignore+=*.pyc                                    " Python byte code
+set wildignore+=*.spl                                    " compiled spelling word lists
+set wildignore+=*.sw?                                    " Vim swap files
 
 set foldopen=tag,search,quickfix,undo,jump,mark,percent
 set fillchars=fold:\ ,stl:\ ,stlnc:\  " borders
@@ -132,7 +132,7 @@ let solarized_bold = 0
 let solarized_underline = 0
 let solarized_italic = 1
 
-let snippets_dir="$HOME/.vim/snippets"
+"let snippets_dir="$HOME/.vim/snippets"
 
 " NERDTree config
 let NERDTreeChDirMode=2
@@ -175,24 +175,22 @@ nmap <silent><Leader>wf <Plug>VimwikiFollowWord
 nmap <silent><Leader>wb <Plug>VimwikiGoBackWord
 nmap <silent><Leader>wn <Plug>VimwikiGoBackWord
 
-nmap <Leader>t :NERDTreeToggle<cr>
-nmap <Leader>n :NERDTreeFocus<cr>
-nmap <Leader>f :NERDTreeFind<cr>
-nmap <Leader>s  :shell<cr>
-nmap <Leader>e  :CtrlPF<cr>
-nmap <Leader>d  :CtrlPZ<cr>
-nmap sf         :CtrlPF<cr>
-nmap sz         :CtrlPZ<cr>
-
+nmap <Leader>t  :NERDTreeToggle<CR>
+nmap <Leader>n  :NERDTreeFocus<CR>
+nmap <Leader>f  :NERDTreeFind<CR>
+nmap <Leader>s  :shell<CR>
+nmap <Leader>v  :tabedit $MYVIMRC<CR>
+nmap sf         :CtrlPF<CR>
+nmap sz         :CtrlPZ<CR>
 
 nnoremap <Left> <C-w>h
 nnoremap <Down> <C-w>j
 nnoremap <Up>   <C-w>k
 nnoremap <Right> <C-w>l
 
-inoremap <Left> <C-o><C-w>h
-inoremap <Down> <C-o><C-w>j
-inoremap <Up>   <C-o><C-w>k
+inoremap <Left>  <C-o><C-w>h
+inoremap <Down>  <C-o><C-w>j
+inoremap <Up>    <C-o><C-w>k
 inoremap <Right> <C-o><C-w>l
 
 " make <c-l> clear the highlight as well as redraw
@@ -243,6 +241,7 @@ if !exists('autocmds_loaded')
                     \ setl commentstring=--%s
         autocmd BufNewFile,BufRead */.i3/config* set ft=i3
         autocmd BufNewFile,BufRead */.config/i3/config* set ft=i3
+        autocmd BufNewFile,BufRead Capfile set ft=ruby
     augroup END
     " }}}
 
@@ -253,17 +252,18 @@ if !exists('autocmds_loaded')
     autocmd FileType man  setl nolist
     autocmd FileType python setl et
     autocmd FileType yaml   setl et
-    autocmd FileType lua setl foldmethod=marker |
+    autocmd FileType lua
+                \ setl foldmethod=marker |
                 \ setl comments=sO:-\ -,mO:-\ \ ,exO:]],s1:--[[,mb:-,ex:]],:-- |
                 \ setl commentstring=--%s
 
-    
-    au WinLeave * if &g:cursorline | 
-                \ setl nocursorline | 
+
+    au WinLeave * if &g:cursorline |
+                \ setl nocursorline |
                 \ endif
 
-    au WinEnter * if &g:cursorline | 
-                \ setl cursorline   | 
+    au WinEnter * if &g:cursorline |
+                \ setl cursorline   |
                 \ endif
 
     au BufWritePre /tmp/*,*/.git/COMMIT_EDITMSG setlocal noundofile
