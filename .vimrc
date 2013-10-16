@@ -9,6 +9,7 @@ syntax on
 filetype plugin indent on
 
 runtime! ftplugin/man.vim
+runtime macros/matchit.vim
 " }}}
 
 " OPTIONS {{{1
