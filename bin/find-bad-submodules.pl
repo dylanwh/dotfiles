@@ -6,36 +6,56 @@ use Path::Class::Rule;
 use Config::GitLike;
 use YAML::XS;
 
-my $config  = parse(Config::GitLike->load_file('.git/config'), 'submodule');
-my $modules = parse(Config::GitLike->load_file('.gitmodules'), 'submodule');
+my $config      = parse(Config::GitLike->load_file('.git/config'), 'submodule');
+my $modules     = parse(Config::GitLike->load_file('.gitmodules'), 'submodule');
+my $modules_rule = Path::Class::Rule->new->file->name('index');
+my $modules_iter = sub {
+    state $iter = $modules_rule->iter( '.git/modules' ); 
+    my $file = $iter->();
+    return $file->dir->relative('.git/modules') if $file;
+    return undef;
+};
 
-for my $path (keys %$config) {
-    unless (exists $modules->{$path}) {
-        warn "$path does not exist in ~/.gitmodules\n";
-        print "git config --remove-section $config->{$path}{SECTION}\n";
+say "-- checking .git/modules dir";
+while (my $path = $modules_iter->()) {
+    unless ($modules->{$path}) {
+        say "UM $path";
     }
-    unless ($modules->{$path}{url} eq $config->{$path}{url}) {
-        warn "$path url disagrees between .gitmodules and .git/config\n";
-    }
-    unless (-d $path) {
-        warn "$path does not exist\n";
+    unless ($config->{$path}) {
+        say "UC $path";
     }
 }
 
+say "-- checking .git/config";
+for my $path (keys %$config) {
+    unless (-d $path) {
+        say "EC $path";
+    }
+    unless (-f "$path/.git") {
+        say "FC $path" if -d $path;
+    }
+
+    unless (exists $modules->{$path}) {
+        say "RC $path";
+    }
+}
+
+say "-- checking .gitmodules";
 for my $path (keys %$modules) {
-    unless (exists $config->{$path}) {
-        warn "$path does not exist in ~/.git/config\n";
+    unless (-d $path) {
+        say "EM $path";
+    }
+    unless (-f "$path/.git") {
+        say "FM $path" if -d $path;
     }
     unless ($path eq $modules->{$path}{path}) {
-        warn "$path inconsistent in .gitmodules\n";
+        say "PM $path $modules->{$path}{path}";
     }
-    unless ($modules->{$path}{url} eq $config->{$path}{url}) {
-        warn "$path url disagrees between .gitmodules and .git/config\n";
-    }
-    unless (-d $path) {
-        warn "$path does not exist\n";
+    unless (exists $config->{$path}) {
+        say "RM $path";
     }
 }
+
 
 sub parse {
     my ($hash, $prefix) = @_;
