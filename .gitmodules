@@ -16,9 +16,6 @@
 [submodule ".vim/bundle/repeat"]
 	path = .vim/bundle/repeat
 	url = git://github.com/tpope/vim-repeat.git
-[submodule ".zsh/antigen"]
-	path = .zsh/antigen
-	url = https://github.com/zsh-users/antigen.git
 [submodule ".vim/bundle/i3-syntax"]
 	path = .vim/bundle/i3-syntax
 	url = git@github.com:dylanwh/i3-vim-syntax.git
