@@ -22,7 +22,7 @@ bindsym $mod+Shift+C kill
 
 # start gmrun (a program launcher)
 bindsym $mod+p exec i3-menu
-bindsym $mod+x exec i3lock
+bindsym $mod+x exec i3-freeze
 
 bindsym $mod+Shift+v exec --no-startup-id xdo-paste
 
