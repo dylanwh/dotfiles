@@ -44,14 +44,6 @@ if [[ -o rcs ]]; then
         source $file
     done
 
-    export PERLBREW_HOME=$HOME/app/perlbrew
-    export PERLBREW_ROOT=$PERLBREW_HOME
-    unset PERLBREW_PATH
-
-    if which perlbrew &> /dev/null; then
-        [[ ! -d $PERLBREW_HOME ]] && perlbrew init
-        [[ -f $PERLBREW_HOME/etc/bashrc ]] && source $PERLBREW_HOME/etc/bashrc
-    fi
 fi
 
 # vim: set sw=4 ts=4 foldmethod=marker path=.,~/.zsh:
