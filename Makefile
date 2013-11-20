@@ -50,6 +50,7 @@ $(XDG_CACHE_HOME)/user-dirs.mk: $(XDG_CONFIG_HOME)/user-dirs.dirs $(XDG_CACHE_HO
 
 $(XDG_CONFIG_HOME)/i3/config: $(XDG_CONFIG_HOME)/i3/config.tt
 	ttpp -Tstar -o $@ $<
+	i3-cmd reload
 
 $(XDG_CONFIG_HOME)/i3status/config: $(XDG_CONFIG_HOME)/i3status/config.tt
 	ttpp -Tstar -o $@ $<
