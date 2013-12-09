@@ -183,6 +183,8 @@ have ack-grep   && alias ack=ack-grep
 have hub        && eval "$(hub alias -s)"
 have fasd       && eval "$(fasd --init posix-alias zsh-hook zsh-ccomp zsh-ccomp-install zsh-wcomp zsh-wcomp-install)"
 
+alias xclip='xclip -selection clipboard'
+
 # paste
 alias p='xclip -o'
 alias P='xclip -o |'
@@ -266,19 +268,6 @@ ttyctl -f    # Freeze terminal properties.
 
 namedir progfiles     ~/.wine/drive_c/Program\ Files
 namedir moonshine     ~/src/moonshine
-
-namedir g2            ~/src/g2
-namedir hewitt        ~/src/hewitt
-namedir mar_alignment ~hewitt/hewitt-marriott-alignment
-namedir bes           ~/src/hewitt/bes
-namedir bes2010       ~bes/BES-2010
-namedir bes2011       ~bes/BES-2011
-namedir bes2011_data  ~bes/BES-2011-Data
-namedir bes2012_data  ~bes/hewitt-bes-2012-data
-namedir bes_eers      ~bes/hewitt-bes-eers
-namedir bes_setup     ~bes/hewitt-bes-setup
-namedir bes_workspace ~bes/hewitt-bes-workspace
-namedir bes_import    ~bes/hewitt-bes-import
 
 if have xdg-user-dir; then
     namedir docs   $(xdg-user-dir DOCUMENTS)
