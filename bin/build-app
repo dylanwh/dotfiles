@@ -2,6 +2,8 @@
 
 APP_DIR=$HOME/app
 
+export PKG_CONFIG_PATH LDFLAGS 
+
 build_zsh() {
     this=${1:-${FUNCNAME/#build_/}}
     name=${FUNCNAME/#build_/}
@@ -19,6 +21,35 @@ build_zsh() {
         ./configure --prefix=$APP_DIR/$this || return 1
         make                                || return 1
         make install                        || return 1
+        touch $built
+    fi
+}
+
+build_apache() {
+    this=${1:-${FUNCNAME/#build_/}}
+    name=${FUNCNAME/#build_/}
+    built=$APP_DIR/$this/.built_$name
+
+    version=2.2.26
+    srcfile=httpd-${version}.tar.bz2 
+    srcdir=httpd-${version}
+
+    if [[ -f $built ]]; then
+        return 0
+    else
+        [[ -f $srcfile ]] || wget -O $srcfile http://mirrors.sonic.net/apache/httpd/$srcfile
+
+        tar -jxf $srcfile || return 1
+        cd $srcdir
+        ./configure \
+            --prefix=$APP_DIR/$this \
+            --enable-headers \
+            --enable-expires \
+            --enable-rewrite \
+            || return 1
+
+        make         || return 1
+        make install || return 1
         touch $built
     fi
 }
@@ -42,7 +73,6 @@ build_vim() {
         cd vim73                 || return 1
 
         LDFLAGS="-Wl,-rpath=$APP_DIR/$this/lib"
-        export LDFLAGS
 
         ./configure \
             --prefix=$APP_DIR/$this \
@@ -104,7 +134,6 @@ build_tmux() {
         cd tmux-1.8               || return 1
 
         LDFLAGS=-Wl,-rpath=$APP_DIR/$this/lib
-        export LDFLAGS
 
         ./configure --prefix=$APP_DIR/$this || return 1
         make                                || return 1
@@ -133,28 +162,8 @@ build_python() {
     fi
 }
 
-build_tools() {
-    this=${1:-${FUNCNAME/#build_/}}
-    name=${FUNCNAME/#build_/}
-    built=$APP_DIR/$this/.built_$name
-
-    if [[ -f $built ]]; then
-        return 0
-    else
-        ( build_tmux $this ) || return 1
-        ( build_vim  $this ) || return 1
-        ( build_zsh  $this ) || return 1
-
-        touch $built
-    fi
-}
-
-cmd=$1; shift
-
-case $cmd in
-    install)
-        pkg=$1
-        build_$pkg
-    ;;
-esac
-
+mkdir -p ~/.cache/build-app
+cd ~/.cache/build-app
+pkg=$1
+build_$pkg
+echo $tmpdir
