@@ -9,30 +9,21 @@
 
 xset +fp /usr/share/fonts/local
 xset fp rehash
-
-if ! which xrdb-tt &>/dev/null; then
-	xmessage -center "environment is broken"
-	env > ~/BROKEN-ENV.sh
-fi
-
-xrdb-tt -load
-make
 xset r rate 200 35
+
+xsetroot -cursor_name left_ptr 
+
+make dirs
+xrdb-tt -load
 
 setxkbmap -option
 setxkbmap -option terminate:ctrl_alt_bksp
 setxkbmap -option ctrl:nocaps
 
-case $HOST in
-	odin)
-		syndaemon -k -i 1 -d 
-	;;
-esac
 
-if have xcalib && [[ -f $XDG_CONFIG_HOME/xcalib/$HOST.icm ]]; then
-	xcalib $XDG_CONFIG_HOME/xcalib/$HOST.icm
+if have synclient; then
+    synclient TouchpadOff=1
 fi
-
 if have keychain; then
 	keys=( $( egrep -l -- '^-{5}BEGIN .* PRIVATE KEY-{5}$' .ssh/*(.) ) )
 

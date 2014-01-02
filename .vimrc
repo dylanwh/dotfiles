@@ -121,6 +121,7 @@ let perl_include_pod = 1
 "-- different from string contents.
 let perl_string_as_statement = 1
 
+"-- allow perl code to be folded.
 let perl_fold = 1
 
 "-- context-based supertabbing
@@ -135,24 +136,25 @@ let solarized_italic = 1
 "let snippets_dir="$HOME/.vim/snippets"
 
 " NERDTree config
-let NERDTreeChDirMode=2
 "let NERDTreeIgnore=['\env','\.vim$', '\~$', '\.pyc$', '\.swp$', '\.egg-info$', '^dist$', '^build$']
 "let NERDTreeSortOrder=['^__\.py$', '\/$', '*', '\.swp$', '\~$']
-let NERDTreeShowBookmarks=1
-let NERDTreeHightlightCursorline=1
-let NERDTreeBookmarksFile=".NERDTreeBookmarks"
+let NERDTreeChDirMode            = 2
+let NERDTreeShowBookmarks        = 1
+let NERDTreeHightlightCursorline = 1
+let NERDTreeBookmarksFile        = ".NERDTreeBookmarks"
 
 let jedi#squelch_py_warning = 1
 
-let ctrlp_z_nerdtree = 1
-
-let ctrlp_extensions = ['Z', 'F']
-
+let ctrlp_z_nerdtree    = 1
+let ctrlp_extensions    = ['Z', 'F']
 let ctrlp_custom_ignore = '\v[\/]\.(git|hg|svn)$'
 
 let airline_powerline_fonts            = 1
 let airline_inactive_collapse          = 1
 let airline#extensions#tabline#enabled = 1
+
+" if you want the NERDTree integration.
+let project_use_nerdtree = 1
 
 " }}}
 
@@ -277,7 +279,7 @@ if !exists('autocmds_loaded')
                 \   setlocal modifiable |
                 \ endif
 
-    autocmd! BufWritePost */.vimrc source $MYVIMRC
+    autocmd! BufWritePost */.vimrc source $MYVIMRC | AirlineRefresh
 endif
 " }}}
 

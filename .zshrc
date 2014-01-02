@@ -38,10 +38,10 @@ setopt promptcr                # add \n which overwrites cmds with no \n
 setopt histverify              # when using ! cmds, confirm first
 setopt hist_ignore_dups        # ignore same commands run twice+
 setopt hist_ignore_all_dups
-setopt appendhistory           # do not overwrite history 
+setopt appendhistory           # do not overwrite history
 setopt sharehistory            # share history between all running instances.
 setopt hist_find_no_dups       # ignore dups in history search.
-setopt hist_save_no_dups       
+setopt hist_save_no_dups
 setopt hist_expire_dups_first
 setopt extended_history        # store time info in history.
 setopt interactive_comments    # escape commands so i can use them later
@@ -223,7 +223,7 @@ if [[  ~/.zshrc -nt $ZCACHE/alias-ls || ! -f $ZCACHE/alias-ls ]]; then
             ls_args[-1]=()
         fi
     done
-    echo "alias ls=\"$ls_cmd $ls_args\"" >! $ZCACHE/alias-ls 
+    echo "alias ls=\"$ls_cmd $ls_args\"" >! $ZCACHE/alias-ls
     unset ls_cmd ls_args
 fi
 

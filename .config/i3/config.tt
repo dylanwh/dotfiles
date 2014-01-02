@@ -11,7 +11,7 @@ font $font
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
 floating_maximum_size 1600 x 900
-floating_minimum_size 10 x 10
+floating_minimum_size 160 x 90
 
 # start a terminal
 bindsym $mod+grave exec dterm
@@ -75,18 +75,20 @@ bindsym $mod+a focus parent
 bindsym $mod+d focus child
 
 # switch to workspace
-bindsym $mod+1 workspace number 1
-bindsym $mod+2 workspace number 2
-bindsym $mod+3 workspace number 3
-bindsym $mod+4 workspace number 4
-bindsym $mod+5 workspace number 5
-bindsym $mod+6 workspace number 6
-bindsym $mod+7 workspace number 7
-bindsym $mod+8 workspace number 8
-bindsym $mod+9 workspace number 9
-bindsym $mod+0 workspace number 10
-bindsym $mod+minus scratchpad show
-bindsym $mod+equal exec i3-goto
+bindsym $mod+1                 workspace number 1
+bindsym $mod+2                 workspace number 2
+bindsym $mod+3                 workspace number 3
+bindsym $mod+4                 workspace number 4
+bindsym $mod+5                 workspace number 5
+bindsym $mod+6                 workspace number 6
+bindsym $mod+7                 workspace number 7
+bindsym $mod+8                 workspace number 8
+bindsym $mod+9                 workspace number 9
+bindsym $mod+0                 workspace number 10
+bindsym $mod+minus             scratchpad show
+bindsym $mod+equal             exec i3-goto
+bindsym $mod+comma             focus output VIRTUAL1
+bindsym $mod+period            focus output LVDS1
 
 # move focused container to workspace
 bindsym $mod+Shift+exclam      move container to workspace number 1
@@ -101,7 +103,9 @@ bindsym $mod+Shift+parenleft   move container to workspace number 9
 bindsym $mod+Shift+parenright  move container to workspace number 10
 bindsym $mod+Shift+minus       move scratchpad
 
-bindsym $mod+period exec i3-rename
+bindsym $mod+Shift+less        move workspace to output right
+bindsym $mod+Shift+greater     move workspace to output left
+
 bindsym $mod+slash  exec i3-focus
 
 bindsym $mod+XF86Back   workspace prev
@@ -128,11 +132,10 @@ for_window [title="^Event Tester$"] floating enable
 for_window [window_role="^pop-up$"] floating enable
 for_window [class="^Blueman-"] floating enable
 for_window [class="emulator64-arm"] floating enable
+for_window [title="^Steam(?: Login)?$"] floating enable
+for_window [class="Steam" title="^Steam$"] floating disable
+for_window [class="Steam" title="^Install"] floating enable
 
-assign [class="Google-chrome"] 2: chrome
-assign [class="emulator64-arm"] 9: android
-assign [class="Eclipse"] 10: eclipse
-assign [class="Steam"] 6: steam
 
 for_window [class="Google-chrome"] layout tabbed
 for_window [class="MPlayer"] floating enable

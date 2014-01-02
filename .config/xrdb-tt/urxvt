@@ -12,9 +12,9 @@ END;
 
 -%]
 
-URxvt.font:     [% config.fonts.1 %]
-URxvt.boldFont: [% config.fonts.1 %]
-URxvt.italicFont: [% config.fonts.1 %]
+URxvt.font:     [% config.fonts.0 %]
+URxvt.boldFont: [% config.fonts.0 %]
+URxvt.italicFont: [% config.fonts.0 %]
 
 URxvt.keysym.C-M-z: [% change_font("fixed") %]
 
@@ -35,7 +35,7 @@ URxvt.cursorBlink: false
 URxvt.geometry: 80x25
 
 URxvt.perl-ext-common: mark-and-yank,font-size,vtwheel
-URxvt.urlLauncher: url-handler
+URxvt.urlLauncher: xdg-open
 URxvt.underlineURLs: false
 
 URxvt.keysym.C-M-y:    perl:mark-and-yank:activate_mark_mode
