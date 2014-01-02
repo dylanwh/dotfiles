@@ -8,6 +8,10 @@ set output-meta on
 set editing-mode vi
 set visible-stats on
 
+# Completed names which are symbolic links to
+# directories have a slash appended.
+set mark-symlinked-directories on
+
 set keymap vi-command
 C-p: history-search-backward
 C-n: history-search-forward
@@ -15,14 +19,9 @@ C-n: history-search-forward
 set keymap vi-insert
 C-b: backward-kill-word
 C-f: unix-filename-rubout
-C-p: dynamic-complete-history
 C-e: yank-last-arg
 C-n: menu-complete
-
-
-# Completed names which are symbolic links to
-# directories have a slash appended.
-set mark-symlinked-directories on
+C-p: dynamic-complete-history
 
 # for linux console and RH/Debian xterm
 "\e[1~": beginning-of-line

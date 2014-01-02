@@ -12,6 +12,11 @@ $(DIR): $(HOME)
 	@mkdir -vp $(DIR)
 	@echo "cloning $<..."
 	@git clone --recursive $< $@
+	@cd $(DIR) && ( \
+		git remote rm origin; \
+		git remote add origin git@git.hardison.net:dylan/home; \
+		git remote add github git@github.com:dylanwh/dylan.git; \
+	)
 
 # 
 # cd ${TMPDIR:-/tmp}             || exit 1
