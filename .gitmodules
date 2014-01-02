@@ -10,9 +10,6 @@
 [submodule ".vim/bundle/supertab"]
 	path = .vim/bundle/supertab
 	url = git://github.com/ervandew/supertab.git
-[submodule ".vim/bundle/nerdtree"]
-	path = .vim/bundle/nerdtree
-	url = git://github.com/scrooloose/nerdtree.git
 [submodule ".vim/bundle/repeat"]
 	path = .vim/bundle/repeat
 	url = git://github.com/tpope/vim-repeat.git
@@ -25,9 +22,6 @@
 [submodule ".vim/bundle/eunuch"]
 	path = .vim/bundle/eunuch
 	url = git://github.com/tpope/vim-eunuch.git
-[submodule ".vim/bundle/nerdtree-tabs"]
-	path = .vim/bundle/nerdtree-tabs
-	url = https://github.com/jistr/vim-nerdtree-tabs.git
 [submodule ".config/dircolors-solarized"]
 	path = .config/dircolors-solarized
 	url = git@github.com:dylanwh/dircolors-solarized.git
