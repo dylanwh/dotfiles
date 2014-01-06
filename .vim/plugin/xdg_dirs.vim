@@ -47,9 +47,12 @@ set undodir=$XDG_DATA_HOME/vim/undo//
 set viewdir=$XDG_DATA_HOME/vim/view
 set viminfo+=n$XDG_DATA_HOME/vim/info
 
+let g:netrw_home = $XDG_DATA_HOME . "/vim/netrw"
+
 call s:MakePath(&directory)
 call s:MakePath(&backupdir)
 call s:MakePath(&undodir)
 call s:MakePath(&viewdir)
+call s:MakePath(g:netrw_home)
 
 " vim: set fdm=marker:
