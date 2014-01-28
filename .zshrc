@@ -18,6 +18,7 @@ fignore=(.o .hi .pyc)
 cdpath=(~ ~/src/hewitt ~/Dropbox /media)
 
 export PS_PERSONALITY=linux
+export KEYTIMEOUT=1
 
 ## }}}
 ## {{{ OPTIONS
@@ -153,6 +154,8 @@ alias g='git'
 alias gcd='cd $(git top)'
 alias gvi=gvim
 alias help=run-help
+alias i3rc='vim ~/.config/i3/config.tt'
+alias i3strc='vim ~/.config/i3status/config.tt'
 alias l='ls -L'
 alias la='ls -ax'
 alias ll='ls -l'
@@ -163,10 +166,10 @@ alias mv='mv -i'
 alias nl0="tr '\n' '\0'"
 alias pd=popd
 alias pdoc=perldoc
-alias please='sudo !!'
 alias pu=pushd
 alias rd="rmdir"
 alias rm='rm -i'
+alias tmuxrc='vim ~/.tmux.conf'
 alias vi=vim
 alias vimrc="$EDITOR ~/.vimrc"
 alias xmrc='vim ~/.xmonad/xmonad.hs && xmonad --recompile && xmonad --restart'
@@ -175,13 +178,13 @@ alias xs=cd
 alias zenv='vim ~/.zshenv' 
 alias zpro='vim ~/.zprofile'
 alias zrc='vim ~/.zshrc'
-alias i3rc='vim ~/.config/i3/config.tt'
 alias zreload='exec env SHLVL=0 $SHELL'
 
 have pinfo      && alias info=pinfo
 have ack-grep   && alias ack=ack-grep
 have hub        && eval "$(hub alias -s)"
 have fasd       && eval "$(fasd --init posix-alias zsh-hook zsh-ccomp zsh-ccomp-install zsh-wcomp zsh-wcomp-install)"
+have gcp        && alias cp=gcp
 
 alias xclip='xclip -selection clipboard'
 
