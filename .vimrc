@@ -63,7 +63,7 @@ set viewoptions+=unix      " view files use unix EOL, even on Windows.
 set viewoptions-=options   " options in views can cause unexpected behavior.
 set wim=longest,list,full  " thanks nornagon!
 set grepprg=ag             " use ag for grep
-set viminfo='1000          " store last 1000 marks
+set viminfo='4000          " store last 1000 marks
 set viminfo+=!             " save any variables that begin with a capital letter to viminfo
 set viminfo+=%             " save and restore buffer list
 set viminfo+=h             " nohlsearch previous search pattern when vim starts.
@@ -71,10 +71,11 @@ set viminfo+=f1            " store all file marks
 set viminfo+=r/tmp         " no viminfo for /tmp/*
 set viminfo+=r/mnt         " ...
 set viminfo+=r/media       " ...
+set list                   " show invisible characters by default
 
 " Ignore these filenames during enhanced command line completion.
 set wildignore+=*.aux,*.out,*.toc                        " LaTeX intermediate files
-set wildignore+=*.jpg,*.bmp,*.gif                        " binary images
+set wildignore+=*.png,*.jpg,*.bmp,*.gif                  " binary images
 set wildignore+=*.luac                                   " Lua byte code
 set wildignore+=*.o,*.obj,*.exe,*.dll,*.manifest,*.class " compiled object files
 set wildignore+=*.pyc                                    " Python byte code
