@@ -2,18 +2,47 @@
 
 profile=$1
 
+function die {
+    echo "$@" >&2
+    exit 1
+}
+
+before_hooks=( $HOME/.screenlayout/before/*.sh(N) )
+after_hooks=( $HOME/.screenlayout/after/*.sh(N) )
 
 if [[ -n $profile ]]; then
-	script=$HOME/.screenlayout/$profile@$HOST.sh
+	profile_script=$HOME/.screenlayout/$profile@$HOST.sh
 
-	if [[ -x $script ]]; then
-		 $script
-		 . ~/.fehbg
+	if [[ -x $profile_script ]]; then
+
+        for hook in $before_hooks; do
+            $hook $profile
+        done
+
+		 $profile_script
+         profile_status=$?
+
+        for hook in $after_hooks; do
+            $hook $profile
+        done
+
+        if [[ -L $profile_script ]]; then
+            last_target=$(readlink $profile_script)
+        else
+            last_target=$(basename $profile_script)
+        fi
+
+        if (( $profile_status == 0 )); then
+            ln -fs $last_target last@$HOST.sh
+        fi
+        exit $profile_status
 	else
-		echo "no such layout" >&2
+		die "no such layout" >&2
 	fi
 else
 	profiles=( $HOME/.screenlayout/*@$HOST.sh(:t:r:s/@$HOST/) )
+    (( $#profiles == 0 )) && die "no layouts for $HOST"
+
 	for profile in $profiles; do
 		echo $profile
 	done | sort
