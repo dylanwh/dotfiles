@@ -1,6 +1,6 @@
 #!/bin/zsh
 
-cmd=(dmenu-dark -p "run program: ")
+cmd=(dymenu -q -p "run:")
 
 cachedir=${XDG_CACHE_HOME:-"$HOME/.cache"}
 if [ -d "$cachedir" ]; then

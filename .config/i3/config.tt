@@ -1,9 +1,10 @@
+[% TAGS star %]
 # i3 config file (v4)
 #
 # Please see http://i3wm.org/docs/userguide.html for a complete reference!
 
 set $mod Mod4
-set $font -xos4-terminus-bold-r-*-*-12-*-*-*-*-*-iso8859-1
+set $font -xos4-terminus-*-r-*-*-16-*-*-*-*-*-*-*
 
 # font for window titles. ISO 10646 = Unicode
 font $font
@@ -13,16 +14,21 @@ floating_modifier $mod
 floating_maximum_size 1600 x 900
 floating_minimum_size 160 x 90
 
+force_focus_wrapping no
+force_display_urgency_hint 500 ms
+
 # start a terminal
-bindsym $mod+grave exec dterm
-bindsym $mod+Escape exec dterm
+bindsym $mod+grave exec dyterm
+bindsym $mod+Escape exec dyterm
 
 # kill focused window
 bindsym $mod+Shift+C kill
 
 # start gmrun (a program launcher)
-bindsym $mod+p exec i3-menu
+bindsym $mod+p exec dymenu-run
+bindsym $mod+o exec dymenu-fasd
 bindsym $mod+x exec i3-freeze
+bindsym XF86ScreenSaver exec i3-freeze
 
 bindsym $mod+Shift+v exec --no-startup-id xdo-paste
 
@@ -33,10 +39,6 @@ bindsym $mod+k focus up
 bindsym $mod+l focus right
 
 bindsym $mod+u [urgent="last"] focus
-bindsym $mod+i [con_mark="irssi"] focus
-
-bindsym $mod+m exec i3-input -F 'mark %s' -P 'mark: ' -f '$font'
-bindsym $mod+apostrophe exec i3-marks
 
 # move focused window
 bindsym $mod+Shift+H move left
@@ -45,19 +47,20 @@ bindsym $mod+Shift+K move up
 bindsym $mod+Shift+L move right
 
 # split in horizontal orientation
-bindsym $mod+z split h
+bindsym $mod+Shift+bar split h
 
 # split in vertical orientation
-bindsym $mod+v split v
+bindsym $mod+Shift+minus split v
 
 # enter fullscreen mode for the focused container
 bindsym $mod+f fullscreen
 bindsym $mod+t floating toggle
 
+bindsym $mod+q layout toggle split
+bindsym $mod+w layout stacked
+bindsym $mod+e layout tabbed
+
 # change container layout (stacking, tabbed, default)
-bindsym $mod+e layout toggle split
-bindsym $mod+s layout stacking
-bindsym $mod+w layout tabbed
 bindsym $mod+space layout toggle all
 
 # toggle tiling / floating
@@ -67,6 +70,7 @@ bindsym $mod+Shift+space layout default
 bindsym $mod+Tab focus mode_toggle
 
 bindsym $mod+b border toggle
+bindsym $mod+m bar mode toggle
 
 # focus the parent container
 bindsym $mod+a focus parent
@@ -85,8 +89,7 @@ bindsym $mod+7                 workspace number 7
 bindsym $mod+8                 workspace number 8
 bindsym $mod+9                 workspace number 9
 bindsym $mod+0                 workspace number 10
-bindsym $mod+minus             scratchpad show
-bindsym $mod+equal             exec i3-goto
+bindsym $mod+s             scratchpad show
 bindsym $mod+comma             focus output VIRTUAL1
 bindsym $mod+period            focus output LVDS1
 
@@ -101,24 +104,13 @@ bindsym $mod+Shift+ampersand   move container to workspace number 7
 bindsym $mod+Shift+asterisk    move container to workspace number 8
 bindsym $mod+Shift+parenleft   move container to workspace number 9
 bindsym $mod+Shift+parenright  move container to workspace number 10
-bindsym $mod+Shift+minus       move scratchpad
+bindsym $mod+Shift+S       move scratchpad
 
-bindsym $mod+Shift+less        move workspace to output right
-bindsym $mod+Shift+greater     move workspace to output left
-
-bindsym $mod+slash  exec i3-focus
+bindsym $mod+Shift+less        move workspace to output left
+bindsym $mod+Shift+greater     move workspace to output right
 
 bindsym $mod+XF86Back   workspace prev
 bindsym $mod+XF86Forward workspace next
-
-# exit i3 (logs you out of your X session)
-bindsym $mod+Shift+Q exit
-
-# restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
-bindsym $mod+Shift+W restart
-
-# reload the configuration file
-bindsym $mod+Shift+R reload
 
 for_window [class="URxvt"] border 1pixel
 for_window [class="Google-chrome"] border 1pixel
@@ -162,7 +154,7 @@ mode "resize" {
 bindsym $mod+r mode "resize"
 
 [* SET
-# SOLARIZED HEX 
+# SOLARIZED HEX
 # --------- -------
     base03   = "#002b36"
     base02   = "#073642"
@@ -183,11 +175,13 @@ bindsym $mod+r mode "resize"
 *]
 
 # solarized
-client.background       [* base2 *]
-client.focused          [* base2 *] [* base02 *]  [* blue *]   [* orange *]
-client.focused_inactive [* base01 *] [* base03 *] [* base01 *] [* orange *]
-client.unfocused        [* base00 *] [* base03 *] [* base00 *] [* orange *]
-client.urgent           [* base00 *] [* red *] [* base2 *]  [* orange *]
+# client.background       [* base2 *]
+#                       border       background   text           indicator
+# client.focused          [* base2 *]  [* blue *] [* base1 *]   [* orange *]
+# client.unfocused        [* base00 *] [* base03 *] [* base00 *] [* orange *]
+# client.focused_inactive [* base01 *] [* base03 *] [* base01 *] [* orange *]
+# client.urgent           [* base00 *] [* red *] [* base2 *]  [* orange *]
+
 
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
@@ -204,24 +198,24 @@ bar {
         statusline [* base0 *]
 
         # base3, #base02
-        focused_workspace [* base3 *] [* base02 *]
+        focused_workspace [* base2 *] [* base02 *]
 
-        # base01, #base03   
-        active_workspace [* base01 *] [* base03 *]
+        # base01, #base03
+        active_workspace [* base00 *] [* base03 *]
 
         # base00, base02
-        inactive_workspace [* base00 *] [* base03 *]
+        inactive_workspace [* base01 *] [* base03 *]
 
         # red, base02
         urgent_workspace [* red *] [* base03 *]
     }
 }
 
-[* 
+[*
 SET applets = ["nm-applet", "blueman-applet", "parcellite"];
 
 FOREACH applet IN applets;
-    IF have(applet); 
+    IF have(applet);
         GET "exec --no-startup-id $applet\n";
     END;
 END;

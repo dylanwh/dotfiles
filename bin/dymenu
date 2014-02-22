@@ -1,0 +1,11 @@
+#!/bin/zsh
+
+
+font=$(sed -n 's/set\s\+$font\s\+//p' ~/.config/i3/config)
+args=(-fn $font -b)
+
+if [[ -f ~/.outside ]]; then
+    exec dmenu-dark $args "$@"
+else
+    exec dmenu-light $args "$@"
+fi
