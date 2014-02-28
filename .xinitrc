@@ -34,7 +34,7 @@ source ~/.fehbg
 
 start-pulseaudio-x11 
 
-lo default
+lo current
 sleep .5
 
-i3
+i3 &> /dev/null

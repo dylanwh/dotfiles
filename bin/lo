@@ -1,5 +1,7 @@
 #!/bin/zsh
 
+PROFILE_DIR=$HOME/.screenlayout
+
 profile=$1
 
 function die {
@@ -7,19 +9,18 @@ function die {
     exit 1
 }
 
-before_hooks=( $HOME/.screenlayout/before/*.sh(N) )
-after_hooks=( $HOME/.screenlayout/after/*.sh(N) )
+before_hooks=( $PROFILE_DIR/before/*.sh(N) )
+after_hooks=( $PROFILE_DIR/after/*.sh(N) )
 
 if [[ -n $profile ]]; then
-	profile_script=$HOME/.screenlayout/$profile@$HOST.sh
+    profile_script=$PROFILE_DIR/$profile@$HOST.sh
 
-	if [[ -x $profile_script ]]; then
-
+    if [[ -x $profile_script ]]; then
         for hook in $before_hooks; do
             $hook $profile
         done
 
-		 $profile_script
+         $profile_script
          profile_status=$?
 
         for hook in $after_hooks; do
@@ -27,23 +28,24 @@ if [[ -n $profile ]]; then
         done
 
         if [[ -L $profile_script ]]; then
-            last_target=$(readlink $profile_script)
+            current_target=$(readlink $profile_script)
         else
-            last_target=$(basename $profile_script)
+            current_target=$(basename $profile_script)
         fi
 
         if (( $profile_status == 0 )); then
-            ln -fs $last_target last@$HOST.sh
+            mv $PROFILE_DIR/current@$HOST.sh $PROFILE_DIR/last@$HOST.sh
+            ln -fs $PROFILE_DIR/$current_target $PROFILE_DIR/current@$HOST.sh
         fi
         exit $profile_status
-	else
-		die "no such layout" >&2
-	fi
+    else
+        die "no such layout" >&2
+    fi
 else
-	profiles=( $HOME/.screenlayout/*@$HOST.sh(:t:r:s/@$HOST/) )
+    profiles=( $PROFILE_DIR/*@$HOST.sh(:t:r:s/@$HOST/) )
     (( $#profiles == 0 )) && die "no layouts for $HOST"
 
-	for profile in $profiles; do
-		echo $profile
-	done | sort
+    for profile in $profiles; do
+        echo $profile
+    done | sort
 fi
