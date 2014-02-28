@@ -2,7 +2,7 @@
 MACRO cmd(code, body) GET "\\033]$code;$body\\007";
 
 MACRO change_font(font, bold_font) BLOCK;
-    UNLESS bold_font; 
+    UNLESS bold_font;
         bold_font = font;
     END;
     GET "command:";
@@ -12,9 +12,9 @@ END;
 
 -%]
 
-URxvt.font:     [% config.fonts.0 %]
-URxvt.boldFont: [% config.fonts.0 %]
-URxvt.italicFont: [% config.fonts.0 %]
+URxvt.font:     [% config.fonts.1 %]
+URxvt.boldFont: [% config.fonts.1 %]
+URxvt.italicFont: [% config.fonts.1 %]
 
 URxvt.keysym.C-M-z: [% change_font("fixed") %]
 
@@ -38,15 +38,15 @@ URxvt.perl-ext-common: mark-and-yank,font-size,vtwheel
 URxvt.urlLauncher: xdg-open
 URxvt.underlineURLs: false
 
-URxvt.keysym.C-M-y:    perl:mark-and-yank:activate_mark_mode
-URxvt.keysym.C-M-u:    perl:mark-and-yank:activate_mark_url_mode
+URxvt.keysym.C-M-y:      perl:mark-and-yank:activate_mark_mode
+URxvt.keysym.C-M-u:      perl:mark-and-yank:activate_mark_url_mode
 URxvt.keysym.C-M-Up:     perl:font-size:increase
 URxvt.keysym.C-M-Down:   perl:font-size:decrease
 
 URxvt.iso14755: false
 URxvt.iso14755_52: false
 
-[% 
+[%
 INCLUDE theme/solarized;
 INCLUDE theme/solarized prefix='outside.' option="invert";
 INCLUDE theme/solarized prefix='night.' option="black";

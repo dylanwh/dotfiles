@@ -37,7 +37,7 @@ END;
 
 [% prefix %]background:   [% background %]
 [% prefix %]foreground:   [% foreground %]
-[% IF fading -%]
+[% IF fading AND fading != 'none' -%]
 [% prefix %]fading:       [% fading     %]
 [% prefix %]fadeColor:    [% fade_color %]
 [% END -%]

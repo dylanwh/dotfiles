@@ -21,85 +21,89 @@
 
 # Solarized Colors {{{
 SET S = {
-	base03  => "#002b36",
-	base02  => "#073642",
-	base01  => "#586e75",
-	base00  => "#657b83",
+    base03  => "#002b36",
+    base02  => "#073642",
+    base01  => "#586e75",
+    base00  => "#657b83",
 
-	base0   => "#839496",
-	base1   => "#93a1a1",
-	base2   => "#eee8d5",
-	base3   => "#fdf6e3",
+    base0   => "#839496",
+    base1   => "#93a1a1",
+    base2   => "#eee8d5",
+    base3   => "#fdf6e3",
 
-	yellow  => "#b58900",
-	orange  => "#cb4b16",
-	red     => "#dc322f",
-	magenta => "#d33682",
-	violet  => "#6c71c4",
-	blue    => "#268bd2",
-	cyan    => "#2aa198",
-	green   => "#859900",
+    yellow  => "#b58900",
+    orange  => "#cb4b16",
+    red     => "#dc322f",
+    magenta => "#d33682",
+    violet  => "#6c71c4",
+    blue    => "#268bd2",
+    cyan    => "#2aa198",
+    green   => "#859900",
 };
 
 MACRO flip(S, base) BLOCK;
-	SET base0 = base.replace("(\\d)$", '0$1');
-	SET temp = S.${base};
-	SET S.${base} = S.${base0};
-	SET S.${base0} = temp;
+    SET base0 = base.replace("(\\d)$", '0$1');
+    SET temp = S.${base};
+    SET S.${base} = S.${base0};
+    SET S.${base0} = temp;
 END;
 
 # }}}
 
-DEFAULT option = "base";
+DEFAULT option = "default";
 
 INCLUDE "solarized_$option";
 
 BLOCK solarized_invert;
-	flip(S, "base0");
-	flip(S, "base1");
-	flip(S, "base2");
-	flip(S, "base3");
+    flip(S, "base0");
+    flip(S, "base1");
+    flip(S, "base2");
+    flip(S, "base3");
+    DEFAULT fading = 'none';
 
-	INCLUDE solarized_base;
+    INCLUDE _solarized_base;
 END;
-	
+
+BLOCK solarized_default;
+    INCLUDE _solarized_base;
+END;
+
 BLOCK solarized_black;
-	DEFAULT background = 'black';
-	INCLUDE solarized_base;
+    DEFAULT background = 'black';
+    INCLUDE _solarized_base;
 END;
 
-BLOCK solarized_base;
-	DEFAULT
-		background = S.base03
-		foreground = S.base0
+BLOCK _solarized_base;
+    DEFAULT
+        background = S.base03
+        foreground = S.base0
 
-		fading     = 40
-		fade_color = S.base03
+        fade_color = S.base03
 
-		cursor_color = S.base1
+        cursor_color = S.base1
 
-		ptr_background = S.base01
-		ptr_foreground = S.base1
+        ptr_background = S.base01
+        ptr_foreground = S.base1
 
-		color0     = S.base02
-		color1     = S.red
-		color2     = S.green
-		color3     = S.yellow
-		color4     = S.blue
-		color5     = S.magenta
-		color6     = S.cyan
-		color7     = S.base2
-		color8     = S.base03
-		color9     = S.orange
-		color10    = S.base01
-		color11    = S.base00
-		color12    = S.base0
-		color13    = S.violet
-		color14    = S.base1
-		color15    = S.base3;
+        color0     = S.base02
+        color1     = S.red
+        color2     = S.green
+        color3     = S.yellow
+        color4     = S.blue
+        color5     = S.magenta
+        color6     = S.cyan
+        color7     = S.base2
+        color8     = S.base03
+        color9     = S.orange
+        color10    = S.base01
+        color11    = S.base00
+        color12    = S.base0
+        color13    = S.violet
+        color14    = S.base1
+        color15    = S.base3;
 
 
-	PROCESS "theme/base" ;
+    PROCESS "theme/base" ;
 %]
 [% prefix %]keysym.C-Mod4-n: command:[% cmd(11, 'black'); cmd(708, 'black'); %]
 [% prefix %]keysym.C-Mod4-s: command:[% cmd(11, S.base03); cmd(708, S.base03); %]
