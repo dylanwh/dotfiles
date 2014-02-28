@@ -1,3 +1,3 @@
 #!/bin/sh
 
-git log --graph --pretty=format:'%Cred%h%Creset%C(yellow)%d%Creset %C(bold blue)%an %Cgreen(%cr)%Creset%n%s%n' --abbrev-commit --date=relative --stat=$COLUMNS "$@"
+git log --graph --pretty=format:'%C(white)%h%Creset%C(yellow)%d%Creset %C(blue)%an %Cgreen(%cr)%Creset%n%s%n' --abbrev-commit --date=relative --stat=$COLUMNS "$@"
