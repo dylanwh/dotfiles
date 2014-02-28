@@ -13,11 +13,14 @@ ENSURE_DIRS = $(XDG_DATA_HOME) \
 			  $(XDG_CACHE_HOME) \
 			  $(XDG_CACHE_HOME)/ssh \
 			  $(XDG_CACHE_HOME)/zsh \
+			  $(XDG_DATA_HOME)/zsh \
+			  $(XDG_DATA_HOME)/tmux \
 			  $(XDG_DATA_HOME)/vim \
 			  $(XDG_DATA_HOME)/vim/backup \
 			  $(XDG_DATA_HOME)/vim/swap \
 			  $(XDG_DATA_HOME)/vim/undo \
 			  $(XDG_DATA_HOME)/vim/view \
+			  $(XDG_DATA_HOME)/vim/netrw \
 			  $(XDG_DESKTOP_DIR) \
 			  $(XDG_DOCUMENTS_DIR) \
 			  $(XDG_DOWNLOAD_DIR) \
@@ -49,11 +52,11 @@ $(XDG_CACHE_HOME)/user-dirs.mk: $(XDG_CONFIG_HOME)/user-dirs.dirs $(XDG_CACHE_HO
 
 
 $(XDG_CONFIG_HOME)/i3/config: $(XDG_CONFIG_HOME)/i3/config.tt
-	ttpp -Tstar -o $@ $<
+	ttpp -o $@ $<
 	i3-cmd reload
 
 $(XDG_CONFIG_HOME)/i3status/config: $(XDG_CONFIG_HOME)/i3status/config.tt
-	ttpp -Tstar -o $@ $<
+	ttpp -o $@ $<
 
 $(ENSURE_DIRS):
 	mkdir -p $@
