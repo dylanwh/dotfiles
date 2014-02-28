@@ -159,6 +159,8 @@ alias dbfs='dropbox filestatus'
 alias dbs='dropbox status'
 alias df="df -h"
 alias evince='runbg evince'
+alias fd='find . -type d -name'
+alias ff='find . -type f -name'
 alias find="noglob find"
 alias free="free -m"
 alias g='git'
@@ -190,6 +192,7 @@ alias zenv='vim ~/.zshenv'
 alias zpro='vim ~/.zprofile'
 alias zrc='vim ~/.zshrc'
 alias zreload='exec env SHLVL=0 $SHELL'
+
 
 have pinfo      && alias info=pinfo
 have ack-grep   && alias ack=ack-grep
@@ -274,6 +277,7 @@ if have dircolors; then
     eval $(dircolors ~/.config/dircolors-solarized/dircolors.ansi-dark )
 
     zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
+    zstyle ':completion:*' menu select=2 interactive=5
 fi
 
 umask  077   # Create files that are readable only by moi

@@ -85,3 +85,15 @@
 [submodule ".vim/bundle/vinegar"]
 	path = .vim/bundle/vinegar
 	url = git://github.com/tpope/vim-vinegar.git
+[submodule ".zsh/antigen"]
+	path = .zsh/antigen
+	url = git://github.com/zsh-users/antigen.git
+[submodule ".zsh/bundle/zsh-syntax-highlighting"]
+	path = .zsh/bundle/zsh-syntax-highlighting
+	url = git://github.com/zsh-users/zsh-syntax-highlighting.git
+[submodule ".zsh/bundle/zsh-completions"]
+	path = .zsh/bundle/zsh-completions
+	url = git://github.com/rtyler/zsh-completions.git
+[submodule ".zsh/bundle/zsh-bd"]
+	path = .zsh/bundle/zsh-bd
+	url = git://github.com/Tarrasch/zsh-bd.git

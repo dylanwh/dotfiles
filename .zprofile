@@ -10,6 +10,13 @@ case $HOST in
     ;; 
 esac
 
-source ~/.zshenv
+if [[ -f /etc/arch-release && -d /etc/profile.d ]]; then
+    for file in /etc/profile.d/*.(z|)sh(N); do
+        source $file
+        unset file
+    done
+fi
+
+setopt globalrcs
 
 # vim: set sw=4 ts=4 foldmethod=marker path=.,~/.zsh:
