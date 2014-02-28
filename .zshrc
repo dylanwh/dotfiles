@@ -18,7 +18,7 @@ fignore=(.o .hi .pyc)
 cdpath=(~ ~/src/hewitt ~/Dropbox /media)
 
 export PS_PERSONALITY=linux
-export KEYTIMEOUT=1
+export KEYTIMEOUT=1 # Kill lag for <esc> bindings.
 
 ## }}}
 ## {{{ OPTIONS
@@ -109,20 +109,31 @@ bindkey "^_" copy-prev-shell-word
 bindkey '^Q' push-input
 bindkey '^X^N' infer-next-history
 bindkey '^E' expand-word
+bindkey ' ' magic-space ## do history expansion on space
+
 bindkey '^F' fasd-complete-f
 bindkey '^X^A' fasd-complete
 bindkey '^X^F' fasd-complete-f
 bindkey '^X^D' fasd-complete-d
-bindkey ' ' magic-space ## do history expansion on space
-
 bindkey -r '^X'
+
+
+bindkey -v
+
+bindkey '^P' up-history
+bindkey '^N' down-history
+bindkey '^?' backward-delete-char
+bindkey '^h' backward-delete-char
+bindkey '^w' backward-kill-word
+bindkey '^r' history-incremental-search-backward
 
 ## }}}
 ## {{{ FUNCTIONS
 # Autoload various functions
 autoload run-help compinit promptinit colors
 autoload title shuffle perlpath prefix
-autoload runbg fname mcp 
+autoload runbg fname mcp
+autoload bd
 
 # initialize advanced tab completion.
 compinit -d $ZCACHE/zcompdump
