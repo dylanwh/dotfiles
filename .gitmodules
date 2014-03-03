@@ -97,3 +97,6 @@
 [submodule ".zsh/bundle/zsh-bd"]
 	path = .zsh/bundle/zsh-bd
 	url = git://github.com/Tarrasch/zsh-bd.git
+[submodule ".vim/bundle/tabular"]
+	path = .vim/bundle/tabular
+	url = git://github.com/godlygeek/tabular.git
