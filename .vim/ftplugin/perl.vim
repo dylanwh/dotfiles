@@ -3,6 +3,9 @@ setlocal foldtext=PerlFoldTextNoLines()
 setlocal textwidth=120
 setlocal expandtab
 setlocal isfname=@,48-57,/,.,_,+,,,#,$,%,~,=,:
+if !&l:equalprg
+    setlocal equalprg=perltidy\ -pbp\ -l=120
+endif
 
 if $HOST == 'mani'
     setlocal expandtab
