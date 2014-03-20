@@ -152,10 +152,8 @@ let ctrlp_custom_ignore = '\v[\/]\.(git|hg|svn)$'
 
 let airline_powerline_fonts            = 1
 let airline_inactive_collapse          = 1
+let airline_theme                      = 'lucius'
 let airline#extensions#tabline#enabled = 1
-
-" if you want the NERDTree integration.
-let project_use_nerdtree = 1
 
 " }}}
 
@@ -165,11 +163,11 @@ colorscheme solarized
 " }}}
 
 " MAPPINGS {{{1
-map <F1> :set spell!<BAR>set spell?<CR>
-map <F2> :set cul!<BAR>set cul?<CR>
-map <F3> :set nu!<BAR>set nu?<CR>
-map <F4> :set nonu nocul<BAR>set nu? cul?<CR>
-map <F5> :Welcome<CR>
+map <F1>   :set spell!<BAR>set spell?<CR>
+map <F2>   :set cul!<BAR>set cul?<CR>
+map <F3>   :set nu!<BAR>set nu?<CR>
+map <F4>   :set nonu nocul<BAR>set nu? cul?<CR>
+map <F10>  :Welcome<CR>
 
 map K \K
 map Y y$
@@ -186,10 +184,19 @@ nmap <Leader>v  :tabedit $MYVIMRC<CR>
 nmap sf         :CtrlPF<CR>
 nmap sz         :CtrlPZ<CR>
 
-nnoremap <Left> <C-w>h
-nnoremap <Down> <C-w>j
-nnoremap <Up>   <C-w>k
-nnoremap <Right> <C-w>l
+nmap <Leader>> :Tab/=><CR>
+vmap <Leader>> :Tab/=><CR>
+nmap <Leader>= :Tab/=<CR>
+vmap <Leader>= :Tab/=<CR>
+nmap <Leader>: :Tab/:\zs<CR>
+vmap <Leader>: :Tab/:\zs<CR>
+nmap <Leader>t :Tab/
+vmap <Leader>t :Tab/
+
+nnoremap <Left>   <C-w>h
+nnoremap <Down>   <C-w>j
+nnoremap <Up>     <C-w>k
+nnoremap <Right>  <C-w>l
 
 inoremap <Left>  <C-o><C-w>h
 inoremap <Down>  <C-o><C-w>j
@@ -245,6 +252,7 @@ if !exists('autocmds_loaded')
         autocmd BufNewFile,BufRead */.i3/config* set ft=i3
         autocmd BufNewFile,BufRead */.config/i3/config* set ft=i3
         autocmd BufNewFile,BufRead Capfile set ft=ruby
+        autocmd BufNewFile,BufRead /tmp/zsh* set ft=sh syn=zsh
     augroup END
     " }}}
 
@@ -259,6 +267,7 @@ if !exists('autocmds_loaded')
                 \ setl foldmethod=marker |
                 \ setl comments=sO:-\ -,mO:-\ \ ,exO:]],s1:--[[,mb:-,ex:]],:-- |
                 \ setl commentstring=--%s
+    autocmd FileType zsh setl path=.,~/.zsh/lib
 
 
     au WinLeave * if &g:cursorline |
