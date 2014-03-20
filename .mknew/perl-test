@@ -1,5 +1,0 @@
-[% INCLUDE "perl-script" -%]
-use Test::More;
-use Test::Exception;
-
-done_testing;

@@ -1,4 +1,0 @@
-[% INCLUDE "perl-script" -%]
-use CGI qw( :standard );
-
-print header();
