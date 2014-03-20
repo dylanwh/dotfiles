@@ -10,7 +10,11 @@ function mutagen_infect {
 
     for plugin_dir in $bundle_dir/*(N/); do
         plugin_name="$(basename $plugin_dir)"
-        plugin_files=($plugin_dir/(*.plugin.zsh|*.zsh)(N))
+        if [[ -f $bundle_dir/$plugin_name.loader.zsh ]]; then
+            plugin_files=( $bundle_dir/$plugin_name.loader.zsh )
+        else
+            plugin_files=($plugin_dir/(*.plugin.zsh|*.zsh)(N))
+        fi
 
         [[ -n $MUTAGEN_LOADED[$plugin_name] ]] && continue
 
