@@ -1,3 +1,0 @@
-#!zsh
-word="$1"
-find -name "*$word*"

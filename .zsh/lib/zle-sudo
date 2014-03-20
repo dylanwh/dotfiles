@@ -1,0 +1,9 @@
+#!zsh
+case $LBUFFER in
+    *sudo*)
+        # do nothing
+    ;;
+    *)
+        LBUFFER="sudo $LBUFFER"; (( CURSOR = CURSOR + 5)); zle reset-prompt
+    ;;
+esac

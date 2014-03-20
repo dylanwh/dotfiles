@@ -1,4 +1,5 @@
 #!zsh
+# vim: set foldmethod=marker:
 
 local PR_TIME PR_DATE PR_USER PR_DIR PR_JOBS PR_CHAR PR_VCS PR_NAME PR_HOST PR_AT
 PR_TIME="%F{10}%D{%H:%M}%f"
@@ -11,15 +12,15 @@ PR_CHAR="%0(?.%F{10}%#%f.%F{1}%?%F{10}?%f)"
 PR_AT="%F{10}@%f"
 PR_VCS='${vcs_info_msg_0_}'
 
-autoload -Uz vcs_info title 
+autoload -Uz vcs_info title
 
 #zstyle ':vcs_info:*' formats       \
-#	'%F{10}(%F{green}%s:%b%F{10})%f'
+#   '%F{10}(%F{green}%s:%b%F{10})%f'
 
 zstyle ':vcs_info:git*:*' actionformats \
-	'%F{10}(%F{red}%b, %a%F{10})%f'
+    '%F{10}(%F{red}%b, %a%F{10})%f'
 zstyle ':vcs_info:git*:*' formats \
-	'%F{10}(%F{green}%b%F{10})%f'
+    '%F{10}(%F{green}%b%F{10})%f'
 
 zstyle ':vcs_info:(sv[nk]|bzr):*' branchformat '%b:%r'
 
@@ -31,10 +32,10 @@ zstyle ':vcs_info:svn:*' check-for-changes true
 
 #PROMPT="$PR_TIME $PR_NAME@$PR_HOST:$PR_DIR%# "
 
-if [[ -n $SSH_CLIENT || $USERNAME != dylan ]]; then
-	PR_USER="$PR_NAME$PR_AT$PR_HOST "
+if [[ -n $SSH_CLIENT ]]; then
+    PR_USER="$PR_NAME$PR_AT$PR_HOST "
 else
-	PR_USER=''
+    PR_USER=''
 fi
 
 PROMPT="$PR_USER$PR_DIR$PR_VCS$PR_JOBS$PR_CHAR "
@@ -49,3 +50,27 @@ precmd_functions+=( title vcs_info )
 prompt_opts=( cr percent subst )
 
 alias norp='unset RPROMPT'
+
+# {{{ ZSH HIGHLIGHT STYLES
+ZSH_HIGHLIGHT_STYLES[default]=none
+ZSH_HIGHLIGHT_STYLES[unknown-token]=fg=red
+ZSH_HIGHLIGHT_STYLES[reserved-word]=fg=white,bold
+ZSH_HIGHLIGHT_STYLES[alias]=fg=blue
+ZSH_HIGHLIGHT_STYLES[builtin]=fg=cyan
+ZSH_HIGHLIGHT_STYLES[function]=fg=blue
+ZSH_HIGHLIGHT_STYLES[command]=fg=green
+ZSH_HIGHLIGHT_STYLES[precommand]=fg=green,bold
+ZSH_HIGHLIGHT_STYLES[commandseparator]=fg=white,bold
+ZSH_HIGHLIGHT_STYLES[globbing]=fg=magenta,bold
+ZSH_HIGHLIGHT_STYLES[hashed-command]=fg=blue
+ZSH_HIGHLIGHT_STYLES[path]=fg=magenta
+ZSH_HIGHLIGHT_STYLES[history-expansion]=fg=blue
+ZSH_HIGHLIGHT_STYLES[single-hyphen-option]=fg=yellow
+ZSH_HIGHLIGHT_STYLES[double-hyphen-option]=fg=yellow
+ZSH_HIGHLIGHT_STYLES[back-quoted-argument]=fg=red
+ZSH_HIGHLIGHT_STYLES[single-quoted-argument]=fg=cyan
+ZSH_HIGHLIGHT_STYLES[double-quoted-argument]=fg=cyan
+ZSH_HIGHLIGHT_STYLES[dollar-double-quoted-argument]=fg=cyan
+ZSH_HIGHLIGHT_STYLES[back-double-quoted-argument]=fg=red
+ZSH_HIGHLIGHT_STYLES[assign]=fg=white
+# }}}

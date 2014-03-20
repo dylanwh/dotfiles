@@ -3,10 +3,10 @@
 src=$1; shift
 
 if [[ -z $src ]]; then
-	echo "usage: $0 src dest1 [dest2 [dest3 ...]]" >&2
-	exit 1
+    echo "usage: $0 src dest1 [dest2 [dest3 ...]]" >&2
+    exit 1
 fi
 
 for dest in $argv; do
-	cp -vf --backup=existing $src $dest
+    cp -vf --backup=existing $src $dest
 done

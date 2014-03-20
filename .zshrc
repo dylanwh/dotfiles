@@ -2,16 +2,24 @@
 # This script is executed for every interactive shell.
 # See also: ~/.zshenv ~/.zprofile [~/.zshrc] ~/.zlogin ~/.zlogout
 
+# MUTAGEN# {{{
+source ~/.zsh/bundle/mutagen/mutagen.plugin.zsh
+mutagen_infect ~/.zsh/bundle
+fpath=(~/.zsh/lib $fpath)
+
+# }}}
 ## {{{ VARIABLES
-declare -g ZCACHE
+declare -g ZCACHE ZDATA
 ZCACHE=$XDG_CACHE_HOME/zsh
+ZDATA=$XDG_DATA_HOME/zsh
 [[ -d $ZCACHE ]] || mkdir -p $ZCACHE
+[[ -d $ZDATA ]]  || mkdir -p $ZDATA
 
 HISTSIZE=4000
-READNULLCMD=${PAGER:-/usr/bin/pager}
+READNULLCMD=${PAGER:-/usr/bin/less}
 LOGCHECK=30
 SAVEHIST=3000
-HISTFILE=$ZCACHE/history
+HISTFILE=$ZDATA/history
 
 watch=(all)
 fignore=(.o .hi .pyc)
@@ -19,6 +27,13 @@ cdpath=(~ ~/src/hewitt ~/Dropbox /media)
 
 export PS_PERSONALITY=linux
 export KEYTIMEOUT=1 # Kill lag for <esc> bindings.
+
+if have dircolors; then
+    unset LS_COLORS
+
+    eval $(dircolors ~/.config/dircolors-solarized/dircolors.ansi-dark )
+fi
+
 
 ## }}}
 ## {{{ OPTIONS
@@ -60,97 +75,104 @@ setopt auto_resume             # automatically resume jobs from commands
 setopt no_list_beep            
 setopt nobeep
 ## }}}
-## {{{ KEY BINDINGS
-bindkey -v
-
-case $TERM in
-    linux|screen*)
-        bindkey "^[[1~" beginning-of-line
-        bindkey "^[[3~" delete-char
-        bindkey "^[[4~" end-of-line
-        bindkey "^[[5~" up-line-or-history   # PageUp
-        bindkey "^[[6~" down-line-or-history # PageDown
-        bindkey "^[[A"  up-line-or-search    # up arrow for back-history-search
-        bindkey "^[[B"  down-line-or-search  # down arrow for fwd-history-search
-        bindkey "^?"   backward-delete-char
-        bindkey "^H"   backward-delete-char
-        bindkey "^[OM" accept-line
-    ;;
-    rxvt-unicode)
-        bindkey "^[[7~" beginning-of-line  # home
-        bindkey "^[[5~" up-line-or-history # pgup
-        bindkey "^[[6~" down-line-or-history # pgdown
-        bindkey "^[[8~" end-of-line        # end
-        bindkey "^[[A" up-line-or-search   # up arrow
-        bindkey "^[[B" down-line-or-search # down arrow
-        bindkey "^?"   backward-delete-char
-        bindkey "^H"   backward-delete-char
-    ;;
-    *xterm*|rxvt*|(dt|k|E)term)
-        bindkey "^[[2~" yank
-        bindkey "^[[3~" delete-char
-        bindkey "^[[5~" up-line-or-history # PageUp
-        bindkey "^[[6~" down-line-or-history # PageDown
-        bindkey "^[[7~" beginning-of-line
-        bindkey "^[[8~" end-of-line
-        bindkey "^[[A" up-line-or-search ## up arrow for back-history-search
-        bindkey "^[[B" down-line-or-search ## down arrow for fwd-history-search
-        bindkey "^[OM" accept-line
-    ;;
-esac
-
-
-bindkey -a ' ' magic-space ## do history expansion on space
-bindkey -a '#' vi-pound-insert
-bindkey -a Q quote-line
-bindkey -a q quote-region
-
-bindkey "^_" copy-prev-shell-word
-bindkey '^Q' push-input
-bindkey '^X^N' infer-next-history
-bindkey '^E' expand-word
-bindkey ' ' magic-space ## do history expansion on space
-
-bindkey '^F' fasd-complete-f
-bindkey '^X^A' fasd-complete
-bindkey '^X^F' fasd-complete-f
-bindkey '^X^D' fasd-complete-d
-bindkey -r '^X'
-
-
-bindkey -v
-
-bindkey '^P' up-history
-bindkey '^N' down-history
-bindkey '^?' backward-delete-char
-bindkey '^h' backward-delete-char
-bindkey '^w' backward-kill-word
-bindkey '^r' history-incremental-search-backward
-
-## }}}
 ## {{{ FUNCTIONS
 # Autoload various functions
-autoload run-help compinit promptinit colors
-autoload title shuffle perlpath prefix
-autoload runbg fname mcp
-autoload bd
+autoload -U run-help compinit promptinit colors zcalc
+autoload -U title shuffle perlpath prefix
+autoload -U runbg fname mcp
+autoload -U bd insert-files
+autoload -U zle-sudo zle-less insert-files edit-command-line
+
+zle -N insert-files
+zle -N zle-sudo
+zle -N zle-less
+zle -N edit-command-line
 
 # initialize advanced tab completion.
 compinit -d $ZCACHE/zcompdump
 
 colors
-promptinit   # Setup prompt theming 
+promptinit       # Setup prompt theming
 prompt solarized # Set the prompt.
 
 function mdc      { mkdir -p $1 && cd $1 }
-function namedir  { declare -g $1=$2  }
+function namedir  { declare -g $1=$2; : ~$1  }
 function save_cwd { echo $PWD >! $ZCACHE/last_cwd }
+function hr       { seq -s ' ' 1 $COLUMNS  | sed 's/[0-9]\+ \?/-/g' }
 
 chpwd_functions+=( save_cwd )
 ## }}}
-## {{{ ALIASES
-alias have='whence -p ls &>/dev/null'
+## {{{ KEY BINDINGS
+bindkey -v
 
+case $TERM in
+    linux|screen*)
+        bindkey '^[[1~' beginning-of-line
+        bindkey '^[[3~' delete-char
+        bindkey '^[[4~' end-of-line
+        bindkey '^[[5~' up-line-or-history   # PageUp
+        bindkey '^[[6~' down-line-or-history # PageDown
+        bindkey '^[[A'  up-line-or-search    # up arrow for back-history-search
+        bindkey '^[[B'  down-line-or-search  # down arrow for fwd-history-search
+        bindkey '^?'   backward-delete-char
+        bindkey '^H'   backward-delete-char
+        bindkey '^[OM' accept-line
+    ;;
+    rxvt-unicode)
+        bindkey '^[[7~' beginning-of-line  # home
+        bindkey '^[[5~' up-line-or-history # pgup
+        bindkey '^[[6~' down-line-or-history # pgdown
+        bindkey '^[[8~' end-of-line        # end
+        bindkey '^[[A' up-line-or-search   # up arrow
+        bindkey '^[[B' down-line-or-search # down arrow
+        bindkey '^?'   backward-delete-char
+        bindkey '^H'   backward-delete-char
+    ;;
+    *xterm*|rxvt*|(dt|k|E)term)
+        bindkey '^[[2~' yank
+        bindkey '^[[3~' delete-char
+        bindkey '^[[5~' up-line-or-history # PageUp
+        bindkey '^[[6~' down-line-or-history # PageDown
+        bindkey '^[[7~' beginning-of-line
+        bindkey '^[[8~' end-of-line
+        bindkey '^[[A' up-line-or-search ## up arrow for back-history-search
+        bindkey '^[[B' down-line-or-search ## down arrow for fwd-history-search
+        bindkey '^[OM' accept-line
+    ;;
+esac
+
+bindkey -M vicmd ' ' magic-space ## do history expansion on space
+bindkey -M vicmd '#' vi-pound-insert
+bindkey -M vicmd Q   quote-line
+bindkey -M vicmd q   quote-region
+bindkey -M vicmd u   undo
+bindkey -M vicmd v   edit-command-line
+
+bindkey '^_' copy-prev-shell-word
+bindkey '^Q' push-input
+bindkey '^E' expand-word
+bindkey '^ ' _expand_alias
+
+if have fasd; then
+    bindkey '^X^A' fasd-complete
+    bindkey '^X^F' fasd-complete-f
+    bindkey '^X^D' fasd-complete-d
+fi
+
+bindkey '^O'   accept-and-infer-next-history
+bindkey '^[^M' accept-and-hold
+bindkey '^F'   insert-files
+
+bindkey '^P' up-history
+bindkey '^N' down-history
+bindkey '^?' backward-delete-char
+bindkey '^H' backward-delete-char
+bindkey '^W' backward-kill-word
+bindkey '^R' history-incremental-search-backward
+bindkey '^S' zle-sudo
+
+## }}}
+## {{{ ALIASES
 alias cdd='cd ~desk'
 alias cp='cp -i'
 alias cpanm-test='command cpanm'
@@ -158,13 +180,16 @@ alias cpanm='cpanm --notest'
 alias dbfs='dropbox filestatus'
 alias dbs='dropbox status'
 alias df="df -h"
+alias egrep='egrep --color=auto'
 alias evince='runbg evince'
-alias fd='find . -type d -name'
+alias fd='fasd_cd -d'
 alias ff='find . -type f -name'
+alias fgrep='fgrep --color=auto'
 alias find="noglob find"
 alias free="free -m"
 alias g='git'
 alias gcd='cd $(git top)'
+alias grep='grep --color=auto'
 alias gvi=gvim
 alias help=run-help
 alias i3rc='vim ~/.config/i3/config.tt'
@@ -193,12 +218,11 @@ alias zpro='vim ~/.zprofile'
 alias zrc='vim ~/.zshrc'
 alias zreload='exec env SHLVL=0 $SHELL'
 
-
-have pinfo      && alias info=pinfo
-have ack-grep   && alias ack=ack-grep
-have hub        && eval "$(hub alias -s)"
-have fasd       && eval "$(fasd --init posix-alias zsh-hook zsh-ccomp zsh-ccomp-install zsh-wcomp zsh-wcomp-install)"
-have gcp        && alias cp=gcp
+have pinfo    && alias info=pinfo
+have ack-grep && alias ack=ack-grep
+have gcp      && alias cp=gcp
+have hub      && eval "$(hub alias -s)"
+have fasd     && eval "$(fasd --init auto)"
 
 alias xclip='xclip -selection clipboard'
 
@@ -211,13 +235,17 @@ alias c='xclip -i'
 alias -g C='| xclip -i'
 alias -g @='$( xclip -o )'
 alias -g '"@"'='"$( xclip -o )"'
-alias -g 'G'='|grep '
 
-alias pvc='p | vipe | c'
-alias ppc='p | publish | c'
+# copy and paste
+if have vipe; then
+    alias pvc='p | vipe | c'
+fi
 
 # less
 alias -g L='| less -F'
+
+# grep
+alias -g 'G'='|grep '
 
 # scripts
 alias -s pl='perl -S'
@@ -225,6 +253,9 @@ alias -s py=python
 alias -s rb=ruby
 alias -s hs=runhaskell
 
+# alias ls to ls -Fh --color=auto --group-directories-first,
+# but if our version of ls does not support one or more of those,
+# then don't use it.
 if [[  ~/.zshrc -nt $ZCACHE/alias-ls || ! -f $ZCACHE/alias-ls ]]; then
     # handle ls specially...
     local ls_cmd=ls
@@ -245,25 +276,8 @@ if [[  ~/.zshrc -nt $ZCACHE/alias-ls || ! -f $ZCACHE/alias-ls ]]; then
 fi
 
 source $ZCACHE/alias-ls
-
-case $OSTYPE in
-    *gnu*)
-        # use colors on gnu systems.
-        alias grep='grep --color=auto'
-        alias egrep='egrep --color=auto'
-        alias fgrep='fgrep --color=auto'
-    ;;
-    *bsd*)
-        have gdircolors && alias dircolors=gdircolors
-        if have gmake; then
-            alias make=gmake
-            alias bsdmake='command make'
-        fi
-    ;;
-esac
-
 ## }}}
-
+# {{{ ZSTYLES
 # Add sbin directories for sudo tab completion.
 zstyle ':completion:*:sudo:*' command-path $path /usr/sbin /sbin
 
@@ -271,19 +285,14 @@ zstyle ':completion:*:sudo:*' command-path $path /usr/sbin /sbin
 zstyle ':completion:*' use-cache on
 zstyle ':completion:*' cache-path $ZCACHE
 
-if have dircolors; then
-    unset LS_COLORS
+# use menu style completions
+zstyle ':completion:*' menu select=2 search=5
 
-    eval $(dircolors ~/.config/dircolors-solarized/dircolors.ansi-dark )
+# colorize file listing from completions
+[[ -n $LS_COLORS ]] && zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
 
-    zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
-    zstyle ':completion:*' menu select=2 interactive=5
-fi
-
-umask  077   # Create files that are readable only by moi
-stty -ixon   # Disable the freeze-the-terminal-on-control-s thing.
-ttyctl -f    # Freeze terminal properties.
-
+# }}}
+# NAMED DIRECTORIES# {{{
 namedir progfiles     ~/.wine/drive_c/Program\ Files
 namedir moonshine     ~/src/moonshine
 
@@ -296,5 +305,14 @@ if have xdg-user-dir; then
     namedir vids   $(xdg-user-dir VIDEOS)
     namedir dl     $(xdg-user-dir DOWNLOAD)
 fi
+# }}}
 
-# vim: set sw=4 ts=4 foldmethod=marker path=.,~/.zsh:
+umask  077   # Create files that are readable only by moi
+stty -ixon   # Disable the freeze-the-terminal-on-control-s thing.
+ttyctl -f    # Freeze terminal properties.
+
+if [[ -f $ZCACHE/last_cwd && ! -o login ]]; then
+    cd $(< $ZCACHE/last_cwd)
+fi
+
+# vim: set sw=4 ts=4 foldmethod=marker path=.,~/.zsh/lib,~/:

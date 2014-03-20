@@ -19,4 +19,4 @@ fi
 
 setopt globalrcs
 
-# vim: set sw=4 ts=4 foldmethod=marker path=.,~/.zsh:
+# vim: set sw=4 ts=4 foldmethod=marker path=.,~/.zsh/lib,~/:

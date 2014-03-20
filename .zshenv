@@ -8,12 +8,16 @@ declare -gxT PERL5LIB perl5lib # declare array
 declare -U path perl5lib       # remove duplicates
 setopt noglobalrcs
 
+have() {
+    whence -p "$@" &>/dev/null || return 1
+}
+
 if [[ -o rcs ]]; then
     export REALNAME="Dylan William Hardison"
     export EMAIL="dylan@hardison.net"
     export EDITOR="vim"
     export VISUAL="$EDITOR"
-    export BROWSER="chrome"
+    export BROWSER="firefox"
     export MANPAGER='less -s'
 
     export HOST="${HOST/.*/}"
@@ -38,29 +42,13 @@ if [[ -o rcs ]]; then
         /sbin
         $path
     )
-    fpath=(~/.zsh/lib $fpath)
     perl5lib=(~/lib 'lib')
 
-    for plugin_dir in ~/.zsh/bundle/*(N/); do
-        plugin_name="$(basename $plugin_dir)"
-        plugin_files=($plugin_dir/($plugin_name.plugin.zsh|$plugin.zsh|init.zsh|*.zsh)(N.))
-        if (( $#plugin_files > 0 )); then
-            for plugin_file in $plugin_files; do
-                source $plugin_file
-            done
-            unset plugin_file
-        else
-            fpath+=( $plugin_dir )
-        fi
-    done
-
-    unset plugin_dir plugin_files plugin_name
-
-    for file in $HOME/app/*/zshenv(N); do
+    for file in $HOME/app/*/zshenv(N.); do
         source $file
     done
     unset file
 
 fi
 
-# vim: set sw=4 ts=4 foldmethod=marker path=.,~/.zsh:
+# vim: set sw=4 ts=4 foldmethod=marker path=.,~/.zsh/lib,~/:
