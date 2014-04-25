@@ -29,11 +29,12 @@ general {
 }
 
 order += "ipv6"
-order += "disk /"
-order += "run_watch DHCP"
-#order += "run_watch VPN"
 order += "wireless wlan0"
 order += "ethernet eth0"
+
+order += "disk /"
+# order += "run_watch DHCP"
+# order += "run_watch VPN"
 order += "battery 0"
 order += "load"
 order += "time"
@@ -54,16 +55,16 @@ battery 0 {
     format = "%status %percentage %remaining"
 }
 
-run_watch DHCP {
-    pidfile = "/var/run/dhclient*.pid"
-}
+# run_watch DHCP {
+#     pidfile = "/var/run/dhclient*.pid"
+# }
 
-run_watch VPN {
-    pidfile = "/var/run/vpnc/pid"
-}
+# run_watch VPN {
+#     pidfile = "/var/run/vpnc/pid"
+# }
 
 time {
-    format = "%Y-%m-%d %H:%M:%S"
+    format = "%R"
 }
 
 load {

@@ -4,13 +4,13 @@
 
 # run other components -- zsh is a bourne shell
 if [[ -o interactive ]]; then
-	case $HOST in
-		lofn*)
-		;;
-		*)
-			uptime
-		;;
-	esac
+    case $HOST in
+        lofn*)
+        ;;
+        *)
+            uptime
+        ;;
+    esac
 fi
 
 # vim: set ft=zsh:

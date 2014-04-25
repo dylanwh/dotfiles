@@ -1,1 +1,1 @@
-desktop-2@thor.sh
+desktop-2-left-portrait@thor.sh

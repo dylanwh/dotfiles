@@ -11,7 +11,7 @@ xset +fp /usr/share/fonts/local
 xset fp rehash
 xset r rate 200 35
 
-xsetroot -cursor_name left_ptr 
+xsetroot -cursor_name left_ptr
 
 make dirs
 xrdb-tt -load
@@ -20,19 +20,18 @@ setxkbmap -option
 setxkbmap -option terminate:ctrl_alt_bksp
 setxkbmap -option ctrl:nocaps
 
-
 if have synclient; then
     synclient TouchpadOff=1
 fi
-if have keychain; then
-	keys=( $( egrep -l -- '^-{5}BEGIN .* PRIVATE KEY-{5}$' .ssh/*(.) ) )
 
-	eval $(keychain --eval $keys)
+if have keychain; then
+    keys=( $( egrep -l -- '^-{5}BEGIN .* PRIVATE KEY-{5}$' .ssh/*(.) ) )
+    eval $(keychain --eval $keys)
 fi
 
 source ~/.fehbg
 
-start-pulseaudio-x11 
+start-pulseaudio-x11
 
 lo current
 sleep .5

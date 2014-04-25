@@ -10,7 +10,7 @@ my $config      = parse(Config::GitLike->load_file('.git/config'), 'submodule');
 my $modules     = parse(Config::GitLike->load_file('.gitmodules'), 'submodule');
 my $modules_rule = Path::Class::Rule->new->skip_dirs('modules')->file->name('index');
 my $modules_iter = sub {
-    state $iter = $modules_rule->iter( '.git/modules' ); 
+    state $iter = $modules_rule->iter( '.git/modules' );
     my $file = $iter->();
     return $file->dir->relative('.git/modules') if $file;
     return undef;

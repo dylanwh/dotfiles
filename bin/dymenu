@@ -1,11 +1,10 @@
 #!/bin/zsh
 
-
-font=$(sed -n 's/set\s\+$font\s\+//p' ~/.config/i3/config)
+font='-xos4-terminus-bold-r-*-*-18-*-*-*-*-*-*-*'
 args=(-fn $font -b)
 
 if [[ -f ~/.outside ]]; then
-    exec dmenu-dark $args "$@"
-else
     exec dmenu-light $args "$@"
+else
+    exec dmenu-dark $args "$@"
 fi

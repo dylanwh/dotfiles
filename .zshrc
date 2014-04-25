@@ -23,7 +23,7 @@ HISTFILE=$ZDATA/history
 
 watch=(all)
 fignore=(.o .hi .pyc)
-cdpath=(~ ~/src/hewitt ~/Dropbox /media)
+cdpath=(~ ~/src/mozilla ~/Dropbox /media)
 
 export PS_PERSONALITY=linux
 export KEYTIMEOUT=1 # Kill lag for <esc> bindings.
@@ -33,8 +33,6 @@ if have dircolors; then
 
     eval $(dircolors ~/.config/dircolors-solarized/dircolors.ansi-dark )
 fi
-
-
 ## }}}
 ## {{{ OPTIONS
 setopt autocd                  # change to dirs without cd
@@ -76,29 +74,27 @@ setopt no_list_beep
 setopt nobeep
 ## }}}
 ## {{{ FUNCTIONS
-# Autoload various functions
-autoload -U run-help compinit promptinit colors zcalc
-autoload -U title shuffle perlpath prefix
-autoload -U runbg fname mcp
-autoload -U bd insert-files
-autoload -U zle-sudo zle-less insert-files edit-command-line
+# autoload useful functions distributed with zsh
+autoload -U colors compinit edit-command-line insert-files promptinit run-help zcalc
 
+# autoload my own utilities
+autoload -U title shuffle perlpath prefix runbg fname mcp zle-sudo zle-less
+
+# create zle bindings
 zle -N insert-files
 zle -N zle-sudo
 zle -N zle-less
 zle -N edit-command-line
 
-# initialize advanced tab completion.
-compinit -d $ZCACHE/zcompdump
-
-colors
-promptinit       # Setup prompt theming
-prompt solarized # Set the prompt.
+compinit -d $ZCACHE/zcompdump # initialize advanced tab completion
+colors                        # initialize color associative arrays
+promptinit                    # Setup prompt theming
+prompt solarized              # Set the prompt.
 
 function mdc      { mkdir -p $1 && cd $1 }
 function namedir  { declare -g $1=$2; : ~$1  }
 function save_cwd { echo $PWD >! $XDG_RUNTIME_DIR/last_cwd }
-function hr       { seq -s ' ' 1 $COLUMNS  | sed 's/[0-9]\+ \?/-/g' }
+function hr       { seq -s ' ' 1 $COLUMNS | sed 's/[0-9]\+ \?/-/g' }
 
 precmd_functions+=( save_cwd )
 ## }}}
@@ -147,6 +143,8 @@ bindkey -M vicmd Q   quote-line
 bindkey -M vicmd q   quote-region
 bindkey -M vicmd u   undo
 bindkey -M vicmd v   edit-command-line
+bindkey -M vicmd k   up-line-or-search
+bindkey -M vicmd j   down-line-or-search
 
 bindkey '^_' copy-prev-shell-word
 bindkey '^Q' push-input
@@ -154,6 +152,7 @@ bindkey '^E' expand-word
 bindkey '^ ' _expand_alias
 
 if have fasd; then
+    bindkey -r '^X'
     bindkey '^X^A' fasd-complete
     bindkey '^X^F' fasd-complete-f
     bindkey '^X^D' fasd-complete-d
@@ -171,9 +170,12 @@ bindkey '^W' backward-kill-word
 bindkey '^R' history-incremental-search-backward
 bindkey '^S' zle-sudo
 
+# function zle-line-init { zle -K vicmd }
+# zle -N zle-line-init
+
 ## }}}
 ## {{{ ALIASES
-alias cdd='cd ~desk'
+alias ack='noglob ack'
 alias cp='cp -i'
 alias cpanm-test='command cpanm'
 alias cpanm='cpanm --notest'
@@ -186,7 +188,7 @@ alias fd='fasd_cd -d'
 alias ff='find . -type f -name'
 alias fgrep='fgrep --color=auto'
 alias find="noglob find"
-alias free="free -m"
+alias free="free -h"
 alias g='git'
 alias gcd='cd $(git top)'
 alias grep='grep --color=auto'
@@ -199,6 +201,7 @@ alias la='ls -ax'
 alias ll='ls -l'
 alias lsd='ls -d *(/)'
 alias md="mkdir -p"
+alias mosh=$'mosh --ssh=\'ssh -o ClearAllForwardings=yes\''
 alias muttrc="$EDITOR ~/.mutt/muttrc"
 alias mv='mv -i'
 alias nl0="tr '\n' '\0'"
@@ -210,10 +213,9 @@ alias rm='rm -i'
 alias tmuxrc='vim ~/.tmux.conf'
 alias vi=vim
 alias vimrc="$EDITOR ~/.vimrc"
-alias xmrc='vim ~/.xmonad/xmonad.hs && xmonad --recompile && xmonad --restart'
 alias xrc='vim ~/.xinitrc'
 alias xs=cd
-alias zenv='vim ~/.zshenv' 
+alias zenv='vim ~/.zshenv'
 alias zpro='vim ~/.zprofile'
 alias zrc='vim ~/.zshrc'
 alias zreload='exec env SHLVL=0 $SHELL'
@@ -223,6 +225,10 @@ have ack-grep && alias ack=ack-grep
 have gcp      && alias cp=gcp
 have hub      && eval "$(hub alias -s)"
 have fasd     && eval "$(fasd --init auto)"
+
+have systemctl && alias systemctl='sudo systemctl'
+have pacman    && alias pacman='sudo pacman'
+have yaourt    && alias yaourt='yaourt --noconfirm'
 
 alias xclip='xclip -selection clipboard'
 
@@ -237,9 +243,7 @@ alias -g @='$( xclip -o )'
 alias -g '"@"'='"$( xclip -o )"'
 
 # copy and paste
-if have vipe; then
-    alias pvc='p | vipe | c'
-fi
+have vipe && alias pvc='p | vipe | c'
 
 # less
 alias -g L='| less -F'
@@ -286,7 +290,7 @@ zstyle ':completion:*' use-cache on
 zstyle ':completion:*' cache-path $ZCACHE
 
 # use menu style completions
-zstyle ':completion:*' menu select=2 search=5
+zstyle ':completion:*' menu 'select>10'
 
 # colorize file listing from completions
 [[ -n $LS_COLORS ]] && zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
