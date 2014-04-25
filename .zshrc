@@ -97,10 +97,10 @@ prompt solarized # Set the prompt.
 
 function mdc      { mkdir -p $1 && cd $1 }
 function namedir  { declare -g $1=$2; : ~$1  }
-function save_cwd { echo $PWD >! $ZCACHE/last_cwd }
+function save_cwd { echo $PWD >! $XDG_RUNTIME_DIR/last_cwd }
 function hr       { seq -s ' ' 1 $COLUMNS  | sed 's/[0-9]\+ \?/-/g' }
 
-chpwd_functions+=( save_cwd )
+precmd_functions+=( save_cwd )
 ## }}}
 ## {{{ KEY BINDINGS
 bindkey -v
@@ -310,9 +310,5 @@ fi
 umask  077   # Create files that are readable only by moi
 stty -ixon   # Disable the freeze-the-terminal-on-control-s thing.
 ttyctl -f    # Freeze terminal properties.
-
-if [[ -f $ZCACHE/last_cwd && ! -o login ]]; then
-    cd $(< $ZCACHE/last_cwd)
-fi
 
 # vim: set sw=4 ts=4 foldmethod=marker path=.,~/.zsh/lib,~/:

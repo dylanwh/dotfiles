@@ -4,7 +4,7 @@
 # Please see http://i3wm.org/docs/userguide.html for a complete reference!
 
 set $mod Mod4
-set $font -xos4-terminus-*-r-*-*-16-*-*-*-*-*-*-*
+set $font -xos4-terminus-*-r-*-*-14-*-*-*-*-*-*-*
 
 # font for window titles. ISO 10646 = Unicode
 font $font
@@ -18,8 +18,8 @@ force_focus_wrapping no
 force_display_urgency_hint 500 ms
 
 # start a terminal
-bindsym $mod+grave exec dyterm
-bindsym $mod+Escape exec dyterm
+bindsym $mod+grave exec dyterm -A
+bindsym $mod+Escape exec dyterm -A
 
 # kill focused window
 bindsym $mod+Shift+C kill
@@ -108,6 +108,11 @@ bindsym $mod+Shift+S       move scratchpad
 
 bindsym $mod+Shift+less        move workspace to output left
 bindsym $mod+Shift+greater     move workspace to output right
+
+bindsym $mod+Shift+Up    move workspace to output up
+bindsym $mod+Shift+Down  move workspace to output down
+bindsym $mod+Shift+Left  move workspace to output left
+bindsym $mod+Shift+Right move workspace to output right
 
 bindsym $mod+XF86Back   workspace prev
 bindsym $mod+XF86Forward workspace next
