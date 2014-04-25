@@ -1,19 +1,29 @@
-"-- Pretty folding.
 setlocal foldtext=PerlFoldTextNoLines()
-setlocal textwidth=120
 setlocal expandtab
 setlocal isfname=@,48-57,/,.,_,+,,,#,$,%,~,=,:
-if !&l:equalprg
-    setlocal equalprg=perltidy\ -pbp\ -l=120
-endif
 
-if $HOST == 'mani'
-    setlocal expandtab
-end
+setlocal equalprg=perltidy\ -pbp\ -l=120
+setlocal textwidth=120
 
 "-- Do not fold package-level things.
 if expand("%:e") == 'pm'
     setlocal foldlevel=1
+endif
+
+if !exists("#InsertEnter#<buffer>")
+    autocmd InsertEnter <buffer>
+                \ if !exists('w:last_fdm') |
+                \     let w:last_fdm=&foldmethod |
+                \     setlocal foldmethod=manual |
+                \ endif
+endif
+
+if !( exists("#InsertLeave#<buffer>") || exists("#WinLeave#<buffer>") )
+    autocmd InsertLeave,WinLeave <buffer>
+                \ if exists('w:last_fdm')  |
+                \     let &l:foldmethod=w:last_fdm |
+                \     unlet w:last_fdm |
+                \ endif
 endif
 
 "-- Do not highlight 'new'!
@@ -26,9 +36,6 @@ iab mx MooseX
 
 let tlist_perl_settings='perl;u:use;p:package;r:role;e:extends;c:constant;a:attribute;s:subroutine;l:label'
 "let Tlist_Show_One_File = 1
-
-"inoremap { { }<C-o>3h
-"inoremap [ [ ]<C-o>3h
 
 command! -range=% PerlTidy <line1>,<line2>!perltidy
 
@@ -71,4 +78,6 @@ endfunction
 
 command! -complete=file -nargs=+ Test call s:RunShellCommand('prove -v '.<q-args> )
 
-
+if exists("b:ftplugin_callback")
+    call {b:project_ftplugin}()
+endif

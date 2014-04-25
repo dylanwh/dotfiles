@@ -106,3 +106,6 @@
 [submodule ".zsh/bundle/opp"]
 	path = .zsh/bundle/opp
 	url = git://github.com/hchbaw/opp.zsh.git
+[submodule ".vim/bundle/vim-cpanfile"]
+	path = .vim/bundle/vim-cpanfile
+	url = git://github.com/moznion/vim-cpanfile.git

@@ -48,6 +48,7 @@ set linebreak              " break on words
 set sidescroll=1           " when 'nowrap' is set, this line and the next prevent the cursor from ever reaching the prcededing char.
 set sidescrolloff=1        " see above
 set scrolloff=5            " always show 5 lines of context when scrolling j/k
+set splitright             " split to the right
 set mouse=a                " enable mouse
 set cb=autoselectplus      " don't automatically put stuff in the clipboard.
 set visualbell             " visual bell
@@ -60,6 +61,7 @@ set bs=indent,eol,start    " backspace over identation, end-of-line, and start-o
 set tags+=~/.tags          " use a global tags file in $HOME
 set nrformats=alpha,hex    " allow vim to increment letters and hex numbers with Ctrl-A and Ctrl-X
 set viewoptions+=unix      " view files use unix EOL, even on Windows.
+set viewoptions-=folds     " folds in views annoys me
 set viewoptions-=options   " options in views can cause unexpected behavior.
 set wim=longest,list,full  " thanks nornagon!
 set grepprg=ag             " use ag for grep
@@ -84,10 +86,11 @@ set wildignore+=*.sw?                                    " Vim swap files
 
 set foldopen=tag,search,quickfix,undo,jump,mark,percent
 set fillchars=fold:\ ,stl:\ ,stlnc:\  " borders
-
 set listchars=tab:>\ ,trail:-,extends:>,precedes:<,nbsp:+
+
 if &termencoding ==# 'utf-8' || &encoding ==# 'utf-8'
     let &listchars = "tab:\u21e5 ,trail:\u2423,extends:\u21c9,precedes:\u21c7,nbsp:\u26ad"
+    let &fillchars = "vert:┃,diff:⎼,fold:⎼"
 endif
 
 "}}}
@@ -100,61 +103,37 @@ let maplocalleader = "-"
 let python_highlight_all = 1
 
 "-- C-language settings.
-let c_gnu=1
-let c_comment_strings=1
+let c_gnu             = 1
+let c_comment_strings = 1
 
 "-- Disable the annoying paren highlighter.
 "let loaded_matchparen = 1
 
-let vimwiki_list = [{'path': "~/.local/Dropbox/Documents/wiki"}]
-let vimwiki_hl_cb_checked = 1
-
-"-- matches hash and array subscripts, etc.
-let perl_extended_vars = 1
-
-"-- Shows package part of var names in green
-let perl_want_scope_in_variables = 1
-
-"-- Highlight POD with perl files.
-let perl_include_pod = 1
-
-"-- Highlight quotes as a statement (orange),
-"-- different from string contents.
-let perl_string_as_statement = 1
-
-"-- allow perl code to be folded.
-let perl_fold = 1
+let perl_extended_vars           = 1 " matches hash and array subscripts, etc.
+let perl_want_scope_in_variables = 1 " Shows package part of var names in green
+let perl_include_pod             = 1 " Highlight POD with perl files.
+let perl_string_as_statement     = 1 " Highlight quote marks different from string contents
+let perl_fold                    = 1 " allow perl code to be folded.
 
 "-- context-based supertabbing
 let SuperTabDefaultCompletionType = "context"
 
 let redcode_highlight_numbers=1
 
-let solarized_bold = 0
+let solarized_bold      = 0
 let solarized_underline = 0
-let solarized_italic = 1
+let solarized_italic    = 1
 
 "let snippets_dir="$HOME/.vim/snippets"
 
-" NERDTree config
-"let NERDTreeIgnore=['\env','\.vim$', '\~$', '\.pyc$', '\.swp$', '\.egg-info$', '^dist$', '^build$']
-"let NERDTreeSortOrder=['^__\.py$', '\/$', '*', '\.swp$', '\~$']
-let NERDTreeChDirMode            = 2
-let NERDTreeShowBookmarks        = 1
-let NERDTreeHightlightCursorline = 1
-let NERDTreeBookmarksFile        = ".NERDTreeBookmarks"
-
 let jedi#squelch_py_warning = 1
 
-let ctrlp_z_nerdtree    = 1
 let ctrlp_extensions    = ['Z', 'F']
 let ctrlp_custom_ignore = '\v[\/]\.(git|hg|svn)$'
 
 let airline_powerline_fonts            = 1
 let airline_inactive_collapse          = 1
-let airline_theme                      = 'lucius'
 let airline#extensions#tabline#enabled = 1
-
 " }}}
 
 " COLORS {{{1
@@ -166,19 +145,12 @@ colorscheme solarized
 map <F1>   :set spell!<BAR>set spell?<CR>
 map <F2>   :set cul!<BAR>set cul?<CR>
 map <F3>   :set nu!<BAR>set nu?<CR>
-map <F4>   :set nonu nocul<BAR>set nu? cul?<CR>
+map <F4>   :set nonu nocul nolist<CR>
 map <F10>  :Welcome<CR>
 
 map K \K
 map Y y$
 
-nmap <silent><Leader>wf <Plug>VimwikiFollowWord
-nmap <silent><Leader>wb <Plug>VimwikiGoBackWord
-nmap <silent><Leader>wn <Plug>VimwikiGoBackWord
-
-nmap <Leader>t  :NERDTreeToggle<CR>
-nmap <Leader>n  :NERDTreeFocus<CR>
-nmap <Leader>f  :NERDTreeFind<CR>
 nmap <Leader>s  :shell<CR>
 nmap <Leader>v  :tabedit $MYVIMRC<CR>
 nmap sf         :CtrlPF<CR>
@@ -186,12 +158,13 @@ nmap sz         :CtrlPZ<CR>
 
 nmap <Leader>> :Tab/=><CR>
 vmap <Leader>> :Tab/=><CR>
-nmap <Leader>= :Tab/=<CR>
-vmap <Leader>= :Tab/=<CR>
+nmap <Leader>= :Tab/=[^>]<CR>
+vmap <Leader>= :Tab/=[^>]<CR>
 nmap <Leader>: :Tab/:\zs<CR>
 vmap <Leader>: :Tab/:\zs<CR>
 nmap <Leader>t :Tab/
 vmap <Leader>t :Tab/
+nmap <Leader>w :Ag <cword><CR>
 
 nnoremap <Left>   <C-w>h
 nnoremap <Down>   <C-w>j
@@ -252,22 +225,25 @@ if !exists('autocmds_loaded')
         autocmd BufNewFile,BufRead */.i3/config* set ft=i3
         autocmd BufNewFile,BufRead */.config/i3/config* set ft=i3
         autocmd BufNewFile,BufRead Capfile set ft=ruby
-        autocmd BufNewFile,BufRead /tmp/zsh* set ft=sh syn=zsh
+        autocmd BufNewFile,BufRead /tmp/zshecl* set ft=sh syn=zsh |
+                    \ map <buffer> q ZZ
     augroup END
     " }}}
 
-    autocmd FileType csv setl noet list
+    autocmd FileType csv       setl noet list
     autocmd FileType gitconfig setl noet nolist
     autocmd FileType gitcommit setl noet nolist
-    autocmd FileType make setl noet nolist
-    autocmd FileType man  setl nolist
-    autocmd FileType python setl et
-    autocmd FileType yaml   setl et
+    autocmd FileType make      setl noet nolist
+    autocmd FileType man       setl nolist
+    autocmd FileType python    setl et
+    autocmd FileType yaml      setl et
+    autocmd FileType help      setl nolist
+    autocmd FileType zsh       setl path=.,~/.zsh/lib
+    autocmd FileType html,javascript      setl ts=2 sw=2 et list
     autocmd FileType lua
                 \ setl foldmethod=marker |
                 \ setl comments=sO:-\ -,mO:-\ \ ,exO:]],s1:--[[,mb:-,ex:]],:-- |
                 \ setl commentstring=--%s
-    autocmd FileType zsh setl path=.,~/.zsh/lib
 
 
     au WinLeave * if &g:cursorline |
