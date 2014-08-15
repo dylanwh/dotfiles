@@ -1,11 +1,9 @@
-set hls
 "set guioptions=b
-set ds=duck
 set showtabline=1
 set editor=dterm\ -e\ vim
 
-noremap h H
-noremap l L
+map -builtin h H
+map -builtin l L
 map \ :set invum<CR>
 map D :tabdetach<CR>
 
@@ -15,5 +13,6 @@ set! browser.download.manager.useWindow=false
 set! browser.download.manager.showWhenStarting=false
 set! browser.download.manager.showAlertOnComplete=false
 set! browser.download.lastDir=/home/dylan/var/download
+set! ui.key.menuAccessKeyFocuses=false
 
-javascript liberator.beep = function () { return false; }
+colorscheme solarized-dark
