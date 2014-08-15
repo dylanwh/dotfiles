@@ -31,6 +31,8 @@
 !.newsbeuter
 !.offlineimap.py
 !.offlineimaprc
+!.pentadactyl
+!.pentadactylrc
 !.quotes
 !.remind
 !.reminders
@@ -49,7 +51,6 @@
 !.userContent.css
 !.vim
 !.vimoutlinerrc
-!.vimperatorrc
 !.vimrc
 !.w3m
 !.wyrdrc
@@ -68,10 +69,11 @@
 .cpanm/work/
 .imapfilter/certificates
 .imapfilter/status
-.mutt/history
-.mutt/passwd.home
-.mutt/passwd.work
-.mutt/profile.active
-.mutt/profile.foo
 .newsbeuter/cache.db
 .newsbeuter/queue
+.pentadactyl/info/default/cache
+.pentadactyl/info/default/command-history
+.pentadactyl/info/default/local-marks
+.pentadactyl/info/default/register-ring
+.pentadactyl/info/default/registers
+.pentadactyl/info/default/url-marks
