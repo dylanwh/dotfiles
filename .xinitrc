@@ -20,16 +20,14 @@ setxkbmap -option
 setxkbmap -option terminate:ctrl_alt_bksp
 setxkbmap -option ctrl:nocaps
 
-if have synclient; then
-    synclient TouchpadOff=1
-fi
+for rc in /etc/X11/xinit/xinitrc.d/*(.); do
+    source $rc
+done
 
-if have keychain; then
-    keys=( $( egrep -l -- '^-{5}BEGIN .* PRIVATE KEY-{5}$' .ssh/*(.) ) )
-    eval $(keychain --eval $keys)
-fi
+eval $(/usr/bin/gnome-keyring-daemon --start --components=gpg,pkcs11,secrets,ssh)
+export GPG_AGENT_INFO SSH_AUTH_SOCK
 
-source ~/.fehbg
+[[ -f ~/.fehbg ]] && source ~/.fehbg
 
 start-pulseaudio-x11
 

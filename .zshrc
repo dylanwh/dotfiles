@@ -201,7 +201,6 @@ alias la='ls -ax'
 alias ll='ls -l'
 alias lsd='ls -d *(/)'
 alias md="mkdir -p"
-alias mosh=$'mosh --ssh=\'ssh -o ClearAllForwardings=yes\''
 alias muttrc="$EDITOR ~/.mutt/muttrc"
 alias mv='mv -i'
 alias nl0="tr '\n' '\0'"
@@ -225,6 +224,7 @@ have ack-grep && alias ack=ack-grep
 have gcp      && alias cp=gcp
 have hub      && eval "$(hub alias -s)"
 have fasd     && eval "$(fasd --init auto)"
+have mosh     && alias mosh=$'mosh --ssh=\'ssh -o ClearAllForwardings=yes\''
 
 have systemctl && alias systemctl='sudo systemctl'
 have pacman    && alias pacman='sudo pacman'

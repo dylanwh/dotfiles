@@ -10,6 +10,7 @@ Skype/
 Thunar/
 Trolltech.conf
 Trolltech/
+Vidyo/
 akonadi
 alien-arena/
 bashrun
@@ -34,6 +35,7 @@ google-musicmanager/
 googlecl/
 gtk-2.0/
 gtk-3.0/
+guvcview/
 gxine/
 hub
 i3/config
@@ -47,6 +49,7 @@ midori/
 monitors.xml
 mupen64plus/
 openbox/
+oxygen-gtk/
 pavucontrol.ini
 pcmanfm/
 pnmixer
@@ -59,6 +62,8 @@ transmission/
 twmn
 ubuntuone/
 uevt
+unity3d
+user-dirs.mk
 user-share/
 uzbl/
 viewnior/
@@ -70,5 +75,3 @@ xmms2/clients/
 xmms2/medialib.db
 xmms2/startup.d/
 youtube-viewer/
-user-dirs.mk
-unity3d

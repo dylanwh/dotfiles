@@ -1,5 +1,6 @@
 #!/bin/zsh
 
+# dmenu-patchy is assumed
 font='-xos4-terminus-bold-r-*-*-18-*-*-*-*-*-*-*'
 args=(-fn $font -b)
 

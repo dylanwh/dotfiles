@@ -128,6 +128,7 @@ for_window [class="Paprefs"] floating enable
 for_window [title="^Event Tester$"] floating enable
 for_window [window_role="^pop-up$"] floating enable
 for_window [class="^Blueman-"] floating enable
+for_window [class="VidyoDesktop"] floating enable
 for_window [class="emulator64-arm"] floating enable
 for_window [title="^Steam(?: Login)?$"] floating enable
 for_window [class="Steam" title="^Steam$"] floating disable
