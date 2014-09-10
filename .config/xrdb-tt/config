@@ -7,9 +7,7 @@ SET config = {
         "-*-terminesspowerline-*-r-*-*-14-*-*-*-*-*-*-*",
         "-*-terminesspowerline-*-r-*-*-20-*-*-*-*-*-*-*",
         "-*-terminesspowerline-*-r-*-*-24-*-*-*-*-*-*-*",
-        "xft:Droid Sans Mono:size=10",
     ],
 };
-
 
 %]
