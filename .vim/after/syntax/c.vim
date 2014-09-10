@@ -485,7 +485,7 @@ syn keyword	gStructure GCache
 " Memory Allocators
 syn keyword	gStructure GAllocator
 
-syn keyword gType GFunc AQFunc lua_State luaL_reg luaL_Buffer LuaState LuaLReg
+syn keyword gType GFunc AQFunc lua_State luaL_Reg luaL_Buffer
 
 syn keyword gType GOptionContext GSequence GSequenceIter
 	

@@ -113,7 +113,6 @@ let perl_extended_vars           = 1 " matches hash and array subscripts, etc.
 let perl_want_scope_in_variables = 1 " Shows package part of var names in green
 let perl_include_pod             = 1 " Highlight POD with perl files.
 let perl_string_as_statement     = 1 " Highlight quote marks different from string contents
-let perl_fold                    = 1 " allow perl code to be folded.
 
 "-- context-based supertabbing
 let SuperTabDefaultCompletionType = "context"
@@ -213,7 +212,7 @@ if !exists('autocmds_loaded')
         autocmd BufNewFile,BufRead *.rem
                     \ setl ft=remind
         autocmd BufEnter *.hs,*.lhs       compiler ghc
-        autocmd BufEnter *.c,*.C,*.cc,*.h compiler gcc
+        autocmd BufEnter *.c,*.C,*.cc,*.h compiler gcc | set et
         autocmd BufNewFile,BufRead *.csv,*.tsv set ft=csv
 
         autocmd BufNewFile,BufRead *.cos setl ft=caos
@@ -268,6 +267,31 @@ if !exists('autocmds_loaded')
     autocmd! BufWritePost */.vimrc source $MYVIMRC | AirlineRefresh
 endif
 " }}}
+
+call project#rc("~/src")
+
+File    '~/.vimrc', 'vimrc'
+Project 'mozilla/bugzilla', 'bugzilla'
+Project 'mozilla/bmo', 'bmo'
+
+Callback 'bugzilla', 'BugzillaPerl'
+Callback 'bmo', 'BugzillaPerl'
+
+function! BugzillaPerl(title) abort
+
+    if &l:ft == 'perl'
+        if a:title == 'bmo' 
+            let b:perltidy_profile = $HOME . "/src/mozilla/bmo/.perltidyrc"
+            let &l:equalprg="perltidy -pro=" . shellescape(b:perltidy_profile)
+            setlocal tw=120
+        elseif a:title == 'bugzilla'
+            let b:perltidy_profile = $HOME . "/src/mozilla/bugzilla/.perltidyrc"
+            let &l:equalprg="perltidy -pro=" . shellescape(b:perltidy_profile)
+            setlocal tw=80
+        endif
+    end
+endfunction
+
 
 if filereadable(expand("~/.vimrc.local", 1))
   source ~/.vimrc.local

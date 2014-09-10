@@ -1,8 +1,10 @@
 #compdef lo
 typeset -A opt_args
-local context state line
+local context state line ignored
 local layout_dir=$HOME/.screenlayout
 
-_files -W $layout_dir -g "*@$HOST.sh(:t:r:s/@$HOST/)" && return 0
+ignored=(after last current )
+
+_files -W $layout_dir -F ignored -g "*@$HOST.sh(:t:r:s/@$HOST/)" && return 0
 
 return 1

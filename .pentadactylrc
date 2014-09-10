@@ -1,6 +1,4 @@
-"set guioptions=b
-set showtabline=1
-set editor=dterm\ -e\ vim
+set editor=dyterm\ -e\ vim
 
 map -builtin h H
 map -builtin l L
@@ -16,3 +14,6 @@ set! browser.download.lastDir=/home/dylan/var/download
 set! ui.key.menuAccessKeyFocuses=false
 
 colorscheme solarized-dark
+
+map e <C-S-e>
+set defsearch=duckduckgo

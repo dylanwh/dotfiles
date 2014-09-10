@@ -95,6 +95,7 @@ function mdc      { mkdir -p $1 && cd $1 }
 function namedir  { declare -g $1=$2; : ~$1  }
 function save_cwd { echo $PWD >! $XDG_RUNTIME_DIR/last_cwd }
 function hr       { seq -s ' ' 1 $COLUMNS | sed 's/[0-9]\+ \?/-/g' }
+function bzfixperms { sudo chmod -Rc go+rX .; sudo chown -Rc dylan:http . }
 
 precmd_functions+=( save_cwd )
 ## }}}

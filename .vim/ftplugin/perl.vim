@@ -10,21 +10,21 @@ if expand("%:e") == 'pm'
     setlocal foldlevel=1
 endif
 
-if !exists("#InsertEnter#<buffer>")
-    autocmd InsertEnter <buffer>
-                \ if !exists('w:last_fdm') |
-                \     let w:last_fdm=&foldmethod |
-                \     setlocal foldmethod=manual |
-                \ endif
-endif
+" if !exists("#InsertEnter#<buffer>")
+"     autocmd InsertEnter <buffer>
+"                 \ if !exists('w:last_fdm') |
+"                 \     let w:last_fdm=&foldmethod |
+"                 \     setlocal foldmethod=manual |
+"                 \ endif
+" endif
 
-if !( exists("#InsertLeave#<buffer>") || exists("#WinLeave#<buffer>") )
-    autocmd InsertLeave,WinLeave <buffer>
-                \ if exists('w:last_fdm')  |
-                \     let &l:foldmethod=w:last_fdm |
-                \     unlet w:last_fdm |
-                \ endif
-endif
+" if !( exists("#InsertLeave#<buffer>") || exists("#WinLeave#<buffer>") )
+"     autocmd InsertLeave,WinLeave <buffer>
+"                 \ if exists('w:last_fdm')  |
+"                 \     let &l:foldmethod=w:last_fdm |
+"                 \     unlet w:last_fdm |
+"                 \ endif
+" endif
 
 "-- Do not highlight 'new'!
 hi link perlStatementNew NONE

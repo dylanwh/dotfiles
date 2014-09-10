@@ -50,7 +50,6 @@ show-files:
 $(XDG_CACHE_HOME)/user-dirs.mk: $(XDG_CONFIG_HOME)/user-dirs.dirs $(XDG_CACHE_HOME) Makefile
 	sed '/^#/ d; s|$$HOME/||g; s/"//g;' $< > $@
 
-
 $(XDG_CONFIG_HOME)/i3/config: $(XDG_CONFIG_HOME)/i3/config.tt
 	ttpp -o $@ $<
 	i3-cmd reload

@@ -47,7 +47,10 @@ if (not $chdir and $auto_chdir) {
 }
 
 my (@run) = @ARGV;
-chdir $chdir if $chdir;
+eval {
+    chdir $chdir if $chdir;
+};
+
 unshift @run, '-e' if @run;
 
 unless ($name) {
