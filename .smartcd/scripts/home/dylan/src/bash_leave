@@ -1,0 +1,10 @@
+########################################################################
+# smartcd leave - /home/dylan/src
+#
+# This is a smartcd script.  Commands you type will be run when you
+# leave this directory.  The string __PATH__ will be replaced with
+# the current path.
+#
+# See http://smartcd.org for more ideas about what can be put here
+########################################################################
+umask 077

@@ -1,0 +1,15 @@
+# Load and configure smartcd
+source ~/.smartcd/lib/core/arrays
+source ~/.smartcd/lib/core/varstash
+source ~/.smartcd/lib/core/smartcd
+smartcd setup chpwd
+# smartcd setup prompt-hook
+smartcd setup exit-hook
+smartcd setup completion
+VARSTASH_AUTOCONFIGURE=1
+VARSTASH_AUTOEDIT=1
+# SMARTCD_NO_INODE=1
+# SMARTCD_AUTOMIGRATE=1
+# SMARTCD_LEGACY=1
+SMARTCD_QUIET=1
+VARSTASH_QUIET=1

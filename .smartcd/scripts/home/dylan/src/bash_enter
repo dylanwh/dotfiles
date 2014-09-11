@@ -1,0 +1,14 @@
+########################################################################
+# smartcd enter - /home/dylan/src
+#
+# This is a smartcd script.  Commands you type will be run when you
+# enter this directory.  The string __PATH__ will be replaced with
+# the current path.  Some examples are editing your $PATH or creating
+# a temporary alias:
+#
+#     autostash PATH=__PATH__/bin:$PATH
+#     autostash alias restart="service stop; sleep 1; service start"
+#
+# See http://smartcd.org for more ideas about what can be put here
+########################################################################
+umask 007

@@ -1,0 +1,95 @@
+# Export file format: (leading space added before all file contents)
+# -------------------------
+# smartcd export 1.0
+# @ scripts/home/user/foo
+#  ...
+#  ...
+# @ templates/wtf
+#  ...
+# -------------------------
+function smartcd_export() {
+    # not using stash here to avoid interfering with the user, who might also have it stashed.
+    local _old_ifs="$IFS"
+    local base=$(_smartcd_base)
+    IFS=$'\n'
+    echo "smartcd export 1.0"
+    apush remaining_dirs "scripts" "templates"
+    while (( $(alen remaining_dirs) > 0 )); do
+        dir=$(afirst remaining_dirs)
+        ashift remaining_dirs >/dev/null
+        # Skip directories never created
+        if [[ -d "$base/$dir" ]]; then
+            for entry in "$base/$dir/"*; do
+                local fn="${entry##*/}"
+                if [[ -f "$entry" ]]; then
+                    echo "@ $dir/$fn"
+                    local line=
+                    while builtin read -r line; do
+                        echo " $line"
+                    done < "$entry"
+                elif [[ -d "$entry" ]]; then
+                    apush remaining_dirs "$dir/$fn"
+                elif [[ "$entry" = "$base/$dir/*" ]]; then
+                    : # without nullglob the literal globbed string may appear; ignore it
+                else
+                    echo "Skipping unknown file $entry" >&2
+                fi
+            done
+        fi
+    done
+
+    IFS="$_old_ifs"
+}
+
+function smartcd_import() {
+    if [[ -n $1 ]]; then
+        cat "$1" | _smartcd_import
+    else
+        _smartcd_import
+    fi
+}
+
+function _smartcd_import() {
+    local _old_ifs="$IFS"
+    IFS=$'\n'
+
+    local base=$(_smartcd_base)
+
+    if [[ -d "$base" ]]; then
+        for file in "$base/"*; do
+            case $file in
+                "$base/"scripts|"$base/"templates)
+                    command mkdir -p "$base/archive"
+                    local backup=$(command mktemp -d "$base/archive/import-backup.XXXXXX")
+                    if (( ${SMARTCD_QUIET:-0} == 0 )); then
+                        echo "Old $file found, moving to $backup"
+                    fi
+                    command mv "$file" "$backup"
+                    ;;
+            esac
+        done
+
+        # These will be all wrong, so remove them
+        command rm -rf "$base/inodes"
+    fi
+
+    local line=
+    while builtin read -r line; do
+        case $line in
+            "smartcd export"*) ;;
+                        "@ "*) local file="${line#@ }"
+                               local dir="${file%'/'*}"
+                               command mkdir -p "$base/$dir"
+                               ;;
+                            *)
+                               line="${line# }"
+                               [[ -n $ZSH_VERSION ]] && setopt localoptions && setopt clobber
+                               echo "$line" >> "$base/$file"
+                               ;;
+        esac
+    done
+
+    IFS="$_old_ifs"
+}
+
+# vim: filetype=sh autoindent expandtab shiftwidth=4 softtabstop=4
