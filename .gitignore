@@ -14,6 +14,7 @@
 !.cvsignore
 !.dmrc
 !.emacs
+!.fasdrc
 !.git
 !.gitconfig
 !.gitignore
