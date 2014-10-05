@@ -13,7 +13,7 @@ set! browser.download.manager.showAlertOnComplete=false
 set! browser.download.lastDir=/home/dylan/var/download
 set! ui.key.menuAccessKeyFocuses=false
 
-colorscheme solarized-dark
+colorscheme solarized_dark
 
 map e <C-S-e>
 set defsearch=duckduckgo
