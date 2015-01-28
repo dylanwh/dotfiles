@@ -1,3 +1,0 @@
-#!/usr/bin/env zsh
-print -n "\e]2;irssi\a"
-exec dtach -A ~/.irssi/dtach -z irssi

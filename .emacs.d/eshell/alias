@@ -1,0 +1,11 @@
+alias new  $*
+alias ll ls -l $*
+alias vi ff $*
+alias git hub $*
+alias vim ff $*
+alias zsh ansi-term /bin/zsh
+alias foo bar $*
+alias emacs emacsclient $*
+alias e emacsclient $*
+alias v ff $*
+alias d dired $*

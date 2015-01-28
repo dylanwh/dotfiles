@@ -1,0 +1,9 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: has required
+# key: hasr
+# --
+has '${1:attr}' => (
+    is       => '${2:ro}',
+    isa      => '${3:Str}',
+    required => 1,$0
+);

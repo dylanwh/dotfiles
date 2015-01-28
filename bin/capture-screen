@@ -1,6 +1,0 @@
-#!/bin/zsh
-
-if filename=$(zenity --file-selection --save --confirm-overwrite --file-filter='*.png'); then
-	import $filename
-	zenity --info --text="captured screen to $filename"
-fi

@@ -21,6 +21,12 @@ my %config = (
     INCLUDE_PATH => \@include,     # or list ref
     PRE_PROCESS  => \@pre_process, # prefix each template
     WRAPPER      => \@wrapper,     # wrappers
+    VARIABLES => {
+        foo => sub {
+            warn "@_";
+            return 1;
+        }
+    }
 );
 
 my @tt_features = qw[ INTERPOLATE EVAL_PERL STRICT ];

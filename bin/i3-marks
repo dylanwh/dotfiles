@@ -1,7 +1,0 @@
-#!/bin/zsh
-
-mark=$(i3-msg -t get_marks | jshon -a -u | dmenu-dark -p "mark: ")
-
-if [[ -n $mark ]]; then
-    i3-msg "[con_mark=$mark] focus"
-fi

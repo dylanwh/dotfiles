@@ -1,8 +1,0 @@
-#!/bin/zsh
-
-for exe in ~/app/eclipse/eclipse /usr/bin/eclipse; do
-	if [[ -x $exe ]]; then
-		exec $exe "$@"
-	fi
-done
-

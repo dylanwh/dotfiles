@@ -1,0 +1,12 @@
+# -*- mode: snippet; require-final-newline: nil -*-
+# name: moo-class
+# key: class
+# --
+package ${1:`(my-perl-module-name (buffer-file-name))`};
+
+use Moo;
+use namespace::clean;
+
+$0
+
+1;

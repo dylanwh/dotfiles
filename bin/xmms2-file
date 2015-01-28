@@ -1,8 +1,0 @@
-#!/bin/zsh
-
-fpath+=( ~/.zsh/lib )
-autoload zx2-info
-
-zx2-info -n song "$argv"
-
-echo $song[file]
