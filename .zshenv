@@ -6,7 +6,6 @@ emulate zsh
 
 declare -gxT PERL5LIB perl5lib # declare array
 declare -U path perl5lib       # remove duplicates
-setopt noglobalrcs
 
 have() {
     whence -p "$@" &>/dev/null || return 1
@@ -26,13 +25,12 @@ if [[ -o rcs ]]; then
     export LC_COLLATE=POSIX # sort in POSIX order.
     export TZ=US/Eastern
 
-    export XDG_DATA_HOME=$HOME/.data
+    export XDG_DATA_HOME=$HOME/.local/share
     export XDG_CONFIG_HOME=$HOME/.config
     export XDG_CACHE_HOME=$HOME/.cache
 
     path=(
         ~/bin
-        ~/app/*/bin(N)
         /home/dylan/.gem/ruby/*/bin(N)
         /usr/local/bin
         /usr/bin
@@ -43,12 +41,6 @@ if [[ -o rcs ]]; then
         $path
     )
     perl5lib=(~/lib 'lib')
-
-    for file in $HOME/app/*/zshenv(N.); do
-        source $file
-    done
-    unset file
-
 fi
 
 # vim: set sw=4 ts=4 foldmethod=marker path=.,~/.zsh/lib,~/:
