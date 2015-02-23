@@ -2,7 +2,7 @@
 # This script is executed for every interactive shell.
 # See also: ~/.zshenv ~/.zprofile [~/.zshrc] ~/.zlogin ~/.zlogout
 
-# MUTAGEN# {{{
+# MUTAGEN {{{
 source ~/.zsh/bundle/mutagen/mutagen.plugin.zsh
 mutagen_infect ~/.zsh/bundle
 fpath=(~/.zsh/lib $fpath)
@@ -70,7 +70,7 @@ setopt checkjobs               # warn me about bg processes when exiting
 setopt nohup                   # and do not kill them, either
 setopt auto_continue           # automatically continue disowned jobs.
 setopt auto_resume             # automatically resume jobs from commands
-setopt no_list_beep            
+setopt no_list_beep
 setopt nobeep
 ## }}}
 ## {{{ FUNCTIONS
@@ -193,10 +193,7 @@ alias free="free -h"
 alias g='git'
 alias gcd='cd $(git top)'
 alias grep='grep --color=auto'
-alias gvi=gvim
 alias help=run-help
-alias i3rc='vim ~/.config/i3/config.tt'
-alias i3strc='vim ~/.config/i3status/config.tt'
 alias l='ls -L'
 alias la='ls -ax'
 alias ll='ls -l'
@@ -210,15 +207,14 @@ alias pdoc=perldoc
 alias pu=pushd
 alias rd="rmdir"
 alias rm='rm -i'
-alias tmuxrc='vim ~/.tmux.conf'
-alias vi=vim
-alias vimrc="$EDITOR ~/.vimrc"
-alias xrc='vim ~/.xinitrc'
+alias vi=emacsclient
+alias xrc="$EDITOR ~/.xinitrc"
 alias xs=cd
-alias zenv='vim ~/.zshenv'
-alias zpro='vim ~/.zprofile'
-alias zrc='vim ~/.zshrc'
+alias zenv="$EDITOR ~/.zshenv"
+alias zpro="$EDITOR ~/.zprofile"
+alias zrc="$EDITOR ~/.zshrc"
 alias zreload='exec env SHLVL=0 $SHELL'
+alias home-time='TZ=US/Eastern date'
 
 have pinfo    && alias info=pinfo
 have ack-grep && alias ack=ack-grep

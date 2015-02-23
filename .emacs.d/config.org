@@ -1,33 +1,46 @@
-* setup
-  I like keeping all "state" data in the ~/.local/share directory
-  tree, rather than my ~/.emacs.d -- because that way everything in ~/.emacs.d
-  can be versioned.
+#+TITLE: emacs configuration file
+#+AUTHOR: Dylan William Hardison
+#+EMAIL: dylan@hardison.net
 
-#+begin_src emacs-lisp
+* installation
+Copy this file to ~/.emacs.d and add the following to ~/.emacs/init.el:
+
+#+BEGIN_SRC emacs-lisp :tangle no
+(require 'org)
+(org-babel-load-file "~/.emacs.d/config.org")
+#+END_SRC
+
+* environment
+
+I like keeping all "state" data in the ~/.local/share directory
+tree, rather than my ~/.emacs.d -- because that way everything in ~/.emacs.d
+can be versioned.
+
+#+BEGIN_SRC emacs-lisp
   (defconst user-data-directory (concat (getenv "XDG_DATA_HOME") "/emacs/"))
-#+end_src
+#+END_SRC
 
 For things that arn't available as an elpa package, add ~/.emacs.d/elisp
 to the load-path. This is also where I can put my own utilities functions.
 
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
   (add-to-list 'load-path (concat user-emacs-directory "elisp"))
-#+end_src
+#+END_SRC
 
 Tweak the gc settings
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
   (setq-default gc-cons-threshold 50000000
                 gc-cons-percentage 0.5)
-#+end_src
+#+END_SRC
 
 Keep customize settings in its own file (~/.emacs.d/custom.el)
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
   (setq custom-file (concat user-emacs-directory "custom.el"))
   (load-file custom-file)
-#+end_src
+#+END_SRC
 
 Setup the package system and install use-package.
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
   (setq package-archives '(("melpa" . "http://melpa.org/packages/")
                            ("org" . "http://orgmode.org/elpa/")
                            ("gnu" .  "http://elpa.gnu.org/packages/"))
@@ -41,27 +54,46 @@ Setup the package system and install use-package.
     (package-install 'use-package))
 
   (require 'use-package)
-#+end_src
+#+END_SRC
 
 There are a few packages that need to be loaded before anything else,
 because I use them through out this file.
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
   (use-package after)
   (use-package bind)
   (use-package f :ensure f)
-#+end_src
+#+END_SRC
+
+I always want an emacs server running.
+#+BEGIN_SRC emacs-lisp
+  (server-start)
+#+END_SRC
 
 * look and feel
 Configure font, theme, and a few other things relating to how
 emacs looks.
 
-#+begin_src emacs-lisp
+Fira Mono is a very nice monospace font.
+#+BEGIN_SRC emacs-lisp
+  (set-frame-font "Fira Mono Medium-11" nil t)
+#+END_SRC
+
+Install solarized-theme and set theme to solarized-dark.
+#+BEGIN_SRC emacs-lisp
+  (use-package diminish :ensure diminish)
+
+  (use-package solarized-theme
+    :ensure solarized-theme
+    :init
+    (progn
+      (setq solarized-use-less-bold t)
+      (load-theme 'solarized-dark t)))
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
   (defalias 'yes-or-no-p 'y-or-n-p)
   (setq compilation-always-kill t
         compilation-ask-about-save nil)
-
-  (set-frame-font "Fira Mono Medium-11" nil t)
-
 
   (when (fboundp 'menu-bar-mode) (menu-bar-mode -1))
   (when (display-graphic-p) (fringe-mode 16))
@@ -86,15 +118,6 @@ emacs looks.
 
   (which-function-mode t)     ;; display current function
   (blink-cursor-mode -1)      ;; disable blinking cursor
-
-  (use-package diminish :ensure diminish)
-
-  (use-package solarized-theme
-    :ensure solarized-theme
-    :init
-    (progn
-      (setq solarized-use-less-bold t)
-      (load-theme 'solarized-dark t)))
 
   (use-package xterm-color
     :ensure xterm-color
@@ -139,11 +162,12 @@ emacs looks.
     :diminish ""
     :ensure git-gutter+
     :init (global-git-gutter+-mode))
-#+end_src
-* text
+#+END_SRC
+** TODO look into sublimity
+** TODO stripe-buffer
 Tabs are 4 real spaces, by default we use 80 columns with
 a word wrap. Empty lines are indicated in the fringe.
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
   (setq sentence-end-double-space nil)
   (setq-default fill-column 80
                 default-tab-width 4
@@ -151,27 +175,28 @@ a word wrap. Empty lines are indicated in the fringe.
                 indicate-empty-lines t
                 imenu-auto-rescan t
                 word-wrap t)
-#+end_src
+#+END_SRC
 
 Enable UTF-8 for all the things.
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
   (set-terminal-coding-system 'utf-8)
   (set-keyboard-coding-system 'utf-8)
   (set-selection-coding-system 'utf-8)
   (prefer-coding-system 'utf-8)
-#+end_src
+#+END_SRC
 
 Use ethan-wspace to handle whitespace issues.
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
   (setq mode-require-final-newline nil)
 
   (use-package ethan-wspace
+    :ensure ethan-wspace
     :init (global-ethan-wspace-mode 1))
-#+end_src
-* misc
+#+END_SRC
+* unorganized stuff
 settings that don't make more sense anywhere else...
 
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
   (setq delete-by-moving-to-trash t
         mark-ring-max 64
         global-mark-ring-max 128
@@ -191,28 +216,28 @@ settings that don't make more sense anywhere else...
   (transient-mark-mode 1)     ;; lose selection when buffer changes, etc
   (delete-selection-mode 1)   ;; typing replaces selected text.
   (require 'midnight)         ;; clean up old buffers periodically
-#+end_src
+#+END_SRC
 
 * booksmarks, save places, history, recent files and backups
 ** bookmarks
    bookmarks in the data dir too.
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (setq
   bookmark-default-file (concat user-data-directory "bookmarks")
   bookmark-save-flag 1 ) ;; save after every change
-#+end_src
+#+END_SRC
 
 ** saveplace
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (use-package saveplace
   :init
   (progn
     (setq save-place-file (concat user-data-directory "places"))
     (setq-default save-place t)))
-#+end_src
+#+END_SRC
 
 ** minibuffer history
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (use-package savehist
   :init
   (progn
@@ -221,10 +246,10 @@ settings that don't make more sense anywhere else...
           savehist-autosave-interval 60)
     (setq-default history-length 1000)
     (savehist-mode +1)))
-#+end_src
+#+END_SRC
 
 ** recent files
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (use-package recentf
   :init
   (progn
@@ -234,23 +259,28 @@ settings that don't make more sense anywhere else...
     (add-to-list 'recentf-exclude "COMMIT_EDITMSG\\'")
     (recentf-mode +1)
     (run-with-timer 1800 1800 'recentf-save-list)))
-#+end_src
+#+END_SRC
 
 ** store backup files in the data dir
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
 (setq backup-directory-alist         `((".*" . ,(concat user-data-directory "backups")))
       auto-save-file-name-transforms `((".*" ,(concat user-data-directory "backups") t))
       auto-save-list-file-prefix     (concat user-data-directory "auto-save-list/saves-"))
-#+end_src
+#+END_SRC
 
 * general utilities
-** org
-#+begin_src emacs-lisp
+** org-mode
+#+BEGIN_SRC emacs-lisp
   (require 'org)
   (setq org-log-done t)
-#+end_src
+#+END_SRC
+** ham-mode
+#+BEGIN_SRC emacs-lisp
+  (use-package ham-mode :ensure ham-mode)
+#+END_SRC
+** TODO spaces
 ** dired
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
   (use-package dired-x)
 
   (setq dired-listing-switches "-aBhl  --group-directories-first"
@@ -258,14 +288,15 @@ settings that don't make more sense anywhere else...
         dired-omit-files-p t)
 
 
-#+end_src
+#+END_SRC
 ** git-annex
-#+begin_src emacs-lisp
+
+#+BEGIN_SRC emacs-lisp
   (use-package git-annex :ensure git-annex)
-#+end_src
+#+END_SRC
 ** eshell
 
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
   (after 'esh-module
     (add-to-list 'eshell-modules-list 'eshell-smart)
 
@@ -351,29 +382,20 @@ settings that don't make more sense anywhere else...
       (split-window-vertically (- height))
       (other-window 1)
       (eshell)))
-#+end_src
-** with-editor
-Allow local emacs to be $EDITOR for shell and eshell sessions,
-even remote ones.
-#+begin_src emacs-lisp
-(use-package with-editor
-  :ensure with-editor
-  :init
-  (progn
-    (dolist (hook '(with-editor-export-editor with-editor-export-git-editor))
-            (add-hook 'shell-mode-hook  hook)
-            (add-hook 'eshell-mode-hook hook))))
-#+end_src
-
+#+END_SRC
+** google-this
+#+BEGIN_SRC emacs-lisp
+  (use-package google-this :ensure google-this)
+#+END_SRC
 ** google-translate
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
   (use-package google-translate
     :ensure google-translate
     :commands (google-translate-at-point google-translate-smooth-translate)
     :config (require 'google-translate-smooth-ui))
-#+end_src
+#+END_SRC
 ** magit
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
   (use-package magit
     :ensure magit
     :init
@@ -393,40 +415,28 @@ even remote ones.
         (jump-to-register :magit-fullscreen)))
 
     (after 'evil
-           (after 'git-commit-mode
-                  (add-hook 'git-commit-mode-hook 'evil-emacs-state))
+      (after 'git-commit-mode
+        (add-hook 'git-commit-mode-hook 'evil-emacs-state))
 
-           (after 'magit-blame
-                  (defadvice magit-blame-file-on (after advice-for-magit-blame-file-on activate)
-                    (evil-emacs-state))
-                  (defadvice magit-blame-file-off (after advice-for-magit-blame-file-off activate)
-                    (evil-exit-emacs-state)))))
-
-  ; (use-package diff-hl
-  ;   :ensure diff-hl
-  ;   :init
-  ;   (progn
-  ;     (add-hook 'dired-mode-hook 'diff-hl-dired-mode)
-  ;     (unless (display-graphic-p)
-  ;       (diff-hl-margin-mode))))
-#+end_src
+      (after 'magit-blame
+        (defadvice magit-blame-file-on (after advice-for-magit-blame-file-on activate)
+          (evil-emacs-state))
+        (defadvice magit-blame-file-off (after advice-for-magit-blame-file-off activate)
+          (evil-exit-emacs-state)))))
+#+END_SRC
 ** my utilities
 A mostly un-organized list of interactive functions.
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
   (use-package my-util)
-
-  (use-package ssh
-    :ensure ssh
-    :commands ssh)
-#+end_src
+#+END_SRC
 ** pwsafe
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
   (use-package pwsafe
     :commands (pwsafe pwsafe-copy-password pwsafe-add-entry))
-#+end_src
+#+END_SRC
 ** sauron
 Configure sauron for notification support
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
   (use-package sauron
     :ensure sauron
     :init
@@ -435,10 +445,10 @@ Configure sauron for notification support
             sauron-hide-mode-line t
             sauron-min-priority 3
             sauron-watch-patterns '("\\btea\\b"))))
-#+end_src
+#+END_SRC
 ** weechat
    Configure weechat IRC client.
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
   (setq weechat-modules
         '(weechat-sauron weechat-image weechat-button weechat-complete))
 
@@ -460,19 +470,19 @@ Configure sauron for notification support
   (defun my-weechat-start ()
     (interactive)
     (weechat-connect nil nil))
-#+end_src
+#+END_SRC
 
 ** xkcd
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
   (use-package xkcd
     :ensure xkcd
     :commands xkcd)
-#+end_src
+#+END_SRC
 * typing utilities
 ** guide-key
 Use guide-key to help figure out what things do.
 
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
   (use-package guide-key
     :ensure guide-key
     :diminish ""
@@ -481,11 +491,11 @@ Use guide-key to help figure out what things do.
       (setq guide-key/guide-key-sequence '("C-x" "C-c" "," "C-w")
             guide-key/recursive-key-sequence-flag t)
       (guide-key-mode 1)))
-#+end_src
+#+END_SRC
 
 ** undo-tree
 Before loading evil, configure undo-tree.
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
   (use-package undo-tree
     :ensure undo-tree
     :diminish ""
@@ -495,10 +505,10 @@ Before loading evil, configure undo-tree.
             undo-tree-history-directory-alist `(("." . ,(concat user-data-directory "undo")))
             undo-tree-visualizer-timestamps t
             undo-tree-visualizer-diff t)))
-#+end_src
+#+END_SRC
 ** auto-complete
 Load auto-complete.
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
   (use-package auto-complete
     :ensure auto-complete
     :diminish ""
@@ -516,29 +526,29 @@ Load auto-complete.
       (when (fboundp 'linum-mode)
         (ac-linum-workaround))))
 
-#+end_src
+#+END_SRC
 
 *** ac-etags
 Load ac backend for etags.
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
   (use-package ac-etags
     :ensure ac-etags
     :init
     (progn
       (setq ac-etags-requires 1)
       (ac-etags-setup)))
-#+end_src
+#+END_SRC
 
 *** ac-html
 Load ac backend for html.
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
   (use-package ac-html
     :ensure ac-html
     :init (add-hook 'html-mode-hook 'ac-html-enable))
-#+end_src
+#+END_SRC
 
 ** yassnippets
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
   (use-package yasnippet
     :ensure yasnippet
     :diminish 'yas-minor-mode
@@ -564,9 +574,9 @@ Load ac backend for html.
 
       (add-hook 'prog-mode-hook 'yas-minor-mode)
       (add-hook 'html-mode-hook 'yas-minor-mode)))
-#+end_src
+#+END_SRC
 ** smartparens
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
   (use-package smartparens
     :ensure smartparens
     :diminish ""
@@ -601,16 +611,16 @@ Load ac backend for html.
       ;; fix conflict where smartparens clobbers yas' key bindings
       (defadvice yas-expand (before advice-for-yas-expand activate)
         (sp-remove-active-pair-overlay))))
-#+end_src
+#+END_SRC
 
 * navigation utilities
 ** ag
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
   (use-package ag
     :ensure ag)
-#+end_src
+#+END_SRC
 ** helm
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
   (use-package helm
     :ensure helm
     :diminish ""
@@ -627,10 +637,11 @@ Load ac backend for html.
 
   ;(after 'helm
   ; (use-package helm-company :ensure helm-company))
-#+end_src
+#+END_SRC
 
 ** ido
-#+begin_src emacs-lisp
+
+#+BEGIN_SRC emacs-lisp
   (use-package ido
     :init
     (progn
@@ -650,47 +661,58 @@ Load ac backend for html.
   (use-package ido-vertical-mode
     :ensure ido-vertical-mode
     :init (ido-vertical-mode t))
-#+end_src
+#+END_SRC
 
 *** smex
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
   (use-package smex
     :ensure smex
     :init
     (progn
       (setq smex-save-file (concat user-data-directory "smex-items"))
       (smex-initialize)))
-#+end_src
+#+END_SRC
 
+** zsh-style tab completion
+
+Provide zsh like completion system to Emacs. This allows you to select
+candidates one-by-one by pressing `TAB' repeatedly in minibuffer, shell-mode,
+and so forth. In addition, with arrow keys, you can move around the candidates.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package zlc :ensure zlc :init (zlc-mode t))
+#+END_SRC
 * programming languages
 ** Perl
-#+begin_src emacs-lisp
+
+#+BEGIN_SRC emacs-lisp
   (use-package cperl-mode
     :ensure cperl-mode
     :config
     (progn
 
+      (defalias 'perl-mode 'cperl-mode)
       (setq cperl-hairy t)
       (cperl-set-style "PerlStyle")
 
-      (setq cperl-autoindent-on-semi t
-            cperl-auto-newline t
-            cperl-clobber-lisp-bindings t
-            cperl-close-paren-offset -4
-            cperl-continued-statement-offset 2
-            cperl-electric-keywords t
-            cperl-electric-lbrace-space nil
-            cperl-electric-linefeed t
-            cperl-electric-parens nil
-            cperl-font-lock t
-            cperl-highlight-variables-indiscriminately t
-            cperl-indent-level 4
-            cperl-indent-parens-as-block t
-            cperl-indent-region-fix-constructs nil
-            cperl-info-on-command-no-prompt t
-            cperl-invalid-face nil
-            cperl-lazy-help-time 5
-            cperl-tab-always-indent t)))
+      (setq-default cperl-autoindent-on-semi nil
+                    cperl-auto-newline nil
+                    cperl-clobber-lisp-bindings t
+                    cperl-close-paren-offset -4
+                    cperl-continued-statement-offset 2
+                    cperl-electric-keywords t
+                    cperl-electric-lbrace-space nil
+                    cperl-electric-linefeed nil
+                    cperl-electric-parens nil
+                    cperl-font-lock t
+                    cperl-highlight-variables-indiscriminately t
+                    cperl-indent-level 4
+                    cperl-indent-parens-as-block t
+                    cperl-indent-region-fix-constructs nil
+                    cperl-info-on-command-no-prompt t
+                    cperl-invalid-face nil
+                    cperl-lazy-help-time 5
+                    cperl-tab-always-indent t)))
 
 
   (defun perl-bugzilla? (dir)
@@ -726,9 +748,9 @@ Load ac backend for html.
 
   (defun my-perl-module-name (file)
     (replace-regexp-in-string "/" "::" (f-no-ext (my-perl-module-file file))))
-#+end_src
+#+END_SRC
 ** Javascript
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
   (defun js-ctrl-c-ctrl-c ()
     (interactive)
     (require 'thingatpt)
@@ -749,7 +771,7 @@ Load ac backend for html.
                 (lambda ()
                   (local-set-key (kbd "C-c C-c") 'js-ctrl-c-ctrl-c)))
       (setq js2-highlight-level 3)
-      (setq-default js2-basic-offset 2)))
+      (setq-default js2-basic-offset 4)))
 
   (use-package js2-refactor
     :ensure js2-refactor
@@ -765,9 +787,9 @@ Load ac backend for html.
     ;;     (after 'company-mode
     ;;       (require-package 'company-tern)))))
 
-#+end_src
+#+END_SRC
 ** web
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
   (use-package web-mode
     :ensure web-mode
     :mode ( ("\\.html?\\'" . web-mode)
@@ -782,9 +804,9 @@ Load ac backend for html.
   (setq web-mode-engines-alist
         '(("php" . "\\.phtml\\'")
           ("template-toolkit" . "\\.tmpl\\'")))
-#+end_src
+#+END_SRC
 ** sql
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
   (setq sql-connection-alist
         '((bmo (sql-product 'mysql)
                (sql-server "10.0.0.150")
@@ -803,11 +825,11 @@ Load ac backend for html.
   (defun bmo-sql ()
     (interactive)
     (sql-connect 'bmo))
-#+end_src
+#+END_SRC
 ** config files
 Syntax highlighting for ssh config, nginx config, vimrc (haha), yaml and lua.
 
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
   (use-package ssh-config-mode
     :ensure ssh-config-mode
     :mode ((".ssh/config\\'"       . ssh-config-mode)
@@ -833,9 +855,9 @@ Syntax highlighting for ssh config, nginx config, vimrc (haha), yaml and lua.
   (use-package lua-mode
     :ensure lua-mode
     :mode "\\.lua$")
-#+end_src
+#+END_SRC
 * global keybindings
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
   (global-set-key (kbd "M-x") 'smex)
   (global-set-key (kbd "C-x C-m") 'smex)
   (global-set-key (kbd "C-c C-m") 'smex)
@@ -860,12 +882,12 @@ Syntax highlighting for ssh config, nginx config, vimrc (haha), yaml and lua.
 
   (after 'evil
     (global-set-key (kbd "C-w") 'evil-window-map))
-#+end_src
+#+END_SRC
 * evil keybindings
 Setup evil with some very vim-like defaults.
 
 ** turn on evil
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
   (use-package evil
     :ensure evil
     :init
@@ -982,9 +1004,9 @@ Setup evil with some very vim-like defaults.
       ;; (define-key web-mode-map (kbd "C-c C-d") 'ng-snip-show-docs-at-point)
 
       ))
-#+end_src
+#+END_SRC
 ** evil leader
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
   (use-package evil-leader
     :ensure evil-leader
     :init
@@ -1011,31 +1033,31 @@ Setup evil with some very vim-like defaults.
         "g r" 'git-gutter+-revert-hunks
         "g c" 'magit-commit
         "g l" 'magit-log)))
-#+end_src
+#+END_SRC
 ** comment operator (gc)
 Make the evil nerd commenter use "gc" like tpope's commentary.vim
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
   (setq evilnc-hotkey-comment-operator "gc")
   (use-package evil-nerd-commenter :ensure evil-nerd-commenter)
-#+end_src
+#+END_SRC
 
 ** additional text objects
 Add surround-style text objects.
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
   (use-package evil-surround
     :ensure evil-surround
     :init (global-evil-surround-mode t))
-#+end_src
+#+END_SRC
 
 indent text object
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
   (use-package evil-indent-textobject
     :ensure evil-indent-textobject)
-#+end_src
+#+END_SRC
 
 ** jumps
 Make emacs jump more like vim.
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
   (use-package evil-jumper
     :ensure evil-jumper
     :config
@@ -1043,27 +1065,27 @@ Make emacs jump more like vim.
       (setq evil-jumper-auto-center t
             evil-jumper-file (concat user-data-directory "evil-jumps")
             evil-jumper-auto-save-interval 3600)))
-#+end_src
+#+END_SRC
 
 After searching, recenter on the search term.
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
   (defadvice evil-ex-search-next (after advice-for-evil-ex-search-next activate)
     (recenter))
 
   (defadvice evil-ex-search-previous (after advice-for-evil-ex-search-previous activate)
     (recenter))
-#+end_src
+#+END_SRC
 
 ** evil org
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
   (use-package evil-org
     :ensure evil-org)
-#+end_src
+#+END_SRC
 ** disable vi/vim style-exits
-#+begin_src emacs-lisp
+#+BEGIN_SRC emacs-lisp
   (defadvice evil-quit (around advice-for-evil-quit activate)
     (message "Thou shall not quit!"))
 
   (defadvice evil-quit-all (around advice-for-evil-quit-all activate)
     (message "Thou shall not quit!"))
-#+end_src
+#+END_SRC

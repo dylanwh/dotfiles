@@ -9,7 +9,7 @@ PWSAFE_DATABASE="annex/private/pwsafe.dat"
 export REALNAME EMAIL EDITOR VISUAL BROWSER MANPAGER PWSAFE_DATABASE
 
 LC_COLLATE=POSIX # sort in POSIX order.
-TZ=US/Eastern
+TZ=America/New_York
 
 export LC_COLLATE TZ
 

@@ -36,9 +36,6 @@
   changed = magenta bold
   untracked = green bold
 
-[github]
-	user = dylanwh
-
 [core]
 	excludesfile = ~/.cvsignore
 
