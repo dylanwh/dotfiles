@@ -1,24 +1,24 @@
 [push]
-	default = simple
+    default = simple
 
 [user]
-	email = dylan@hardison.net
-	name  = Dylan William Hardison
+    email = dylan@hardison.net
+    name  = Dylan William Hardison
 
 [alias]
-	co = checkout
-	ci = commit
-	br = branch
-	st = status
-	up = !git fetch --all --tags --prune && git pull --rebase
+    co = checkout
+    ci = commit
+    br = branch
+    st = status
+    up = !git fetch --all --tags --prune && git pull --rebase
     reword = commit --amend
     top = !pwd
 
 [color]
-	ui = auto
-	diff = auto
-	status = auto
-	branch = auto
+    ui = auto
+    diff = auto
+    status = auto
+    branch = auto
 
 [color "branch"]
   current = yellow reverse
@@ -28,8 +28,8 @@
 [color "diff"]
   meta = green bold
   frag = green bold
-  old = red bold 
-  new = green 
+  old = red bold
+  new = green
 
 [color "status"]
   added = blue
@@ -37,7 +37,4 @@
   untracked = green bold
 
 [core]
-	excludesfile = ~/.cvsignore
-
-
-
+    excludesfile = ~/.cvsignore

@@ -270,10 +270,19 @@ settings that don't make more sense anywhere else...
 
 * general utilities
 ** org-mode
+Basic org mode settings.
+
 #+BEGIN_SRC emacs-lisp
   (require 'org)
   (setq org-log-done t)
 #+END_SRC
+
+Load epresent, for presentations from org-mode buffers
+
+#+BEGIN_SRC emacs-lisp
+  (use-package epresent :ensure epresent)
+#+END_SRC
+
 ** ham-mode
 #+BEGIN_SRC emacs-lisp
   (use-package ham-mode :ensure ham-mode)
@@ -901,6 +910,7 @@ Setup evil with some very vim-like defaults.
 
       (add-to-list 'evil-insert-state-modes 'weechat-mode)
       (add-to-list 'evil-emacs-state-modes 'sauron-mode)
+      (add-to-list 'evil-emacs-state-modes 'epresent-mode)
       (add-to-list 'evil-insert-state-modes 'sql-interactive-mode)
 
       (unless (display-graphic-p)
