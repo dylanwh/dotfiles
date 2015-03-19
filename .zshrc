@@ -33,6 +33,8 @@ if have dircolors; then
 
     eval $(dircolors ~/.config/dircolors-solarized/dircolors.ansi-dark )
 fi
+
+
 ## }}}
 ## {{{ OPTIONS
 setopt autocd                  # change to dirs without cd
@@ -72,6 +74,9 @@ setopt auto_continue           # automatically continue disowned jobs.
 setopt auto_resume             # automatically resume jobs from commands
 setopt no_list_beep
 setopt nobeep
+
+[[ $TERM = 'dumb' && $EMACS = t ]] && unsetopt zle
+
 ## }}}
 ## {{{ FUNCTIONS
 # autoload useful functions distributed with zsh
@@ -81,10 +86,12 @@ autoload -U colors compinit edit-command-line insert-files promptinit run-help z
 autoload -U title shuffle perlpath prefix runbg fname mcp zle-sudo zle-less
 
 # create zle bindings
-zle -N insert-files
-zle -N zle-sudo
-zle -N zle-less
-zle -N edit-command-line
+if [[ -o zle ]]; then
+    zle -N insert-files
+    zle -N zle-sudo
+    zle -N zle-less
+    zle -N edit-command-line
+fi
 
 compinit -d $ZCACHE/zcompdump # initialize advanced tab completion
 colors                        # initialize color associative arrays
@@ -100,80 +107,67 @@ function bzfixperms { sudo chmod -Rc go+rX .; sudo chown -Rc dylan:http . }
 precmd_functions+=( save_cwd )
 ## }}}
 ## {{{ KEY BINDINGS
-bindkey -v
+if [[ -o zle ]]; then
+    bindkey -v
 
-case $TERM in
-    linux|screen*)
-        bindkey '^[[1~' beginning-of-line
-        bindkey '^[[3~' delete-char
-        bindkey '^[[4~' end-of-line
-        bindkey '^[[5~' up-line-or-history   # PageUp
-        bindkey '^[[6~' down-line-or-history # PageDown
-        bindkey '^[[A'  up-line-or-search    # up arrow for back-history-search
-        bindkey '^[[B'  down-line-or-search  # down arrow for fwd-history-search
-        bindkey '^?'   backward-delete-char
-        bindkey '^H'   backward-delete-char
-        bindkey '^[OM' accept-line
-    ;;
-    rxvt-unicode)
-        bindkey '^[[7~' beginning-of-line  # home
-        bindkey '^[[5~' up-line-or-history # pgup
-        bindkey '^[[6~' down-line-or-history # pgdown
-        bindkey '^[[8~' end-of-line        # end
-        bindkey '^[[A' up-line-or-search   # up arrow
-        bindkey '^[[B' down-line-or-search # down arrow
-        bindkey '^?'   backward-delete-char
-        bindkey '^H'   backward-delete-char
-    ;;
-    *xterm*|rxvt*|(dt|k|E)term)
-        bindkey '^[[2~' yank
-        bindkey '^[[3~' delete-char
-        bindkey '^[[5~' up-line-or-history # PageUp
-        bindkey '^[[6~' down-line-or-history # PageDown
-        bindkey '^[[7~' beginning-of-line
-        bindkey '^[[8~' end-of-line
-        bindkey '^[[A' up-line-or-search ## up arrow for back-history-search
-        bindkey '^[[B' down-line-or-search ## down arrow for fwd-history-search
-        bindkey '^[OM' accept-line
-    ;;
-esac
+    case $TERM in
+        (linux|screen*)
+            bindkey '^[[1~' beginning-of-line
+            bindkey '^[[3~' delete-char
+            bindkey '^[[4~' end-of-line
+            bindkey '^[[5~' up-line-or-history   # PageUp
+            bindkey '^[[6~' down-line-or-history # PageDown
+            bindkey '^[[A'  up-line-or-search    # up arrow for back-history-search
+            bindkey '^[[B'  down-line-or-search  # down arrow for fwd-history-search
+            bindkey '^?'   backward-delete-char
+            bindkey '^H'   backward-delete-char
+            bindkey '^[OM' accept-line
+            ;;
+        (rxvt-unicode)
+            bindkey '^[[7~' beginning-of-line  # home
+            bindkey '^[[5~' up-line-or-history # pgup
+            bindkey '^[[6~' down-line-or-history # pgdown
+            bindkey '^[[8~' end-of-line        # end
+            bindkey '^[[A' up-line-or-search   # up arrow
+            bindkey '^[[B' down-line-or-search # down arrow
+            bindkey '^?'   backward-delete-char
+            bindkey '^H'   backward-delete-char
+        ;;
+    esac
 
-bindkey -M vicmd ' ' magic-space ## do history expansion on space
-bindkey -M vicmd '#' vi-pound-insert
-bindkey -M vicmd Q   quote-line
-bindkey -M vicmd q   quote-region
-bindkey -M vicmd u   undo
-bindkey -M vicmd v   edit-command-line
-bindkey -M vicmd k   up-line-or-search
-bindkey -M vicmd j   down-line-or-search
+    bindkey -M vicmd ' ' magic-space ## do history expansion on space
+    bindkey -M vicmd '#' vi-pound-insert
+    bindkey -M vicmd Q   quote-line
+    bindkey -M vicmd q   quote-region
+    bindkey -M vicmd u   undo
+    bindkey -M vicmd v   edit-command-line
+    bindkey -M vicmd k   up-line-or-search
+    bindkey -M vicmd j   down-line-or-search
 
-bindkey '^_' copy-prev-shell-word
-bindkey '^Q' push-input
-bindkey '^E' expand-word
-bindkey '^ ' _expand_alias
+    bindkey '^_' copy-prev-shell-word
+    bindkey '^Q' push-input
+    bindkey '^E' expand-word
+    bindkey '^ ' _expand_alias
 
-if have fasd; then
-    bindkey -r '^X'
-    bindkey '^X^A' fasd-complete
-    bindkey '^X^F' fasd-complete-f
-    bindkey '^X^D' fasd-complete-d
+    if have fasd; then
+        bindkey -r '^X'
+        bindkey '^X^A' fasd-complete
+        bindkey '^X^F' fasd-complete-f
+        bindkey '^X^D' fasd-complete-d
+    fi
+
+    bindkey '^O'   accept-and-infer-next-history
+    bindkey '^[^M' accept-and-hold
+    bindkey '^F'   insert-files
+
+    bindkey '^P' up-history
+    bindkey '^N' down-history
+    bindkey '^?' backward-delete-char
+    bindkey '^H' backward-delete-char
+    bindkey '^W' backward-kill-word
+    bindkey '^R' history-incremental-search-backward
+    bindkey '^S' zle-sudo
 fi
-
-bindkey '^O'   accept-and-infer-next-history
-bindkey '^[^M' accept-and-hold
-bindkey '^F'   insert-files
-
-bindkey '^P' up-history
-bindkey '^N' down-history
-bindkey '^?' backward-delete-char
-bindkey '^H' backward-delete-char
-bindkey '^W' backward-kill-word
-bindkey '^R' history-incremental-search-backward
-bindkey '^S' zle-sudo
-
-# function zle-line-init { zle -K vicmd }
-# zle -N zle-line-init
-
 ## }}}
 ## {{{ ALIASES
 alias ack='noglob ack'
@@ -279,15 +273,17 @@ fi
 source $ZCACHE/alias-ls
 ## }}}
 # {{{ ZSTYLES
-# Add sbin directories for sudo tab completion.
-zstyle ':completion:*:sudo:*' command-path $path /usr/sbin /sbin
+if [[ -o zle ]]; then
+    # Add sbin directories for sudo tab completion.
+    zstyle ':completion:*:sudo:*' command-path $path /usr/sbin /sbin
 
-# cache the output of completion functions.
-zstyle ':completion:*' use-cache on
-zstyle ':completion:*' cache-path $ZCACHE
+    # cache the output of completion functions.
+    zstyle ':completion:*' use-cache on
+    zstyle ':completion:*' cache-path $ZCACHE
 
-# use menu style completions
-zstyle ':completion:*' menu 'select>10'
+    # use menu style completions
+    zstyle ':completion:*' menu 'select>10'
+fi
 
 # colorize file listing from completions
 [[ -n $LS_COLORS ]] && zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}

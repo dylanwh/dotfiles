@@ -11,34 +11,35 @@ Copy this file to ~/.emacs.d and add the following to ~/.emacs/init.el:
 #+END_SRC
 
 * environment
-
-I like keeping all "state" data in the ~/.local/share directory
-tree, rather than my ~/.emacs.d -- because that way everything in ~/.emacs.d
-can be versioned.
-
-#+BEGIN_SRC emacs-lisp
-  (defconst user-data-directory (concat (getenv "XDG_DATA_HOME") "/emacs/"))
-#+END_SRC
-
-For things that arn't available as an elpa package, add ~/.emacs.d/elisp
-to the load-path. This is also where I can put my own utilities functions.
-
-#+BEGIN_SRC emacs-lisp
-  (add-to-list 'load-path (concat user-emacs-directory "elisp"))
-#+END_SRC
-
-Tweak the gc settings
+** Tweak the gc settings
 #+BEGIN_SRC emacs-lisp
   (setq-default gc-cons-threshold 50000000
                 gc-cons-percentage 0.5)
 #+END_SRC
 
+** user-data-directory
+I like keeping all "state" data in the ~/.local/share directory
+tree, rather than my ~/.emacs.d -- because that way everything in ~/.emacs.d
+can be versioned.
+#+BEGIN_SRC emacs-lisp
+  (defconst user-data-directory (concat (getenv "XDG_DATA_HOME") "/emacs/"))
+#+END_SRC
+
+** add ~/.emacs.d/elisp to load-path
+For things that arn't available as an elpa package, add ~/.emacs.d/elisp
+to the load-path. This is also where I can put my own utilities functions.
+#+BEGIN_SRC emacs-lisp
+  (add-to-list 'load-path (concat user-emacs-directory "elisp"))
+#+END_SRC
+
+** custom.el
 Keep customize settings in its own file (~/.emacs.d/custom.el)
 #+BEGIN_SRC emacs-lisp
   (setq custom-file (concat user-emacs-directory "custom.el"))
   (load-file custom-file)
 #+END_SRC
 
+** configure use-package and package archives
 Setup the package system and install use-package.
 #+BEGIN_SRC emacs-lisp
   (setq package-archives '(("melpa" . "http://melpa.org/packages/")
@@ -56,6 +57,7 @@ Setup the package system and install use-package.
   (require 'use-package)
 #+END_SRC
 
+** bootstrap packages
 There are a few packages that need to be loaded before anything else,
 because I use them through out this file.
 #+BEGIN_SRC emacs-lisp
@@ -64,10 +66,18 @@ because I use them through out this file.
   (use-package f :ensure f)
 #+END_SRC
 
+** server
 I always want an emacs server running.
 #+BEGIN_SRC emacs-lisp
   (server-start)
 #+END_SRC
+
+** environmental variables
+ #+BEGIN_SRC emacs-lisp
+   (setenv "PAGER" "cat")
+   (setenv "GIT_PAGER" "cat")
+   (setenv "MANPAGER" "cat")
+ #+END_SRC
 
 * look and feel
 Configure font, theme, and a few other things relating to how
