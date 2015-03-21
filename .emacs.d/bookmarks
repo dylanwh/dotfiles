@@ -1,0 +1,54 @@
+;;;; Emacs Bookmark Format Version 1 ;;;;
+;;; This format is meant to be slightly human-readable;
+;;; nevertheless, you probably don't want to edit it.
+;;; -*- End Of Bookmark File Format Version Stamp -*-
+(("org-files"
+ (filename . "/davs:dylan=hardison.net@dav.messagingengine.com:/dylan.hardison.net/files/org/")
+ (front-context-string)
+ (rear-context-string . ".0k 1969-12-31  ")
+ (position . 408))
+("emacs-data"
+ (filename . "~/.local/share/emacs/")
+ (front-context-string)
+ (rear-context-string . "3K Mar  7 12:17 ")
+ (position . 1605))
+("bmo-extensions"
+ (filename . "/ssh:lofn:/home/dylan/src/mozilla/bmo/extensions/")
+ (front-context-string . "Github\n  drwxr-x")
+ (rear-context-string . "0K Feb 20 09:09 ")
+ (position . 1017))
+("bz-github-ext"
+ (filename . "/ssh:lofn:/home/dylan/src/mozilla/bmo/extensions/Github/Extension.pm")
+ (front-context-string . "    return if $i")
+ (rear-context-string . "age_id vars)};\n\n")
+ (position . 777))
+("lofn pub"
+ (filename .
+           #("/ssh:lofn:/home/dylan/pub/" 1 4
+             (tramp-default t)))
+ (front-context-string . "Mumford & Sons -")
+ (rear-context-string . "7M Oct 31  2011 ")
+ (position . 9365))
+("elpa"
+ (filename . "~/.local/share/emacs/elpa/")
+ (front-context-string . "ac-etags-2013112")
+ (rear-context-string . "50 Dec 17 22:44 ")
+ (position . 224))
+("bugzilla"
+ (filename . "/ssh:lofn:/home/dylan/src/mozilla/bugzilla/")
+ (front-context-string . "\n#<buffer *shell")
+ (rear-context-string . "ugzilla [4.4] $ ")
+ (position . 17481))
+("bmo"
+ (filename . "/ssh:lofn:src/mozilla/bmo")
+ (front-context-string)
+ (rear-context-string . "/bmo [master] $ ")
+ (position . 5219))
+("lofn-etc"
+ (filename .
+           #("/ssh:lofn|sudo::/etc/" 6 10
+             (tramp-default t)))
+ (front-context-string . "nginx\n  drwxr-xr")
+ (rear-context-string . "0K Dec 11 12:30 ")
+ (position . 2455))
+)

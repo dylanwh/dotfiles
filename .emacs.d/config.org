@@ -232,9 +232,8 @@ settings that don't make more sense anywhere else...
 ** bookmarks
    bookmarks in the data dir too.
 #+BEGIN_SRC emacs-lisp
-(setq
-  bookmark-default-file (concat user-data-directory "bookmarks")
-  bookmark-save-flag 1 ) ;; save after every change
+  (setq bookmark-default-file (concat user-emacs-directory "bookmarks")
+        bookmark-save-flag 1 ) ;; save after every change
 #+END_SRC
 
 ** saveplace
