@@ -22,7 +22,7 @@ I like keeping all "state" data in the ~/.local/share directory
 tree, rather than my ~/.emacs.d -- because that way everything in ~/.emacs.d
 can be versioned.
 #+BEGIN_SRC emacs-lisp
-  (defconst user-data-directory (concat (getenv "XDG_DATA_HOME") "/emacs/"))
+  (defconst user-data-directory (concat (or (getenv "XDG_DATA_HOME") (concat (getenv "HOME") "/.local/share")) "/emacs/"))
 #+END_SRC
 
 ** add ~/.emacs.d/elisp to load-path
@@ -85,7 +85,7 @@ emacs looks.
 
 Fira Mono is a very nice monospace font.
 #+BEGIN_SRC emacs-lisp
-  (set-frame-font "Fira Mono Medium-11" nil t)
+  (set-frame-font "Fira Mono Medium-12" nil t)
 #+END_SRC
 
 Install solarized-theme and set theme to solarized-dark.
@@ -260,13 +260,14 @@ settings that don't make more sense anywhere else...
 ** recent files
 #+BEGIN_SRC emacs-lisp
 (use-package recentf
-  :init
+  :ensure recentf
+  :config
   (progn
     (setq recentf-save-file (concat user-data-directory "recentf"))
     (setq recentf-max-saved-items 1000)
     (setq recentf-max-menu-items 500)
-    (add-to-list 'recentf-exclude "COMMIT_EDITMSG\\'")
     (recentf-mode +1)
+    (add-to-list 'recentf-exclude "COMMIT_EDITMSG\\'")
     (run-with-timer 1800 1800 'recentf-save-list)))
 #+END_SRC
 
@@ -416,7 +417,7 @@ Load epresent, for presentations from org-mode buffers
 #+BEGIN_SRC emacs-lisp
   (use-package magit
     :ensure magit
-    :init
+    :config
     (progn
       (diminish 'magit-auto-revert-mode)
       (setq magit-diff-options '("--histogram"))
@@ -566,12 +567,11 @@ Load ac backend for html.
 #+END_SRC
 
 ** yassnippets
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle no
   (use-package yasnippet
     :ensure yasnippet
-    :diminish 'yas-minor-mode
-    :idle (yas-reload-all)
-    :init
+    :diminish yas-minor-mode
+    :config
     (progn
       (let* ((yas-install-dir (car (file-expand-wildcards (concat package-user-dir "/yasnippet-*"))))
              (dir (concat yas-install-dir "/snippets/js-mode")))
@@ -641,8 +641,7 @@ Load ac backend for html.
 #+BEGIN_SRC emacs-lisp
   (use-package helm
     :ensure helm
-    :diminish ""
-    :init
+    :config
     (progn
       (setq helm-command-prefix-key "C-c h")
       (setq helm-quick-update t)

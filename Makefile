@@ -41,7 +41,12 @@ all:  $(GEN_FILES) dirs
 dirs: $(ENSURE_DIRS)
 
 mnt:
-	ln -fs /run/media/$$LOGNAME ~/mnt
+	@for dir in /run/media/$$LOGNAME /Volumes; do \
+		if [[ -d $$dir ]]; then \
+			ln -svf $$dir ~/mnt; \
+			break; \
+		fi; \
+	done
 
 show-dirs:
 	@for dir in $(ENSURE_DIRS) $(GEN_DIRS); do echo $$dir; done
