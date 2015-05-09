@@ -92,12 +92,14 @@ Install solarized-theme and set theme to solarized-dark.
 #+BEGIN_SRC emacs-lisp
   (use-package diminish :ensure diminish)
 
-  (use-package solarized-theme
-    :ensure solarized-theme
-    :init
-    (progn
-      (setq solarized-use-less-bold t)
-      (load-theme 'solarized-dark t)))
+  (if (display-graphic-p)
+      (use-package solarized-theme
+        :ensure solarized-theme
+        :init
+        (progn
+          (setq solarized-use-less-bold t)
+          (load-theme 'solarized-dark t)))
+    (use-package zenburn-theme :ensure zenburn-theme))
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
