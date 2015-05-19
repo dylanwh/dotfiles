@@ -1,0 +1,10 @@
+# -*- mode: snippet -*-
+# uuid: 7BCCF386-19EE-4176-92B7-DCB8DDCE698D
+# contributor: Translated from textmate snippet by yasmate.rb
+# name: ul wrap links
+## binding: "^@l
+## condition: "text.html
+# --
+<${1:ul}${2: id="$3"}${4: class="$5"}>
+${TM_SELECTED_TEXT/.+/	<li><a href="$0">$0<\/a><\/li>/g}
+</$1>

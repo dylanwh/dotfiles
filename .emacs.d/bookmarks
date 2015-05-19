@@ -14,7 +14,7 @@
  (position . 1605))
 ("lofn pub"
  (filename .
-           #("/ssh:lofn:/home/dylan/pub/" 1 4
+           #("/sshx:lofn:/home/dylan/pub/" 1 4
              (tramp-default t)))
  (front-context-string . "Mumford & Sons -")
  (rear-context-string . "7M Oct 31  2011 ")
@@ -25,13 +25,14 @@
  (rear-context-string . "50 Dec 17 22:44 ")
  (position . 224))
 ("bugzilla"
- (filename . "/ssh:bmo:/opt/bugzilla/")
+ (filename . "/ssh:bmo:/opt/bugzilla")
  (front-context-string . "htdocs\n  drwx---")
  (rear-context-string . "66 Apr 16 21:37 ")
- (position . 192))
+ (position . 192)
+ (annotation . ""))
 ("lofn-etc"
  (filename .
-           #("/ssh:lofn|sudo::/etc/" 6 10
+           #("/sshx:lofn|sudo::/etc/" 6 10
              (tramp-default t)))
  (front-context-string . "nginx\n  drwxr-xr")
  (rear-context-string . "0K Dec 11 12:30 ")

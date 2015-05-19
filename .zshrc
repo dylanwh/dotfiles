@@ -210,7 +210,7 @@ alias zpro="$EDITOR ~/.zprofile"
 alias zrc="$EDITOR ~/.zshrc"
 alias zreload='exec env SHLVL=0 $SHELL'
 alias home-time='TZ=US/Eastern date'
-alias emacsclient='emacsclient -c'
+alias emacsclient='emacsclient -a "" -c'
 
 have pinfo    && alias info=pinfo
 have ack-grep && alias ack=ack-grep

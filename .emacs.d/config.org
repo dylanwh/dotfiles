@@ -370,7 +370,6 @@ Load epresent, for presentations from org-mode buffers
     (shell-command-to-string "bz summary"))
 
 
-
   (defun my-current-git-branch ()
     (let ((branch (car (loop for match in (split-string (shell-command-to-string "git branch") "\n")
                              when (string-match "^\*" match)
@@ -425,6 +424,18 @@ Load epresent, for presentations from org-mode buffers
       (split-window-vertically (- height))
       (other-window 1)
       (eshell)))
+
+  (defun my-projectile-eshell ()
+    "Open `eshell' at the root of the project."
+    (interactive)
+    (let* ((default-directory  (projectile-project-root))
+           (height             (/ (window-total-height) 3))
+           (name               (car (last (split-string default-directory "/" t))))
+           (eshell-buffer-name (concat "*eshell: " name "*")))
+      (split-window-vertically (- height))
+      (other-window 1)
+      (eshell)))
+
 #+END_SRC
 ** google-this
 #+BEGIN_SRC emacs-lisp
@@ -609,8 +620,7 @@ Load ac backend for html.
           (delete-directory dir t)))
 
       (setq yas-fallback-behavior 'return-nil
-            yas-also-auto-indent-first-line t
-            yas-prompt-functions '(yas/ido-prompt yas/completing-prompt))
+            yas-also-auto-indent-first-line t)
       (add-to-list 'yas-snippet-dirs (concat user-emacs-directory "snippets"))
       (add-hook 'yas-before-expand-snippet-hook
                 (lambda () (auto-complete-mode -1)))
@@ -624,6 +634,7 @@ Load ac backend for html.
       (add-hook 'html-mode-hook 'yas-minor-mode)))
 #+END_SRC
 ** smartparens
+
 #+BEGIN_SRC emacs-lisp
   (use-package smartparens
     :ensure smartparens
@@ -661,11 +672,24 @@ Load ac backend for html.
         (sp-remove-active-pair-overlay))))
 #+END_SRC
 
+** more pcomplete
+#+BEGIN_SRC emacs-lisp
+  (use-package pcomplete-extension :ensure pcomplete-extension)
+#+END_SRC
 * navigation utilities
 ** ag
 #+BEGIN_SRC emacs-lisp
   (use-package ag
     :ensure ag)
+#+END_SRC
+** projectile
+#+BEGIN_SRC emacs-lisp
+  (use-package projectile
+    :ensure projectile
+    :config
+    (progn
+      (projectile-global-mode)))
+
 #+END_SRC
 ** helm
 #+BEGIN_SRC emacs-lisp
@@ -673,51 +697,36 @@ Load ac backend for html.
     :ensure helm
     :config
     (progn
-      (setq helm-command-prefix-key "C-c h")
-      (setq helm-quick-update t)
-      (setq helm-bookmark-show-location t)
-      (setq helm-buffers-fuzzy-matching t)
       (require 'helm-config)
+      (setq helm-ff-transformer-show-only-basename nil
+            helm-command-prefix-key                "C-c h"
+            helm-quick-update                      t
+            helm-adaptive-history-file             (concat user-data-directory "helm-history")
+            helm-yank-symbol-first                 t
+            helm-move-to-line-cycle-in-source      t
+            helm-buffers-fuzzy-matching            t
+            helm-bookmark-show-location            t
+            helm-ff-auto-update-initial-value      t)
+      (helm-mode 1)
+      (helm-adaptative-mode 1)
+      (helm-autoresize-mode 1)
 
+      (autoload 'helm-descbinds      "helm-descbinds" t)
+      (autoload 'helm-eshell-history "helm-eshell"    t)
+      (autoload 'helm-esh-pcomplete  "helm-eshell"    t)
+
+      (add-hook 'eshell-mode-hook
+                #'(lambda ()
+                    (define-key eshell-mode-map (kbd "<tab>")     #'helm-esh-pcomplete)
+                    (define-key eshell-mode-map (kbd "C-c C-l") #'helm-eshell-history)))
+
+      (use-package helm-company :ensure helm-company)
       (use-package helm-swoop :ensure helm-swoop)
+      (use-package helm-ag :ensure helm-ag)
+      (use-package helm-projectile
+        :ensure helm-projectile
+        :config (helm-projectile-on))
       (use-package helm-descbinds :ensure helm-descbinds)))
-
-  ;(after 'helm
-  ; (use-package helm-company :ensure helm-company))
-#+END_SRC
-
-** ido
-
-#+BEGIN_SRC emacs-lisp
-  (use-package ido
-    :init
-    (progn
-      (setq ido-enable-prefix nil
-            ido-use-virtual-buffers t
-            ido-enable-flex-matching t
-            ido-create-new-buffer 'always
-            ido-use-filename-at-point 'guess
-            ido-save-directory-list-file (concat user-data-directory "ido.last"))
-      (ido-mode t)
-      (ido-everywhere t)))
-
-  (use-package ido-ubiquitous
-    :ensure ido-ubiquitous
-    :init (ido-ubiquitous-mode t))
-
-  (use-package ido-vertical-mode
-    :ensure ido-vertical-mode
-    :init (ido-vertical-mode t))
-#+END_SRC
-
-*** smex
-#+BEGIN_SRC emacs-lisp
-  (use-package smex
-    :ensure smex
-    :init
-    (progn
-      (setq smex-save-file (concat user-data-directory "smex-items"))
-      (smex-initialize)))
 #+END_SRC
 
 ** zsh-style tab completion
@@ -844,7 +853,9 @@ and so forth. In addition, with arrow keys, you can move around the candidates.
 
   (defun my-web-mode-hook ()
     "Hooks for Web mode."
-    (setq web-mode-markup-indent-offset 2))
+    (setq web-mode-markup-indent-offset 2
+          web-mode-script-padding 2
+          web-mode-code-indent-offset 2))
 
   (add-hook 'web-mode-hook 'my-web-mode-hook)
 
@@ -895,6 +906,14 @@ Syntax highlighting for ssh config, nginx config, vimrc (haha), yaml and lua.
     :ensure vimrc-mode
     :mode "\.vimrc")
 
+  (use-package  gitignore-mode
+    :ensure gitignore-mode
+    :mode "\.gitignore")
+
+  (use-package  gitconfig-mode
+    :ensure gitconfig-mode
+    :mode "\.git/?config")
+
   (use-package yaml-mode
     :ensure yaml-mode
     :mode "\\.yml$"
@@ -905,12 +924,13 @@ Syntax highlighting for ssh config, nginx config, vimrc (haha), yaml and lua.
   (use-package lua-mode
     :ensure lua-mode
     :mode "\\.lua$")
+
+
 #+END_SRC
 * global keybindings
 #+BEGIN_SRC emacs-lisp
-  (global-set-key (kbd "M-x") 'smex)
-  (global-set-key (kbd "C-x C-m") 'smex)
-  (global-set-key (kbd "C-c C-m") 'smex)
+  (global-set-key (kbd "M-x") 'helm-M-x)
+  (global-set-key (kbd "C-x C-m") 'helm-M-x)
 
   (global-set-key (kbd "C-x g") 'magit-status)
   (global-set-key (kbd "C->") 'mc/mark-next-like-this)
@@ -922,13 +942,19 @@ Syntax highlighting for ssh config, nginx config, vimrc (haha), yaml and lua.
   (global-set-key (kbd "C-c l") 'org-store-link)
 
   (global-set-key (kbd "C-c s") 'my-goto-scratch-buffer)
-  (global-set-key (kbd "C-x C-b") 'ibuffer)
+
+  (global-set-key (kbd "C-x b")   #'helm-mini)
+  (global-set-key (kbd "C-x C-b") #'helm-buffers-list)
+  (global-set-key (kbd "C-x C-f") #'helm-find-files)
+  (global-set-key (kbd "C-x C-r") #'helm-recentf)
+  (global-set-key (kbd "C-x r l") #'helm-filtered-bookmarks)
+
   (global-set-key (kbd "C-x C-k") 'kill-this-buffer)
-  (global-set-key (kbd "C-x p") 'proced)
-  (global-set-key (kbd "C-s") 'isearch-forward-regexp)
-  (global-set-key (kbd "C-M-s") 'isearch-forward)
-  (global-set-key (kbd "C-r") 'isearch-backward-regexp)
-  (global-set-key (kbd "C-M-r") 'isearch-backward)
+  (global-set-key (kbd "C-x p")   'proced)
+  (global-set-key (kbd "C-s")     'isearch-forward-regexp)
+  (global-set-key (kbd "C-M-s")   'isearch-forward)
+  (global-set-key (kbd "C-r")     'isearch-backward-regexp)
+  (global-set-key (kbd "C-M-r")   'isearch-backward)
 
   (after 'evil
     (global-set-key (kbd "C-w") 'evil-window-map))
@@ -960,8 +986,8 @@ Setup evil with some very vim-like defaults.
       (define-key evil-normal-state-map (kbd "SPC o") 'imenu)
       (define-key evil-normal-state-map (kbd "SPC b") 'switch-to-buffer)
 
-      (define-key evil-normal-state-map (kbd "SPC k") 'ido-kill-buffer)
-      (define-key evil-normal-state-map (kbd "SPC f") 'ido-find-file)
+      ;; (define-key evil-normal-state-map (kbd "SPC k") 'ido-kill-buffer)
+      ;; (define-key evil-normal-state-map (kbd "SPC f") 'ido-find-file)
 
       (define-key evil-normal-state-map (kbd "C-b") 'evil-scroll-up)
       (define-key evil-normal-state-map (kbd "C-f") 'evil-scroll-down)
@@ -991,8 +1017,8 @@ Setup evil with some very vim-like defaults.
       (define-key evil-normal-state-map (kbd "[ h") 'git-gutter+-previous-hunk)
       (define-key evil-normal-state-map (kbd "] h") 'git-gutter+-next-hunk)
       (evil-ex-define-cmd "Gw" (bind (git-gutter+-stage-whole-buffer)))
-      (define-key evil-visual-state-map (kbd "SPC SPC") 'smex)
-      (define-key evil-normal-state-map (kbd "SPC SPC") 'smex)
+      (define-key evil-visual-state-map (kbd "SPC SPC") 'helm-M-x)
+      (define-key evil-normal-state-map (kbd "SPC SPC") 'helm-M-x)
       (define-key evil-normal-state-map (kbd "g b") 'helm-mini)
       (define-key evil-normal-state-map (kbd "SPC f") 'helm-find-files)
       (define-key evil-normal-state-map (kbd "SPC o") 'helm-semantic-or-imenu)
@@ -1050,8 +1076,8 @@ Setup evil with some very vim-like defaults.
       ;; (define-key company-active-map (kbd "<tab>") 'my-company-tab)
       ;; (define-key company-active-map (kbd "<backtab>") 'company-select-previous)
 
-      ;; (define-key company-mode-map (kbd "<C-return>") 'helm-company)
-      ;; (define-key company-active-map (kbd "<C-return>") 'helm-company)
+      (define-key company-mode-map (kbd "<C-return>") 'helm-company)
+      (define-key company-active-map (kbd "<C-return>") 'helm-company)
       ;; (define-key web-mode-map (kbd "C-c C-d") 'ng-snip-show-docs-at-point)
 
       ))
