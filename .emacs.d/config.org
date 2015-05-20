@@ -63,6 +63,7 @@ because I use them through out this file.
 #+BEGIN_SRC emacs-lisp
   (use-package after)
   (use-package bind)
+  (use-package bmo)
   (use-package f :ensure f)
 #+END_SRC
 
@@ -88,93 +89,100 @@ Fira Mono is a very nice monospace font.
   (set-frame-font "Fira Mono Medium-10" nil t)
 #+END_SRC
 
-Install solarized-theme and set theme to solarized-dark.
+Install themes, solarized for graphical displays and moe-dark for terminals.
 #+BEGIN_SRC emacs-lisp
   (use-package diminish :ensure diminish)
 
+  (use-package solarized-theme :ensure t
+    :config
+    (progn
+      (setq solarized-use-less-bold t)
+      (load-theme 'solarized-dark t t)))
+
+  (use-package moe-theme :ensure t
+    :config (load-theme 'moe-dark t t))
+
+  (use-package zenburn-theme :ensure t
+    :config (load-theme 'zenburn t t))
+
   (if (display-graphic-p)
-      (use-package solarized-theme
-        :ensure solarized-theme
-        :init
-        (progn
-          (setq solarized-use-less-bold t)
-          (load-theme 'solarized-dark t)))
-    (use-package zenburn-theme :ensure zenburn-theme))
+      (enable-theme 'solarized-dark)
+    (enable-theme 'moe-dark))
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
-    (defalias 'yes-or-no-p 'y-or-n-p)
-    (setq compilation-always-kill t
-          compilation-ask-about-save nil)
+  (defalias 'yes-or-no-p 'y-or-n-p)
+  (setq compilation-always-kill t
+        compilation-ask-about-save nil)
 
-    (when (fboundp 'menu-bar-mode) (menu-bar-mode -1))
-    (when (display-graphic-p) (fringe-mode 16))
-    (when (fboundp 'tool-bar-mode) (tool-bar-mode -1))
-    (when (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
+  (when (fboundp 'menu-bar-mode) (menu-bar-mode -1))
+  (when (display-graphic-p) (fringe-mode 16))
+  (when (fboundp 'tool-bar-mode) (tool-bar-mode -1))
+  (when (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
 
-    (setq inhibit-splash-screen t
-          inhibit-startup-echo-area-message t
-          inhibit-startup-message t
-          initial-scratch-message ""
+  (setq inhibit-splash-screen t
+        inhibit-startup-echo-area-message t
+        inhibit-startup-message t
+        initial-scratch-message ""
 
-          ring-bell-function (lambda () ())
+        ring-bell-function (lambda () ())
 
-          truncate-partial-width-windows nil
+        truncate-partial-width-windows nil
 
-          ;; ediff
-          ediff-split-window-function 'split-window-horizontally
-          ediff-window-setup-function 'ediff-setup-windows-plain
+        ;; ediff
+        ediff-split-window-function 'split-window-horizontally
+        ediff-window-setup-function 'ediff-setup-windows-plain
 
-          ;; better scrolling
-          scroll-conservatively 9999
-          scroll-preserve-screen-position t)
+        ;; better scrolling
+        scroll-conservatively 9999
+        scroll-preserve-screen-position t)
 
-    (which-function-mode t)     ;; display current function
-    (blink-cursor-mode -1)      ;; disable blinking cursor
+  (which-function-mode t)     ;; display current function
+  (blink-cursor-mode -1)      ;; disable blinking cursor
 
-    (use-package xterm-color
-      :ensure xterm-color
-      :init
-      (progn (add-hook 'comint-preoutput-filter-functions 'xterm-color-filter)
-             (setq comint-output-filter-functions
-                   (remove 'ansi-color-process-output comint-output-filter-functions))
-             (setq font-lock-unfontify-region-function 'xterm-color-unfontify-region)))
+  (use-package xterm-color
+    :ensure xterm-color
+    :init
+    (progn (add-hook 'comint-preoutput-filter-functions 'xterm-color-filter)
+           (setq comint-output-filter-functions
+                 (remove 'ansi-color-process-output comint-output-filter-functions))
+           (setq font-lock-unfontify-region-function 'xterm-color-unfontify-region)))
 
-    ;; better buffer names for duplicates
-    (use-package uniquify
-      :init
-      (progn
-        (setq uniquify-buffer-name-style 'forward
-              uniquify-separator "/"
-                                            ; leave special buffers alone
-              uniquify-ignore-buffers-re "^\\*"
-              uniquify-after-kill-buffer-p t)))
+  ;; better buffer names for duplicates
+  (use-package uniquify
+    :init
+    (progn
+      (setq uniquify-buffer-name-style 'forward
+            uniquify-separator "/"
+                                          ; leave special buffers alone
+            uniquify-ignore-buffers-re "^\\*"
+            uniquify-after-kill-buffer-p t)))
 
-    (add-hook 'compilation-filter-hook
-              (lambda ()
-                (when (eq major-mode 'compilation-mode)
-                  (require 'ansi-color)
-                  (let ((inhibit-read-only t))
-                    (ansi-color-apply-on-region (point-min) (point-max))))))
+  (add-hook 'compilation-filter-hook
+            (lambda ()
+              (when (eq major-mode 'compilation-mode)
+                (require 'ansi-color)
+                (let ((inhibit-read-only t))
+                  (ansi-color-apply-on-region (point-min) (point-max))))))
 
-    (use-package smart-mode-line
-      :ensure smart-mode-line
-      :init
-      (progn
-        (setq sml/show-client t
-              sml/show-eol t
-              sml/show-frame-identification t
-              sml/theme 'respectful)
-        (sml/setup)))
+  (use-package smart-mode-line
+    :ensure t
+    :init
+    (progn
+      (setq sml/show-client t
+            sml/show-eol t
+            sml/show-frame-identification t
+            sml/theme 'powerline)
+      (sml/setup)))
 
-    (when (display-graphic-p)
-      (use-package git-gutter-fringe+
-        :ensure git-gutter-fringe+))
+  (when (display-graphic-p)
+    (use-package git-gutter-fringe+
+      :ensure git-gutter-fringe+))
 
-    (use-package git-gutter+
-      :diminish ""
-      :ensure git-gutter+
-      :init (global-git-gutter+-mode))
+  (use-package git-gutter+
+    :diminish ""
+    :ensure git-gutter+
+    :init (global-git-gutter+-mode))
 #+END_SRC
 ** TODO look into sublimity
 ** TODO stripe-buffer
@@ -215,6 +223,9 @@ settings that don't make more sense anywhere else...
         global-mark-ring-max 128
         save-interprogram-paste-before-kill t
         create-lockfiles nil
+
+        tramp-inline-compress-start-size (* 1024 1024)
+        tramp-persistency-file-name (concat user-data-directory "tramp")
 
         ;; auth-source configuration
         auth-sources '("~/annex/private/authinfo.gpg"))
@@ -360,15 +371,6 @@ Load epresent, for presentations from org-mode buffers
     "Opens a file in emacs."
     (unless (null args)
       (mapc #'find-file-other-window (mapcar #'expand-file-name (eshell-flatten-list (reverse args))))))
-
-  (defun eshell/cdb (path &rest args)
-    (let ((bz-dir (shell-command-to-string (format "bz path %s" path))))
-      (if (file-remote-p default-directory)
-          (with-parsed-tramp-file-name default-directory nil
-            (eshell/cd (tramp-make-tramp-file-name method user host bz-dir hop)))
-        (eshell/cd bz-dir)))
-    (shell-command-to-string "bz summary"))
-
 
   (defun my-current-git-branch ()
     (let ((branch (car (loop for match in (split-string (shell-command-to-string "git branch") "\n")
@@ -731,6 +733,7 @@ Load ac backend for html.
 
 ** zsh-style tab completion
 
+
 Provide zsh like completion system to Emacs. This allows you to select
 candidates one-by-one by pressing `TAB' repeatedly in minibuffer, shell-mode,
 and so forth. In addition, with arrow keys, you can move around the candidates.
@@ -968,9 +971,9 @@ Setup evil with some very vim-like defaults.
     :ensure evil
     :init
     (progn
-      (setq evil-search-module 'evil-search
-            evil-magic 'very-magic
-            evil-want-C-w-delete nil
+      (setq evil-search-module           'evil-search
+            evil-magic                   'very-magic
+            evil-want-C-w-delete         nil
             evil-want-C-w-in-emacs-state t)
 
       (evil-mode 1)
@@ -986,8 +989,7 @@ Setup evil with some very vim-like defaults.
       (define-key evil-normal-state-map (kbd "SPC o") 'imenu)
       (define-key evil-normal-state-map (kbd "SPC b") 'switch-to-buffer)
 
-      ;; (define-key evil-normal-state-map (kbd "SPC k") 'ido-kill-buffer)
-      ;; (define-key evil-normal-state-map (kbd "SPC f") 'ido-find-file)
+      ;; (define-key evil-normal-state-map (kbd "SPC f") 'helm-find-file)
 
       (define-key evil-normal-state-map (kbd "C-b") 'evil-scroll-up)
       (define-key evil-normal-state-map (kbd "C-f") 'evil-scroll-down)
