@@ -130,7 +130,7 @@ let jedi#squelch_py_warning = 1
 let ctrlp_extensions    = ['Z', 'F']
 let ctrlp_custom_ignore = '\v[\/]\.(git|hg|svn)$'
 
-let airline_powerline_fonts            = 1
+let airline_powerline_fonts            = 0
 let airline_inactive_collapse          = 1
 let airline#extensions#tabline#enabled = 1
 " }}}
@@ -267,30 +267,6 @@ if !exists('autocmds_loaded')
     autocmd! BufWritePost */.vimrc source $MYVIMRC | AirlineRefresh
 endif
 " }}}
-
-call project#rc("~/src")
-
-File    '~/.vimrc', 'vimrc'
-Project 'mozilla/bugzilla', 'bugzilla'
-Project 'mozilla/bmo', 'bmo'
-
-Callback 'bugzilla', 'BugzillaPerl'
-Callback 'bmo', 'BugzillaPerl'
-
-function! BugzillaPerl(title) abort
-
-    if &l:ft == 'perl'
-        if a:title == 'bmo' 
-            let b:perltidy_profile = $HOME . "/src/mozilla/bmo/.perltidyrc"
-            let &l:equalprg="perltidy -pro=" . shellescape(b:perltidy_profile)
-            setlocal tw=120
-        elseif a:title == 'bugzilla'
-            let b:perltidy_profile = $HOME . "/src/mozilla/bugzilla/.perltidyrc"
-            let &l:equalprg="perltidy -pro=" . shellescape(b:perltidy_profile)
-            setlocal tw=80
-        endif
-    end
-endfunction
 
 
 if filereadable(expand("~/.vimrc.local", 1))
