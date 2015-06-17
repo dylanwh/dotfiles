@@ -2,7 +2,17 @@
 ;;; This format is meant to be slightly human-readable;
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
-(("org-files"
+(("bz-trunk"
+ (filename . "/ssh:bmo:/opt/bugzilla/repo/bugzilla/trunk/")
+ (front-context-string . "bugzilla    4 Ap")
+ (rear-context-string . "---- 1 bugzilla ")
+ (position . 761))
+("bmo-master"
+ (filename . "/ssh:bmo:/opt/bugzilla/repo/bmo/master/")
+ (front-context-string . "Bugzilla\n  drwx-")
+ (rear-context-string . "1K May 27 15:15 ")
+ (position . 214))
+("org-files"
  (filename . "/davs:dylan=hardison.net@dav.messagingengine.com:/dylan.hardison.net/files/org/")
  (front-context-string)
  (rear-context-string . ".0k 1969-12-31  ")

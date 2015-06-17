@@ -310,4 +310,6 @@ umask  077   # Create files that are readable only by moi
 stty -ixon   # Disable the freeze-the-terminal-on-control-s thing.
 ttyctl -f    # Freeze terminal properties.
 
+source ~/.ssh/agent
+
 # vim: set sw=4 ts=4 foldmethod=marker path=.,~/.zsh/lib,~/:

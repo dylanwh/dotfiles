@@ -64,7 +64,7 @@ because I use them through out this file.
   (use-package after)
   (use-package bind)
   (use-package bmo)
-  (use-package f :ensure f)
+  (use-package f :ensure t)
 #+END_SRC
 
 ** server
@@ -91,8 +91,6 @@ Fira Mono is a very nice monospace font.
 
 Install themes, solarized for graphical displays and moe-dark for terminals.
 #+BEGIN_SRC emacs-lisp
-  (use-package diminish :ensure diminish)
-
   (use-package solarized-theme :ensure t
     :config
     (progn
@@ -105,9 +103,23 @@ Install themes, solarized for graphical displays and moe-dark for terminals.
   (use-package zenburn-theme :ensure t
     :config (load-theme 'zenburn t t))
 
-  (if (display-graphic-p)
-      (enable-theme 'solarized-dark)
-    (enable-theme 'moe-dark))
+  (enable-theme 'solarized-dark)
+#+END_SRC
+
+Hide minor modes
+#+BEGIN_SRC emacs-lisp
+  (use-package rich-minority
+    :ensure t
+    :config
+    (setq rm-blacklist
+          '(" EvilOrg"
+            " ew:mnlt"
+            " Helm"
+            " MRev"
+            " Guide"
+            " Undo-Tree"
+            " GitGutter"
+            " Server")))
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
@@ -141,7 +153,7 @@ Install themes, solarized for graphical displays and moe-dark for terminals.
   (blink-cursor-mode -1)      ;; disable blinking cursor
 
   (use-package xterm-color
-    :ensure xterm-color
+    :ensure t
     :init
     (progn (add-hook 'comint-preoutput-filter-functions 'xterm-color-filter)
            (setq comint-output-filter-functions
@@ -171,21 +183,19 @@ Install themes, solarized for graphical displays and moe-dark for terminals.
     (progn
       (setq sml/show-client t
             sml/show-eol t
+            sml/mode-width 'right
             sml/show-frame-identification t
-            sml/theme 'powerline)
+            sml/shorten-modes t
+            sml/theme 'respectful)
       (sml/setup)))
 
   (when (display-graphic-p)
-    (use-package git-gutter-fringe+
-      :ensure git-gutter-fringe+))
+    (use-package git-gutter-fringe+ :ensure t))
 
   (use-package git-gutter+
-    :diminish ""
-    :ensure git-gutter+
+    :ensure t
     :init (global-git-gutter+-mode))
 #+END_SRC
-** TODO look into sublimity
-** TODO stripe-buffer
 Tabs are 4 real spaces, by default we use 80 columns with
 a word wrap. Empty lines are indicated in the fringe.
 #+BEGIN_SRC emacs-lisp
@@ -210,9 +220,7 @@ Use ethan-wspace to handle whitespace issues.
 #+BEGIN_SRC emacs-lisp
   (setq mode-require-final-newline nil)
 
-  (use-package ethan-wspace
-    :ensure ethan-wspace
-    :init (global-ethan-wspace-mode 1))
+  (use-package ethan-wspace :ensure t)
 #+END_SRC
 * unorganized stuff
 settings that don't make more sense anywhere else...
@@ -274,7 +282,7 @@ settings that don't make more sense anywhere else...
 ** recent files
 #+BEGIN_SRC emacs-lisp
 (use-package recentf
-  :ensure recentf
+  :ensure t
   :config
   (progn
     (setq recentf-save-file (concat user-data-directory "recentf"))
@@ -304,14 +312,13 @@ Basic org mode settings.
 Load epresent, for presentations from org-mode buffers
 
 #+BEGIN_SRC emacs-lisp
-  (use-package epresent :ensure epresent)
+  (use-package epresent :ensure t)
 #+END_SRC
 
 ** ham-mode
 #+BEGIN_SRC emacs-lisp
-  (use-package ham-mode :ensure ham-mode)
+  (use-package ham-mode :ensure t)
 #+END_SRC
-** TODO spaces
 ** dired
 #+BEGIN_SRC emacs-lisp
   (use-package dired-x)
@@ -325,7 +332,7 @@ Load epresent, for presentations from org-mode buffers
 ** git-annex
 
 #+BEGIN_SRC emacs-lisp
-  (use-package git-annex :ensure git-annex)
+  (use-package git-annex :ensure t)
 #+END_SRC
 ** eshell
 
@@ -441,12 +448,12 @@ Load epresent, for presentations from org-mode buffers
 #+END_SRC
 ** google-this
 #+BEGIN_SRC emacs-lisp
-  (use-package google-this :ensure google-this)
+  (use-package google-this :ensure t)
 #+END_SRC
 ** google-translate
 #+BEGIN_SRC emacs-lisp
   (use-package google-translate
-    :ensure google-translate
+    :ensure t
     :commands (google-translate-at-point google-translate-smooth-translate)
     :config (require 'google-translate-smooth-ui))
 #+END_SRC
@@ -454,10 +461,9 @@ Load epresent, for presentations from org-mode buffers
 #+BEGIN_SRC emacs-lisp
   (setq magit-last-seen-setup-instructions "1.4.0")
   (use-package magit
-    :ensure magit
+    :ensure t
     :config
     (progn
-      (diminish 'magit-auto-revert-mode)
       (setq magit-diff-options '("--histogram"))
       (setq magit-stage-all-confirm nil)
 
@@ -495,7 +501,7 @@ A mostly un-organized list of interactive functions.
 Configure sauron for notification support
 #+BEGIN_SRC emacs-lisp
   (use-package sauron
-    :ensure sauron
+    :ensure t
     :init
     (progn
       (setq sauron-max-line-length nil
@@ -510,7 +516,7 @@ Configure sauron for notification support
         '(weechat-sauron weechat-image weechat-button weechat-complete))
 
   (use-package weechat
-    :ensure weechat
+    :ensure t
     :init
     (progn
       (setq weechat-host-default "hardison.net"
@@ -532,13 +538,11 @@ Configure sauron for notification support
 ** xkcd
 
 #+BEGIN_SRC emacs-lisp
-  (use-package xkcd
-    :ensure xkcd
-    :commands xkcd)
+  (use-package xkcd :ensure t :commands xkcd)
 #+END_SRC
 ** rainbow mode
 #+BEGIN_SRC emacs-lisp
-  (use-package rainbow-mode :ensure rainbow-mode)
+  (use-package rainbow-mode :ensure t)
 #+END_SRC
 * typing utilities
 ** guide-key
@@ -546,8 +550,7 @@ Use guide-key to help figure out what things do.
 
 #+BEGIN_SRC emacs-lisp
   (use-package guide-key
-    :ensure guide-key
-    :diminish ""
+    :ensure t
     :init
     (progn
       (setq guide-key/guide-key-sequence '("C-x" "C-c" "," "C-w")
@@ -559,8 +562,7 @@ Use guide-key to help figure out what things do.
 Before loading evil, configure undo-tree.
 #+BEGIN_SRC emacs-lisp
   (use-package undo-tree
-    :ensure undo-tree
-    :diminish ""
+    :ensure t
     :init
     (progn
       (setq undo-tree-auto-save-history t
@@ -572,8 +574,7 @@ Before loading evil, configure undo-tree.
 Load auto-complete.
 #+BEGIN_SRC emacs-lisp
   (use-package auto-complete
-    :ensure auto-complete
-    :diminish ""
+    :ensure t
     :init
     (progn
       (require 'auto-complete-config)
@@ -594,7 +595,7 @@ Load auto-complete.
 Load ac backend for etags.
 #+BEGIN_SRC emacs-lisp
   (use-package ac-etags
-    :ensure ac-etags
+    :ensure t
     :init
     (progn
       (setq ac-etags-requires 1)
@@ -605,15 +606,14 @@ Load ac backend for etags.
 Load ac backend for html.
 #+BEGIN_SRC emacs-lisp
   (use-package ac-html
-    :ensure ac-html
+    :ensure t
     :init (add-hook 'html-mode-hook 'ac-html-enable))
 #+END_SRC
 
 ** yassnippets
 #+BEGIN_SRC emacs-lisp :tangle no
   (use-package yasnippet
-    :ensure yasnippet
-    :diminish yas-minor-mode
+    :ensure t
     :config
     (progn
       (let* ((yas-install-dir (car (file-expand-wildcards (concat package-user-dir "/yasnippet-*"))))
@@ -632,6 +632,7 @@ Load ac backend for html.
         (when (yas-expand)
           (ac-stop)))
 
+      (yas-reload-all)
       (add-hook 'prog-mode-hook 'yas-minor-mode)
       (add-hook 'html-mode-hook 'yas-minor-mode)))
 #+END_SRC
@@ -639,9 +640,8 @@ Load ac backend for html.
 
 #+BEGIN_SRC emacs-lisp
   (use-package smartparens
-    :ensure smartparens
-    :diminish ""
-    :init
+    :ensure t
+    :config
     (progn
       (require 'smartparens-config)
 
@@ -650,6 +650,9 @@ Load ac backend for html.
             sp-autoescape-string-quote nil
             sp-autoinsert-if-followed-by-same 1
             sp-highlight-pair-overlay nil)
+
+      (push #'cperl-mode sp-ignore-modes-list)
+      (push #'perl-mode sp-ignore-modes-list)
 
       (sp-use-smartparens-bindings)
       (smartparens-global-mode t)
@@ -679,24 +682,25 @@ Load ac backend for html.
   (use-package pcomplete-extension :ensure pcomplete-extension)
 #+END_SRC
 * navigation utilities
+
 ** ag
 #+BEGIN_SRC emacs-lisp
-  (use-package ag
-    :ensure ag)
+  (use-package ag :ensure t)
 #+END_SRC
 ** projectile
 #+BEGIN_SRC emacs-lisp
   (use-package projectile
-    :ensure projectile
+    :ensure t
     :config
     (progn
       (projectile-global-mode)))
 
 #+END_SRC
 ** helm
+
 #+BEGIN_SRC emacs-lisp
   (use-package helm
-    :ensure helm
+    :ensure t
     :config
     (progn
       (require 'helm-config)
@@ -722,25 +726,21 @@ Load ac backend for html.
                     (define-key eshell-mode-map (kbd "<tab>")     #'helm-esh-pcomplete)
                     (define-key eshell-mode-map (kbd "C-c C-l") #'helm-eshell-history)))
 
-      (use-package helm-company :ensure helm-company)
-      (use-package helm-swoop :ensure helm-swoop)
-      (use-package helm-ag :ensure helm-ag)
+      (use-package helm-company :ensure t)
+      (use-package helm-swoop :ensure t)
+      (use-package helm-ag :ensure t)
       (use-package helm-projectile
-        :ensure helm-projectile
+        :ensure t
         :config (helm-projectile-on))
-      (use-package helm-descbinds :ensure helm-descbinds)))
+      (use-package helm-descbinds :ensure t)))
 #+END_SRC
 
-** zsh-style tab completion
-
-
-Provide zsh like completion system to Emacs. This allows you to select
-candidates one-by-one by pressing `TAB' repeatedly in minibuffer, shell-mode,
-and so forth. In addition, with arrow keys, you can move around the candidates.
+** goto-last-change (needed for evil)
 
 #+BEGIN_SRC emacs-lisp
-  (use-package zlc :ensure zlc :init (zlc-mode t))
+  (use-package goto-last-change :ensure t)
 #+END_SRC
+
 * programming languages
 ** Perl
 
@@ -895,41 +895,46 @@ Syntax highlighting for ssh config, nginx config, vimrc (haha), yaml and lua.
 
 #+BEGIN_SRC emacs-lisp
   (use-package ssh-config-mode
-    :ensure ssh-config-mode
+    :ensure t
     :mode ((".ssh/config\\'"       . ssh-config-mode)
            ("sshd?_config\\'"      . ssh-config-mode)
            ("known_hosts\\'"       . ssh-known-hosts-mode)
            ("authorized_keys2?\\'" . ssh-authorized-keys-mode)))
 
   (use-package nginx-mode
-    :ensure nginx-mode
+    :ensure t
     :mode "/etc/nginx/.*")
 
   (use-package vimrc-mode
-    :ensure vimrc-mode
+    :ensure t
     :mode "\.vimrc")
 
   (use-package  gitignore-mode
-    :ensure gitignore-mode
+    :ensure t
     :mode "\.gitignore")
 
   (use-package  gitconfig-mode
-    :ensure gitconfig-mode
+    :ensure t
     :mode "\.git/?config")
 
   (use-package yaml-mode
-    :ensure yaml-mode
+    :ensure t
     :mode "\\.yml$"
     :init (add-hook 'yaml-mode-hook
                     '(lambda ()
                        (define-key yaml-mode-map "\C-m" 'newline-and-indent))))
 
   (use-package lua-mode
-    :ensure lua-mode
+    :ensure t
     :mode "\\.lua$")
 
 
 #+END_SRC
+** racket
+#+BEGIN_SRC emacs-lisp
+  (use-package racket-mode :ensure t)
+#+END_SRC
+
 * global keybindings
 #+BEGIN_SRC emacs-lisp
   (global-set-key (kbd "M-x") 'helm-M-x)
@@ -968,7 +973,7 @@ Setup evil with some very vim-like defaults.
 ** turn on evil
 #+BEGIN_SRC emacs-lisp
   (use-package evil
-    :ensure evil
+    :ensure t
     :init
     (progn
       (setq evil-search-module           'evil-search
@@ -978,10 +983,11 @@ Setup evil with some very vim-like defaults.
 
       (evil-mode 1)
 
-      (add-to-list 'evil-insert-state-modes 'weechat-mode)
       (add-to-list 'evil-emacs-state-modes 'sauron-mode)
       (add-to-list 'evil-emacs-state-modes 'epresent-mode)
+      (add-to-list 'evil-insert-state-modes 'weechat-mode)
       (add-to-list 'evil-insert-state-modes 'sql-interactive-mode)
+      (add-to-list 'evil-insert-state-modes 'racket-repl-mode)
 
       (unless (display-graphic-p)
         (evil-esc-mode))
@@ -1087,7 +1093,7 @@ Setup evil with some very vim-like defaults.
 ** evil leader
 #+BEGIN_SRC emacs-lisp
   (use-package evil-leader
-    :ensure evil-leader
+    :ensure t
     :init
     (progn
       (global-evil-leader-mode t)
@@ -1124,21 +1130,21 @@ Make the evil nerd commenter use "gc" like tpope's commentary.vim
 Add surround-style text objects.
 #+BEGIN_SRC emacs-lisp
   (use-package evil-surround
-    :ensure evil-surround
+    :ensure t
     :init (global-evil-surround-mode t))
 #+END_SRC
 
 indent text object
 #+BEGIN_SRC emacs-lisp
   (use-package evil-indent-textobject
-    :ensure evil-indent-textobject)
+    :ensure t)
 #+END_SRC
 
 ** jumps
 Make emacs jump more like vim.
 #+BEGIN_SRC emacs-lisp
   (use-package evil-jumper
-    :ensure evil-jumper
+    :ensure t
     :config
     (progn
       (setq evil-jumper-auto-center t
@@ -1158,7 +1164,7 @@ After searching, recenter on the search term.
 ** evil org
 #+BEGIN_SRC emacs-lisp
   (use-package evil-org
-    :ensure evil-org)
+    :ensure t)
 #+END_SRC
 ** disable vi/vim style-exits
 #+BEGIN_SRC emacs-lisp
@@ -1168,3 +1174,9 @@ After searching, recenter on the search term.
   (defadvice evil-quit-all (around advice-for-evil-quit-all activate)
     (message "Thou shall not quit!"))
 #+END_SRC
+* Stuff to look at
+** TODO rings
+** TODO scpaste
+** TODO spaces
+** TODO sublimity
+** TODO stripe-buffer
