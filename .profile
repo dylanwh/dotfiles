@@ -1,6 +1,6 @@
 REALNAME="Dylan William Hardison"
 EMAIL="dylan@hardison.net"
-EDITOR="emacsclient"
+EDITOR="vim"
 VISUAL="$EDITOR"
 BROWSER="firefox"
 MANPAGER='less -s'
@@ -22,7 +22,7 @@ if [[ -z $XDG_RUNTIME_DIR ]]; then
     [[ -d $XDG_RUNTIME_DIR ]] || mkdir $XDG_RUNTIME_DIR
 fi
 
-export XDG_DATA_HOME XDG_CONFIG_HOME XDG_CACHE_HOME
+export XDG_DATA_HOME XDG_CONFIG_HOME XDG_CACHE_HOME XDG_RUNTIME_DIR
 
 PATH="$HOME/bin:$PATH"
 

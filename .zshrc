@@ -202,7 +202,6 @@ alias pdoc=perldoc
 alias pu=pushd
 alias rd="rmdir"
 alias rm='rm -i'
-alias vi=emacsclient
 alias xrc="$EDITOR ~/.xinitrc"
 alias xs=cd
 alias zenv="$EDITOR ~/.zshenv"
@@ -309,7 +308,5 @@ fi
 umask  077   # Create files that are readable only by moi
 stty -ixon   # Disable the freeze-the-terminal-on-control-s thing.
 ttyctl -f    # Freeze terminal properties.
-
-source ~/.ssh/agent
 
 # vim: set sw=4 ts=4 foldmethod=marker path=.,~/.zsh/lib,~/:

@@ -20,6 +20,6 @@ export TERM
 unset xterm
 unset ppid
 
-eval $(dircolors ~/.config/dircolors-solarized/dircolors.ansi-dark)
-alias vim=emacsclient
-alias vi=emacsclient
+if which dircolors &> /dev/null; then
+    eval $(dircolors ~/.config/dircolors-solarized/dircolors.ansi-dark)
+fi

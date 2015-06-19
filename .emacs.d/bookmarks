@@ -12,11 +12,6 @@
  (front-context-string . "Bugzilla\n  drwx-")
  (rear-context-string . "1K May 27 15:15 ")
  (position . 214))
-("org-files"
- (filename . "/davs:dylan=hardison.net@dav.messagingengine.com:/dylan.hardison.net/files/org/")
- (front-context-string)
- (rear-context-string . ".0k 1969-12-31  ")
- (position . 408))
 ("emacs-data"
  (filename . "~/.local/share/emacs/")
  (front-context-string)
