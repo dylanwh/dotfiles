@@ -1,4 +1,4 @@
-.PHONY: all dirs clean show-dirs show-files
+.PHONY: all dirs links
 
 PATH:=$(HOME)/bin:$(PATH)
 
@@ -32,13 +32,15 @@ ENSURE_DIRS = $(XDG_DATA_HOME) \
 			  $(XDG_TEMPLATES_DIR) \
 			  $(XDG_VIDEOS_DIR)
 
-GEN_FILES = mnt 
+ENSURE_LINKS = mnt .pwsafe.dat
 
 -include $(XDG_CACHE_HOME)/user-dirs.mk
 
-all:  $(GEN_FILES) dirs
+all:  links dirs
 
 dirs: $(ENSURE_DIRS)
+
+links: $(ENSURE_LINKS)
 
 mnt:
 	@for dir in /run/media/$$LOGNAME /Volumes; do \
@@ -48,17 +50,11 @@ mnt:
 		fi; \
 	done
 
-show-dirs:
-	@for dir in $(ENSURE_DIRS) $(GEN_DIRS); do echo $$dir; done
-
-show-files:
-	@for dir in $(GEN_FILES); do echo $$dir; done
+.pwsafe.dat: annex/private/pwsafe.dat
+	@ln -svf $< $@
 
 $(XDG_CACHE_HOME)/user-dirs.mk: $(XDG_CONFIG_HOME)/user-dirs.dirs $(XDG_CACHE_HOME) Makefile
 	@sed '/^#/ d; s|$$HOME/||g; s/"//g;' $< > $@
 
 $(ENSURE_DIRS):
 	mkdir -p $@
-
-clean:
-	rm -f $(GEN_FILES)
