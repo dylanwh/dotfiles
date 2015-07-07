@@ -11,12 +11,6 @@ Copy this file to ~/.emacs.d and add the following to ~/.emacs/init.el:
 #+END_SRC
 
 * environment
-I always want "case" and so on available.
-
-#+BEGIN_SRC emacs-lisp
-  (require 'cl)
-#+END_SRC
-
 ** Tweak the gc settings
 #+BEGIN_SRC emacs-lisp
   (setq-default gc-cons-threshold 50000000
@@ -91,14 +85,18 @@ I always want an emacs server running.
    (setenv "GIT_PAGER" "cat")
    (setenv "MANPAGER" "cat")
  #+END_SRC
-
+   
 * look and feel
 Configure font, theme, and a few other things relating to how
 emacs looks.
 
 Fira Mono is a very nice monospace font.
 #+BEGIN_SRC emacs-lisp
-  (set-frame-font "Fira Mono Medium-14" nil t)
+  (set-frame-font (cl-case (intern (system-name))
+                    (thor "Fira Mono Medium-10")
+                    (t    "Fira Mono Medium-14"))
+                  nil t)
+
 #+END_SRC
 
 Install themes, solarized for graphical displays and moe-dark for terminals.
@@ -328,8 +326,17 @@ Load epresent, for presentations from org-mode buffers
 #+END_SRC
 
 ** ham-mode
+Html As Markdown. Transparently edit an html file using markdown.
+
+When this mode is activated in an html file, the buffer is
+converted to markdown and you may edit at will, but the file is
+still saved as html behind the scenes. 
+
+See `ham-mode-markdown-to-html-command' and `ham-mode--save-as-html' on
+
 #+BEGIN_SRC emacs-lisp
-  (use-package ham-mode :ensure t)
+  (when (executable-find "markdown")
+    (use-package ham-mode :ensure t))
 #+END_SRC
 ** dired
 #+BEGIN_SRC emacs-lisp
