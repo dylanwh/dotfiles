@@ -84,8 +84,22 @@ I always want an emacs server running.
    (setenv "PAGER" "cat")
    (setenv "GIT_PAGER" "cat")
    (setenv "MANPAGER" "cat")
+   (setenv "PATH" (concat "/usr/local/bin:" (getenv "PATH")))
+
+   (dolist (exec-path-dir '("/usr/bin" "/bin" "/usr/local/bin"))
+     (unless (member exec-path-dir exec-path)
+       (setq exec-path (cons  exec-path-dir exec-path))))
  #+END_SRC
-   
+* platform tests
+#+BEGIN_SRC emacs-lisp
+  (cl-case system-type
+    (darwin (progn
+              (if (executable-find "gls")
+                (setq insert-directory-program "/usr/local/bin/gls"))
+              (if (executable-find "trash")
+                  (use-package osx-trash :ensure t)))))
+#+END_SRC
+
 * look and feel
 Configure font, theme, and a few other things relating to how
 emacs looks.
@@ -233,6 +247,7 @@ Use ethan-wspace to handle whitespace issues.
   (use-package ethan-wspace :ensure t)
 #+END_SRC
 * unorganized stuff
+
 settings that don't make more sense anywhere else...
 
 #+BEGIN_SRC emacs-lisp
@@ -241,9 +256,6 @@ settings that don't make more sense anywhere else...
         global-mark-ring-max 128
         save-interprogram-paste-before-kill t
         create-lockfiles nil
-
-        tramp-inline-compress-start-size (* 1024 1024)
-        tramp-persistency-file-name (concat user-data-directory "tramp")
 
         ;; auth-source configuration
         auth-sources '("~/annex/private/authinfo.gpg"))
@@ -259,7 +271,6 @@ settings that don't make more sense anywhere else...
   (delete-selection-mode 1)   ;; typing replaces selected text.
   (require 'midnight)         ;; clean up old buffers periodically
 #+END_SRC
-
 * booksmarks, save places, history, recent files and backups
 ** bookmarks
    bookmarks in the data dir too.
@@ -311,6 +322,16 @@ settings that don't make more sense anywhere else...
 #+END_SRC
 
 * general utilities
+** tramp
+#+BEGIN_SRC emacs-lisp
+      (require 'tramp)
+      (setq tramp-inline-compress-start-size (* 1024 1024)
+            tramp-remote-path '(tramp-default-remote-path
+                                tramp-own-remote-path
+                                "/bin" "/usr/bin" "/usr/local/bin"
+                                "/sbin" "/usr/sbin" "/usr/local/sbin")
+            tramp-persistency-file-name (concat user-data-directory "tramp"))
+#+END_SRC
 ** org-mode
 Basic org mode settings.
 
@@ -1061,17 +1082,7 @@ Setup evil with some very vim-like defaults.
       (define-key evil-normal-state-map (kbd "g ]") 'etags-select-find-tag-at-point)
       (evil-define-key 'normal emacs-lisp-mode-map (kbd "g d") 'elisp-slime-nav-find-elisp-thing-at-point)
 
-      (define-key evil-normal-state-map (kbd "SPC /")
-        (bind
-         (interactive)
-         (call-interactively (cond ((executable-find "pt")
-                                    'projectile-pt)
-                                   ((executable-find "ag")
-                                    'projectile-ag)
-                                   ((executable-find "ack")
-                                    'projectile-ack)
-                                   (t
-                                    'projectile-grep)))))
+      (define-key evil-normal-state-map (kbd "SPC /") 'projectile-ag)
       (define-key evil-normal-state-map (kbd "SPC e") 'projectile-recentf)
       (define-key evil-normal-state-map (kbd "C-p") 'projectile-find-file)
 

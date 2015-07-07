@@ -16,7 +16,7 @@
 (after 'projectile
   (defun bz-browse-site ()
     (interactive)
-    (browse-url (concat  "http://localhost/" (projectile-project-name))))
+    (browse-url (concat  "http://jord/" (projectile-project-name))))
 
   (defun bz-browse-bug ()
     (interactive)
