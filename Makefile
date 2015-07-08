@@ -1,6 +1,7 @@
-.PHONY: all dirs links
+.PHONY: all dirs links 
 
 PATH:=$(HOME)/bin:$(PATH)
+HOST:=$(shell hostname -s)
 
 XDG_DATA_HOME   ?= $(HOME)/.local/share
 XDG_CONFIG_HOME ?= $(HOME)/.config
@@ -34,6 +35,10 @@ ENSURE_DIRS = $(XDG_DATA_HOME) \
 
 ENSURE_LINKS = mnt .pwsafe.dat
 
+ifdef DISPLAY
+	ENSURE_LINKS += .i3status.conf
+endif
+
 -include $(XDG_CACHE_HOME)/user-dirs.mk
 
 all:  links dirs
@@ -52,6 +57,14 @@ mnt:
 
 .pwsafe.dat: annex/private/pwsafe.dat
 	@ln -svf $< $@
+
+ifdef DISPLAY
+.i3status.conf: .i3status.conf@$(HOST)
+	@ln -svf $< $@
+
+.i3status.conf@$(HOST): /etc/i3status.conf
+	@cp -v $< $@
+endif
 
 $(XDG_CACHE_HOME)/user-dirs.mk: $(XDG_CONFIG_HOME)/user-dirs.dirs $(XDG_CACHE_HOME) Makefile
 	@sed '/^#/ d; s|$$HOME/||g; s/"//g;' $< > $@
