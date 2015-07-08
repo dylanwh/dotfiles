@@ -338,7 +338,7 @@ Basic org mode settings.
 #+BEGIN_SRC emacs-lisp
   (require 'org)
   (setq org-log-done t)
-#+END_SRC
+#+DND_SRC
 
 Load epresent, for presentations from org-mode buffers
 
@@ -366,8 +366,6 @@ See `ham-mode-markdown-to-html-command' and `ham-mode--save-as-html' on
   (setq dired-listing-switches "-aBhl  --group-directories-first"
         dired-omit-files "^\\.?#\\|^\\."
         dired-omit-files-p t)
-
-
 #+END_SRC
 ** git-annex
 
@@ -1156,7 +1154,12 @@ Setup evil with some very vim-like defaults.
 Make the evil nerd commenter use "gc" like tpope's commentary.vim
 #+BEGIN_SRC emacs-lisp
   (setq evilnc-hotkey-comment-operator "gc")
-  (use-package evil-nerd-commenter :ensure evil-nerd-commenter)
+  (use-package evil-nerd-commenter :ensure t
+    :config
+    (progn
+      (global-set-key (kbd "M-;") 'evilnc-comment-or-uncomment-lines)
+      (define-key evil-normal-state-map "gc" 'evilnc-comment-operator)
+      (define-key evil-visual-state-map "gc" 'evilnc-comment-operator)))
 #+END_SRC
 
 ** additional text objects
