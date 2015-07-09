@@ -4,7 +4,7 @@
 # Please see http://i3wm.org/docs/userguide.html for a complete reference!
 
 set $mod Mod4
-set $font -xos4-terminus-*-r-*-*-14-*-*-*-*-*-*-*
+set $font pango:Fira Mono Medium 18
 
 # font for window titles. ISO 10646 = Unicode
 font $font
@@ -118,6 +118,7 @@ bindsym XF86Back   workspace prev
 bindsym XF86Forward workspace next
 
 for_window [class="URxvt"] border 1pixel
+for_window [class="Gnome-terminal"] border 1pixel
 for_window [class="Google-chrome"] border 1pixel
 
 for_window [class="Gmrun"] floating enable
@@ -133,7 +134,6 @@ for_window [class="emulator64-arm"] floating enable
 for_window [title="^Steam(?: Login)?$"] floating enable
 for_window [class="Steam" title="^Steam$"] floating disable
 for_window [class="Steam" title="^Install"] floating enable
-
 
 for_window [class="Google-chrome"] layout tabbed
 for_window [class="MPlayer"] floating enable
@@ -196,3 +196,7 @@ bar {
 }
 
 
+exec --no-startup-id /usr/libexec/gnome-settings-daemon
+exec --no-startup-id emacs
+exec gnome-terminal
+exec firefox

@@ -210,6 +210,7 @@ alias zrc="$EDITOR ~/.zshrc"
 alias zreload='exec env SHLVL=0 $SHELL'
 alias home-time='TZ=US/Eastern date'
 alias emacsclient='emacsclient -a "" -c'
+alias sudo='command sudo '
 
 have pinfo    && alias info=pinfo
 have ack-grep && alias ack=ack-grep
@@ -248,6 +249,8 @@ alias -s pl='perl -S'
 alias -s py=python
 alias -s rb=ruby
 alias -s hs=runhaskell
+
+have dnf && alias yum=dnf
 
 # alias ls to ls -Fh --color=auto --group-directories-first,
 # but if our version of ls does not support one or more of those,

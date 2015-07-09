@@ -1,4 +1,4 @@
-.PHONY: all dirs links 
+.PHONY: all dirs links clean-links
 
 PATH:=$(HOME)/bin:$(PATH)
 HOST:=$(shell hostname -s)
@@ -36,7 +36,7 @@ ENSURE_DIRS = $(XDG_DATA_HOME) \
 ENSURE_LINKS = mnt .pwsafe.dat
 
 ifdef DISPLAY
-	ENSURE_LINKS += .i3status.conf
+	ENSURE_LINKS += .i3status.conf .i3/config
 endif
 
 -include $(XDG_CACHE_HOME)/user-dirs.mk
@@ -47,8 +47,11 @@ dirs: $(ENSURE_DIRS)
 
 links: $(ENSURE_LINKS)
 
+clean-links:
+	rm -v $(ENSURE_LINKS)
+
 mnt:
-	@for dir in /run/media/$$LOGNAME /Volumes; do \
+	@for dir in /run/media/$$LOGNAME /Volumes /media; do \
 		if [[ -d $$dir ]]; then \
 			ln -svf $$dir ~/mnt; \
 			break; \
@@ -59,8 +62,8 @@ mnt:
 	@ln -svf $< $@
 
 ifdef DISPLAY
-.i3status.conf: .i3status.conf@$(HOST)
-	@ln -svf $< $@
+%: %@$(HOST)
+	@ln -rsvf $< $@
 
 .i3status.conf@$(HOST): /etc/i3status.conf
 	@cp -v $< $@

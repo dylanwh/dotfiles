@@ -338,7 +338,7 @@ Basic org mode settings.
 #+BEGIN_SRC emacs-lisp
   (require 'org)
   (setq org-log-done t)
-#+DND_SRC
+#+END_SRC
 
 Load epresent, for presentations from org-mode buffers
 
