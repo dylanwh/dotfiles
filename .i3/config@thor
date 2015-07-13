@@ -119,6 +119,7 @@ bindsym XF86Forward workspace next
 
 for_window [class="URxvt"] border 1pixel
 for_window [class="Gnome-terminal"] border 1pixel
+for_window [class="Emacs"] border 1pixel
 for_window [class="Google-chrome"] border 1pixel
 
 for_window [class="Gmrun"] floating enable

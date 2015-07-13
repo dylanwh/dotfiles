@@ -106,11 +106,10 @@ emacs looks.
 
 Fira Mono is a very nice monospace font.
 #+BEGIN_SRC emacs-lisp
-  (set-frame-font (cl-case (intern (system-name))
-                    (thor "Fira Mono Medium-10")
-                    (t    "Fira Mono Medium-14"))
-                  nil t)
-
+  (let ((font (cl-case (intern (system-name))
+                (thor "Fira Mono Medium-10")
+                (t    "Fira Mono Medium-14"))))
+    (set-frame-font font nil t))
 #+END_SRC
 
 Install themes, solarized for graphical displays and moe-dark for terminals.
