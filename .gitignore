@@ -22,7 +22,6 @@
 !.gnupg
 !.guile
 !.gvimrc
-!.i3/config@*
 !.i3status.conf@*
 !.imapfilter
 !.inputrc

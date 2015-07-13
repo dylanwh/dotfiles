@@ -197,7 +197,4 @@ bar {
 }
 
 
-exec --no-startup-id /usr/libexec/gnome-settings-daemon
-exec --no-startup-id emacs
-exec gnome-terminal
-exec firefox
+exec --no-startup-id ~/.i3/rc

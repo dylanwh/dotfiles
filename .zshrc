@@ -312,4 +312,16 @@ umask  077   # Create files that are readable only by moi
 stty -ixon   # Disable the freeze-the-terminal-on-control-s thing.
 ttyctl -f    # Freeze terminal properties.
 
+if [[ $TERM == xterm ]]; then
+    ppid="$(cat /proc/$$/stat | cut -d ' ' -f 4)"
+    xterm="$(readlink /proc/$ppid/exe)"
+
+    case $xterm in
+        (*gnome*terminal*) TERM=xterm-256color ;;
+    esac
+    export TERM
+    unset xterm
+    unset ppid
+fi
+
 # vim: set sw=4 ts=4 foldmethod=marker path=.,~/.zsh/lib,~/:

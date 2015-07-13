@@ -1,0 +1,11 @@
+#!/bin/zsh
+
+# Desktop environment
+gnome-settings-daemon &
+gnome-keyring-daemon
+/usr/lib/policykit-1-gnome/polkit-gnome-authentication-agent-1 &
+gnome-screensaver &
+nm-applet &
+
+xset dpms 1800 3600 3630
+emacs --daemon
