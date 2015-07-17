@@ -2,16 +2,16 @@
 ;;; This format is meant to be slightly human-readable;
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
-(("bz-trunk"
- (filename . "/ssh:bmo:/opt/bugzilla/repo/bugzilla/trunk/")
- (front-context-string . "bugzilla    4 Ap")
- (rear-context-string . "---- 1 bugzilla ")
- (position . 761))
-("bmo-master"
- (filename . "/ssh:bmo:/opt/bugzilla/repo/bmo/master/")
- (front-context-string . "Bugzilla\n  drwx-")
- (rear-context-string . "1K May 27 15:15 ")
- (position . 214))
+(("bmo-master"
+ (filename . "/ssh:bugzilla:/opt/bugzilla/repo/bmo/master/")
+ (front-context-string . "Bugzilla\n  drwxr")
+ (rear-context-string . "0K Jul 14 20:24 ")
+ (position . 207))
+("bugzilla"
+ (filename . "/ssh:bugzilla:/opt/bugzilla/")
+ (front-context-string . "htdocs\n  drwxr-x")
+ (rear-context-string . "44 Jul 15 11:52 ")
+ (position . 188))
 ("emacs-data"
  (filename . "~/.local/share/emacs/")
  (front-context-string)
@@ -29,12 +29,6 @@
  (front-context-string . "ac-etags-2013112")
  (rear-context-string . "50 Dec 17 22:44 ")
  (position . 224))
-("bugzilla"
- (filename . "/ssh:bmo:/opt/bugzilla")
- (front-context-string . "htdocs\n  drwx---")
- (rear-context-string . "66 Apr 16 21:37 ")
- (position . 192)
- (annotation . ""))
 ("lofn-etc"
  (filename .
            #("/sshx:lofn|sudo::/etc/" 6 10
