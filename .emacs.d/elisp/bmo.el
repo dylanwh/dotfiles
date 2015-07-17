@@ -1,3 +1,5 @@
+(defvar bz-url "http://bugzilla.local/")
+(defvar bz-dir "/ssh:bugzilla:/opt/bugzilla")
 
 (defun eshell/cdb (bug-id)
   (cdb bug-id)
@@ -8,15 +10,16 @@
   (interactive (list
                 (read-string (format "Bug (%s): " (thing-at-point 'word))
                              nil nil (thing-at-point 'word))))
-  (cd "/ssh:bmo:/opt/bugzilla")
+  (cd bz-dir)
   (let ((bug-dir (shell-command-to-string (format "bz path %s" bug-id))))
     (with-parsed-tramp-file-name default-directory nil
+      (message default-directory)
       (cd (tramp-make-tramp-file-name method user host bug-dir hop)))))
 
 (after 'projectile
   (defun bz-browse-site ()
     (interactive)
-    (browse-url (concat  "http://jord/" (projectile-project-name))))
+    (browse-url (concat bz-url (projectile-project-name))))
 
   (defun bz-browse-bug ()
     (interactive)
@@ -27,7 +30,7 @@
 (defun bz-new (bug-id)
   "start working on a new bug"
   (interactive "sBug ")
-  (let ((default-directory "/ssh:bmo:/opt/bugzilla"))
+  (let ((default-directory bz-dir))
     (async-shell-command (concat "bz new " bug-id) "*bznew*")))
 
 (provide 'bmo)
