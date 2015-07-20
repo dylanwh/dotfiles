@@ -1,33 +1,28 @@
 # vim: set ft=desktop foldmethod=marker cms=#%s:
 
-[general]#{{{
-accounts           = home
+[general]
+accounts           = fastmail
 pythonfile         = ~/.offlineimap.py
 maxconnections     = 3
 maxsyncaccounts    = 3
 holdconnectionopen = yes
 #}}}
 
-[Account home]
-remoterepository = hardison.net
-localrepository  = home
+[Account fastmail]
+remoterepository = fastmail_remote
+localrepository  = fastmail_local
 status_backend   = sqlite
 
-[Repository hardison.net]
-type          = Gmail
+[Repository fastmail_remote]
+type          = IMAP
+remotehost    = mail.messagingengine.com
+remoteport    = 993
 remoteuser    = dylan@hardison.net 
-folderfilter  = lambda folder: folder not in ['[Gmail]/Spam']
+remotepassval = get_password_emacs("mail.messagingengine.com", "993")
+folderfilter = lambda folder: folder in ['INBOX', 'Sent']
 sslcacertfile = /etc/ssl/certs/ca-certificates.crt
 maxconnections = 3
 
-[Repository home]
+[Repository fastmail_local]
 type         = Maildir
-localfolders = ~/mail/home
-
-[mbnames]
-enabled = yes
-filename = ~/.mutt/mailboxes
-header = "mailboxes "
-peritem = "+%(accountname)s/%(foldername)s"
-sep = " "
-footer = "\n"
+localfolders = ~/mail

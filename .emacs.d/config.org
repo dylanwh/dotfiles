@@ -84,11 +84,13 @@ I always want an emacs server running.
    (setenv "PAGER" "cat")
    (setenv "GIT_PAGER" "cat")
    (setenv "MANPAGER" "cat")
-   (setenv "PATH" (concat "/usr/local/bin:" (getenv "PATH")))
 
-   (dolist (exec-path-dir '("/usr/bin" "/bin" "/usr/local/bin"))
+   (dolist (exec-path-dir (list (concat (getenv "HOME") "/bin") "/usr/bin" "/bin" "/usr/local/bin"))
      (unless (member exec-path-dir exec-path)
        (setq exec-path (cons  exec-path-dir exec-path))))
+
+   (setenv "PATH" (mapconcat 'identity exec-path ":"))
+   (setq eshell-path-env (getenv "PATH"))
  #+END_SRC
 * platform tests
 #+BEGIN_SRC emacs-lisp
@@ -628,7 +630,6 @@ Load auto-complete.
 
       (when (fboundp 'linum-mode)
         (ac-linum-workaround))))
-
 #+END_SRC
 
 *** ac-etags
@@ -979,6 +980,14 @@ Syntax highlighting for ssh config, nginx config, vimrc (haha), yaml and lua.
 #+BEGIN_SRC emacs-lisp
   (put 'case 'lisp-indent-function 'cond)
 #+END_SRC
+** elasticsearch
+#+BEGIN_SRC emacs-lisp
+  (use-package es-mode :ensure t)
+#+END_SRC
+** bison
+#+BEGIN_SRC emacs-lisp
+  (use-package bison-mode :ensure t)
+#+END_SRC
 * global keybindings
 #+BEGIN_SRC emacs-lisp
   (global-set-key (kbd "M-x") 'helm-M-x)
@@ -1001,7 +1010,7 @@ Syntax highlighting for ssh config, nginx config, vimrc (haha), yaml and lua.
   (global-set-key (kbd "C-x C-r") #'helm-recentf)
   (global-set-key (kbd "C-x r l") #'helm-filtered-bookmarks)
 
-  (global-set-key (kbd "C-x C-k") 'kill-this-buffer)
+  (global-set-key (kbd "C-x k")   'kill-this-buffer)
   (global-set-key (kbd "C-x p")   'proced)
   (global-set-key (kbd "C-s")     'isearch-forward-regexp)
   (global-set-key (kbd "C-M-s")   'isearch-forward)
