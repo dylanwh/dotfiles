@@ -544,8 +544,9 @@ Configure sauron for notification support
 #+BEGIN_SRC emacs-lisp
   (use-package sauron
     :ensure t
-    :init
+    :config
     (progn
+      (setq sauron-modules (remove 'sauron-dbus sauron-modules))
       (setq sauron-max-line-length nil
             sauron-hide-mode-line t
             sauron-min-priority 3
@@ -561,7 +562,7 @@ Configure sauron for notification support
     :ensure t
     :init
     (progn
-      (setq weechat-host-default "hardison.net"
+      (setq weechat-host-default "lofn-e.hardison.net"
             weechat-port-default 19000
             weechat-auto-close-buffers t
             weechat-mode-default 'ssl
@@ -912,24 +913,20 @@ Load ac backend for html.
 #+END_SRC
 ** sql
 #+BEGIN_SRC emacs-lisp
-  (setq sql-connection-alist
-        '((bmo (sql-product 'mysql)
-               (sql-server "10.0.0.150")
-               (sql-user "root")
-               (sql-database "bmo")
-               (sql-password (funcall
-                              (plist-get
-                               (car (auth-source-search
-                                     :max 1
-                                     :user "root"
-                                     :host "10.0.0.150"
-                                     :port "mysql"
-                                     :require '(:secret)))
-                               :secret))))))
-
   (defun bmo-sql ()
     (interactive)
-    (sql-connect 'bmo))
+
+    (let* ((auth-result (car (auth-source-search
+                              :host "bugzilla.local"
+                              :port "mysql")))
+           (sql-connection-alist
+            `((bmo (sql-product 'mysql)
+                   (sql-server "bugzilla.local")
+                   (sql-user ,(plist-get auth-result ':user))
+                   (sql-database "bugs_bmo")
+                   (sql-password ,(funcall (plist-get auth-result ':secret)))))))
+      (sql-connect 'bmo "bmo-sql")))
+
 #+END_SRC
 ** config files
 Syntax highlighting for ssh config, nginx config, vimrc (haha), yaml and lua.
