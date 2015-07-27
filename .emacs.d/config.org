@@ -69,8 +69,9 @@ because I use them through out this file.
 #+BEGIN_SRC emacs-lisp
   (use-package after)
   (use-package bind)
-  (use-package bmo)
   (use-package f :ensure t)
+  (use-package my-util)
+  (use-package bmo)
 #+END_SRC
 
 ** server
@@ -112,7 +113,7 @@ Fira Mono is a very nice monospace font.
 
   (set-frame-font (cl-case (intern system-name-short)
                     (thor "Fira Mono Medium-10")
-                    (mac-thor "Fira Mono Medium-12")
+                    (mac-thor "Source Code Pro Light-12")
                     (freya "Fira Mono Medium-10")
                     (t    "Fira Mono Medium-14"))
                   nil t)
@@ -164,6 +165,7 @@ Hide minor modes
   (setq inhibit-splash-screen t
         inhibit-startup-echo-area-message t
         inhibit-startup-message t
+        initial-buffer-choice #'eshell
         initial-scratch-message ""
 
         ring-bell-function (lambda () ())
@@ -416,6 +418,12 @@ See `ham-mode-markdown-to-html-command' and `ham-mode--save-as-html' on
     (let ((inhibit-read-only t))
       (erase-buffer)))
 
+  (defun around-eshell/cd (orig &rest args)
+      (if (and args (assoc (car args) bookmark-alist))
+          (apply orig (cons (bookmark-location (car args)) (cdr args)))
+        (apply orig args)))
+
+  (advice-add 'eshell/cd :around #'around-eshell/cd)
 
   (defun eshell/ff (&rest args)
     "Opens a file in emacs."
@@ -461,31 +469,19 @@ See `ham-mode-markdown-to-html-command' and `ham-mode--save-as-html' on
       (delete-other-windows)
       nil))
 
-  (defun eshell-here ()
-    "Opens up a new shell in the directory associated with the
-  current buffer's file. The eshell is renamed to match that
-  directory to make multiple eshell windows easier."
-    (interactive)
-    (let* ((parent (if (buffer-file-name)
-                       (file-name-directory (buffer-file-name))
-                     default-directory))
-           (height (/ (window-total-height) 3))
-           (name   (car (last (split-string parent "/" t))))
-           (eshell-buffer-name (concat "*eshell: " name "*")))
-      (split-window-vertically (- height))
-      (other-window 1)
-      (eshell)))
+  (defun eshell/bookmark (name &optional location)
+    (bookmark-set name)
+    (when location
+      (bookmark-set-filename name location)))
 
-  (defun my-projectile-eshell ()
-    "Open `eshell' at the root of the project."
-    (interactive)
-    (let* ((default-directory  (projectile-project-root))
-           (height             (/ (window-total-height) 3))
-           (name               (car (last (split-string default-directory "/" t))))
-           (eshell-buffer-name (concat "*eshell: " name "*")))
-      (split-window-vertically (- height))
-      (other-window 1)
-      (eshell)))
+  (defun eshell/bookmarks ()
+    (let ((max-width (apply #'max (mapcar (lambda (x) (length (car x))) bookmark-alist))))
+      (dolist (bookmark bookmark-alist)
+        (eshell-printn
+         (format (format "%%-%ds (%%s)" max-width)
+                               (car bookmark)
+                               (cdr (assq 'filename (cdr bookmark))))))))
+
 
 #+END_SRC
 ** google-this
@@ -528,11 +524,6 @@ See `ham-mode-markdown-to-html-command' and `ham-mode--save-as-html' on
           (evil-emacs-state))
         (defadvice magit-blame-file-off (after advice-for-magit-blame-file-off activate)
           (evil-exit-emacs-state)))))
-#+END_SRC
-** my utilities
-A mostly un-organized list of interactive functions.
-#+BEGIN_SRC emacs-lisp
-  (use-package my-util)
 #+END_SRC
 ** pwsafe
 #+BEGIN_SRC emacs-lisp
@@ -724,7 +715,6 @@ Load ac backend for html.
   (use-package pcomplete-extension :ensure pcomplete-extension)
 #+END_SRC
 * navigation utilities
-
 ** ag
 #+BEGIN_SRC emacs-lisp
   (use-package ag :ensure t)
@@ -736,7 +726,6 @@ Load ac backend for html.
     :config
     (progn
       (projectile-global-mode)))
-
 #+END_SRC
 ** helm
 
@@ -910,23 +899,6 @@ Load ac backend for html.
 #+END_SRC
 #+BEGIN_SRC emacs-lisp
   (add-to-list 'auto-mode-alist '("\\.css\\'" . rainbow-mode))
-#+END_SRC
-** sql
-#+BEGIN_SRC emacs-lisp
-  (defun bmo-sql ()
-    (interactive)
-
-    (let* ((auth-result (car (auth-source-search
-                              :host "bugzilla.local"
-                              :port "mysql")))
-           (sql-connection-alist
-            `((bmo (sql-product 'mysql)
-                   (sql-server "bugzilla.local")
-                   (sql-user ,(plist-get auth-result ':user))
-                   (sql-database "bugs_bmo")
-                   (sql-password ,(funcall (plist-get auth-result ':secret)))))))
-      (sql-connect 'bmo "bmo-sql")))
-
 #+END_SRC
 ** config files
 Syntax highlighting for ssh config, nginx config, vimrc (haha), yaml and lua.
@@ -1144,7 +1116,6 @@ Setup evil with some very vim-like defaults.
         "e" 'eval-last-sexp
         "E" 'eval-defun
         "f" 'ctl-x-5-prefix
-        "c" 'eshell-here
         "C" 'customize-group
         "b d" 'kill-this-buffer
         "v" (kbd "C-w v C-w l")
@@ -1160,15 +1131,10 @@ Setup evil with some very vim-like defaults.
         "g l" 'magit-log)))
 #+END_SRC
 ** comment operator (gc)
-Make the evil nerd commenter use "gc" like tpope's commentary.vim
+use evil-commentary
 #+BEGIN_SRC emacs-lisp
-  (setq evilnc-hotkey-comment-operator "gc")
-  (use-package evil-nerd-commenter :ensure t
-    :config
-    (progn
-      (global-set-key (kbd "M-;") 'evilnc-comment-or-uncomment-lines)
-      (define-key evil-normal-state-map "gc" 'evilnc-comment-operator)
-      (define-key evil-visual-state-map "gc" 'evilnc-comment-operator)))
+  (use-package evil-commentary :ensure t
+    :config (evil-commentary-mode t))
 #+END_SRC
 
 ** additional text objects

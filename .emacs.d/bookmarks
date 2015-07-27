@@ -2,7 +2,14 @@
 ;;; This format is meant to be slightly human-readable;
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
-(("bmo-master"
+(("emacs-config"
+ (filename . "~/.emacs.d/config.org")
+ (front-context-string . "\n* installation\n")
+ (rear-context-string . "an@hardison.net\n")
+ (position . 96))
+("annex"
+ (filename . "~/annex"))
+("bmo-master"
  (filename . "/ssh:bugzilla:/opt/bugzilla/repo/bmo/master/")
  (front-context-string . "Bugzilla\n  drwxr")
  (rear-context-string . "0K Jul 14 20:24 ")

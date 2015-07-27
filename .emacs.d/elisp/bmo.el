@@ -3,8 +3,13 @@
 
 (defun eshell/cdb (bug-id)
   (cdb bug-id)
-  (rename-buffer (format "*eshell: %s*" bug-id))
   (shell-command-to-string "bz summary"))
+
+(defun bzshell ()
+  (interactive)
+  (let ((default-directory bz-dir)
+        (eshell-buffer-name "*bzshell*"))
+    (eshell)))
 
 (defun cdb (bug-id)
   (interactive (list
@@ -29,8 +34,35 @@
 
 (defun bz-new (bug-id)
   "start working on a new bug"
-  (interactive "sBug ")
+  (interactive "p")
   (let ((default-directory bz-dir))
-    (async-shell-command (concat "bz new " bug-id) "*bznew*")))
+    (async-shell-command (format "yes | bz new %s" bug-id) (format "*bznew:%d*" bug-id))))
+
+(defun bmo-sql ()
+  (interactive)
+
+  (let* ((auth-result (car (auth-source-search
+                            :host "bugzilla.local"
+                            :port "mysql")))
+         (sql-connection-alist
+          `((bmo (sql-product 'mysql)
+                 (sql-server "bugzilla.local")
+                 (sql-user ,(plist-get auth-result ':user))
+                 (sql-database "bugs_bmo")
+                 (sql-password ,(funcall (plist-get auth-result ':secret)))))))
+    (sql-connect 'bmo "bmo-sql")))
+
+(defun bz-bug-id-p (bug-id) (not (null (string-match "^[0-9]+$" bug-id))))
+
+(defun bz-list ()
+  (mapcar #'car
+          (remove-if-not (lambda (x) (and (cadr x) (not (or (equal (car x) "..") (equal (car x) ".")))))
+                         (directory-files-and-attributes (concat bz-dir "/htdocs")))))
+
+(defun bz-list-bugs () (remove-if-not #'bz-bug-id-p (bz-list)))
+
+(defun bz-summary ()
+  (interactive)
+  (message (f-read (concat (projectile-project-root) "/data/summary"))))
 
 (provide 'bmo)
