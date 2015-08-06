@@ -65,4 +65,14 @@
   (interactive)
   (message (f-read (concat (projectile-project-root) "/data/summary"))))
 
+(defun bmo-summary (bug-id)
+  (let ((bug-dir (f-join bz-dir (format "htdocs/%s" bug-id))))
+    (if (f-dir? bug-dir)
+        (f-read (f-join bug-dir "data" "summary"))
+      (let ((response (request (format "https://bugzilla.mozilla.org/rest/bug/%s" bug-id)
+                                  :params '( ("include_fields" . "summary") )
+                                  :parser 'json-read
+                                  :sync t)))
+        (cdr (assq 'summary (aref (cdr (assq 'bugs (request-response-data response))) 0)))))))
+
 (provide 'bmo)

@@ -82,4 +82,10 @@
   (interactive)
   (set-buffer-file-coding-system 'undecided-dos nil))
 
-(provide 'my-util)
+(defun my-get-password (host port)
+  (let ((results (auth-source-search :host host :port port)))
+    (if results
+        (funcall (plist-get (car results) ':secret))
+      "")))
+
+(provide 'my-util)      

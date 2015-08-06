@@ -36,6 +36,9 @@
     ("#002b36" "#002b36" "#002b36" "#002b36" "#002b36" "#002b36" "#002b36" "#002b36")))
  '(magit-diff-use-overlays nil)
  '(magit-use-overlays nil)
+ '(org-agenda-files
+   (quote
+    ("~/org/notes.org" "~/org/bugzilla.org" "~/.emacs.d/config.org")))
  '(pos-tip-background-color "#073642")
  '(pos-tip-foreground-color "#93a1a1")
  '(smartrep-mode-line-active-bg (solarized-color-blend "#859900" "#073642" 0.2))

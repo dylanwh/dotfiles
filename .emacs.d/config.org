@@ -6,8 +6,20 @@
 Copy this file to ~/.emacs.d and add the following to ~/.emacs/init.el:
 
 #+BEGIN_SRC emacs-lisp :tangle no
-(require 'org)
-(org-babel-load-file "~/.emacs.d/config.org")
+  (setq package-archives '(("melpa" . "http://melpa.org/packages/")
+                           ("org" . "http://orgmode.org/elpa/")
+                           ("gnu" .  "http://elpa.gnu.org/packages/"))
+        package-enable-at-startup nil)
+  (package-initialize)
+
+  (unless (package-installed-p 'use-package)
+    (unless (assoc 'use-package package-archive-contents)
+      (package-refresh-contents))
+    (package-install 'use-package))
+
+  (require 'use-package)
+  (use-package org :ensure t)
+  (org-babel-load-file "~/.emacs.d/config.org")
 #+END_SRC
 
 * environment
@@ -32,12 +44,18 @@ can be versioned.
 #+END_SRC
 
 ** add ~/.emacs.d/elisp to load-path
+
 For things that arn't available as an elpa package, add ~/.emacs.d/elisp
 to the load-path. This is also where I can put my own utilities functions.
 #+BEGIN_SRC emacs-lisp
   (add-to-list 'load-path (concat user-emacs-directory "elisp"))
 #+END_SRC
 
+** compile elpa stuff
+We don't store the *.elc files in git, so this needs to run when emacs starts.
+#+BEGIN_SRC emacs-lisp
+  (byte-recompile-directory (expand-file-name "~/.emacs.d/elpa"))
+#+END_SRC
 ** custom.el
 Keep customize settings in its own file (~/.emacs.d/custom.el)
 #+BEGIN_SRC emacs-lisp
@@ -48,19 +66,6 @@ Keep customize settings in its own file (~/.emacs.d/custom.el)
 ** configure use-package and package archives
 Setup the package system and install use-package.
 #+BEGIN_SRC emacs-lisp
-  (setq package-archives '(("melpa" . "http://melpa.org/packages/")
-                           ("org" . "http://orgmode.org/elpa/")
-                           ("gnu" .  "http://elpa.gnu.org/packages/"))
-        package-user-dir (concat user-data-directory "/elpa")
-        package-enable-at-startup nil)
-  (package-initialize)
-
-  (unless (package-installed-p 'use-package)
-    (unless (assoc 'use-package package-archive-contents)
-      (package-refresh-contents))
-    (package-install 'use-package))
-
-  (require 'use-package)
 #+END_SRC
 
 ** bootstrap packages
@@ -70,6 +75,7 @@ because I use them through out this file.
   (use-package after)
   (use-package bind)
   (use-package f :ensure t)
+  (use-package request :ensure t)
   (use-package my-util)
   (use-package bmo)
 #+END_SRC
@@ -126,12 +132,6 @@ Install themes, solarized for graphical displays and moe-dark for terminals.
     (progn
       (setq solarized-use-less-bold t)
       (load-theme 'solarized-dark t t)))
-
-  (use-package moe-theme :ensure t
-    :config (load-theme 'moe-dark t t))
-
-  (use-package zenburn-theme :ensure t
-    :config (load-theme 'zenburn t t))
 
   (enable-theme 'solarized-dark)
 #+END_SRC
@@ -328,6 +328,53 @@ settings that don't make more sense anywhere else...
       auto-save-list-file-prefix     (concat user-data-directory "auto-save-list/saves-"))
 #+END_SRC
 
+* email
+#+BEGIN_SRC emacs-lisp
+
+  (defun my-guess-email-account (msg)
+    (let ((maildir (mu4e-message-field msg :maildir)))
+      (if (string-match "^/\\(.*?\\)/" maildir)
+          (match-string 1 maildir)
+        "fastmail")))
+
+  (defun my-guess-trash-folder (msg)
+    (concat "/" (my-guess-email-account msg) "/trash"))
+
+  (defun my-guess-sent-folder (msg)
+    (concat "/" (my-guess-email-account msg) "/sent"))
+
+  (use-package mu4e
+    :commands mu4e
+    :config
+    (progn
+      (setq mu4e-maildir (expand-file-name "~/mail")
+            mu4e-change-filenames-when-moving t
+            mu4e-view-show-images t
+            mu4e-view-show-addresses t
+            mu4e-get-mail-command "mbsync -qa"
+            mu4e-my-email-addresses '( dylan@hardison.net
+                                       dhardison@cpan.org
+                                       dhardison@mozilla.com
+                                       dylan@mozilla.com
+                                       dylanwh@gmail.com ))
+
+      (when (executable-find "w3m")
+        (setq mu4e-html2text-command "w3m -T text/html"))
+      
+      (setq mu4e-sent-folder #'my-guess-sent-folder
+            mu4e-drafts-folder "/fastmail/drafts"
+            mu4e-trash-folder #'my-guess-trash-folder
+            user-mail-address "dylan@hardison.net")
+      
+      ))
+
+  (use-package mu4e-org)
+  (use-package mu4e-maildirs-extension :ensure t
+    :config (mu4e-maildirs-extension))
+
+
+
+#+END_SRC
 * general utilities
 ** tramp
 #+BEGIN_SRC emacs-lisp
@@ -340,17 +387,41 @@ settings that don't make more sense anywhere else...
             tramp-persistency-file-name (concat user-data-directory "tramp"))
 #+END_SRC
 ** org-mode
-Basic org mode settings.
+*** Basic org mode settings.
 
 #+BEGIN_SRC emacs-lisp
   (require 'org)
   (setq org-log-done t)
+  (setq org-default-notes-file "~/org/notes.org")
+  (add-to-list 'org-agenda-files "~/org")
 #+END_SRC
 
-Load epresent, for presentations from org-mode buffers
+*** Load epresent, for presentations from org-mode buffers
 
 #+BEGIN_SRC emacs-lisp
   (use-package epresent :ensure t)
+#+END_SRC
+
+*** org-protocol is a way of linking to org stuff from outside of emacs.
+#+BEGIN_SRC emacs-lisp
+  (require 'org-protocol)
+#+END_SRC
+
+*** bmo links
+#+BEGIN_SRC emacs-lisp
+  (defun my-org-describe-link (link description)
+    (cond (description description)
+          ((string-match "^bmo:\\([0-9]+\\)" link)
+           (let ((bug-id (match-string 1 link)))
+             (format "Bug %s - %s" bug-id (bmo-summary bug-id))))
+          (t link)))
+
+
+  (defun my-org-open-bmo (bug-id)
+    (browse-url (format "https://bugzilla.mozilla.org/show_bug.cgi?id=%s" bug-id)))
+
+  (org-add-link-type "bmo" #'my-org-open-bmo)
+  (setq org-make-link-description-function #'my-org-describe-link)
 #+END_SRC
 
 ** ham-mode
@@ -715,6 +786,14 @@ Load ac backend for html.
   (use-package pcomplete-extension :ensure pcomplete-extension)
 #+END_SRC
 * navigation utilities
+** registers
+#+BEGIN_SRC emacs-lisp
+  (set-register ?e '(file . "~/.emacs.d/config.org"))
+  (set-register ?m '(file . "~/.mbsyncrc"))
+  (set-register ?n '(file . "~/org/notes.org"))
+  (set-register ?b '(file . "~/org/bugzilla.org"))
+  (set-register ?i '(file . "~/.imapfilter/config.lua"))
+#+END_SRC
 ** ag
 #+BEGIN_SRC emacs-lisp
   (use-package ag :ensure t)
@@ -725,6 +804,7 @@ Load ac backend for html.
     :ensure t
     :config
     (progn
+      (setq projectile-enable-caching t)
       (projectile-global-mode)))
 #+END_SRC
 ** helm
@@ -1186,8 +1266,8 @@ After searching, recenter on the search term.
     (message "Thou shall not quit!"))
 #+END_SRC
 * Stuff to look at
-** TODO rings
-** TODO scpaste
-** TODO spaces
-** TODO sublimity
-** TODO stripe-buffer
+** TODO install rings
+** TODO install scpaste
+** TODO install spaces
+** TODO install sublimity
+** TODO install stripe-buffer
