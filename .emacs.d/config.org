@@ -63,11 +63,6 @@ Keep customize settings in its own file (~/.emacs.d/custom.el)
   (load-file custom-file)
 #+END_SRC
 
-** configure use-package and package archives
-Setup the package system and install use-package.
-#+BEGIN_SRC emacs-lisp
-#+END_SRC
-
 ** bootstrap packages
 There are a few packages that need to be loaded before anything else,
 because I use them through out this file.
@@ -88,16 +83,22 @@ I always want an emacs server running.
 
 ** environmental variables
  #+BEGIN_SRC emacs-lisp
+   (use-package exec-path-from-shell :ensure t)
+
+   (when (memq window-system '(mac ns))
+     (exec-path-from-shell-initialize)
+     (exec-path-from-shell-copy-env "TZ")
+     (exec-path-from-shell-copy-env "LC_COLLATE")
+     (exec-path-from-shell-copy-env "EMAIL")
+     (exec-path-from-shell-copy-env "REALNAME")
+     (exec-path-from-shell-copy-env "PERL5LIB")
+     (exec-path-from-shell-copy-env "PERL_MM_OPT")
+     (exec-path-from-shell-copy-env "PERL_MB_OPT")
+     (exec-path-from-shell-copy-env "PWSAFE_DATABASE"))
+
    (setenv "PAGER" "cat")
    (setenv "GIT_PAGER" "cat")
    (setenv "MANPAGER" "cat")
-
-   (dolist (exec-path-dir (list (concat (getenv "HOME") "/bin") "/usr/bin" "/bin" "/usr/local/bin"))
-     (unless (member exec-path-dir exec-path)
-       (setq exec-path (cons  exec-path-dir exec-path))))
-
-   (setenv "PATH" (mapconcat 'identity exec-path ":"))
-   (setq eshell-path-env (getenv "PATH"))
  #+END_SRC
 * platform tests
 #+BEGIN_SRC emacs-lisp
@@ -128,10 +129,7 @@ Fira Mono is a very nice monospace font.
 Install themes, solarized for graphical displays and moe-dark for terminals.
 #+BEGIN_SRC emacs-lisp
   (use-package solarized-theme :ensure t
-    :config
-    (progn
-      (setq solarized-use-less-bold t)
-      (load-theme 'solarized-dark t t)))
+    :config (load-theme 'solarized-dark t t))
 
   (enable-theme 'solarized-dark)
 #+END_SRC
@@ -378,33 +376,18 @@ settings that don't make more sense anywhere else...
 * general utilities
 ** tramp
 #+BEGIN_SRC emacs-lisp
-      (require 'tramp)
-      (setq tramp-inline-compress-start-size (* 1024 1024)
-            tramp-remote-path '(tramp-default-remote-path
-                                tramp-own-remote-path
-                                "/bin" "/usr/bin" "/usr/local/bin"
-                                "/sbin" "/usr/sbin" "/usr/local/sbin")
-            tramp-persistency-file-name (concat user-data-directory "tramp"))
+  (require 'tramp)
+  (setq tramp-inline-compress-start-size (* 1024 1024)
+        tramp-persistency-file-name (concat user-data-directory "tramp"))
+  (add-to-list 'tramp-remote-path 'tramp-own-remote-path)
+  (add-to-list 'tramp-remote-path "/usr/local/bin")
 #+END_SRC
+
 ** org-mode
-*** Basic org mode settings.
-
-#+BEGIN_SRC emacs-lisp
-  (require 'org)
-  (setq org-log-done t)
-  (setq org-default-notes-file "~/org/notes.org")
-  (add-to-list 'org-agenda-files "~/org")
-#+END_SRC
-
 *** Load epresent, for presentations from org-mode buffers
 
 #+BEGIN_SRC emacs-lisp
   (use-package epresent :ensure t)
-#+END_SRC
-
-*** org-protocol is a way of linking to org stuff from outside of emacs.
-#+BEGIN_SRC emacs-lisp
-  (require 'org-protocol)
 #+END_SRC
 
 *** bmo links
@@ -416,13 +399,33 @@ settings that don't make more sense anywhere else...
              (format "Bug %s - %s" bug-id (bmo-summary bug-id))))
           (t link)))
 
-
   (defun my-org-open-bmo (bug-id)
     (browse-url (format "https://bugzilla.mozilla.org/show_bug.cgi?id=%s" bug-id)))
 
   (org-add-link-type "bmo" #'my-org-open-bmo)
   (setq org-make-link-description-function #'my-org-describe-link)
 #+END_SRC
+
+*** ox publish
+#+BEGIN_SRC emacs-lisp
+  (require 'ox-publish)
+  (setq org-publish-project-alist
+        '(("org-notes"
+           :base-directory "~/org/"
+           :base-extension "org"
+           :publishing-directory "~/pub/org"
+           :recursive t
+           :publishing-function org-html-publish-to-html
+           :headline-levels 4             ; Just the default for this project.
+           :auto-preamble t
+           )))
+#+END_SRC
+*** cpan links
+ Things like [[cpan:Moose]]
+
+ #+BEGIN_SRC emacs-lisp
+   (add-to-list 'org-link-abbrev-alist '("cpan" . "https://metacpan.org/pod/%h"))
+ #+END_SRC
 
 ** ham-mode
 Html As Markdown. Transparently edit an html file using markdown.
@@ -446,6 +449,7 @@ See `ham-mode-markdown-to-html-command' and `ham-mode--save-as-html' on
         dired-omit-files-p t)
 #+END_SRC
 ** git-annex
+This just adds a few things to dired mode.
 
 #+BEGIN_SRC emacs-lisp
   (use-package git-annex :ensure t)
@@ -454,8 +458,6 @@ See `ham-mode-markdown-to-html-command' and `ham-mode--save-as-html' on
 
 #+BEGIN_SRC emacs-lisp
   (after 'esh-module
-    (add-to-list 'eshell-modules-list 'eshell-smart)
-
     (let ((eshell-data-dir (concat user-data-directory "eshell/")))
       (unless (f-dir? eshell-data-dir)
         (make-directory eshell-data-dir))
@@ -467,7 +469,6 @@ See `ham-mode-markdown-to-html-command' and `ham-mode--save-as-html' on
 
             ;; eshell
             eshell-scroll-to-bottom-on-input 'all
-            ;;eshell-buffer-shorthand t
 
             ;; kill annoying banner
             eshell-banner-message "\n\n"
@@ -753,14 +754,12 @@ Load ac backend for html.
             sp-show-pair-from-inside t
             sp-autoescape-string-quote nil
             sp-autoinsert-if-followed-by-same 1
-            sp-highlight-pair-overlay nil)
+            sp-highlight-pair-overlay t)
 
       (push #'cperl-mode sp-ignore-modes-list)
       (push #'perl-mode sp-ignore-modes-list)
 
       (sp-use-smartparens-bindings)
-      (smartparens-global-mode t)
-
       (show-smartparens-global-mode t)
       (show-paren-mode -1)
 
@@ -792,6 +791,7 @@ Load ac backend for html.
   (set-register ?m '(file . "~/.mbsyncrc"))
   (set-register ?n '(file . "~/org/notes.org"))
   (set-register ?b '(file . "~/org/bugzilla.org"))
+  (set-register ?q '(file . "~/org/elastic-quick-search.org"))
   (set-register ?i '(file . "~/.imapfilter/config.lua"))
 #+END_SRC
 ** ag
@@ -1078,11 +1078,6 @@ Setup evil with some very vim-like defaults.
     :ensure t
     :init
     (progn
-      (setq evil-search-module           'evil-search
-            evil-magic                   'very-magic
-            evil-want-C-w-delete         nil
-            evil-want-C-w-in-emacs-state t)
-
       (evil-mode 1)
 
       (add-to-list 'evil-emacs-state-modes 'sauron-mode)
@@ -1096,8 +1091,6 @@ Setup evil with some very vim-like defaults.
 
       (define-key evil-normal-state-map (kbd "SPC o") 'imenu)
       (define-key evil-normal-state-map (kbd "SPC b") 'switch-to-buffer)
-
-      ;; (define-key evil-normal-state-map (kbd "SPC f") 'helm-find-file)
 
       (define-key evil-normal-state-map (kbd "C-b") 'evil-scroll-up)
       (define-key evil-normal-state-map (kbd "C-f") 'evil-scroll-down)
@@ -1196,8 +1189,10 @@ Setup evil with some very vim-like defaults.
         "e" 'eval-last-sexp
         "E" 'eval-defun
         "f" 'ctl-x-5-prefix
+        "j" 'org-open-at-point
         "C" 'customize-group
         "b d" 'kill-this-buffer
+        "b z" 'bzshell
         "v" (kbd "C-w v C-w l")
         "s" (kbd "C-w s C-w j")
         "P" 'package-list-packages
@@ -1257,6 +1252,18 @@ After searching, recenter on the search term.
   (use-package evil-org
     :ensure t)
 #+END_SRC
+
+Also, let's make org-return work while we're at it.
+
+#+BEGIN_SRC emacs-lisp
+  (defun my-evil-ret (orig &rest args)
+    (if (derived-mode-p 'org-mode)
+        (org-return)
+      (apply orig args)))
+
+  (advice-add 'evil-ret :around #'my-evil-ret)
+#+END_SRC
+
 ** disable vi/vim style-exits
 #+BEGIN_SRC emacs-lisp
   (defadvice evil-quit (around advice-for-evil-quit activate)

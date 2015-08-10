@@ -12,9 +12,7 @@
     (eshell)))
 
 (defun cdb (bug-id)
-  (interactive (list
-                (read-string (format "Bug (%s): " (thing-at-point 'word))
-                             nil nil (thing-at-point 'word))))
+  (interactive "s")
   (cd bz-dir)
   (let ((bug-dir (shell-command-to-string (format "bz path %s" bug-id))))
     (with-parsed-tramp-file-name default-directory nil
@@ -34,9 +32,9 @@
 
 (defun bz-new (bug-id)
   "start working on a new bug"
-  (interactive "p")
+  (interactive "s")
   (let ((default-directory bz-dir))
-    (async-shell-command (format "yes | bz new %s" bug-id) (format "*bznew:%d*" bug-id))))
+    (async-shell-command (format "yes | bz new %s" bug-id) (format "*bznew:%s*" bug-id))))
 
 (defun bmo-sql ()
   (interactive)

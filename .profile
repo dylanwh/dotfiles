@@ -26,4 +26,8 @@ export XDG_DATA_HOME XDG_CONFIG_HOME XDG_CACHE_HOME XDG_RUNTIME_DIR
 
 PATH="$HOME/bin:$PATH"
 
+if [[ -d ~/perl5 ]]; then
+    eval $(perl -I ~/perl5/lib/perl5 -Mlocal::lib)
+fi
+
 export PATH
