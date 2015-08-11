@@ -1,6 +1,7 @@
 #+TITLE: emacs configuration file
 #+AUTHOR: Dylan William Hardison
 #+EMAIL: dylan@hardison.net
+#+OPTIONS: ^:nil
 
 * installation
 Copy this file to ~/.emacs.d and add the following to ~/.emacs/init.el:
@@ -58,9 +59,12 @@ We don't store the *.elc files in git, so this needs to run when emacs starts.
 #+END_SRC
 ** custom.el
 Keep customize settings in its own file (~/.emacs.d/custom.el)
+and ... don't bother loading it. customize settings are nice, but they tend to not be very portable
+(such as absolute pathnames leaking into some settings).
+
 #+BEGIN_SRC emacs-lisp
   (setq custom-file (concat user-emacs-directory "custom.el"))
-  (load-file custom-file)
+  ;; (load-file custom-file)
 #+END_SRC
 
 ** bootstrap packages
@@ -72,7 +76,6 @@ because I use them through out this file.
   (use-package f :ensure t)
   (use-package request :ensure t)
   (use-package my-util)
-  (use-package bmo)
 #+END_SRC
 
 ** server
@@ -100,38 +103,96 @@ I always want an emacs server running.
    (setenv "GIT_PAGER" "cat")
    (setenv "MANPAGER" "cat")
  #+END_SRC
-* platform tests
-#+BEGIN_SRC emacs-lisp
-  (cl-case system-type
-    (darwin (progn
-              (if (executable-find "gls")
-                (setq insert-directory-program "/usr/local/bin/gls"))
-              (if (executable-find "trash")
-                  (use-package osx-trash :ensure t)))))
-#+END_SRC
+** platform tests
+ #+BEGIN_SRC emacs-lisp
+   (cl-case system-type
+     (darwin (progn
+               (if (executable-find "gls")
+                 (setq insert-directory-program "/usr/local/bin/gls"))
+               (if (executable-find "trash")
+                   (use-package osx-trash :ensure t)))))
+ #+END_SRC
 
+* general settings
+
+settings that don't make more sense anywhere else...
+
+#+BEGIN_SRC emacs-lisp
+  (defalias 'yes-or-no-p 'y-or-n-p)
+
+  (setq delete-by-moving-to-trash t
+        mark-ring-max 64
+        global-mark-ring-max 128
+        save-interprogram-paste-before-kill t
+
+        ;; auth-source configuration
+        auth-sources '("~/annex/private/authinfo.gpg"))
+
+  (setq vc-make-backup-files t
+        vc-handled-backends '(SVN Git))
+
+  (setq compilation-always-kill t
+        compilation-ask-about-save nil
+
+        truncate-partial-width-windows nil
+
+        ;; ediff
+        ediff-split-window-function 'split-window-horizontally
+        ediff-window-setup-function 'ediff-setup-windows-plain
+
+        ;; better scrolling
+        scroll-conservatively 9999
+        scroll-preserve-screen-position t)
+
+  (global-auto-revert-mode 1) ;; revert buffers when their files change
+  (electric-indent-mode t)    ;; automatic indent
+  (transient-mark-mode 1)     ;; lose selection when buffer changes, etc
+  (delete-selection-mode 1)   ;; typing replaces selected text.
+  (require 'midnight)         ;; clean up old buffers periodically
+#+END_SRC
 * look and feel
 Configure font, theme, and a few other things relating to how
 emacs looks.
 
-Fira Mono is a very nice monospace font.
+** fonts
+Choose font size based on hostname
 #+BEGIN_SRC emacs-lisp
   (defvar system-name-short (car (split-string (system-name) "\\." t)))
 
-  (set-frame-font (cl-case (intern system-name-short)
-                    (thor "Fira Mono Medium-10")
-                    (mac-thor "Source Code Pro Light-12")
-                    (freya "Fira Mono Medium-10")
-                    (t    "Fira Mono Medium-14"))
-                  nil t)
+  (cl-case (intern system-name-short)
+    (thor     (set-frame-font "Fira Mono Medium-10" nil t))
+    (mac-thor (set-frame-font "Source Code Pro Light-12" nil t))
+    (freya    (set-frame-font "Fira Mono Medium-10")))
 #+END_SRC
 
-Install themes, solarized for graphical displays and moe-dark for terminals.
+** theme
+Install solarized
 #+BEGIN_SRC emacs-lisp
-  (use-package solarized-theme :ensure t
-    :config (load-theme 'solarized-dark t t))
+  (setq solarized-distinct-fringe-background t
+        solarized-high-contrast-mode-line nil
+        solarized-scale-org-headlines nil
+        solarized-use-less-bold nil
+        solarized-use-more-italic t
+        solarized-use-variable-pitch nil)
 
-  (enable-theme 'solarized-dark)
+   (use-package solarized-theme :ensure t
+     :config (load-theme 'solarized-dark t t))
+
+   (enable-theme 'solarized-dark)
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+  (use-package smart-mode-line :ensure t
+    :init
+    (progn
+      (setq sml/show-client t
+            sml/show-eol t
+            sml/mode-width 'right
+            sml/show-frame-identification t
+            sml/shorten-modes t
+            sml/no-confirm-load-theme t
+            sml/theme 'respectful)
+      (sml/setup)))
 #+END_SRC
 
 Hide minor modes
@@ -150,34 +211,32 @@ Hide minor modes
             " Server")))
 #+END_SRC
 
-#+BEGIN_SRC emacs-lisp
-  (defalias 'yes-or-no-p 'y-or-n-p)
-  (setq compilation-always-kill t
-        compilation-ask-about-save nil)
+Turn off most of the GUI features. they're wastes of space.
 
+#+BEGIN_SRC emacs-lisp
   (when (fboundp 'menu-bar-mode) (menu-bar-mode -1))
   (when (display-graphic-p) (fringe-mode 16))
   (when (fboundp 'tool-bar-mode) (tool-bar-mode -1))
   (when (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
+#+END_SRC
 
+** initial buffer settings: just eshell.
+I don't want emacs to show anything but an eshell at start-up.
+
+#+BEGIN_SRC emacs-lisp
   (setq inhibit-splash-screen t
         inhibit-startup-echo-area-message t
         inhibit-startup-message t
         initial-buffer-choice #'eshell
-        initial-scratch-message ""
+        initial-scratch-message "")
+#+END_SRC
 
-        ring-bell-function (lambda () ())
+** annoyances fixed
+No ringing bells, no blinking cursor. show current function
+and allow 256 xterm colors.
 
-        truncate-partial-width-windows nil
-
-        ;; ediff
-        ediff-split-window-function 'split-window-horizontally
-        ediff-window-setup-function 'ediff-setup-windows-plain
-
-        ;; better scrolling
-        scroll-conservatively 9999
-        scroll-preserve-screen-position t)
-
+#+BEGIN_SRC emacs-lisp
+  (setq ring-bell-function (lambda () ()))
   (which-function-mode t)     ;; display current function
   (blink-cursor-mode -1)      ;; disable blinking cursor
 
@@ -188,8 +247,10 @@ Hide minor modes
            (setq comint-output-filter-functions
                  (remove 'ansi-color-process-output comint-output-filter-functions))
            (setq font-lock-unfontify-region-function 'xterm-color-unfontify-region)))
+#+END_SRC
 
-  ;; better buffer names for duplicates
+** better buffer names for duplicates
+#+BEGIN_SRC emacs-lisp
   (use-package uniquify
     :init
     (progn
@@ -206,18 +267,6 @@ Hide minor modes
                 (let ((inhibit-read-only t))
                   (ansi-color-apply-on-region (point-min) (point-max))))))
 
-  (use-package smart-mode-line
-    :ensure t
-    :init
-    (progn
-      (setq sml/show-client t
-            sml/show-eol t
-            sml/mode-width 'right
-            sml/show-frame-identification t
-            sml/shorten-modes t
-            sml/theme 'respectful)
-      (sml/setup)))
-
   (when (display-graphic-p)
     (use-package git-gutter-fringe+ :ensure t))
 
@@ -225,6 +274,8 @@ Hide minor modes
     :ensure t
     :init (global-git-gutter+-mode))
 #+END_SRC
+
+** text formatting
 Tabs are 4 real spaces, by default we use 80 columns with
 a word wrap. Empty lines are indicated in the fringe.
 #+BEGIN_SRC emacs-lisp
@@ -237,6 +288,7 @@ a word wrap. Empty lines are indicated in the fringe.
                 word-wrap t)
 #+END_SRC
 
+** utf-8
 Enable UTF-8 for all the things.
 #+BEGIN_SRC emacs-lisp
   (set-terminal-coding-system 'utf-8)
@@ -245,45 +297,14 @@ Enable UTF-8 for all the things.
   (prefer-coding-system 'utf-8)
 #+END_SRC
 
+** cleanup whitespace
 Use ethan-wspace to handle whitespace issues.
 #+BEGIN_SRC emacs-lisp
   (setq mode-require-final-newline nil)
 
   (use-package ethan-wspace :ensure t)
 #+END_SRC
-* unorganized stuff
-
-settings that don't make more sense anywhere else...
-
-#+BEGIN_SRC emacs-lisp
-  (setq delete-by-moving-to-trash t
-        mark-ring-max 64
-        global-mark-ring-max 128
-        save-interprogram-paste-before-kill t
-        create-lockfiles nil
-
-        ;; auth-source configuration
-        auth-sources '("~/annex/private/authinfo.gpg"))
-
-  (setq vc-make-backup-files t
-        vc-handled-backends '(SVN Git))
-
-  (put 'narrow-to-region 'disabled nil)
-
-  (global-auto-revert-mode 1) ;; revert buffers when their files change
-  (electric-indent-mode t)    ;; automatic indent
-  (transient-mark-mode 1)     ;; lose selection when buffer changes, etc
-  (delete-selection-mode 1)   ;; typing replaces selected text.
-  (require 'midnight)         ;; clean up old buffers periodically
-#+END_SRC
-* booksmarks, save places, history, recent files and backups
-** bookmarks
-   bookmarks in the data dir too.
-#+BEGIN_SRC emacs-lisp
-  (setq bookmark-default-file (concat user-emacs-directory "bookmarks")
-        bookmark-save-flag 1 ) ;; save after every change
-#+END_SRC
-
+* save places, history, recent files and backups
 ** saveplace
 #+BEGIN_SRC emacs-lisp
 (use-package saveplace
@@ -326,120 +347,16 @@ settings that don't make more sense anywhere else...
       auto-save-list-file-prefix     (concat user-data-directory "auto-save-list/saves-"))
 #+END_SRC
 
-* email
+* file management
+** projectile
 #+BEGIN_SRC emacs-lisp
-
-  (defun my-guess-email-account (msg)
-    (let ((maildir (mu4e-message-field msg :maildir)))
-      (if (string-match "^/\\(.*?\\)/" maildir)
-          (match-string 1 maildir)
-        "fastmail")))
-
-  (defun my-guess-trash-folder (msg)
-    (concat "/" (my-guess-email-account msg) "/trash"))
-
-  (defun my-guess-sent-folder (msg)
-    (concat "/" (my-guess-email-account msg) "/sent"))
-
-  (use-package mu4e
-    :commands mu4e
+  (use-package projectile :ensure t
     :config
     (progn
-      (setq mu4e-maildir (expand-file-name "~/mail")
-            mu4e-change-filenames-when-moving t
-            mu4e-view-show-images t
-            mu4e-view-show-addresses t
-            mu4e-get-mail-command "mbsync -qa"
-            mu4e-my-email-addresses '( dylan@hardison.net
-                                       dhardison@cpan.org
-                                       dhardison@mozilla.com
-                                       dylan@mozilla.com
-                                       dylanwh@gmail.com ))
-
-      (when (executable-find "w3m")
-        (setq mu4e-html2text-command "w3m -T text/html"))
-      
-      (setq mu4e-sent-folder #'my-guess-sent-folder
-            mu4e-drafts-folder "/fastmail/drafts"
-            mu4e-trash-folder #'my-guess-trash-folder
-            user-mail-address "dylan@hardison.net")
-      
-      ))
-
-  (use-package mu4e-org)
-  (use-package mu4e-maildirs-extension :ensure t
-    :config (mu4e-maildirs-extension))
-
-
-
-#+END_SRC
-* general utilities
-** tramp
-#+BEGIN_SRC emacs-lisp
-  (require 'tramp)
-  (setq tramp-inline-compress-start-size (* 1024 1024)
-        tramp-persistency-file-name (concat user-data-directory "tramp"))
-  (add-to-list 'tramp-remote-path 'tramp-own-remote-path)
-  (add-to-list 'tramp-remote-path "/usr/local/bin")
+      (setq projectile-enable-caching t)
+      (projectile-global-mode)))
 #+END_SRC
 
-** org-mode
-*** Load epresent, for presentations from org-mode buffers
-
-#+BEGIN_SRC emacs-lisp
-  (use-package epresent :ensure t)
-#+END_SRC
-
-*** bmo links
-#+BEGIN_SRC emacs-lisp
-  (defun my-org-describe-link (link description)
-    (cond (description description)
-          ((string-match "^bmo:\\([0-9]+\\)" link)
-           (let ((bug-id (match-string 1 link)))
-             (format "Bug %s - %s" bug-id (bmo-summary bug-id))))
-          (t link)))
-
-  (defun my-org-open-bmo (bug-id)
-    (browse-url (format "https://bugzilla.mozilla.org/show_bug.cgi?id=%s" bug-id)))
-
-  (org-add-link-type "bmo" #'my-org-open-bmo)
-  (setq org-make-link-description-function #'my-org-describe-link)
-#+END_SRC
-
-*** ox publish
-#+BEGIN_SRC emacs-lisp
-  (require 'ox-publish)
-  (setq org-publish-project-alist
-        '(("org-notes"
-           :base-directory "~/org/"
-           :base-extension "org"
-           :publishing-directory "~/pub/org"
-           :recursive t
-           :publishing-function org-html-publish-to-html
-           :headline-levels 4             ; Just the default for this project.
-           :auto-preamble t
-           )))
-#+END_SRC
-*** cpan links
- Things like [[cpan:Moose]]
-
- #+BEGIN_SRC emacs-lisp
-   (add-to-list 'org-link-abbrev-alist '("cpan" . "https://metacpan.org/pod/%h"))
- #+END_SRC
-
-** ham-mode
-Html As Markdown. Transparently edit an html file using markdown.
-
-When this mode is activated in an html file, the buffer is
-converted to markdown and you may edit at will, but the file is
-still saved as html behind the scenes. 
-
-See `ham-mode-markdown-to-html-command' and `ham-mode--save-as-html' on
-
-#+BEGIN_SRC emacs-lisp
-  (when (executable-find "markdown")
-    (use-package ham-mode :ensure t))
-#+END_SRC
 ** dired
 #+BEGIN_SRC emacs-lisp
   (use-package dired-x)
@@ -447,12 +364,6 @@ See `ham-mode-markdown-to-html-command' and `ham-mode--save-as-html' on
   (setq dired-listing-switches "-aBhl  --group-directories-first"
         dired-omit-files "^\\.?#\\|^\\."
         dired-omit-files-p t)
-#+END_SRC
-** git-annex
-This just adds a few things to dired mode.
-
-#+BEGIN_SRC emacs-lisp
-  (use-package git-annex :ensure t)
 #+END_SRC
 ** eshell
 
@@ -484,7 +395,11 @@ This just adds a few things to dired mode.
 
             ;; em-prompt
             eshell-prompt-function 'my-eshell-prompt)))
+#+END_SRC
 
+customize some stuff.
+
+#+BEGIN_SRC emacs-lisp
   (defun eshell/clear ()
     "Clears the buffer."
     (let ((inhibit-read-only t))
@@ -553,19 +468,32 @@ This just adds a few things to dired mode.
          (format (format "%%-%ds (%%s)" max-width)
                                (car bookmark)
                                (cdr (assq 'filename (cdr bookmark))))))))
-
-
 #+END_SRC
-** google-this
+*** bmo eshell stuff
+This is basically just a shortcut to spawn an eshell in the bz-dir and a "cdb" eshell command.
+
 #+BEGIN_SRC emacs-lisp
-  (use-package google-this :ensure t)
+  (defun bzshell ()
+    (interactive)
+    (let ((default-directory bz-dir)
+          (eshell-buffer-name "*bzshell*"))
+      (eshell)))
+
+  (defun eshell/cdb (bug-id)
+    (cd bz-dir)
+    (let* ((default-directory bz-dir)
+           (bug-dir (shell-command-to-string (format "bz path %s" bug-id))))
+      (with-parsed-tramp-file-name default-directory nil
+        (message default-directory)
+        (cd (tramp-make-tramp-file-name method user host bug-dir hop))))
+    (shell-command-to-string "bz summary"))
 #+END_SRC
-** google-translate
+
+** git-annex
+This just adds a few things to dired mode.
+
 #+BEGIN_SRC emacs-lisp
-  (use-package google-translate
-    :ensure t
-    :commands (google-translate-at-point google-translate-smooth-translate)
-    :config (require 'google-translate-smooth-ui))
+  (use-package git-annex :ensure t)
 #+END_SRC
 ** magit
 #+BEGIN_SRC emacs-lisp
@@ -597,24 +525,65 @@ This just adds a few things to dired mode.
         (defadvice magit-blame-file-off (after advice-for-magit-blame-file-off activate)
           (evil-exit-emacs-state)))))
 #+END_SRC
+** tramp
+#+BEGIN_SRC emacs-lisp
+  (require 'tramp)
+  (setq tramp-inline-compress-start-size (* 1024 1024)
+        tramp-persistency-file-name (concat user-data-directory "tramp"))
+  (add-to-list 'tramp-remote-path 'tramp-own-remote-path)
+  (add-to-list 'tramp-remote-path "/usr/local/bin")
+#+END_SRC
+
 ** pwsafe
 #+BEGIN_SRC emacs-lisp
   (use-package pwsafe
     :commands (pwsafe pwsafe-copy-password pwsafe-add-entry))
 #+END_SRC
-** sauron
-Configure sauron for notification support
-#+BEGIN_SRC emacs-lisp
-  (use-package sauron
-    :ensure t
-    :config
-    (progn
-      (setq sauron-modules (remove 'sauron-dbus sauron-modules))
-      (setq sauron-max-line-length nil
-            sauron-hide-mode-line t
-            sauron-min-priority 3
-            sauron-watch-patterns '("\\btea\\b"))))
-#+END_SRC
+* communication
+** email
+ #+BEGIN_SRC emacs-lisp
+
+   (defun my-guess-email-account (msg)
+     (let ((maildir (mu4e-message-field msg :maildir)))
+       (if (string-match "^/\\(.*?\\)/" maildir)
+           (match-string 1 maildir)
+         "fastmail")))
+
+   (defun my-guess-trash-folder (msg)
+     (concat "/" (my-guess-email-account msg) "/trash"))
+
+   (defun my-guess-sent-folder (msg)
+     (concat "/" (my-guess-email-account msg) "/sent"))
+
+   (when (executable-find "mu")
+     (use-package mu4e
+       :commands mu4e
+       :config
+       (progn
+         (setq mu4e-maildir (expand-file-name "~/mail")
+               mu4e-change-filenames-when-moving t
+               mu4e-view-show-images t
+               mu4e-view-show-addresses t
+               mu4e-get-mail-command "mbsync -qa"
+               mu4e-my-email-addresses '( dylan@hardison.net
+                                          dhardison@cpan.org
+                                          dhardison@mozilla.com
+                                          dylan@mozilla.com
+                                          dylanwh@gmail.com ))
+
+         (when (executable-find "w3m")
+           (setq mu4e-html2text-command "w3m -T text/html"))
+      
+         (setq mu4e-sent-folder #'my-guess-sent-folder
+               mu4e-drafts-folder "/fastmail/drafts"
+               mu4e-trash-folder #'my-guess-trash-folder
+               user-mail-address "dylan@hardison.net")))
+     (use-package mu4e-org)
+
+     (use-package mu4e-maildirs-extension :ensure t
+       :config (mu4e-maildirs-extension))
+     (use-package org-mu4e))
+ #+END_SRC
 ** weechat
    Configure weechat IRC client.
 #+BEGIN_SRC emacs-lisp
@@ -641,41 +610,198 @@ Configure sauron for notification support
     (weechat-connect nil nil))
 #+END_SRC
 
-** xkcd
+** google-translate
+#+BEGIN_SRC emacs-lisp
+  (use-package google-translate
+    :ensure t
+    :commands (google-translate-at-point google-translate-smooth-translate)
+    :config (require 'google-translate-smooth-ui))
+#+END_SRC
+* misc utilities
+** bmo stuff
+
+   Most of my customizations for working bugzilla.mozilla.org.
+   There's also some stuff for org-mode later in this file
+
+   - [[*bmo links][bmo org-mode links]]
+   - [[*bmo eshell stuff][bmo eshell stuff]] 
+
+ #+BEGIN_SRC emacs-lisp
+   (defvar bz-url "http://bugzilla.local/")
+   (defvar bz-dir "/ssh:bugzilla:/opt/bugzilla")
+
+   (defun bz-browse-site ()
+     (interactive)
+     (browse-url (concat bz-url (projectile-project-name))))
+
+   (defun bz-browse-bug ()
+     (interactive)
+     (let ((bug-id (projectile-project-name)))
+       (when (string-match "^[0-9]+$" bug-id)
+         (browse-url (concat  "https://bugzilla.mozilla.org/show_bug.cgi?id=" bug-id)))))
+
+   (defun bz-new (bug-id)
+     "start working on a new bug"
+     (interactive "s")
+     (let ((default-directory bz-dir))
+       (async-shell-command (format "yes | bz new %s" bug-id) (format "*bznew:%s*" bug-id))))
+
+   (defun bz-list ()
+     (mapcar #'car
+             (remove-if-not (lambda (x) (and (cadr x) (not (or (equal (car x) "..") (equal (car x) ".")))))
+                            (directory-files-and-attributes (concat bz-dir "/htdocs")))))
+
+   (defun bz-bug-id-p (bug-id) (not (null (string-match "^[0-9]+$" bug-id))))
+   (defun bz-list-bugs () (remove-if-not #'bz-bug-id-p (bz-list)))
+
+   (defun bz-summary ()
+     "Show summary for current bug in projectile root"
+     (interactive)
+     (message (f-read (concat (projectile-project-root) "/data/summary"))))
+
+   (defun bmo-sql ()
+     "Launch an iSQL buffer connected to bugzilla.local"
+     (interactive)
+
+     (let* ((auth-result (car (auth-source-search
+                               :host "bugzilla.local"
+                               :port "mysql")))
+            (sql-connection-alist
+             `((bmo (sql-product 'mysql)
+                    (sql-server "bugzilla.local")
+                    (sql-user ,(plist-get auth-result ':user))
+                    (sql-database "bugs_bmo")
+                    (sql-password ,(funcall (plist-get auth-result ':secret)))))))
+       (sql-connect 'bmo "bmo-sql")))
+
+
+   (defun bmo-summary (bug-id)
+     (let ((bug-dir (f-join bz-dir (format "htdocs/%s" bug-id))))
+       (if (f-dir? bug-dir)
+           (f-read (f-join bug-dir "data" "summary"))
+         (let ((response (request (format "https://bugzilla.mozilla.org/rest/bug/%s" bug-id)
+                                  :params '( ("include_fields" . "summary") )
+                                  :parser 'json-read
+                                  :sync t)))
+           (cdr (assq 'summary (aref (cdr (assq 'bugs (request-response-data response))) 0)))))))
+ #+END_SRC
+** org-mode
+#+BEGIN_SRC emacs-lisp
+
+  (setq org-agenda-files '("~/org/bugzilla.org"
+                           "~/.emacs.d/config.org"
+                           "~/org/elastic-quick-search.org"
+                           "~/org/notes.org"))
+
+  (setq org-babel-load-languages '((emacs-lisp . t)
+                                   (perl . t)
+                                   (sql . t)
+                                   (js . t)))
+
+  (require 'org-mouse)
+  (require 'org-protocol)
+  (require 'org-eshell)
+
+  (setq org-confirm-babel-evaluate              nil
+        org-confirm-elisp-link-function         nil
+        org-default-notes-file                  "~/org/notes.org"
+        org-enforce-todo-checkbox-dependencies  t
+        org-log-done                            'time
+        org-log-into-drawer                     t
+        org-open-directory-means-index-dot-org  t
+        org-refile-allow-creating-parent-nodes  'confirm
+        org-return-follows-link                 t
+        org-src-fontify-natively                t
+        org-tab-follows-link                    t
+        org-tags-column                         120)
+#+END_SRC
+*** Load epresent, for presentations from org-mode buffers
 
 #+BEGIN_SRC emacs-lisp
-  (use-package xkcd :ensure t :commands xkcd)
+  (use-package epresent :ensure t)
+#+END_SRC
+
+*** bmo links
+This makes it possible to link to bmo bugs using the "bmo:" syntax.
+
+#+BEGIN_SRC emacs-lisp
+  (defun my-org-describe-link (link description)
+    (cond (description description)
+          ((string-match "^bmo:\\([0-9]+\\)" link)
+           (let ((bug-id (match-string 1 link)))
+             (format "Bug %s - %s" bug-id (bmo-summary bug-id))))
+          (t link)))
+
+  (defun my-org-open-bmo (bug-id)
+    (browse-url (format "https://bugzilla.mozilla.org/show_bug.cgi?id=%s" bug-id)))
+
+  (org-add-link-type "bmo" #'my-org-open-bmo)
+  (setq org-make-link-description-function #'my-org-describe-link)
+#+END_SRC
+
+*** ox publish
+#+BEGIN_SRC emacs-lisp
+  (require 'ox-publish)
+  (setq org-publish-project-alist
+        '(("org-notes"
+           :base-directory "~/org/"
+           :base-extension "org"
+           :publishing-directory "~/pub/org"
+           :recursive t
+           :publishing-function org-html-publish-to-html
+           :headline-levels 4             ; Just the default for this project.
+           :auto-preamble t
+           )))
+#+END_SRC
+*** ox-rst
+For wrting reports and other documentation.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package ox-rst :ensure t)
+#+END_SRC
+*** cpan links
+ Things like [[cpan:Moose]]
+
+ #+BEGIN_SRC emacs-lisp
+   (add-to-list 'org-link-abbrev-alist '("cpan" . "https://metacpan.org/pod/%h"))
+ #+END_SRC
+
+** ham-mode
+   Html As Markdown. Transparently edit an html file using markdown.
+
+   When this mode is activated in an html file, the buffer is
+   converted to markdown and you may edit at will, but the file is
+   still saved as html behind the scenes. 
+
+   See `ham-mode-markdown-to-html-command' and `ham-mode--save-as-html' on
+
+#+BEGIN_SRC emacs-lisp
+  (when (executable-find "markdown")
+    (use-package ham-mode :ensure t))
 #+END_SRC
 ** rainbow mode
 #+BEGIN_SRC emacs-lisp
   (use-package rainbow-mode :ensure t)
 #+END_SRC
+** sauron
+   Configure sauron for notification support
+
+#+BEGIN_SRC emacs-lisp
+  (use-package sauron :ensure t
+    :config
+    (progn
+      (setq sauron-modules (remove 'sauron-dbus sauron-modules))
+      (setq sauron-max-line-length nil
+            sauron-hide-mode-line t
+            sauron-min-priority 3
+            sauron-watch-patterns '("\\btea\\b"))))
+#+END_SRC
+** xkcd
+
+#+BEGIN_SRC emacs-lisp
+  (use-package xkcd :ensure t :commands xkcd)
+#+END_SRC
 * typing utilities
-** guide-key
-Use guide-key to help figure out what things do.
-
-#+BEGIN_SRC emacs-lisp
-  (use-package guide-key
-    :ensure t
-    :init
-    (progn
-      (setq guide-key/guide-key-sequence '("C-x" "C-c" "," "C-w")
-            guide-key/recursive-key-sequence-flag t)
-      (guide-key-mode 1)))
-#+END_SRC
-
-** undo-tree
-Before loading evil, configure undo-tree.
-#+BEGIN_SRC emacs-lisp
-  (use-package undo-tree
-    :ensure t
-    :init
-    (progn
-      (setq undo-tree-auto-save-history t
-            undo-tree-history-directory-alist `(("." . ,(concat user-data-directory "undo")))
-            undo-tree-visualizer-timestamps t
-            undo-tree-visualizer-diff t)))
-#+END_SRC
 ** auto-complete
 Load auto-complete.
 #+BEGIN_SRC emacs-lisp
@@ -715,31 +841,22 @@ Load ac backend for html.
     :init (add-hook 'html-mode-hook 'ac-html-enable))
 #+END_SRC
 
-** yassnippets
-#+BEGIN_SRC emacs-lisp :tangle no
-  (use-package yasnippet
+** guide-key
+   Use guide-key to help figure out what things do.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package guide-key
     :ensure t
-    :config
+    :init
     (progn
-      (let* ((yas-install-dir (car (file-expand-wildcards (concat package-user-dir "/yasnippet-*"))))
-             (dir (concat yas-install-dir "/snippets/js-mode")))
-        (when (file-exists-p dir)
-          (delete-directory dir t)))
+      (setq guide-key/guide-key-sequence '("C-x" "C-c" "," "C-w" "SPC")
+            guide-key/recursive-key-sequence-flag t)
+      (guide-key-mode 1)))
+#+END_SRC
 
-      (setq yas-fallback-behavior 'return-nil
-            yas-also-auto-indent-first-line t)
-      (add-to-list 'yas-snippet-dirs (concat user-emacs-directory "snippets"))
-      (add-hook 'yas-before-expand-snippet-hook
-                (lambda () (auto-complete-mode -1)))
-      (add-hook 'yas-after-exit-snippet-hook
-                (lambda () (auto-complete-mode t)))
-      (defadvice ac-expand (before advice-for-ac-expand activate)
-        (when (yas-expand)
-          (ac-stop)))
-
-      (yas-reload-all)
-      (add-hook 'prog-mode-hook 'yas-minor-mode)
-      (add-hook 'html-mode-hook 'yas-minor-mode)))
+** more pcomplete
+#+BEGIN_SRC emacs-lisp
+  (use-package pcomplete-extension :ensure pcomplete-extension)
 #+END_SRC
 ** smartparens
 
@@ -780,11 +897,106 @@ Load ac backend for html.
         (sp-remove-active-pair-overlay))))
 #+END_SRC
 
-** more pcomplete
+** undo-tree
+Before loading evil, configure undo-tree.
 #+BEGIN_SRC emacs-lisp
-  (use-package pcomplete-extension :ensure pcomplete-extension)
+  (use-package undo-tree
+    :ensure t
+    :init
+    (progn
+      (setq undo-tree-auto-save-history t
+            undo-tree-history-directory-alist `(("." . ,(concat user-data-directory "undo")))
+            undo-tree-visualizer-timestamps t
+            undo-tree-visualizer-diff t)))
+#+END_SRC
+** yassnippets
+#+BEGIN_SRC emacs-lisp :tangle no
+  (use-package yasnippet
+    :ensure t
+    :config
+    (progn
+      (let* ((yas-install-dir (car (file-expand-wildcards (concat package-user-dir "/yasnippet-*"))))
+             (dir (concat yas-install-dir "/snippets/js-mode")))
+        (when (file-exists-p dir)
+          (delete-directory dir t)))
+
+      (setq yas-fallback-behavior 'return-nil
+            yas-also-auto-indent-first-line t)
+      (add-to-list 'yas-snippet-dirs (concat user-emacs-directory "snippets"))
+      (add-hook 'yas-before-expand-snippet-hook
+                (lambda () (auto-complete-mode -1)))
+      (add-hook 'yas-after-exit-snippet-hook
+                (lambda () (auto-complete-mode t)))
+      (defadvice ac-expand (before advice-for-ac-expand activate)
+        (when (yas-expand)
+          (ac-stop)))
+
+      (yas-reload-all)
+      (add-hook 'prog-mode-hook 'yas-minor-mode)
+      (add-hook 'html-mode-hook 'yas-minor-mode)))
 #+END_SRC
 * navigation utilities
+** ag
+#+BEGIN_SRC emacs-lisp
+  (use-package ag :ensure t)
+#+END_SRC
+** bookmarks
+   bookmarks in the data dir too.
+#+BEGIN_SRC emacs-lisp
+  (setq bookmark-default-file (concat user-emacs-directory "bookmarks")
+        bookmark-save-flag 1 ) ;; save after every change
+#+END_SRC
+** google-this
+#+BEGIN_SRC emacs-lisp
+  (use-package google-this :ensure t)
+#+END_SRC
+** helm
+#+BEGIN_SRC emacs-lisp
+      (use-package helm
+        :ensure t
+        :config
+        (progn
+          (require 'helm-config)
+
+          (setq helm-adaptive-history-file (concat user-data-directory "helm-history"))
+          (setq helm-ff-transformer-show-only-basename nil
+                helm-command-prefix-key                "C-c h"
+                helm-quick-update                      t
+                helm-yank-symbol-first                 t
+                helm-move-to-line-cycle-in-source      t
+                helm-buffers-fuzzy-matching            t
+                helm-bookmark-show-location            t
+                helm-split-window-in-side-p            t
+                helm-ff-file-name-history-use-recentf  t
+                helm-ff-auto-update-initial-value      t)
+
+          (helm-mode 1)
+          (helm-adaptative-mode 1)
+          (helm-autoresize-mode 1)
+
+          (autoload 'helm-descbinds      "helm-descbinds" t)
+          (autoload 'helm-eshell-history "helm-eshell"    t)
+          (autoload 'helm-esh-pcomplete  "helm-eshell"    t)
+
+          (add-hook 'eshell-mode-hook
+                    #'(lambda ()
+                        (define-key eshell-mode-map
+                          (kbd "<tab>")     #'helm-esh-pcomplete)
+                        (define-key eshell-mode-map
+                          (kbd "C-c C-l") #'helm-eshell-history)))
+      
+          (when (executable-find "curl")
+            (setq helm-google-suggest-use-curl-p t))
+
+          (use-package helm-company :ensure t)
+          (use-package helm-swoop :ensure t)
+          (use-package helm-ag :ensure t)
+          (use-package helm-projectile
+            :ensure t
+            :config (helm-projectile-on))
+          (use-package helm-descbinds :ensure t)))
+#+END_SRC
+
 ** registers
 #+BEGIN_SRC emacs-lisp
   (set-register ?e '(file . "~/.emacs.d/config.org"))
@@ -794,64 +1006,6 @@ Load ac backend for html.
   (set-register ?q '(file . "~/org/elastic-quick-search.org"))
   (set-register ?i '(file . "~/.imapfilter/config.lua"))
 #+END_SRC
-** ag
-#+BEGIN_SRC emacs-lisp
-  (use-package ag :ensure t)
-#+END_SRC
-** projectile
-#+BEGIN_SRC emacs-lisp
-  (use-package projectile
-    :ensure t
-    :config
-    (progn
-      (setq projectile-enable-caching t)
-      (projectile-global-mode)))
-#+END_SRC
-** helm
-
-#+BEGIN_SRC emacs-lisp
-  (use-package helm
-    :ensure t
-    :config
-    (progn
-      (require 'helm-config)
-      (setq helm-ff-transformer-show-only-basename nil
-            helm-command-prefix-key                "C-c h"
-            helm-quick-update                      t
-            helm-adaptive-history-file             (concat user-data-directory "helm-history")
-            helm-yank-symbol-first                 t
-            helm-move-to-line-cycle-in-source      t
-            helm-buffers-fuzzy-matching            t
-            helm-bookmark-show-location            t
-            helm-ff-auto-update-initial-value      t)
-      (helm-mode 1)
-      (helm-adaptative-mode 1)
-      (helm-autoresize-mode 1)
-
-      (autoload 'helm-descbinds      "helm-descbinds" t)
-      (autoload 'helm-eshell-history "helm-eshell"    t)
-      (autoload 'helm-esh-pcomplete  "helm-eshell"    t)
-
-      (add-hook 'eshell-mode-hook
-                #'(lambda ()
-                    (define-key eshell-mode-map (kbd "<tab>")     #'helm-esh-pcomplete)
-                    (define-key eshell-mode-map (kbd "C-c C-l") #'helm-eshell-history)))
-
-      (use-package helm-company :ensure t)
-      (use-package helm-swoop :ensure t)
-      (use-package helm-ag :ensure t)
-      (use-package helm-projectile
-        :ensure t
-        :config (helm-projectile-on))
-      (use-package helm-descbinds :ensure t)))
-#+END_SRC
-
-** goto-last-change (needed for evil)
-
-#+BEGIN_SRC emacs-lisp
-  (use-package goto-last-change :ensure t)
-#+END_SRC
-
 * programming languages
 ** Perl
 
@@ -1072,6 +1226,12 @@ Syntax highlighting for ssh config, nginx config, vimrc (haha), yaml and lua.
 * evil keybindings
 Setup evil with some very vim-like defaults.
 
+** goto-last-change (needed for evil)
+
+#+BEGIN_SRC emacs-lisp
+  (use-package goto-last-change :ensure t)
+#+END_SRC
+
 ** turn on evil
 #+BEGIN_SRC emacs-lisp
   (use-package evil
@@ -1272,9 +1432,10 @@ Also, let's make org-return work while we're at it.
   (defadvice evil-quit-all (around advice-for-evil-quit-all activate)
     (message "Thou shall not quit!"))
 #+END_SRC
+
 * Stuff to look at
 ** TODO install rings
 ** TODO install scpaste
 ** TODO install spaces
 ** TODO install sublimity
-** TODO install stripe-buffer
+** SODO install stripe-buffer
