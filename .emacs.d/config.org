@@ -71,11 +71,12 @@ and ... don't bother loading it. customize settings are nice, but they tend to n
 There are a few packages that need to be loaded before anything else,
 because I use them through out this file.
 #+BEGIN_SRC emacs-lisp
-  (use-package after)
-  (use-package bind)
-  (use-package f :ensure t)
-  (use-package request :ensure t)
-  (use-package my-util)
+    (use-package after)
+    (use-package bind)
+    (use-package f :ensure t)
+    (use-package request :ensure t
+      :config (setq request-storage-directory (concat user-data-directory "request")))
+    (use-package my-util)
 #+END_SRC
 
 ** server
@@ -354,6 +355,10 @@ Use ethan-wspace to handle whitespace issues.
     :config
     (progn
       (setq projectile-enable-caching t)
+      (setq projectile-cache-file (concat user-data-directory "projectile.cache"))
+      (setq projectile-known-projects-file
+            (concat user-data-directory "projectile-bookmarks.eld"))
+    
       (projectile-global-mode)))
 #+END_SRC
 
@@ -943,7 +948,7 @@ Before loading evil, configure undo-tree.
 ** bookmarks
    bookmarks in the data dir too.
 #+BEGIN_SRC emacs-lisp
-  (setq bookmark-default-file (concat user-emacs-directory "bookmarks")
+  (setq bookmark-default-file (concat user-data-directory "bookmarks")
         bookmark-save-flag 1 ) ;; save after every change
 #+END_SRC
 ** google-this
