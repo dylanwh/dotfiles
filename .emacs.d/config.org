@@ -162,7 +162,7 @@ Choose font size based on hostname
 
   (cl-case (intern system-name-short)
     (thor     (set-frame-font "Fira Mono Medium-10" nil t))
-    (mac-thor (set-frame-font "Source Code Pro Light-12" nil t))
+    (mac-thor (set-frame-font "Source Code Pro Light-14" nil t))
     (freya    (set-frame-font "Fira Mono Medium-10")))
 #+END_SRC
 
@@ -176,10 +176,22 @@ Install solarized
         solarized-use-more-italic t
         solarized-use-variable-pitch nil)
 
-   (use-package solarized-theme :ensure t
-     :config (load-theme 'solarized-dark t t))
+  (use-package solarized-theme :ensure t
+    :config (progn
+              (load-theme 'solarized-dark t t)
+              (load-theme 'solarized-light t t)))
 
-   (enable-theme 'solarized-dark)
+  (enable-theme 'solarized-dark)
+
+  (defun my-solarized-toggle ()
+    (interactive)
+    (cond
+     ((member 'solarized-dark custom-enabled-themes)
+      (disable-theme 'solarized-dark)
+      (enable-theme 'solarized-light))
+     ((member 'solarized-light custom-enabled-themes)
+      (disable-theme 'solarized-light)
+      (enable-theme 'solarized-dark))))
 #+END_SRC
 
 #+BEGIN_SRC emacs-lisp
@@ -354,11 +366,13 @@ Use ethan-wspace to handle whitespace issues.
   (use-package projectile :ensure t
     :config
     (progn
-      (setq projectile-enable-caching t)
-      (setq projectile-cache-file (concat user-data-directory "projectile.cache"))
+      (setq projectile-enable-caching t
+            projectile-tags-command "echo /usr/bin/etags.ctags -Re -f \"%s\" %s")
+      (setq projectile-cache-file
+            (concat user-data-directory "projectile.cache"))
       (setq projectile-known-projects-file
             (concat user-data-directory "projectile-bookmarks.eld"))
-    
+  
       (projectile-global-mode)))
 #+END_SRC
 
@@ -480,18 +494,20 @@ This is basically just a shortcut to spawn an eshell in the bz-dir and a "cdb" e
 #+BEGIN_SRC emacs-lisp
   (defun bzshell ()
     (interactive)
-    (let ((default-directory bz-dir)
-          (eshell-buffer-name "*bzshell*"))
+    (let* ((default-directory bz-dir)
+           (eshell-buffer-name "*bzshell*"))
       (eshell)))
 
   (defun eshell/cdb (bug-id)
-    (cd bz-dir)
-    (let* ((default-directory bz-dir)
-           (bug-dir (shell-command-to-string (format "bz path %s" bug-id))))
-      (with-parsed-tramp-file-name default-directory nil
-        (message default-directory)
-        (cd (tramp-make-tramp-file-name method user host bug-dir hop))))
-    (shell-command-to-string "bz summary"))
+    (let ((new-dir
+           (let* ((default-directory bz-dir)
+                  (bug-dir (shell-command-to-string (format "bz path %s" bug-id))))
+             (with-parsed-tramp-file-name default-directory nil
+               (tramp-make-tramp-file-name method user host bug-dir hop)))))
+      (eshell/cd new-dir)
+      (shell-command-to-string "bz summary")))
+
+
 #+END_SRC
 
 ** git-annex
@@ -560,6 +576,10 @@ This just adds a few things to dired mode.
    (defun my-guess-sent-folder (msg)
      (concat "/" (my-guess-email-account msg) "/sent"))
 
+   (defun my-imapfilter ()
+     (interactive)
+     (async-shell-command "imapfilter" "*imapfilter*"))
+
    (when (executable-find "mu")
      (use-package mu4e
        :commands mu4e
@@ -578,7 +598,7 @@ This just adds a few things to dired mode.
 
          (when (executable-find "w3m")
            (setq mu4e-html2text-command "w3m -T text/html"))
-      
+
          (setq mu4e-sent-folder #'my-guess-sent-folder
                mu4e-drafts-folder "/fastmail/drafts"
                mu4e-trash-folder #'my-guess-trash-folder
@@ -664,6 +684,12 @@ This just adds a few things to dired mode.
      (interactive)
      (message (f-read (concat (projectile-project-root) "/data/summary"))))
 
+   (defun bz-checksetup ()
+     "Run checksetup.pl in the current project"
+     (interactive)
+     (projectile-with-default-dir (projectile-project-root)
+       (async-shell-command "perl checksetup.pl")))
+
    (defun bmo-sql ()
      "Launch an iSQL buffer connected to bugzilla.local"
      (interactive)
@@ -679,7 +705,6 @@ This just adds a few things to dired mode.
                     (sql-password ,(funcall (plist-get auth-result ':secret)))))))
        (sql-connect 'bmo "bmo-sql")))
 
-
    (defun bmo-summary (bug-id)
      (let ((bug-dir (f-join bz-dir (format "htdocs/%s" bug-id))))
        (if (f-dir? bug-dir)
@@ -692,6 +717,11 @@ This just adds a few things to dired mode.
  #+END_SRC
 ** org-mode
 #+BEGIN_SRC emacs-lisp
+  (require 'org-mouse)
+  (require 'org-protocol)
+  (require 'org-eshell)
+  (require 'org-mobile)
+  (require 'ob-js)
 
   (setq org-agenda-files '("~/org/bugzilla.org"
                            "~/.emacs.d/config.org"
@@ -702,10 +732,6 @@ This just adds a few things to dired mode.
                                    (perl . t)
                                    (sql . t)
                                    (js . t)))
-
-  (require 'org-mouse)
-  (require 'org-protocol)
-  (require 'org-eshell)
 
   (setq org-confirm-babel-evaluate              nil
         org-confirm-elisp-link-function         nil
@@ -718,7 +744,7 @@ This just adds a few things to dired mode.
         org-return-follows-link                 t
         org-src-fontify-natively                t
         org-tab-follows-link                    t
-        org-tags-column                         120)
+        org-tags-column                         140)
 #+END_SRC
 *** Load epresent, for presentations from org-mode buffers
 
@@ -771,6 +797,10 @@ For wrting reports and other documentation.
    (add-to-list 'org-link-abbrev-alist '("cpan" . "https://metacpan.org/pod/%h"))
  #+END_SRC
 
+*** mediawiki
+#+BEGIN_SRC emacs-lisp
+(use-package ox-mediawiki :ensure t)
+#+END_SRC
 ** ham-mode
    Html As Markdown. Transparently edit an html file using markdown.
 
@@ -807,43 +837,14 @@ For wrting reports and other documentation.
   (use-package xkcd :ensure t :commands xkcd)
 #+END_SRC
 * typing utilities
-** auto-complete
-Load auto-complete.
-#+BEGIN_SRC emacs-lisp
-  (use-package auto-complete
-    :ensure t
-    :init
-    (progn
-      (require 'auto-complete-config)
-      (setq ac-auto-show-menu t
-            ac-auto-start t
-            ac-comphist-file (concat user-data-directory "ac-comphist.dat")
-            ac-quick-help-delay 0.3
-            ac-quick-help-height 30
-            ac-show-menu-immediately-on-auto-complete t)
-      (ac-config-default)
+** company-mode
 
-      (when (fboundp 'linum-mode)
-        (ac-linum-workaround))))
+#+BEGIN_SRC emacs-lisp
+  (use-package company :ensure t)
 #+END_SRC
 
-*** ac-etags
-Load ac backend for etags.
 #+BEGIN_SRC emacs-lisp
-  (use-package ac-etags
-    :ensure t
-    :init
-    (progn
-      (setq ac-etags-requires 1)
-      (ac-etags-setup)))
-#+END_SRC
-
-*** ac-html
-Load ac backend for html.
-#+BEGIN_SRC emacs-lisp
-  (use-package ac-html
-    :ensure t
-    :init (add-hook 'html-mode-hook 'ac-html-enable))
+  (use-package company-quickhelp :ensure t)
 #+END_SRC
 
 ** guide-key
@@ -932,9 +933,6 @@ Before loading evil, configure undo-tree.
                 (lambda () (auto-complete-mode -1)))
       (add-hook 'yas-after-exit-snippet-hook
                 (lambda () (auto-complete-mode t)))
-      (defadvice ac-expand (before advice-for-ac-expand activate)
-        (when (yas-expand)
-          (ac-stop)))
 
       (yas-reload-all)
       (add-hook 'prog-mode-hook 'yas-minor-mode)
@@ -957,49 +955,54 @@ Before loading evil, configure undo-tree.
 #+END_SRC
 ** helm
 #+BEGIN_SRC emacs-lisp
-      (use-package helm
+  (use-package helm
+    :ensure t
+    :config
+    (progn
+      (require 'helm-config)
+
+      (setq helm-adaptive-history-file (concat user-data-directory "helm-history"))
+      (setq helm-ff-transformer-show-only-basename nil
+            helm-command-prefix-key                "C-c h"
+            helm-quick-update                      t
+            helm-yank-symbol-first                 t
+            helm-move-to-line-cycle-in-source      t
+            helm-buffers-fuzzy-matching            t
+            helm-bookmark-show-location            t
+            helm-split-window-in-side-p            t
+            helm-ff-file-name-history-use-recentf  t
+            helm-ff-auto-update-initial-value      t)
+
+      (helm-mode 1)
+      (helm-adaptative-mode 1)
+      (helm-autoresize-mode 1)
+
+      (autoload 'helm-descbinds      "helm-descbinds" t)
+      (autoload 'helm-eshell-history "helm-eshell"    t)
+      (autoload 'helm-esh-pcomplete  "helm-eshell"    t)
+
+      (add-hook 'eshell-mode-hook
+                #'(lambda ()
+                    (define-key eshell-mode-map
+                      (kbd "<tab>")     #'helm-esh-pcomplete)
+                    (define-key eshell-mode-map
+                      (kbd "C-c C-l") #'helm-eshell-history)))
+
+      (when (executable-find "curl")
+        (setq helm-google-suggest-use-curl-p t))
+
+      ;(use-package helm-company :ensure t)
+      (use-package helm-swoop :ensure t)
+      (use-package helm-ag :ensure t)
+      (use-package helm-projectile
         :ensure t
-        :config
-        (progn
-          (require 'helm-config)
+        :config (helm-projectile-on))
+      (use-package helm-descbinds :ensure t)))
 
-          (setq helm-adaptive-history-file (concat user-data-directory "helm-history"))
-          (setq helm-ff-transformer-show-only-basename nil
-                helm-command-prefix-key                "C-c h"
-                helm-quick-update                      t
-                helm-yank-symbol-first                 t
-                helm-move-to-line-cycle-in-source      t
-                helm-buffers-fuzzy-matching            t
-                helm-bookmark-show-location            t
-                helm-split-window-in-side-p            t
-                helm-ff-file-name-history-use-recentf  t
-                helm-ff-auto-update-initial-value      t)
-
-          (helm-mode 1)
-          (helm-adaptative-mode 1)
-          (helm-autoresize-mode 1)
-
-          (autoload 'helm-descbinds      "helm-descbinds" t)
-          (autoload 'helm-eshell-history "helm-eshell"    t)
-          (autoload 'helm-esh-pcomplete  "helm-eshell"    t)
-
-          (add-hook 'eshell-mode-hook
-                    #'(lambda ()
-                        (define-key eshell-mode-map
-                          (kbd "<tab>")     #'helm-esh-pcomplete)
-                        (define-key eshell-mode-map
-                          (kbd "C-c C-l") #'helm-eshell-history)))
-      
-          (when (executable-find "curl")
-            (setq helm-google-suggest-use-curl-p t))
-
-          (use-package helm-company :ensure t)
-          (use-package helm-swoop :ensure t)
-          (use-package helm-ag :ensure t)
-          (use-package helm-projectile
-            :ensure t
-            :config (helm-projectile-on))
-          (use-package helm-descbinds :ensure t)))
+  (defun my-projectile-helm-ag ()
+    (interactive)
+    (projectile-with-default-dir (projectile-project-root)
+      (helm-ag)))
 #+END_SRC
 
 ** registers
@@ -1077,6 +1080,7 @@ Before loading evil, configure undo-tree.
 
   (defun my-perl-module-name (file)
     (replace-regexp-in-string "/" "::" (f-no-ext (my-perl-module-file file))))
+
 #+END_SRC
 ** Javascript
 #+BEGIN_SRC emacs-lisp
@@ -1100,6 +1104,7 @@ Before loading evil, configure undo-tree.
                 (lambda ()
                   (local-set-key (kbd "C-c C-c") 'js-ctrl-c-ctrl-c)))
       (setq js2-highlight-level 3)
+      (setq js2-global-externs (list "$" "window" "BUGZILLA"))
       (setq-default js2-basic-offset 4)))
 
   (use-package js2-refactor
@@ -1137,7 +1142,7 @@ Before loading evil, configure undo-tree.
           ("template-toolkit" . "\\.tmpl\\'")))
 #+END_SRC
 #+BEGIN_SRC emacs-lisp
-  (add-to-list 'auto-mode-alist '("\\.css\\'" . rainbow-mode))
+  (add-to-list 'auto-mode-alist '("\\.css\\'" . css-mode))
 #+END_SRC
 ** config files
 Syntax highlighting for ssh config, nginx config, vimrc (haha), yaml and lua.
@@ -1209,6 +1214,9 @@ Syntax highlighting for ssh config, nginx config, vimrc (haha), yaml and lua.
   (global-set-key (kbd "C-c c") 'org-capture)
   (global-set-key (kbd "C-c a") 'org-agenda)
   (global-set-key (kbd "C-c l") 'org-store-link)
+  (global-set-key (kbd "C-c i") 'my-imapfilter)
+  (global-set-key (kbd "C-c b c") 'bz-checksetup)
+  (global-set-key (kbd "C-c m")  'mu4e)
 
   (global-set-key (kbd "C-c s") 'my-goto-scratch-buffer)
 
@@ -1225,8 +1233,7 @@ Syntax highlighting for ssh config, nginx config, vimrc (haha), yaml and lua.
   (global-set-key (kbd "C-r")     'isearch-backward-regexp)
   (global-set-key (kbd "C-M-r")   'isearch-backward)
 
-  (after 'evil
-    (global-set-key (kbd "C-w") 'evil-window-map))
+  (global-set-key (kbd "C-w") 'evil-window-map)
 #+END_SRC
 * evil keybindings
 Setup evil with some very vim-like defaults.
@@ -1243,6 +1250,12 @@ Setup evil with some very vim-like defaults.
     :ensure t
     :init
     (progn
+      (setq evil-search-module           'evil-search
+            evil-symbol-word-search      t
+            evil-magic                   'very-magic
+            evil-want-C-w-delete         nil
+            evil-want-C-w-in-emacs-state t)
+
       (evil-mode 1)
 
       (add-to-list 'evil-emacs-state-modes 'sauron-mode)
@@ -1299,8 +1312,8 @@ Setup evil with some very vim-like defaults.
       (define-key evil-normal-state-map (kbd "g ]") 'etags-select-find-tag-at-point)
       (evil-define-key 'normal emacs-lisp-mode-map (kbd "g d") 'elisp-slime-nav-find-elisp-thing-at-point)
 
-      (define-key evil-normal-state-map (kbd "SPC /") 'projectile-ag)
-      (define-key evil-normal-state-map (kbd "SPC e") 'projectile-recentf)
+      (define-key evil-normal-state-map (kbd "SPC /") 'my-projectile-helm-ag)
+      (define-key evil-normal-state-map (kbd "SPC e") 'helm-projectile-recentf)
       (define-key evil-normal-state-map (kbd "C-p") 'projectile-find-file)
 
       (evil-define-key 'normal js2-mode-map (kbd "g r") 'js2r-rename-var)
@@ -1326,16 +1339,13 @@ Setup evil with some very vim-like defaults.
       (define-key comint-mode-map [up] 'comint-previous-input)
       (define-key comint-mode-map [down] 'comint-next-input)
 
-      (define-key ac-completing-map (kbd "C-n") 'ac-next)
-      (define-key ac-completing-map (kbd "C-p") 'ac-previous)
-
       ;; (define-key company-active-map (kbd "C-n") 'company-select-next)
       ;; (define-key company-active-map (kbd "C-p") 'company-select-previous)
       ;; (define-key company-active-map (kbd "<tab>") 'my-company-tab)
       ;; (define-key company-active-map (kbd "<backtab>") 'company-select-previous)
 
-      (define-key company-mode-map (kbd "<C-return>") 'helm-company)
-      (define-key company-active-map (kbd "<C-return>") 'helm-company)
+      ;; (define-key company-mode-map (kbd "<C-return>") 'helm-company)
+      ;; (define-key company-active-map (kbd "<C-return>") 'helm-company)
       ;; (define-key web-mode-map (kbd "C-c C-d") 'ng-snip-show-docs-at-point)
 
       ))
@@ -1352,6 +1362,7 @@ Setup evil with some very vim-like defaults.
       (evil-leader/set-key
         "w" 'save-buffer
         "e" 'eval-last-sexp
+        "H" 'helm-org-headlines
         "E" 'eval-defun
         "f" 'ctl-x-5-prefix
         "j" 'org-open-at-point
@@ -1368,6 +1379,7 @@ Setup evil with some very vim-like defaults.
         "g a" 'git-gutter+-stage-hunks
         "g r" 'git-gutter+-revert-hunks
         "g c" 'magit-commit
+        "T"   'my-solarized-toggle
         "g l" 'magit-log)))
 #+END_SRC
 ** comment operator (gc)
