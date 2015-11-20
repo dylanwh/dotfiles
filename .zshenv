@@ -11,4 +11,9 @@ have() {
     whence -p "$@" &>/dev/null || return 1
 }
 
+if [[ -z $XDG_RUNTIME_DIR ]]; then
+    XDG_RUNTIME_DIR=/tmp
+    export XDG_RUNTIME_DIR
+fi
+
 # vim: set sw=4 ts=4 foldmethod=marker path=.,~/.zsh/lib,~/:
