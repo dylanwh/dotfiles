@@ -11,16 +11,16 @@ Copy this file to ~/.emacs.d and add the following to ~/.emacs/init.el:
                            ("org" . "http://orgmode.org/elpa/")
                            ("gnu" .  "http://elpa.gnu.org/packages/"))
         package-enable-at-startup nil)
+  
   (package-initialize)
-
   (unless (package-installed-p 'use-package)
     (unless (assoc 'use-package package-archive-contents)
       (package-refresh-contents))
     (package-install 'use-package))
 
   (require 'use-package)
-  (use-package org :ensure t)
-  (org-babel-load-file "~/.emacs.d/config.org")
+(use-package org :ensure t)
+(org-babel-load-file "~/.emacs.d/config.org")
 #+END_SRC
 
 * environment
@@ -52,11 +52,6 @@ to the load-path. This is also where I can put my own utilities functions.
   (add-to-list 'load-path (concat user-emacs-directory "elisp"))
 #+END_SRC
 
-** compile elpa stuff
-We don't store the *.elc files in git, so this needs to run when emacs starts.
-#+BEGIN_SRC emacs-lisp
-  (byte-recompile-directory (expand-file-name "~/.emacs.d/elpa"))
-#+END_SRC
 ** custom.el
 Keep customize settings in its own file (~/.emacs.d/custom.el)
 and ... don't bother loading it. customize settings are nice, but they tend to not be very portable
@@ -171,7 +166,7 @@ Install solarized
 #+BEGIN_SRC emacs-lisp
   (setq solarized-distinct-fringe-background t
         solarized-high-contrast-mode-line nil
-        solarized-scale-org-headlines nil
+        solarized-scale-org-headlines t
         solarized-use-less-bold nil
         solarized-use-more-italic t
         solarized-use-variable-pitch nil)
@@ -498,6 +493,9 @@ This is basically just a shortcut to spawn an eshell in the bz-dir and a "cdb" e
            (eshell-buffer-name "*bzshell*"))
       (eshell)))
 
+  (defun eshell/cdp ()
+    (eshell/cd (projectile-project-root)))
+
   (defun eshell/cdb (bug-id)
     (let ((new-dir
            (let* ((default-directory bz-dir)
@@ -578,7 +576,8 @@ This just adds a few things to dired mode.
 
    (defun my-imapfilter ()
      (interactive)
-     (async-shell-command "imapfilter" "*imapfilter*"))
+     (let ((default-directory (expand-file-name "~/")))
+       (async-shell-command "imapfilter" "*imapfilter*")))
 
    (when (executable-find "mu")
      (use-package mu4e
@@ -653,7 +652,7 @@ This just adds a few things to dired mode.
 
  #+BEGIN_SRC emacs-lisp
    (defvar bz-url "http://bugzilla.local/")
-   (defvar bz-dir "/ssh:bugzilla:/opt/bugzilla")
+   (defvar bz-dir "/ssh:bugzilla.local:/opt/bugzilla")
 
    (defun bz-browse-site ()
      (interactive)
@@ -744,7 +743,7 @@ This just adds a few things to dired mode.
         org-return-follows-link                 t
         org-src-fontify-natively                t
         org-tab-follows-link                    t
-        org-tags-column                         140)
+        org-tags-column                         0)
 #+END_SRC
 *** Load epresent, for presentations from org-mode buffers
 
@@ -757,11 +756,11 @@ This makes it possible to link to bmo bugs using the "bmo:" syntax.
 
 #+BEGIN_SRC emacs-lisp
   (defun my-org-describe-link (link description)
-    (cond (description description)
-          ((string-match "^bmo:\\([0-9]+\\)" link)
+    (cond ((string-match "^bmo:\\([0-9]+\\)" link)
            (let ((bug-id (match-string 1 link)))
-             (format "Bug %s - %s" bug-id (bmo-summary bug-id))))
-          (t link)))
+             (format "Bug %s - %.75s" bug-id (bmo-summary bug-id))))
+          (t (or description link))))
+
 
   (defun my-org-open-bmo (bug-id)
     (browse-url (format "https://bugzilla.mozilla.org/show_bug.cgi?id=%s" bug-id)))
@@ -1265,7 +1264,7 @@ Setup evil with some very vim-like defaults.
       (add-to-list 'evil-insert-state-modes 'racket-repl-mode)
 
       (unless (display-graphic-p)
-        (evil-esc-mode))
+        (evil-esc-mode -1))
 
       (define-key evil-normal-state-map (kbd "SPC o") 'imenu)
       (define-key evil-normal-state-map (kbd "SPC b") 'switch-to-buffer)
@@ -1311,6 +1310,13 @@ Setup evil with some very vim-like defaults.
       (define-key evil-normal-state-map (kbd "SPC L") 'helm-multi-swoop)
       (define-key evil-normal-state-map (kbd "g ]") 'etags-select-find-tag-at-point)
       (evil-define-key 'normal emacs-lisp-mode-map (kbd "g d") 'elisp-slime-nav-find-elisp-thing-at-point)
+
+      ;; I prefer C-a to jump to the beginning of the line.
+      (define-key evil-insert-state-map "\C-a" nil)
+      (define-key evil-insert-state-map "\C-y" nil)
+      (define-key evil-insert-state-map "\C-e" nil)
+      (define-key evil-insert-state-map "\C-k" nil)
+      (define-key evil-insert-state-map "\C-u" nil)
 
       (define-key evil-normal-state-map (kbd "SPC /") 'my-projectile-helm-ag)
       (define-key evil-normal-state-map (kbd "SPC e") 'helm-projectile-recentf)

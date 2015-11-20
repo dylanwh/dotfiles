@@ -3,14 +3,12 @@ use strict;
 use warnings;
 use English;
 use Getopt::Long qw(:config gnu_getopt);
-use utf8::all;
 
 use Eval::Closure;
 use Set::Object;
 use Template;
 use Text::CSV_XS;
 use Text::CSV;
-use Carp::Always;
 
 my (@modules, $file, $expr, $encode);
 my $named = 0;
@@ -166,7 +164,6 @@ __DATA__
 package main;
 no strict;
 use feature 'say', 'switch';
-use utf8::all;
 
 [% FOREACH module IN modules; GET "use $module;\n"; END %]
 
