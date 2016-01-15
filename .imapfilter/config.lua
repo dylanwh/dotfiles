@@ -2,116 +2,211 @@
 -- which we call at the end of the file. This way the meat
 -- of the code comes first, and the specific details come later.
 
-function main()
-    -- my normal @hardison.net account
-    local home = IMAP {
-        server = 'imap.gmail.com',
-        username = 'dylan@hardison.net',
-        password = get_mutt_var("passwd.home", "imap_pass"),
-        ssl = 'ssl3',
-    }
+package.path = package.path .. ";" .. os.getenv("HOME") .. "/.imapfilter/?.lua"
+local callback = require "callback"
 
-    -- my work email account
-    local work = IMAP {
-        server = 'imap.gmail.com',
-        username = 'dylan.hardison@iinteractive.com',
-        password = get_mutt_var("passwd.work", "imap_pass"),
-        ssl = 'ssl3',
-    }
+local fastmail = IMAP {
+    server = 'mail.messagingengine.com',
+    username = 'dylan@hardison.net',
+    password = io.popen("security find-generic-password -s fastmail -w"):read(),
+    ssl = 'tlvs1',
+}
 
-    -- trash rules
-    trash(home, "daily",        is_older(0))
-    trash(home, "security",     is_older(7))
-    trash(home, "suckless",     is_older(7))
-    trash(home, "poe",          is_older(7))
-    trash(home, "templates",    is_older(7))
-    trash(home, "caml",         is_older(7))
-    trash(home, "haskell-cafe", is_older(1))
-    trash(home, "module-authors", is_older(1))
-    trash(home, "debian-news",  is_older(30))
-    trash(home, "bulk",   is_older(15))
+local mozilla = IMAP {
+    server = 'imap.gmail.com',
+    username = 'dhardison@mozilla.com',
+    password = io.popen("security find-generic-password -s mozilla -w"):read(),
+    ssl = 'tlvs1',
+}
 
-    -- archive rules
-    archive(home, "INBOX", is_expired(7))
-    archive(home, "notifications", is_older(2))
-    move(home,    "slug",    "slug/archive",    is_expired(7))
-    move(home,    "billing", "billing/archive", is_expired(15))
-
-
-    -- I only need a few rules for work.
-    trash(work, "linode", is_older(7))
-    trash(work, "issue", is_older(7))
-    trash(work, "daily",  is_older(0))
+function ignore(mbox)
+   return (mbox:contain_from("jobs-listings@linkedin.com")
+              + mbox:contain_from("news@linkedin.com")
+              + mbox:contain_from("email.campaign@sg.booking.com")
+              + mbox:contain_from("CostcoNews@online.costco.com")
+              + mbox:contain_from("verizonwireless2@email.vzwshop.com")
+              + mbox:contain_from("linkedin@e.linkedin.com"))
 end
 
--- This function takes a mutt config file and a variable name,
--- and causes mutt to parse the file and output the value of the variable.
--- the function returns this value.
-function get_mutt_var(file, name)
-    local home = os.getenv("HOME")
-    local cmd = string.format("mutt -F '%s' -Q '%s'", home .. "/.mutt/" .. file, name)
-    local str = io.popen(cmd):read()
-    local m = str:match(name .. '="(.+)"')
-    if m then
-        return m
-    else
-        error("can't get mutt var")
+function move_messages_by_year(account, folder, year)
+   local mbox = account[folder]
+   local msgs = mbox:sent_since("01-Jan-" .. year) * mbox:sent_before("01-Jan-" .. (year+1))
+   local year_folder = folder .. "/" .. year
+   if not account[year_folder] then
+      account:create_mailbox(year_folder)
+   end
+   msgs:move_messages( account[year_folder] );
+   ignore(account[year_folder]):delete_messages()
+end
+
+for year = 2002, 2015 do
+   move_messages_by_year(fastmail, "Archive", year)
+end
+
+local mailinglists    = {
+    act               = { fastmail, "act.mongueurs.net",                     },
+    slug              = { fastmail, "slug.suncoastlug.org",                  },
+    phs               = { fastmail, "Pinellas-Hack-Shack-list.meetup.com", delete_older = 7 },
+    boardgames        = { fastmail, "boardgames@406-list.meetup.com"         },
+    ["slug/announce"] = { fastmail, "slug-announce.suncoastlug.org", age = 1 },
+    mongers           = { fastmail, "pm_groups.pm.org", age = 1              },
+    suckless          = { fastmail, "dev.suckless.org", delete_older = 1     },
+    webdev            = { mozilla, "dev-webdev.lists.mozilla.org"            },
+    bugzilla          = { mozilla, "dev-apps-bugzilla.lists.mozilla.org",    },
+    autotools         = { mozilla, "auto-tools.mozilla.com"                  },
+    devplatform       = { mozilla, "dev-platform@lists.mozilla.org"          },
+}
+
+for folder, action in pairs(mailinglists) do
+    local account, list_id = unpack(action)
+    local listmail = account.INBOX:contain_field("List-Id", list_id)
+    if not account[folder] then
+       account:create_mailbox(folder)
+    end
+    if action.age then
+       listmail = listmail * account.INBOX:is_older(action.age)
+    end
+    listmail:move_messages(account[folder])
+    if action.delete_older then
+       local oldmail = account[folder]:is_older(action.delete_older)
+       oldmail:delete_messages()
     end
 end
 
--- This helper function lets one copy messages
--- between two folders by name, rather than value,
--- and takes a function callback (f) to act as a "predicate".
-function copy(imap, from_name, to_name, f)
-    local from = imap[from_name]
-    local to   = imap[to_name]
-    from:copy_messages(to, f(from))
+function archive(src, dest)
+    local old_msgs = src:is_seen() * src:is_unflagged() * src:is_older(30)
+    old_msgs:move_messages(dest)
 end
 
--- This is almost identical to copy(), except it moves messages
--- instead.
-function move(imap, from_name, to_name, f)
-    local from = imap[from_name]
-    local to   = imap[to_name]
-    from:move_messages(to, f(from))
+do
+   local amazon_from = {
+      "ship-confirm@amazon.com",
+      "auto-confirm@amazon.com",
+      "no-reply@amazon.com",
+      "prime@amazon.com"
+   }
+
+   local amazons
+   for _, email in ipairs(amazon_from) do
+      local v = fastmail.INBOX:contain_from(email)
+      if amazons then
+         amazons = amazons + v
+      else
+         amazons = v
+      end
+   end
+   amazons:move_messages(fastmail.amazon)
 end
 
--- Here, I use the verb "archive", as I use gmail's imap.
--- Deleting mail from a label (or inbox) == archiving it.
-function archive(imap, from_name, f)
-    local from = imap[from_name]
-    from:delete_messages( f(from) )
+if not fastmail.noreply then fastmail:create_mailbox("noreply") end
+fastmail.INBOX:contain_from("noreply"):move_messages(fastmail.noreply)
+fastmail.INBOX:contain_from("noreply"):move_messages(fastmail.noreply)
+fastmail.INBOX:contain_from("do_not_reply"):move_messages(fastmail.noreply)
+fastmail.INBOX:contain_from("no-reply"):move_messages(fastmail.noreply)
+fastmail.INBOX:contain_from("no_reply"):move_messages(fastmail.noreply)
+fastmail.INBOX:contain_from("donotreply"):move_messages(fastmail.noreply)
+fastmail.INBOX:contain_from("do.not.reply"):move_messages(fastmail.noreply)
+fastmail.INBOX:contain_from("DO-NOT-REPLY"):move_messages(fastmail.noreply)
+
+fastmail.INBOX:contain_from("replies@seeclickfix.com"):delete_messages()
+
+do
+   local fbmail = fastmail.INBOX:contain_from("facebookmail.com")
+   local meetmail = fastmail.INBOX:contain_from("info@meetup.com")
+   local twmail = fastmail.INBOX:contain_from("notify@twitter.com")
+   local bounces = fastmail.INBOX:contain_from("bounces@")
+
+   fbmail:delete_messages()
+   meetmail:delete_messages()
+   twmail:delete_messages()
+   bounces:move_messages(fastmail.Archive)
 end
 
--- Trashing mail is the same as moving it to the Trash folder.
-function trash(imap, name, f)
-    move(imap, name, '[Gmail]/Trash', f)
+function get_email(s)
+    local m = s:match("<([^>]+)>")
+    if m then
+        return m
+    else
+       m = s:match("From: (.+)")
+       if m then
+          return m
+       else
+          return s
+       end
+    end
 end
 
--- This is a shortcut for removing mail regardless of which label(es) it is in.
-function trash_all(imap, f)
-    trash(imap, '[Gmail]/All Mail', f)
+do
+   local box = mozilla.INBOX
+   local seen_or_old = (box:is_seen() + box:is_older(2))
+   local crons =  seen_or_old * box:contain_field("List-Id", "cron-bugzilla.mozilla.com")
+   crons:delete_messages()
+
+   local sentry = ( seen_or_old
+                       * box:contain_subject("[Sentry] [BMO]")
+                       * box:contain_from("root@localhost.webapp") )
+   sentry:delete_messages()
+
+   local pto = seen_or_old * box:contain_subject("PTO notification from")
+   if not mozilla.pto then
+      mozilla:create_mailbox("pto")
+   end
+   pto:move_messages(mozilla.pto)
 end
 
 
--- The following are predicate function builders,
--- which is to say they are functions which return functions which return a set of messages to act on.
--- There is nothing special about '_', it is just the 'from' folder object (c.f. move() and copy()).
 
--- An ignored message is something older than age and unseen (unread).
-function is_ignored(age)
-    return function (_) return _:is_older(age) * _:is_unseen() end
+-- clean up things
+function cleanup(dir, rule, age)
+   local msgs = rule(dir)
+   if age then
+      msgs = msgs * dir:is_older(age)
+   end
+   msgs:delete_messages()
 end
 
--- This matches all messages older than age and unflagged (unstarred in gmail terms)
-function is_older(age) 
-    return function (_) return _:is_older(age) * _:is_unflagged() end 
+local cleanup_rules = {
+   { callback:contain_from("messages-noreply@linkedin.com"), age = 7 },
+   { callback:contain_from("noreply@soylentnews.org"),       age = 1 },
+   { callback:contain_from("no-reply@twitch.tv"),            age = 1 },
+   { callback:contain_from("noreply@fitbit.com"),            age = 1 },
+   { callback:contain_from("pages.plusgoogle.com"),          age = 1 },
+   { callback:contain_from("@linkedin.com"),          age = 0 },
+   { callback:contain_from("@pearltrees.com"),         age = 0 },
+   { callback:contain_from("no-reply@duolingo.com"),   age = 0 },
+   { callback:contain_from("no-reply@endomondo.com"),  age = 0 },
+   { callback:contain_from("noreply@youtube.com"), age = 0 },
+   { callback:contain_from("googleplay-noreply@google.com"), age = 0 },
+}
+
+for _, rule in ipairs(cleanup_rules) do
+   local f = unpack(rule)
+   cleanup(fastmail.noreply, f, rule.age)
 end
 
--- Same, except ignores unseen messages. Used on the inbox, slug, and billing folders/labels.
-function is_expired(age)
-    return function (_) return _:is_older(age) * _:is_seen() * _:is_unflagged() end
+fastmail.noreply:contain_subject("Payment"):move_messages(fastmail.billing)
+
+do
+   mozilla.bugmail:contain_field("X-Bugzilla-Type", "request"):move_messages(mozilla['bugmail/request'])
+
+   local nag = mozilla.bugmail:contain_field("X-Bugzilla-Type", "nag") * mozilla.bugmail:is_older(1)
+   nag:delete_messages()
+
+   local notme = mozilla.bugmail:is_unseen()
+      - mozilla.bugmail:contain_field("X-Bugzilla-Assigned-To", "dylan@mozilla.com")
+      - mozilla.bugmail:contain_field("X-Bugzilla-Assigned-To", "nobody@mozilla.org")
+   notme:mark_seen()
+   
 end
 
+(mozilla.bugmail:is_seen() * mozilla.bugmail:is_older(1)):delete_messages()
+mozilla.bugmail:is_older(7):delete_messages()
+mozilla.github:is_older(7):delete_messages()
+mozilla.webdev:is_older(28):delete_messages()
 
-main() -- and now we begin executing the meat of the script.
+ignore(fastmail.INBOX):delete_messages()
+
+archive(mozilla.INBOX, mozilla.Archive)
+archive(fastmail.INBOX, fastmail.Archive)
+archive(fastmail.billing, fastmail["billing/archive"])
+archive(fastmail.noreply, fastmail.Archive)
