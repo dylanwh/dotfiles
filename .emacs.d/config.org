@@ -492,7 +492,6 @@ This is basically just a shortcut to spawn an eshell in the bz-dir and a "cdb" e
     (let* ((default-directory bz-dir)
            (eshell-buffer-name "*bzshell*"))
       (eshell)))
-
   (defun eshell/cdp ()
     (eshell/cd (projectile-project-root)))
 

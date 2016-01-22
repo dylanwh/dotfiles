@@ -20,12 +20,6 @@ local mozilla = IMAP {
 }
 
 function ignore(mbox)
-   return (mbox:contain_from("jobs-listings@linkedin.com")
-              + mbox:contain_from("news@linkedin.com")
-              + mbox:contain_from("email.campaign@sg.booking.com")
-              + mbox:contain_from("CostcoNews@online.costco.com")
-              + mbox:contain_from("verizonwireless2@email.vzwshop.com")
-              + mbox:contain_from("linkedin@e.linkedin.com"))
 end
 
 function move_messages_by_year(account, folder, year)
@@ -36,7 +30,6 @@ function move_messages_by_year(account, folder, year)
       account:create_mailbox(year_folder)
    end
    msgs:move_messages( account[year_folder] );
-   ignore(account[year_folder]):delete_messages()
 end
 
 for year = 2002, 2015 do
@@ -165,22 +158,38 @@ function cleanup(dir, rule, age)
    msgs:delete_messages()
 end
 
+function contain_from(from)
+    return function (dir)
+        return dir:contain_from(from)
+    end
+end
+
 local cleanup_rules = {
-   { callback:contain_from("messages-noreply@linkedin.com"), age = 7 },
-   { callback:contain_from("noreply@soylentnews.org"),       age = 1 },
-   { callback:contain_from("no-reply@twitch.tv"),            age = 1 },
-   { callback:contain_from("noreply@fitbit.com"),            age = 1 },
-   { callback:contain_from("pages.plusgoogle.com"),          age = 1 },
-   { callback:contain_from("@linkedin.com"),          age = 0 },
-   { callback:contain_from("@pearltrees.com"),         age = 0 },
-   { callback:contain_from("no-reply@duolingo.com"),   age = 0 },
-   { callback:contain_from("no-reply@endomondo.com"),  age = 0 },
-   { callback:contain_from("noreply@youtube.com"), age = 0 },
-   { callback:contain_from("googleplay-noreply@google.com"), age = 0 },
+   { contain_from("linkedin.com"),                 age = 0 },
+   { contain_from("@pearltrees.com"),               age = 0 },
+   { contain_from("CostcoNews@online.costco.com"),  age = 0 },
+   { contain_from("email.campaign@sg.booking.com"), age = 0 },
+   { contain_from("googleplay-noreply@google.com"), age = 0 },
+   { contain_from("moveon.org"),                    age = 1 },
+   { contain_from("nfo@democracyforAmerica.com"),   age = 0 },
+   { contain_from("nfo@dga.net"),                   age = 0 },
+   { contain_from("no-reply@duolingo.com"),         age = 0 },
+   { contain_from("no-reply@endomondo.com"),        age = 0 },
+   { contain_from("no-reply@twitch.tv"),            age = 1 },
+   { contain_from("noreply@fitbit.com"),            age = 1 },
+   { contain_from("noreply@soylentnews.org"),       age = 1 },
+   { contain_from("noreply@youtube.com"),           age = 0 },
+   { contain_from("pages.plusgoogle.com"),          age = 1 },
+   { contain_from("targetnews@e.target.com"),       age = 0 },
+   { contain_from("email.vzwshop.com"),             age = 1 },
+   { contain_from("myfitnesspal.com"),              age = 1 },
+   { contain_from("peopleforbikes.org")                     },
+   { contain_from(".codeweavers.com") },
 }
 
 for _, rule in ipairs(cleanup_rules) do
    local f = unpack(rule)
+   cleanup(fastmail.INBOX, f, rule.age)
    cleanup(fastmail.noreply, f, rule.age)
 end
 
@@ -196,15 +205,12 @@ do
       - mozilla.bugmail:contain_field("X-Bugzilla-Assigned-To", "dylan@mozilla.com")
       - mozilla.bugmail:contain_field("X-Bugzilla-Assigned-To", "nobody@mozilla.org")
    notme:mark_seen()
-   
 end
 
 (mozilla.bugmail:is_seen() * mozilla.bugmail:is_older(1)):delete_messages()
 mozilla.bugmail:is_older(7):delete_messages()
 mozilla.github:is_older(7):delete_messages()
 mozilla.webdev:is_older(28):delete_messages()
-
-ignore(fastmail.INBOX):delete_messages()
 
 archive(mozilla.INBOX, mozilla.Archive)
 archive(fastmail.INBOX, fastmail.Archive)
