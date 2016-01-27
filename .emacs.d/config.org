@@ -153,12 +153,13 @@ emacs looks.
 ** fonts
 Choose font size based on hostname
 #+BEGIN_SRC emacs-lisp
-  (defvar system-name-short (car (split-string (system-name) "\\." t)))
+  (let ((system-name-short (car (split-string (system-name) "\\." t))))
+  
+    (cl-case (intern system-name-short)
+      (thor     (set-frame-font "Fira Mono Medium-10" nil t))
+      (mac-thor (set-frame-font "Source Code Pro Light-12" nil t))
+      (freya    (set-frame-font "Source Code Pro-9" nil t))))
 
-  (cl-case (intern system-name-short)
-    (thor     (set-frame-font "Fira Mono Medium-10" nil t))
-    (mac-thor (set-frame-font "Source Code Pro Light-12" nil t))
-    (freya    (set-frame-font "Fira Mono Medium-10")))
 #+END_SRC
 
 ** theme
