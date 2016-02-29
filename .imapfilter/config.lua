@@ -46,6 +46,8 @@ local mailinglists    = {
     suckless          = { fastmail, "dev.suckless.org", delete_older = 1     },
     webdev            = { mozilla, "dev-webdev.lists.mozilla.org"            },
     bugzilla          = { mozilla, "dev-apps-bugzilla.lists.mozilla.org",    },
+    bzdeck            = { fastmail, "bzdeck.bzdeck.github.com", delete_older = 1 },
+    bzdeck            = { fastmail, "bzdeck.bzdeck.github.com", delete_older = 1 },
     autotools         = { mozilla, "auto-tools.mozilla.com"                  },
     devplatform       = { mozilla, "dev-platform@lists.mozilla.org"          },
 }
@@ -101,7 +103,6 @@ fastmail.INBOX:contain_from("donotreply"):move_messages(fastmail.noreply)
 fastmail.INBOX:contain_from("do.not.reply"):move_messages(fastmail.noreply)
 fastmail.INBOX:contain_from("DO-NOT-REPLY"):move_messages(fastmail.noreply)
 
-fastmail.INBOX:contain_from("replies@seeclickfix.com"):delete_messages()
 
 do
    local fbmail = fastmail.INBOX:contain_from("facebookmail.com")
@@ -170,9 +171,13 @@ local cleanup_rules = {
    { contain_from("CostcoNews@online.costco.com"),  age = 0 },
    { contain_from("email.campaign@sg.booking.com"), age = 0 },
    { contain_from("googleplay-noreply@google.com"), age = 0 },
-   { contain_from("moveon.org"),                    age = 1 },
+   { contain_from("moveon.org"),                    age = 0 },
+   { contain_from("info@twitter.com"),                    age = 0 },
+   { contain_from("info@e.twitter.com"),                    age = 0 },
+   { contain_from("Team@mint.com"),                    age = 0 },
+   { contain_from("mapmyfitness.messages4.com"),    age = 0 },
    { contain_from("nfo@democracyforAmerica.com"),   age = 0 },
-   { contain_from("nfo@dga.net"),                   age = 0 },
+   { contain_from("@dga.net"),                   age = 0 },
    { contain_from("no-reply@duolingo.com"),         age = 0 },
    { contain_from("no-reply@endomondo.com"),        age = 0 },
    { contain_from("no-reply@twitch.tv"),            age = 1 },
@@ -184,13 +189,21 @@ local cleanup_rules = {
    { contain_from("email.vzwshop.com"),             age = 1 },
    { contain_from("myfitnesspal.com"),              age = 1 },
    { contain_from("peopleforbikes.org")                     },
-   { contain_from(".codeweavers.com") },
+   { contain_from(".codeweavers.com"),              age = 0 },
+   { contain_from("berniesanders.com"),             age = 0 },
+   { contain_from("graysonforcongress.com"),        age = 0 },
+   { contain_from("noreply@exact.publix.com"),        age = 0 },
+   { contain_from("no-reply@exact.publix.com"),        age = 0 },
+   { contain_from("velocity@ac.travelocity.com"),        age = 0 },
+   { contain_from("brighthouse@care.brighthouse.com"),        age = 0 },
+   { contain_from("upershuttle@supershuttle.com"),        age = 0 }
 }
 
 for _, rule in ipairs(cleanup_rules) do
    local f = unpack(rule)
    cleanup(fastmail.INBOX, f, rule.age)
    cleanup(fastmail.noreply, f, rule.age)
+   cleanup(fastmail.billing, f, rule.age)
 end
 
 fastmail.noreply:contain_subject("Payment"):move_messages(fastmail.billing)

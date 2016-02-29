@@ -171,6 +171,7 @@ if [[ -o zle ]]; then
 fi
 ## }}}
 ## {{{ ALIASES
+alias runti='docker run -ti'
 alias ack='noglob ack'
 alias cp='cp -i'
 alias cpanm-test='command cpanm'
