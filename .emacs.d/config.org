@@ -649,8 +649,8 @@ This just adds a few things to dired mode.
    - [[*bmo eshell stuff][bmo eshell stuff]] 
 
  #+BEGIN_SRC emacs-lisp
-   (defvar bz-url "http://bugzilla.local/")
-   (defvar bz-dir "/scp:bugzilla.local:/opt/bugzilla")
+   (defvar bz-url "http://bugzilla.vm/")
+   (defvar bz-dir "/scp:bugzilla.vm:/opt/bugzilla")
 
    (defun bz-browse-site ()
      (interactive)
@@ -688,15 +688,15 @@ This just adds a few things to dired mode.
        (async-shell-command "perl checksetup.pl")))
 
    (defun bmo-sql ()
-     "Launch an iSQL buffer connected to bugzilla.local"
+     "Launch an iSQL buffer connected to bugzilla.vm"
      (interactive)
 
      (let* ((auth-result (car (auth-source-search
-                               :host "bugzilla.local"
+                               :host "bugzilla.vm"
                                :port "mysql")))
             (sql-connection-alist
              `((bmo (sql-product 'mysql)
-                    (sql-server "bugzilla.local")
+                    (sql-server "bugzilla.vm")
                     (sql-user ,(plist-get auth-result ':user))
                     (sql-database "bugs_bmo")
                     (sql-password ,(funcall (plist-get auth-result ':secret)))))))
@@ -830,8 +830,18 @@ For wrting reports and other documentation.
 #+END_SRC
 ** xkcd
 
+
 #+BEGIN_SRC emacs-lisp
   (use-package xkcd :ensure t :commands xkcd)
+#+END_SRC
+** url decode region
+#+BEGIN_SRC emacs-lisp
+  (defun url-decode-region (start end)
+    "Replace a region with the same contents, only URL decoded."
+    (interactive "r")
+    (let ((text (url-unhex-string (buffer-substring start end))))
+      (delete-region start end)
+      (insert text)))
 #+END_SRC
 * typing utilities
 ** company-mode
