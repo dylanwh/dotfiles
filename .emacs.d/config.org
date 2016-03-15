@@ -359,6 +359,12 @@ Use ethan-wspace to handle whitespace issues.
 * file management
 ** projectile
 #+BEGIN_SRC emacs-lisp
+  (defun my-project-name (project-root)
+    (let ((summary-file (concat project-root "/data/summary")))
+      (if (f-exists? summary-file)
+          (f-read summary-file)
+        (projectile-default-project-name project-root))))
+
   (use-package projectile :ensure t
     :config
     (progn
@@ -368,7 +374,8 @@ Use ethan-wspace to handle whitespace issues.
             (concat user-data-directory "projectile.cache"))
       (setq projectile-known-projects-file
             (concat user-data-directory "projectile-bookmarks.eld"))
-  
+      (setq projectile-project-name-function #'my-project-name)
+
       (projectile-global-mode)))
 #+END_SRC
 
@@ -1260,7 +1267,7 @@ Setup evil with some very vim-like defaults.
 #+BEGIN_SRC emacs-lisp
   (use-package evil
     :ensure t
-    :init
+    :config
     (progn
       (setq evil-search-module           'evil-search
             evil-symbol-word-search      t
