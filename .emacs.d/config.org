@@ -101,12 +101,17 @@ I always want an emacs server running.
  #+END_SRC
 ** platform tests
  #+BEGIN_SRC emacs-lisp
+   (defun my-osx-tweaks ()
+     (if (executable-find "gls")
+         (setq insert-directory-program "/usr/local/bin/gls"))
+     (if (executable-find "trash")
+         (use-package osx-trash :ensure t))
+     (use-package reveal-in-osx-finder :ensure t)
+     (setq mac-option-modifier 'meta
+           mac-command-modifier 'super))
+
    (cl-case system-type
-     (darwin (progn
-               (if (executable-find "gls")
-                 (setq insert-directory-program "/usr/local/bin/gls"))
-               (if (executable-find "trash")
-                   (use-package osx-trash :ensure t)))))
+     (darwin (my-osx-tweaks)))
  #+END_SRC
 
 * general settings
@@ -263,10 +268,9 @@ and allow 256 xterm colors.
   (use-package uniquify
     :init
     (progn
-      (setq uniquify-buffer-name-style 'forward
+      (setq uniquify-buffer-name-style 'post-forward-angle-brackets  
             uniquify-separator "/"
-                                          ; leave special buffers alone
-            uniquify-ignore-buffers-re "^\\*"
+            uniquify-ignore-buffers-re "^\\*" ; leave special buffers alone
             uniquify-after-kill-buffer-p t)))
 
   (add-hook 'compilation-filter-hook
@@ -311,7 +315,11 @@ Use ethan-wspace to handle whitespace issues.
 #+BEGIN_SRC emacs-lisp
   (setq mode-require-final-newline nil)
 
-  (use-package ethan-wspace :ensure t)
+  ;; (use-package ethan-wspace :ensure t)
+#+END_SRC
+** special face for FIXME/BUG/TODO
+#+BEGIN_SRC emacs-lisp
+  (use-package fic-mode :ensure t)
 #+END_SRC
 * save places, history, recent files and backups
 ** saveplace
@@ -500,6 +508,7 @@ This is basically just a shortcut to spawn an eshell in the bz-dir and a "cdb" e
     (let* ((default-directory bz-dir)
            (eshell-buffer-name "*bzshell*"))
       (eshell)))
+
   (defun eshell/cdp ()
     (eshell/cd (projectile-project-root)))
 
@@ -553,6 +562,8 @@ This just adds a few things to dired mode.
 #+BEGIN_SRC emacs-lisp
   (require 'tramp)
   (setq tramp-inline-compress-start-size (* 1024 1024)
+        tramp-copy-size-limit nil
+        tramp-process-connection-type t
         tramp-persistency-file-name (concat user-data-directory "tramp"))
   (add-to-list 'tramp-remote-path 'tramp-own-remote-path)
   (add-to-list 'tramp-remote-path "/usr/local/bin")
@@ -661,11 +672,11 @@ This just adds a few things to dired mode.
 
    (defun bz-browse-site ()
      (interactive)
-     (browse-url (concat bz-url (projectile-project-name))))
+     (browse-url (concat bz-url (projectile-default-project-name (projectile-project-root)))))
 
    (defun bz-browse-bug ()
      (interactive)
-     (let ((bug-id (projectile-project-name)))
+     (let ((bug-id (projectile-default-project-name (projectile-project-root))))
        (when (string-match "^[0-9]+$" bug-id)
          (browse-url (concat  "https://bugzilla.mozilla.org/show_bug.cgi?id=" bug-id)))))
 
@@ -693,21 +704,6 @@ This just adds a few things to dired mode.
      (interactive)
      (projectile-with-default-dir (projectile-project-root)
        (async-shell-command "perl checksetup.pl")))
-
-   (defun bmo-sql ()
-     "Launch an iSQL buffer connected to bugzilla.vm"
-     (interactive)
-
-     (let* ((auth-result (car (auth-source-search
-                               :host "bugzilla.vm"
-                               :port "mysql")))
-            (sql-connection-alist
-             `((bmo (sql-product 'mysql)
-                    (sql-server "bugzilla.vm")
-                    (sql-user ,(plist-get auth-result ':user))
-                    (sql-database "bugs_bmo")
-                    (sql-password ,(funcall (plist-get auth-result ':secret)))))))
-       (sql-connect 'bmo "bmo-sql")))
 
    (defun bmo-summary (bug-id)
      (let ((bug-dir (f-join bz-dir (format "htdocs/%s" bug-id))))
@@ -1190,6 +1186,10 @@ Syntax highlighting for ssh config, nginx config, vimrc (haha), yaml and lua.
     :ensure t
     :mode "\.git/?config")
 
+  (use-package dockerfile-mode
+    :ensure t
+    :mode "Dockerfile")
+
   (use-package yaml-mode
     :ensure t
     :mode "\\.yml$"
@@ -1465,6 +1465,12 @@ Also, let's make org-return work while we're at it.
       (apply orig args)))
 
   (advice-add 'evil-ret :around #'my-evil-ret)
+#+END_SRC
+
+** evil-magit
+
+#+BEGIN_SRC emacs-lisp
+  (use-package evil-magit :ensure t)
 #+END_SRC
 
 ** disable vi/vim style-exits
