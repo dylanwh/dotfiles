@@ -93,7 +93,7 @@ I always want an emacs server running.
      (exec-path-from-shell-copy-env "PERL5LIB")
      (exec-path-from-shell-copy-env "PERL_MM_OPT")
      (exec-path-from-shell-copy-env "PERL_MB_OPT")
-     (exec-path-from-shell-copy-env "PWSAFE_DATABASE"))
+     (exec-path-from-shell-copy-env "GIT_CEILING_DIRECTORIES"))
 
    (setenv "PAGER" "cat")
    (setenv "GIT_PAGER" "cat")
@@ -159,12 +159,11 @@ emacs looks.
 Choose font size based on hostname
 #+BEGIN_SRC emacs-lisp
   (let ((system-name-short (car (split-string (system-name) "\\." t))))
-  
+
     (cl-case (intern system-name-short)
       (thor     (set-frame-font "Fira Mono Medium-10" nil t))
       (mac-thor (set-frame-font "Source Code Pro Light-12" nil t))
       (freya    (set-frame-font "Source Code Pro-9" nil t))))
-
 #+END_SRC
 
 ** theme
@@ -442,6 +441,9 @@ customize some stuff.
 
   (advice-add 'eshell/cd :around #'around-eshell/cd)
 
+  (defun eshell/ag (pattern)
+    (ag pattern default-directory))
+
   (defun eshell/ff (&rest args)
     "Opens a file in emacs."
     (unless (null args)
@@ -500,22 +502,15 @@ customize some stuff.
                                (cdr (assq 'filename (cdr bookmark))))))))
 #+END_SRC
 *** bmo eshell stuff
-This is basically just a shortcut to spawn an eshell in the bz-dir and a "cdb" eshell command.
 
 #+BEGIN_SRC emacs-lisp
-  (defun bzshell ()
-    (interactive)
-    (let* ((default-directory bz-dir)
-           (eshell-buffer-name "*bzshell*"))
-      (eshell)))
-
   (defun eshell/cdp ()
     (eshell/cd (projectile-project-root)))
 
-  (defun eshell/cdb (bug-id)
+  (defun eshell/cdb (str)
     (let ((new-dir
            (let* ((default-directory bz-dir)
-                  (bug-dir (shell-command-to-string (format "bz path %s" bug-id))))
+                  (bug-dir (shell-command-to-string (format "bz path '%s'" str))))
              (with-parsed-tramp-file-name default-directory nil
                (tramp-make-tramp-file-name method user host bug-dir hop)))))
       (eshell/cd new-dir)
@@ -749,7 +744,13 @@ This just adds a few things to dired mode.
 *** Load epresent, for presentations from org-mode buffers
 
 #+BEGIN_SRC emacs-lisp
-  (use-package epresent :ensure t)
+  (use-package epresent
+    :ensure t
+    :config
+    (progn
+      (setq epresent-src-blocks-visible nil
+            epresent-frame-level 2)))
+            
 #+END_SRC
 
 *** bmo links
@@ -997,10 +998,12 @@ Before loading evil, configure undo-tree.
 
       (add-hook 'eshell-mode-hook
                 #'(lambda ()
+                    ;; (define-key eshell-mode-map
+                    ;;   (kbd "<tab>")     #'helm-esh-pcomplete)
                     (define-key eshell-mode-map
-                      (kbd "<tab>")     #'helm-esh-pcomplete)
+                      (kbd "C-c C-l") #'helm-eshell-history)
                     (define-key eshell-mode-map
-                      (kbd "C-c C-l") #'helm-eshell-history)))
+                      (kbd "C-r") #'helm-eshell-history)))
 
       (when (executable-find "curl")
         (setq helm-google-suggest-use-curl-p t))
@@ -1097,6 +1100,20 @@ Before loading evil, configure undo-tree.
     (replace-regexp-in-string "/" "::" (f-no-ext (my-perl-module-file file))))
 
 #+END_SRC
+
+helm perldoc stuff
+#+BEGIN_SRC emacs-lisp
+  (use-package helm-perldoc
+    :ensure t
+    :init (progn
+            (eval-after-load "cperl-mode"
+              '(progn
+                 (helm-perldoc:setup)))
+
+            ;; auto carton setup
+            (add-hook 'cperl-mode-hook 'helm-perldoc:carton-setup)))
+#+END_SRC
+
 ** Javascript
 #+BEGIN_SRC emacs-lisp
   (defun js-ctrl-c-ctrl-c ()
@@ -1221,6 +1238,14 @@ Syntax highlighting for ssh config, nginx config, vimrc (haha), yaml and lua.
   (use-package bison-mode :ensure t)
 #+END_SRC
 * global keybindings
+
+#+BEGIN_SRC emacs-lisp
+    (use-package shell-switcher
+      :ensure t
+      :init (setq shell-switcher-mode t))
+    (add-hook 'eshell-mode-hook 'shell-switcher-manually-register-shell)
+#+END_SRC
+
 #+BEGIN_SRC emacs-lisp
   (global-set-key (kbd "M-x") 'helm-M-x)
   (global-set-key (kbd "C-x C-m") 'helm-M-x)
@@ -1338,7 +1363,7 @@ Setup evil with some very vim-like defaults.
       (define-key evil-insert-state-map "\C-k" nil)
       (define-key evil-insert-state-map "\C-u" nil)
 
-      (define-key evil-normal-state-map (kbd "SPC /") 'my-projectile-helm-ag)
+      (define-key evil-normal-state-map (kbd "SPC /") 'helm-ag)
       (define-key evil-normal-state-map (kbd "SPC e") 'helm-projectile-recentf)
       (define-key evil-normal-state-map (kbd "C-p") 'projectile-find-file)
 

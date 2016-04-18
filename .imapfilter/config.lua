@@ -166,18 +166,19 @@ function contain_from(from)
 end
 
 local cleanup_rules = {
+   { contain_from("donotreply@seeclickfix.com")              },
    { contain_from("linkedin.com"),                   age = 0 },
    { contain_from("@pearltrees.com"),                age = 0 },
    { contain_from("CostcoNews@online.costco.com"),   age = 0 },
    { contain_from("email.campaign@sg.booking.com"),  age = 0 },
    { contain_from("googleplay-noreply@google.com"),  age = 0 },
-   { contain_from("moveon.org"),                     age = 0 },
+   { contain_from("moveon.org")                },
    { contain_from("info@twitter.com"),               age = 0 },
    { contain_from("info@e.twitter.com"),             age = 0 },
    { contain_from("Team@mint.com"),                  age = 0 },
    { contain_from("mapmyfitness.messages4.com"),     age = 0 },
-   { contain_from("nfo@democracyforAmerica.com"),    age = 0 },
-   { contain_from("@dga.net"),                       age = 0 },
+   { contain_from("nfo@democracyforAmerica.com")  },
+   { contain_from("@dga.net") },
    { contain_from("no-reply@duolingo.com"),          age = 0 },
    { contain_from("no-reply@endomondo.com"),         age = 0 },
    { contain_from("no-reply@twitch.tv"),             age = 1 },
@@ -185,21 +186,19 @@ local cleanup_rules = {
    { contain_from("noreply@soylentnews.org"),        age = 1 },
    { contain_from("noreply@youtube.com"),            age = 0 },
    { contain_from("pages.plusgoogle.com"),           age = 1 },
-   { contain_from("targetnews@e.target.com"),        age = 0 },
+   { contain_from("targetnews@e.target.com")  },
    { contain_from("email.vzwshop.com"),              age = 1 },
    { contain_from("myfitnesspal.com"),               age = 1 },
    { contain_from("peopleforbikes.org")                      },
    { contain_from(".codeweavers.com"),               age = 0 },
    { contain_from("berniesanders.com"),              age = 0 },
-   { contain_from("graysonforcongress.com"),         age = 0 },
+   { contain_from("graysonforcongress.com") },
    { contain_from("noreply@exact.publix.com"),       age = 0 },
    { contain_from("no-reply@exact.publix.com"),      age = 0 },
-   { contain_from("velocity@ac.travelocity.com"),      age = 0 },
-   { contain_from("brighthouse@care.brighthouse.com"), age = 0 },
-   { contain_from("noreply@coursera.org"),           age = 0 },
-   { contain_from("upershuttle@supershuttle.com"),   age = 0 },
-   { contain_from("seeclickfix.com"),                age = 1 },
-   { contain_from("synologynotification.com"),       age = 1 }
+   { contain_from("@dlcc.org")  },
+   { contain_from("velocity@ac.travelocity.com"),        age = 0 },
+   { contain_from("brighthouse@care.brighthouse.com"),        age = 0 },
+   { contain_from("upershuttle@supershuttle.com"),        age = 0 }
 }
 
 for _, rule in ipairs(cleanup_rules) do
@@ -232,3 +231,4 @@ archive(mozilla.INBOX, mozilla.Archive)
 archive(fastmail.INBOX, fastmail.Archive)
 archive(fastmail.billing, fastmail["billing/archive"])
 archive(fastmail.noreply, fastmail.Archive)
+
