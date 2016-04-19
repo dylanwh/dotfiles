@@ -564,10 +564,21 @@ This just adds a few things to dired mode.
   (add-to-list 'tramp-remote-path "/usr/local/bin")
 #+END_SRC
 
-** pwsafe
+** with-editor
 #+BEGIN_SRC emacs-lisp
-  (use-package pwsafe
-    :commands (pwsafe pwsafe-copy-password pwsafe-add-entry))
+  (use-package with-editor
+    :ensure t
+    :config
+    (progn
+      (add-hook 'shell-mode-hook  'with-editor-export-editor)
+      (add-hook 'term-mode-hook   'with-editor-export-editor)
+      (add-hook 'eshell-mode-hook 'with-editor-export-editor)
+
+      (define-key (current-global-map)
+        [remap async-shell-command] 'with-editor-async-shell-command)
+      (define-key (current-global-map)
+        [remap shell-command] 'with-editor-shell-command)))
+
 #+END_SRC
 * communication
 ** email
