@@ -37,4 +37,8 @@ elif [[ -d ~/perl5 ]]; then
     eval $(perl -I ~/perl5/lib/perl5 -Mlocal::lib)
 fi
 
+if which pyenv-virtualenv-init &> /dev/null; then
+    eval "$(pyenv virtualenv-init -)"
+fi
+
 export PATH

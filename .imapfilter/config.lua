@@ -191,7 +191,7 @@ local cleanup_rules = {
    { contain_from("myfitnesspal.com"),               age = 1 },
    { contain_from("peopleforbikes.org")                      },
    { contain_from(".codeweavers.com"),               age = 0 },
-   { contain_from("berniesanders.com"),              age = 0 },
+   { contain_from("berniesanders.com")  },
    { contain_from("graysonforcongress.com") },
    { contain_from("noreply@exact.publix.com"),       age = 0 },
    { contain_from("no-reply@exact.publix.com"),      age = 0 },

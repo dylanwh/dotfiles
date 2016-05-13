@@ -381,7 +381,7 @@ Use ethan-wspace to handle whitespace issues.
             (concat user-data-directory "projectile.cache"))
       (setq projectile-known-projects-file
             (concat user-data-directory "projectile-bookmarks.eld"))
-      (setq projectile-project-name-function #'my-project-name)
+      ;; (setq projectile-project-name-function #'my-project-name)
 
       (projectile-global-mode)))
 #+END_SRC
@@ -858,6 +858,17 @@ For wrting reports and other documentation.
       (delete-region start end)
       (insert text)))
 #+END_SRC
+** smart quotes
+#+BEGIN_SRC emacs-lisp
+  (defun replace-smart-quotes (beg end)
+    "Replace 'smart quotes' in buffer or region with ascii quotes."
+    (interactive "r")
+    (format-replace-strings '(("\x201C" . "\"")
+                              ("\x201D" . "\"")
+                              ("\x2018" . "'")
+                              ("\x2019" . "'"))
+                            nil beg end))
+#+END_SRC
 * typing utilities
 ** company-mode
 
@@ -1045,6 +1056,7 @@ Before loading evil, configure undo-tree.
 * programming languages
 ** Perl
 
+*** perltidy, cperl-mode
 #+BEGIN_SRC emacs-lisp
   (use-package perltidy)
   (use-package cperl-mode
@@ -1112,6 +1124,7 @@ Before loading evil, configure undo-tree.
 
 #+END_SRC
 
+*** perldoc
 helm perldoc stuff
 #+BEGIN_SRC emacs-lisp
   (use-package helm-perldoc

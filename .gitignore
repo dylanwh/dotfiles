@@ -89,3 +89,4 @@
 .imapfilter/status
 .newsbeuter/cache.db
 .newsbeuter/queue
+.DS_STORE
