@@ -3,3 +3,12 @@ games
 tramp
 xkcd
 elpa
+.org-id-locations
+eshell/history
+eshell/lastdir
+helm-adaptive-history
+history
+places
+projectile-bookmarks.eld
+projectile.cache
+recentf
