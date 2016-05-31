@@ -215,10 +215,6 @@ alias c='clipin'
 alias -g C='| clipin'
 alias -g L='| less -F'
 alias -g 'G'='|grep '
-alias -s pl='perl -S'
-alias -s py=python
-alias -s rb=ruby
-alias -s hs=runhaskell
 
 PLATFORM_ALIAS_FILE=$ZCACHE/platform_alias
 
