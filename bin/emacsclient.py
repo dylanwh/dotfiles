@@ -18,7 +18,12 @@ if sys.argv[1:2] == ['-n']:
 
 args = sys.argv[1:] or ['.']
 
-with open(os.environ['remote_emacs_auth']) as infile:
+try:
+    infile_name = os.environ['remote_emacs_auth']
+except KeyError:
+    infile_name = "%s/.emacs.d/remote-server" % (os.environ['HOME'])
+
+with open(infile_name) as infile:
     host, client_auth, tramp_prefix = infile.read().splitlines()
 
 host, port = host.split()
