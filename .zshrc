@@ -212,57 +212,58 @@ alias zreload='exec env SHLVL=0 $SHELL'
 alias home-time='TZ=US/Eastern date'
 alias emacsclient='emacsclient -a "" -c'
 alias sudo='command sudo '
-
-have pinfo    && alias info=pinfo
-have ack-grep && alias ack=ack-grep
-have gcp      && alias cp=gcp
-have hub      && eval "$(hub alias -s)"
-have fasd     && eval "$(fasd --init auto)"
-have mosh     && alias mosh=$'mosh --ssh=\'ssh -o ClearAllForwardings=yes\''
-
-have systemctl && alias systemctl='sudo systemctl'
-have pacman    && alias pacman='sudo pacman'
-have yaourt    && alias yaourt='yaourt --noconfirm'
-
-alias xclip='xclip -selection clipboard'
-
-# paste
-alias p='xclip -o'
-alias P='xclip -o |'
-
-# copy
-alias c='xclip -i'
-alias -g C='| xclip -i'
-alias -g @='$( xclip -o )'
-alias -g '"@"'='"$( xclip -o )"'
-
-# copy and paste
-have vipe && alias pvc='p | vipe | c'
-
-# less
+alias p='clipout'
+alias P='clipout |'
+alias c='clipin'
+alias -g C='| clipin'
 alias -g L='| less -F'
-
-# grep
 alias -g 'G'='|grep '
-
-# scripts
 alias -s pl='perl -S'
 alias -s py=python
 alias -s rb=ruby
 alias -s hs=runhaskell
 
-have dnf && alias yum=dnf
+PLATFORM_ALIAS_FILE=$ZCACHE/platform_aliar
 
-if have bz; then
-    function cdb { cd $(bz path "$@") }
-else
-    ssh -t bugzilla.vm bz "$@"
-fi
+function platform_alias {
+    local def=${1//\'/\\\'}
+    echo "alias $'$def'" >> $PLATFORM_ALIAS_FILE
+}
 
-# alias ls to ls -Fh --color=auto --group-directories-first,
-# but if our version of ls does not support one or more of those,
-# then don't use it.
-if [[  ~/.zshrc -nt $ZCACHE/alias-ls || ! -f $ZCACHE/alias-ls ]]; then
+if [[  ~/.zshrc -nt $PLATFORM_ALIAS_FILE || ! -f $PLATFORM_ALIAS_FILE ]]; then
+    echo -n >! $PLATFORM_ALIAS_FILE
+
+    have pinfo    && platform_alias info=pinfo
+    have ack-grep && platform_alias ack=ack-grep
+    have gcp      && platform_alias cp=gcp
+    have hub      && platform_alias git=hub
+    have mosh     && platform_alias mosh=$'mosh --ssh=\'ssh -o ClearAllForwardings=yes\''
+    have vipe     && platform_alias pvc='p | vipe | c'
+
+    have systemctl && platform_alias systemctl='sudo systemctl'
+    have pacman    && platform_alias pacman='sudo pacman'
+    have yaourt    && platform_alias yaourt='yaourt --noconfirm'
+
+    if have xclip; then
+        platform_alias xclip='xclip -selection clipboard'
+        platform_alias clipin='xclip -i'
+        platform_alias clipout='xclip -o'
+    elif have pbcopy; then
+        platform_alias clipin='pbcopy'
+        platform_alias clipout='pbpaste'
+    fi
+
+    have dnf && platform_alias yum=dnf
+
+    if have bz; then
+        function cdb { cd $(bz path "$@") }
+    else
+        function bz { ssh -t bugzilla.vm bz "$@" }
+    fi
+
+    # alias ls to ls -Fh --color=auto --group-directories-first,
+    # but if our version of ls does not support one or more of those,
+    # then don't use it.
     # handle ls specially...
     local ls_cmd=ls
     local -a ls_args
@@ -277,11 +278,12 @@ if [[  ~/.zshrc -nt $ZCACHE/alias-ls || ! -f $ZCACHE/alias-ls ]]; then
             ls_args[-1]=()
         fi
     done
-    echo "alias ls=\"$ls_cmd $ls_args\"" >! $ZCACHE/alias-ls
+    platform_alias ls="$ls_cmd $ls_args"
     unset ls_cmd ls_args
 fi
 
-source $ZCACHE/alias-ls
+source $PLATFORM_ALIAS_FILE
+
 ## }}}
 # {{{ ZSTYLES
 if [[ -o zle ]]; then
