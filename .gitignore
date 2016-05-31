@@ -33,7 +33,6 @@
 !.gitconfig
 !.gitignore
 !.gitmodules
-!.gnupg
 !.guile
 !.gvimrc
 !.i3status.conf@*
@@ -70,7 +69,6 @@
 !.vim
 !.vimoutlinerrc
 !.vimrc
-!.w3m
 !.wyrdrc
 !.xbindkeysrc.scm
 !.xinitrc
