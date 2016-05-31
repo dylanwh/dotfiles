@@ -171,13 +171,7 @@ if [[ -o zle ]]; then
 fi
 ## }}}
 ## {{{ ALIASES
-alias runti='docker run -ti'
-alias ack='noglob ack'
 alias cp='cp -i'
-alias cpanm-test='command cpanm'
-alias cpanm='cpanm --notest'
-alias dbfs='dropbox filestatus'
-alias dbs='dropbox status'
 alias df="df -h"
 alias egrep='egrep --color=auto'
 alias evince='runbg evince'
@@ -236,9 +230,18 @@ if [[  ~/.zshrc -nt $PLATFORM_ALIAS_FILE || ! -f $PLATFORM_ALIAS_FILE ]]; then
     have pinfo    && platform_alias info=pinfo
     have ack-grep && platform_alias ack=ack-grep
     have gcp      && platform_alias cp=gcp
+    have gmv      && platform_alias mv=gmv
+    have grm      && platform_alias rm=grm
+    have gfind    && platform_alias find='noglob gfind'
     have hub      && platform_alias git=hub
     have mosh     && platform_alias mosh=$'mosh --ssh=\'ssh -o ClearAllForwardings=yes\''
     have vipe     && platform_alias pvc='p | vipe | c'
+
+    have docker && platform_alias runti='docker run -ti'
+    if have cpanm; then
+        platform_alias cpanm-test='command cpanm'
+        platform_alias cpanm='cpanm --notest'
+    fi
 
     have systemctl && platform_alias systemctl='sudo systemctl'
     have pacman    && platform_alias pacman='sudo pacman'
