@@ -7,10 +7,10 @@ GIT_CEILING_DIRECTORIES="$HOME/src"
 export REALNAME EMAIL BROWSER MANPAGER GIT_CEILING_DIRECTORIES
 
 if [[ -z "$EDITOR" && -z "$VISUAL" && "$TERM" != dumb ]]; then
-    EDITOR="vim"
+    EDITOR="emacsclient -a '' -c"
     VISUAL="$EDITOR"
     export EDITOR
-    export EDITOR
+    export VISUAL
 fi
 
 LANG=en_US.UTF-8

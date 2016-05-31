@@ -9,6 +9,6 @@
       (package-refresh-contents))
     (package-install 'use-package))
 
-  (require 'use-package)
+(require 'use-package)
 (use-package org :ensure t)
 (org-babel-load-file "~/.emacs.d/config.org")

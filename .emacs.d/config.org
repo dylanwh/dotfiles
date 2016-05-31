@@ -30,20 +30,6 @@ Copy this file to ~/.emacs.d and add the following to ~/.emacs/init.el:
                 gc-cons-percentage 0.5)
 #+END_SRC
 
-** user-data-directory
-I like keeping all "state" data in the ~/.local/share directory
-tree, rather than my ~/.emacs.d -- because that way everything in ~/.emacs.d
-can be versioned.
-
-#+BEGIN_SRC emacs-lisp
-  (defconst user-data-directory
-    (concat (or (getenv "XDG_DATA_HOME")
-                (concat (getenv "HOME") "/.local/share")) "/emacs/"))
-
-  (unless (file-exists-p user-data-directory)
-    (mkdir user-data-directory t))
-#+END_SRC
-
 ** add ~/.emacs.d/elisp to load-path
 
 For things that arn't available as an elpa package, add ~/.emacs.d/elisp
@@ -69,8 +55,7 @@ because I use them through out this file.
     (use-package after)
     (use-package bind)
     (use-package f :ensure t)
-    (use-package request :ensure t
-      :config (setq request-storage-directory (concat user-data-directory "request")))
+    (use-package request :ensure t)
     (use-package my-util)
 #+END_SRC
 
@@ -326,20 +311,18 @@ Use ethan-wspace to handle whitespace issues.
 (use-package saveplace
   :init
   (progn
-    (setq save-place-file (concat user-data-directory "places"))
     (setq-default save-place t)))
 #+END_SRC
 
 ** minibuffer history
 #+BEGIN_SRC emacs-lisp
-(use-package savehist
-  :init
-  (progn
-    (setq savehist-file (concat user-data-directory "savehist")
-          savehist-additional-variables '(search ring regexp-search-ring)
-          savehist-autosave-interval 60)
-    (setq-default history-length 1000)
-    (savehist-mode +1)))
+  (use-package savehist
+    :init
+    (progn
+      (setq savehist-additional-variables '(search ring regexp-search-ring)
+            savehist-autosave-interval 60)
+      (setq-default history-length 1000)
+      (savehist-mode +1)))
 #+END_SRC
 
 ** recent files
@@ -348,19 +331,11 @@ Use ethan-wspace to handle whitespace issues.
   :ensure t
   :config
   (progn
-    (setq recentf-save-file (concat user-data-directory "recentf"))
     (setq recentf-max-saved-items 1000)
     (setq recentf-max-menu-items 500)
     (recentf-mode +1)
     (add-to-list 'recentf-exclude "COMMIT_EDITMSG\\'")
     (run-with-timer 1800 1800 'recentf-save-list)))
-#+END_SRC
-
-** store backup files in the data dir
-#+BEGIN_SRC emacs-lisp
-(setq backup-directory-alist         `((".*" . ,(concat user-data-directory "backups")))
-      auto-save-file-name-transforms `((".*" ,(concat user-data-directory "backups") t))
-      auto-save-list-file-prefix     (concat user-data-directory "auto-save-list/saves-"))
 #+END_SRC
 
 * file management
@@ -376,14 +351,10 @@ Use ethan-wspace to handle whitespace issues.
     :config
     (progn
       (setq projectile-enable-caching t
-            projectile-tags-command "echo /usr/bin/etags.ctags -Re -f \"%s\" %s")
-      (setq projectile-cache-file
-            (concat user-data-directory "projectile.cache"))
-      (setq projectile-known-projects-file
-            (concat user-data-directory "projectile-bookmarks.eld"))
+            projectile-tags-command "echo /usr/bin/etags.ctags -Re -f \"%s\" %s"))
       ;; (setq projectile-project-name-function #'my-project-name)
 
-      (projectile-global-mode)))
+      (projectile-global-mode))
 #+END_SRC
 
 ** dired
@@ -398,10 +369,6 @@ Use ethan-wspace to handle whitespace issues.
 
 #+BEGIN_SRC emacs-lisp
   (after 'esh-module
-    (let ((eshell-data-dir (concat user-data-directory "eshell/")))
-      (unless (f-dir? eshell-data-dir)
-        (make-directory eshell-data-dir))
-
       ;; eshell settings
       (setq eshell-where-to-jump 'end
             eshell-review-quick-commands 'not-even-short-output
@@ -418,12 +385,10 @@ Use ethan-wspace to handle whitespace issues.
             eshell-error-if-no-glob t
 
             ;; em-hist
-            eshell-history-size 1024
-            eshell-history-file-name (concat eshell-data-dir "history")
-            eshell-last-dir-ring-file-name (concat eshell-data-dir "lastdir")
+            eshell-history-size 4096
 
             ;; em-prompt
-            eshell-prompt-function 'my-eshell-prompt)))
+            eshell-prompt-function 'my-eshell-prompt))
 #+END_SRC
 
 customize some stuff.
@@ -558,8 +523,7 @@ This just adds a few things to dired mode.
   (require 'tramp)
   (setq tramp-inline-compress-start-size (* 1024 1024)
         tramp-copy-size-limit nil
-        tramp-process-connection-type t
-        tramp-persistency-file-name (concat user-data-directory "tramp"))
+        tramp-process-connection-type t)
   (add-to-list 'tramp-remote-path 'tramp-own-remote-path)
   (add-to-list 'tramp-remote-path "/usr/local/bin")
 #+END_SRC
@@ -870,16 +834,6 @@ For wrting reports and other documentation.
                             nil beg end))
 #+END_SRC
 * typing utilities
-** company-mode
-
-#+BEGIN_SRC emacs-lisp
-  (use-package company :ensure t)
-#+END_SRC
-
-#+BEGIN_SRC emacs-lisp
-  (use-package company-quickhelp :ensure t)
-#+END_SRC
-
 ** guide-key
    Use guide-key to help figure out what things do.
 
@@ -897,6 +851,48 @@ For wrting reports and other documentation.
 #+BEGIN_SRC emacs-lisp
   (use-package pcomplete-extension :ensure pcomplete-extension)
 #+END_SRC
+** yassnippets
+#+BEGIN_SRC emacs-lisp 
+  (use-package yasnippet
+    :ensure t
+    :config
+    (progn
+      (let* ((yas-install-dir (car (file-expand-wildcards (concat package-user-dir "/yasnippet-*"))))
+             (dir (concat yas-install-dir "/snippets/js-mode")))
+        (when (file-exists-p dir)
+          (delete-directory dir t)))
+
+      (setq yas-fallback-behavior 'return-nil
+            yas-also-auto-indent-first-line t)
+      (add-to-list 'yas-snippet-dirs (concat user-emacs-directory "snippets"))
+
+      (yas-reload-all)
+
+      (add-hook 'cperl-mode-hook 'yas-minor-mode)
+      (add-hook 'prog-mode-hook 'yas-minor-mode)
+      (add-hook 'html-mode-hook 'yas-minor-mode)))
+#+END_SRC
+** company-mode
+
+#+BEGIN_SRC emacs-lisp
+  (use-package company :ensure t
+    :config
+    (progn
+      (setq company-idle-delay 0.5)
+      (setq company-tooltip-limit 10)
+      (setq company-minimum-prefix-length 2)
+      ;; invert the navigation direction if the the completion popup-isearch-match
+      ;; is displayed on top (happens near the bottom of windows)
+      (setq company-tooltip-flip-when-above t)
+      (add-to-list 'company-backends 'company-yasnippet)
+
+      (add-hook 'after-init-hook 'global-company-mode)))
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+  (use-package company-quickhelp :ensure t)
+#+END_SRC
+
 ** smartparens
 
 #+BEGIN_SRC emacs-lisp
@@ -944,32 +940,8 @@ Before loading evil, configure undo-tree.
     :init
     (progn
       (setq undo-tree-auto-save-history t
-            undo-tree-history-directory-alist `(("." . ,(concat user-data-directory "undo")))
             undo-tree-visualizer-timestamps t
             undo-tree-visualizer-diff t)))
-#+END_SRC
-** yassnippets
-#+BEGIN_SRC emacs-lisp :tangle no
-  (use-package yasnippet
-    :ensure t
-    :config
-    (progn
-      (let* ((yas-install-dir (car (file-expand-wildcards (concat package-user-dir "/yasnippet-*"))))
-             (dir (concat yas-install-dir "/snippets/js-mode")))
-        (when (file-exists-p dir)
-          (delete-directory dir t)))
-
-      (setq yas-fallback-behavior 'return-nil
-            yas-also-auto-indent-first-line t)
-      (add-to-list 'yas-snippet-dirs (concat user-emacs-directory "snippets"))
-      (add-hook 'yas-before-expand-snippet-hook
-                (lambda () (auto-complete-mode -1)))
-      (add-hook 'yas-after-exit-snippet-hook
-                (lambda () (auto-complete-mode t)))
-
-      (yas-reload-all)
-      (add-hook 'prog-mode-hook 'yas-minor-mode)
-      (add-hook 'html-mode-hook 'yas-minor-mode)))
 #+END_SRC
 ** ace-mode
 #+BEGIN_SRC emacs-lisp
@@ -983,8 +955,7 @@ Before loading evil, configure undo-tree.
 ** bookmarks
    bookmarks in the data dir too.
 #+BEGIN_SRC emacs-lisp
-  (setq bookmark-default-file (concat user-data-directory "bookmarks")
-        bookmark-save-flag 1 ) ;; save after every change
+  (setq bookmark-save-flag 1 ) ;; save after every change
 #+END_SRC
 ** google-this
 #+BEGIN_SRC emacs-lisp
@@ -998,7 +969,6 @@ Before loading evil, configure undo-tree.
     (progn
       (require 'helm-config)
 
-      (setq helm-adaptive-history-file (concat user-data-directory "helm-history"))
       (setq helm-ff-transformer-show-only-basename nil
             helm-command-prefix-key                "C-c h"
             helm-quick-update                      t
@@ -1054,8 +1024,11 @@ Before loading evil, configure undo-tree.
   (set-register ?i '(file . "~/.imapfilter/config.lua"))
 #+END_SRC
 * programming languages
+** Flycheck
+#+BEGIN_SRC emacs-lisp
+  (use-package flycheck :ensure t)
+#+END_SRC
 ** Perl
-
 *** perltidy, cperl-mode
 #+BEGIN_SRC emacs-lisp
   (use-package perltidy)
@@ -1301,7 +1274,7 @@ Syntax highlighting for ssh config, nginx config, vimrc (haha), yaml and lua.
   (global-set-key (kbd "C-r")     'isearch-backward-regexp)
   (global-set-key (kbd "C-M-r")   'isearch-backward)
 
-  (global-set-key (kbd "C-w") 'evil-window-map)
+  ;; (global-set-key (kbd "C-w") 'evil-window-map)
 #+END_SRC
 * evil keybindings
 Setup evil with some very vim-like defaults.
@@ -1486,7 +1459,6 @@ Make emacs jump more like vim.
     :config
     (progn
       (setq evil-jumper-auto-center t
-            evil-jumper-file (concat user-data-directory "evil-jumps")
             evil-jumper-auto-save-interval 3600)))
 #+END_SRC
 

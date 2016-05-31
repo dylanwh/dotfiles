@@ -33,6 +33,7 @@ for dircolors in dircolors gdircolors; do
         unset LS_COLORS
 
         eval $($dircolors ~/.config/dircolors-solarized/dircolors.ansi-dark )
+        break
     fi
 done
 
@@ -204,7 +205,9 @@ alias zpro="$EDITOR ~/.zprofile"
 alias zrc="$EDITOR ~/.zshrc"
 alias zreload='exec env SHLVL=0 $SHELL'
 alias home-time='TZ=US/Eastern date'
-alias emacsclient='emacsclient -a "" -c'
+alias emacsclient='emacsclient -a ""'
+alias ec='emacsclient -c'
+alias et='emacsclient -t'
 alias sudo='command sudo '
 alias p='clipout'
 alias P='clipout |'
