@@ -223,7 +223,7 @@ alias -s py=python
 alias -s rb=ruby
 alias -s hs=runhaskell
 
-PLATFORM_ALIAS_FILE=$ZCACHE/platform_aliar
+PLATFORM_ALIAS_FILE=$ZCACHE/platform_alias
 
 function platform_alias {
     local def=${1//\'/\\\'}
