@@ -253,6 +253,12 @@ alias -s hs=runhaskell
 
 have dnf && alias yum=dnf
 
+if have bz; then
+    function cdb { cd $(bz path "$@") }
+else
+    ssh -t bugzilla.vm bz "$@"
+fi
+
 # alias ls to ls -Fh --color=auto --group-directories-first,
 # but if our version of ls does not support one or more of those,
 # then don't use it.
