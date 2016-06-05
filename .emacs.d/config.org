@@ -83,6 +83,7 @@ I always want an emacs server running.
    (setenv "PAGER" "cat")
    (setenv "GIT_PAGER" "cat")
    (setenv "MANPAGER" "cat")
+   (setenv "ANSI_COLORS_DISABLED" "1")
  #+END_SRC
 ** platform tests
  #+BEGIN_SRC emacs-lisp
@@ -147,13 +148,19 @@ Choose font size based on hostname
 
     (cl-case (intern system-name-short)
       (thor     (set-frame-font "Fira Mono Medium-10" nil t))
-      (mac-thor (set-frame-font "Source Code Pro Light-12" nil t))
+      (mac-thor (set-frame-font "Source Code Pro Light-14" nil t))
       (freya    (set-frame-font "Source Code Pro-9" nil t))))
 #+END_SRC
 
 ** theme
-Install solarized
+   Install zenburn
 #+BEGIN_SRC emacs-lisp
+  (use-package zenburn-theme :ensure t)
+#+END_SRC
+
+   Install solarized
+
+#+BEGIN_SRC emacs-lisp :tangle no
   (setq solarized-distinct-fringe-background t
         solarized-high-contrast-mode-line nil
         solarized-scale-org-headlines t
@@ -203,9 +210,11 @@ Hide minor modes
             " ew:mnlt"
             " Helm"
             " MRev"
+            " ARev"
             " Guide"
             " Undo-Tree"
             " GitGutter"
+            " s-/"
             " Server")))
 #+END_SRC
 
@@ -434,8 +443,26 @@ customize some stuff.
       (if (= p (point))
           (beginning-of-line))))
 
+  (defun company-eshell-history (command &optional arg &rest ignored)
+    (interactive (list 'interactive))
+    (cl-case command
+      (interactive (company-begin-backend 'company-eshell-history))
+      (prefix (and (eq major-mode 'eshell-mode)
+                   (let ((word (company-grab-word)))
+                     (save-excursion
+                       (eshell-bol)
+                       (and (looking-at-p (s-concat word "$")) word)))))
+      (candidates (remove-duplicates
+                   (->> (ring-elements eshell-history-ring)
+                        (remove-if-not (lambda (item) (s-prefix-p arg item)))
+                        (mapcar 's-trim))
+                   :test 'string=))
+      (sorted t)))
+
   (add-hook 'eshell-mode-hook
-            (lambda () (define-key eshell-mode-map "\C-a" 'eshell-maybe-bol)))
+            (lambda ()
+              (setq company-backends '(company-eshell-history))
+              (define-key eshell-mode-map "\C-a" 'eshell-maybe-bol)))
 
   (defun server-eshell ()
     (lexical-let ((buf (eshell t))
@@ -630,61 +657,67 @@ This just adds a few things to dired mode.
 * misc utilities
 ** bmo stuff
 
-   Most of my customizations for working bugzilla.mozilla.org.
+   Most of my customizations for working on bugzilla.mozilla.org.
    There's also some stuff for org-mode later in this file
 
    - [[*bmo links][bmo org-mode links]]
    - [[*bmo eshell stuff][bmo eshell stuff]] 
 
- #+BEGIN_SRC emacs-lisp
-   (defvar bz-url "http://bugzilla.vm/")
-   (defvar bz-dir "/scp:bugzilla.vm:/opt/bugzilla")
 
-   (defun bz-browse-site ()
-     (interactive)
-     (browse-url (concat bz-url (projectile-default-project-name (projectile-project-root)))))
+   #+BEGIN_SRC emacs-lisp
+     (defvar bz-url "http://bugzilla.vm/")
+     (defvar bz-dir "/scp:bugzilla.vm:/opt/bugzilla")
 
-   (defun bz-browse-bug ()
-     (interactive)
-     (let ((bug-id (projectile-default-project-name (projectile-project-root))))
-       (when (string-match "^[0-9]+$" bug-id)
-         (browse-url (concat  "https://bugzilla.mozilla.org/show_bug.cgi?id=" bug-id)))))
+     (defun bz-browse-site ()
+       (interactive)
+       (browse-url (concat bz-url (projectile-default-project-name (projectile-project-root)))))
 
-   (defun bz-new (bug-id)
-     "start working on a new bug"
-     (interactive "s")
-     (let ((default-directory bz-dir))
-       (async-shell-command (format "yes | bz new %s" bug-id) (format "*bznew:%s*" bug-id))))
+     (defun bz-browse-bug ()
+       (interactive)
+       (let ((bug-id (projectile-default-project-name (projectile-project-root))))
+         (when (string-match "^[0-9]+$" bug-id)
+           (browse-url (concat  "https://bugzilla.mozilla.org/show_bug.cgi?id=" bug-id)))))
 
-   (defun bz-list ()
-     (mapcar #'car
-             (remove-if-not (lambda (x) (and (cadr x) (not (or (equal (car x) "..") (equal (car x) ".")))))
-                            (directory-files-and-attributes (concat bz-dir "/htdocs")))))
+     (defun bz-new (bug-id)
+       "start working on a new bug"
+       (interactive "s")
+       (let ((default-directory bz-dir))
+         (async-shell-command (format "bz new %s" bug-id) (format "*bznew:%s*" bug-id))))
 
-   (defun bz-bug-id-p (bug-id) (not (null (string-match "^[0-9]+$" bug-id))))
-   (defun bz-list-bugs () (remove-if-not #'bz-bug-id-p (bz-list)))
+     (defun bz-list ()
+       (mapcar #'car
+               (remove-if-not (lambda (x) (and (cadr x) (not (or (equal (car x) "..") (equal (car x) ".")))))
+                              (directory-files-and-attributes (concat bz-dir "/htdocs")))))
 
-   (defun bz-summary ()
-     "Show summary for current bug in projectile root"
-     (interactive)
-     (message (f-read (concat (projectile-project-root) "/data/summary"))))
+     (defun bz-bug-id-p (bug-id) (not (null (string-match "^[0-9]+$" bug-id))))
+     (defun bz-list-bugs () (remove-if-not #'bz-bug-id-p (bz-list)))
 
-   (defun bz-checksetup ()
-     "Run checksetup.pl in the current project"
-     (interactive)
-     (projectile-with-default-dir (projectile-project-root)
-       (async-shell-command "perl checksetup.pl")))
+     (defun bz-summary ()
+       "Show summary for current bug in projectile root"
+       (interactive)
+       (message (f-read (concat (projectile-project-root) "/data/summary"))))
 
-   (defun bmo-summary (bug-id)
-     (let ((bug-dir (f-join bz-dir (format "htdocs/%s" bug-id))))
-       (if (f-dir? bug-dir)
-           (f-read (f-join bug-dir "data" "summary"))
-         (let ((response (request (format "https://bugzilla.mozilla.org/rest/bug/%s" bug-id)
-                                  :params '( ("include_fields" . "summary") )
-                                  :parser 'json-read
-                                  :sync t)))
-           (cdr (assq 'summary (aref (cdr (assq 'bugs (request-response-data response))) 0)))))))
- #+END_SRC
+     (defun bz-checksetup ()
+       "Run checksetup.pl in the current project"
+       (interactive)
+       (projectile-with-default-dir (projectile-project-root)
+         (async-shell-command "perl checksetup.pl")))
+
+     (defun bz-goto (bug-dir &optional switches)
+       (interactive (let ((default-directory (f-join bz-dir "htdocs/")))
+                      (dired-read-dir-and-switches "")))
+       (switch-to-buffer (dired-noselect bug-dir switches)))
+
+     (defun bmo-summary (bug-id)
+       (let ((bug-dir (f-join bz-dir (format "htdocs/%s" bug-id))))
+         (if (f-dir? bug-dir)
+             (f-read (f-join bug-dir "data" "summary"))
+           (let ((response (request (format "https://bugzilla.mozilla.org/rest/bug/%s" bug-id)
+                                    :params '( ("include_fields" . "summary") )
+                                    :parser 'json-read
+                                    :sync t)))
+             (cdr (assq 'summary (aref (cdr (assq 'bugs (request-response-data response))) 0)))))))
+   #+END_SRC
 ** org-mode
 #+BEGIN_SRC emacs-lisp
   (require 'org-mouse)
@@ -843,7 +876,8 @@ For wrting reports and other documentation.
     :init
     (progn
       (setq guide-key/guide-key-sequence '("C-x" "C-c" "," "C-w" "SPC")
-            guide-key/recursive-key-sequence-flag t)
+            guide-key/recursive-key-sequence-flag t
+            guide-key/popup-window-position 'bottom)
       (guide-key-mode 1)))
 #+END_SRC
 
@@ -853,24 +887,25 @@ For wrting reports and other documentation.
 #+END_SRC
 ** yassnippets
 #+BEGIN_SRC emacs-lisp 
-  (use-package yasnippet
-    :ensure t
-    :config
-    (progn
-      (let* ((yas-install-dir (car (file-expand-wildcards (concat package-user-dir "/yasnippet-*"))))
-             (dir (concat yas-install-dir "/snippets/js-mode")))
-        (when (file-exists-p dir)
-          (delete-directory dir t)))
+    (use-package yasnippet
+      :ensure t
+      :config
+      (progn
+        (let* ((yas-install-dir (car (file-expand-wildcards (concat package-user-dir "/yasnippet-*"))))
+               (dir (concat yas-install-dir "/snippets/js-mode")))
+          (when (file-exists-p dir)
+            (delete-directory dir t)))
 
-      (setq yas-fallback-behavior 'return-nil
-            yas-also-auto-indent-first-line t)
-      (add-to-list 'yas-snippet-dirs (concat user-emacs-directory "snippets"))
+        (setq yas-fallback-behavior 'return-nil
+              yas-also-auto-indent-first-line t)
+        (add-to-list 'yas-snippet-dirs (concat user-emacs-directory "snippets"))
 
-      (yas-reload-all)
+        (add-hook 'after-init-hook
+                  '(lambda ()
+                     (yas-reload-all)))
 
-      (add-hook 'cperl-mode-hook 'yas-minor-mode)
-      (add-hook 'prog-mode-hook 'yas-minor-mode)
-      (add-hook 'html-mode-hook 'yas-minor-mode)))
+        (add-hook 'prog-mode-hook 'yas-minor-mode)
+        (add-hook 'html-mode-hook 'yas-minor-mode)))
 #+END_SRC
 ** company-mode
 
@@ -896,40 +931,40 @@ For wrting reports and other documentation.
 ** smartparens
 
 #+BEGIN_SRC emacs-lisp
-  (use-package smartparens
-    :ensure t
-    :config
-    (progn
-      (require 'smartparens-config)
+    (use-package smartparens
+      :ensure t
+      :config
+      (progn
+        (require 'smartparens-config)
 
-      (setq sp-show-pair-delay 0
-            sp-show-pair-from-inside t
-            sp-autoescape-string-quote nil
-            sp-autoinsert-if-followed-by-same 1
-            sp-highlight-pair-overlay t)
+        (setq sp-show-pair-delay 0
+              sp-show-pair-from-inside t
+              sp-autoescape-string-quote nil
+              sp-autoinsert-if-followed-by-same 1
+              sp-highlight-pair-overlay t)
 
-      (push #'cperl-mode sp-ignore-modes-list)
-      (push #'perl-mode sp-ignore-modes-list)
+        (sp-use-smartparens-bindings)
+        (show-smartparens-global-mode t)
+        (show-paren-mode -1)
 
-      (sp-use-smartparens-bindings)
-      (show-smartparens-global-mode t)
-      (show-paren-mode -1)
+        (defun my-open-block-c-mode (id action context)
+          (when (eq action 'insert)
+            (newline)
+            (indent-according-to-mode)
+            (forward-line -1)
+            (indent-according-to-mode)))
 
-      (defun my-open-block-c-mode (id action context)
-        (when (eq action 'insert)
-          (newline)
-          (indent-according-to-mode)
-          (forward-line -1)
-          (indent-according-to-mode)))
+        (sp-pair "{" nil :post-handlers
+                 '(:add (my-open-block-c-mode "RET")))
+        (sp-pair "[" nil :post-handlers
+                 '(:add (my-open-block-c-mode "RET")))
 
-      (sp-pair "{" nil :post-handlers
-               '(:add (my-open-block-c-mode "RET")))
-      (sp-pair "[" nil :post-handlers
-               '(:add (my-open-block-c-mode "RET")))
+        (with-eval-after-load 'cperl-mode
+          (define-key cperl-mode-map "{" nil))
 
-      ;; fix conflict where smartparens clobbers yas' key bindings
-      (defadvice yas-expand (before advice-for-yas-expand activate)
-        (sp-remove-active-pair-overlay))))
+        ;; fix conflict where smartparens clobbers yas' key bindings
+        (defadvice yas-expand (before advice-for-yas-expand activate)
+          (sp-remove-active-pair-overlay))))
 #+END_SRC
 
 ** undo-tree
@@ -1034,31 +1069,30 @@ Before loading evil, configure undo-tree.
   (use-package perltidy)
   (use-package cperl-mode
     :ensure cperl-mode
-    :config
+    :init
     (progn
-
       (defalias 'perl-mode 'cperl-mode)
-      (setq cperl-hairy t)
-      (cperl-set-style "PerlStyle")
 
-      (setq-default cperl-autoindent-on-semi nil
-                    cperl-auto-newline nil
-                    cperl-clobber-lisp-bindings t
-                    cperl-close-paren-offset -4
-                    cperl-continued-statement-offset 2
-                    cperl-electric-keywords t
-                    cperl-electric-lbrace-space nil
-                    cperl-electric-linefeed nil
-                    cperl-electric-parens nil
-                    cperl-font-lock t
-                    cperl-highlight-variables-indiscriminately t
-                    cperl-indent-level 4
-                    cperl-indent-parens-as-block t
-                    cperl-indent-region-fix-constructs nil
-                    cperl-info-on-command-no-prompt t
-                    cperl-invalid-face nil
-                    cperl-lazy-help-time 5
-                    cperl-tab-always-indent t)))
+
+      (add-hook 'cperl-mode-hook
+                '(lambda ()
+                   (cperl-set-style "PerlStyle")
+                   (setq cperl-indent-level 4
+                         cperl-continued-statement-offset 8
+                         cperl-font-lock t
+                         cperl-electric-lbrace-space nil
+                         cperl-electric-parens nil
+                         cperl-electric-linefeed nil
+                         cperl-electric-keywords nil
+                         cperl-info-on-command-no-prompt t
+                         cperl-clobber-lisp-bindings t
+                         cperl-lazy-help-time 3)
+                   (set-face-background 'cperl-array-face nil)
+                   (set-face-background 'cperl-hash-face nil)
+                   (setq cperl-invalid-face nil)
+
+                   (yas-minor-mode 1)
+                   (smartparens-mode 1)))))
 
 
   (defun perl-bugzilla? (dir)
@@ -1085,7 +1119,8 @@ Before loading evil, configure undo-tree.
            (perl-dir (or (my-find-perl-dir dir) dir)))
       (cond ((perl-bugzilla-extension? perl-dir file)
              (let ((ext-dir (f-dirname (f-relative file (f-join perl-dir "extensions")))))
-               (f-join "Bugzilla" "Extension" ext-dir (f-relative file (f-join perl-dir "extensions" ext-dir "lib")))))
+               (f-join "Bugzilla" "Extension" ext-dir
+                       (f-relative file (f-join perl-dir "extensions" ext-dir "lib")))))
             ((perl-bugzilla? perl-dir)
              (f-relative file perl-dir))
             ((perl-cpan? perl-dir)
@@ -1094,7 +1129,6 @@ Before loading evil, configure undo-tree.
 
   (defun my-perl-module-name (file)
     (replace-regexp-in-string "/" "::" (f-no-ext (my-perl-module-file file))))
-
 #+END_SRC
 
 *** perldoc
@@ -1140,16 +1174,14 @@ helm perldoc stuff
     :ensure js2-refactor
     :init (js2r-add-keybindings-with-prefix "C-c C-m"))
 
-    ;; (when (executable-find "tern")
-    ;;   (require-package 'tern)
-    ;;   (add-hook 'js2-mode-hook 'tern-mode)
-    ;;   (after 'tern
-    ;;     (after 'auto-complete
-    ;;       (require-package 'tern-auto-complete)
-    ;;       (tern-ac-setup))
-    ;;     (after 'company-mode
-    ;;       (require-package 'company-tern)))))
-
+  (when (executable-find "tern")
+    (use-package tern :ensure t
+      :init
+      (progn
+        (add-hook 'js2-mode-hook
+                  '(lambda () (tern-mode t)))
+        (eval-after-load 'company-mode
+          (use-package company-tern :ensure t)))))
 #+END_SRC
 ** web
 #+BEGIN_SRC emacs-lisp
@@ -1223,9 +1255,15 @@ Syntax highlighting for ssh config, nginx config, vimrc (haha), yaml and lua.
 #+END_SRC
 
 ** elisp
+things to make elisp hacking for more
+
 #+BEGIN_SRC emacs-lisp
-  (put 'case 'lisp-indent-function 'cond)
+  (add-hook 'emacs-lisp-mode-hook
+            '(lambda ()
+               (put 'case 'lisp-indent-function 'cond)
+               (setq company-backends '(company-elisp))))
 #+END_SRC
+
 ** elasticsearch
 #+BEGIN_SRC emacs-lisp
   (use-package es-mode :ensure t)
