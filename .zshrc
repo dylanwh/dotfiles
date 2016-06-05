@@ -335,4 +335,6 @@ if [[ $TERM == xterm ]]; then
     unset ppid
 fi
 
+[[ -f "$HOME/.iterm2_shell_integration.zsh" ]] && source "$HOME/.iterm2_shell_integration.zsh"
+
 # vim: set sw=4 ts=4 foldmethod=marker path=.,~/.zsh/lib,~/:
