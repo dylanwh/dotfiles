@@ -45,7 +45,7 @@ and ... don't bother loading it. customize settings are nice, but they tend to n
 
 #+BEGIN_SRC emacs-lisp
   (setq custom-file (concat user-emacs-directory "custom.el"))
-  ;; (load-file custom-file)
+  (load-file custom-file)
 #+END_SRC
 
 ** bootstrap packages
@@ -87,17 +87,20 @@ I always want an emacs server running.
  #+END_SRC
 ** platform tests
  #+BEGIN_SRC emacs-lisp
-   (defun my-osx-tweaks ()
-     (if (executable-find "gls")
-         (setq insert-directory-program "/usr/local/bin/gls"))
-     (if (executable-find "trash")
-         (use-package osx-trash :ensure t))
-     (use-package reveal-in-osx-finder :ensure t)
-     (setq mac-option-modifier 'meta
-           mac-command-modifier 'super))
+   (use-package osx-trash :ensure t
+     :if (and (executable-find "trash")
+              (eq system-type 'darwin)))
+   (use-package reveal-in-osx-finder :ensure t
+     :if (eq system-type 'darwin))
 
    (cl-case system-type
-     (darwin (my-osx-tweaks)))
+     (darwin (progn
+               (setq mac-option-modifier 'meta
+                     mac-command-modifier 'super
+                     auth-sources '(macos-keychain-internet)))))
+
+   (if (executable-find "gls")
+       (setq insert-directory-program "/usr/local/bin/gls"))
  #+END_SRC
 
 * general settings
@@ -110,10 +113,7 @@ settings that don't make more sense anywhere else...
   (setq delete-by-moving-to-trash t
         mark-ring-max 64
         global-mark-ring-max 128
-        save-interprogram-paste-before-kill t
-
-        ;; auth-source configuration
-        auth-sources '("~/annex/private/authinfo.gpg"))
+        save-interprogram-paste-before-kill t)
 
   (setq vc-make-backup-files t
         vc-handled-backends '(SVN Git))
@@ -259,12 +259,10 @@ and allow 256 xterm colors.
 ** better buffer names for duplicates
 #+BEGIN_SRC emacs-lisp
   (use-package uniquify
-    :init
-    (progn
-      (setq uniquify-buffer-name-style 'post-forward-angle-brackets  
+    :init (setq uniquify-buffer-name-style 'post-forward-angle-brackets  
             uniquify-separator "/"
             uniquify-ignore-buffers-re "^\\*" ; leave special buffers alone
-            uniquify-after-kill-buffer-p t)))
+            uniquify-after-kill-buffer-p t))
 
   (add-hook 'compilation-filter-hook
             (lambda ()
@@ -273,8 +271,8 @@ and allow 256 xterm colors.
                 (let ((inhibit-read-only t))
                   (ansi-color-apply-on-region (point-min) (point-max))))))
 
-  (when (display-graphic-p)
-    (use-package git-gutter-fringe+ :ensure t))
+  (use-package git-gutter-fringe+ :ensure t
+    :if (display-graphic-p))
 
   (use-package git-gutter+
     :ensure t
@@ -375,66 +373,29 @@ Use ethan-wspace to handle whitespace issues.
         dired-omit-files-p t)
 #+END_SRC
 ** eshell
-
 #+BEGIN_SRC emacs-lisp
-  (after 'esh-module
-      ;; eshell settings
-      (setq eshell-where-to-jump 'end
-            eshell-review-quick-commands 'not-even-short-output
-            eshell-smart-space-goes-to-end nil
+  (use-package esh-module
+    :init
+    (setq eshell-where-to-jump 'end
+          eshell-review-quick-commands 'not-even-short-output
+          eshell-smart-space-goes-to-end nil
 
-            ;; eshell
-            eshell-scroll-to-bottom-on-input 'all
+          ;; eshell
+          eshell-scroll-to-bottom-on-input 'all
 
-            ;; kill annoying banner
-            eshell-banner-message "\n\n"
+          ;; kill annoying banner
+          eshell-banner-message "\n\n"
 
-            ;; em-glob
-            eshell-glob-case-insensitive t
-            eshell-error-if-no-glob t
+          ;; em-glob
+          eshell-glob-case-insensitive t
+          eshell-error-if-no-glob t
 
-            ;; em-hist
-            eshell-history-size 4096
-
-            ;; em-prompt
-            eshell-prompt-function 'my-eshell-prompt))
-#+END_SRC
-
-customize some stuff.
-
-#+BEGIN_SRC emacs-lisp
-  (defun eshell/clear ()
-    "Clears the buffer."
-    (let ((inhibit-read-only t))
-      (erase-buffer)))
-
-  (defun around-eshell/cd (orig &rest args)
-      (if (and args (assoc (car args) bookmark-alist))
-          (apply orig (cons (bookmark-location (car args)) (cdr args)))
-        (apply orig args)))
-
-  (advice-add 'eshell/cd :around #'around-eshell/cd)
-
-  (defun eshell/ag (pattern)
-    (ag pattern default-directory))
-
-  (defun eshell/ff (&rest args)
-    "Opens a file in emacs."
-    (unless (null args)
-      (mapc #'find-file-other-window (mapcar #'expand-file-name (eshell-flatten-list (reverse args))))))
-
-  (defun my-current-git-branch ()
-    (let ((branch (car (loop for match in (split-string (shell-command-to-string "git branch") "\n")
-                             when (string-match "^\*" match)
-                             collect match))))
-      (if (not (eq branch nil))
-          (concat " [" (substring branch 2) "]")
-        "")))
-
-  (defun my-eshell-prompt ()
-    (concat (propertize (abbreviate-file-name (eshell/pwd)) 'face 'eshell-prompt)
-            (propertize (my-current-git-branch) 'face 'font-lock-function-name-face)
-            (propertize " $ " 'face 'font-lock-constant-face)))
+          ;; em-hist
+          eshell-history-size 4096)
+    :config
+    (progn
+      (use-package dylan-eshell-commands)
+      (use-package dylan-eshell-prompt)))
 
   (defun eshell-maybe-bol ()
     (interactive)
@@ -459,55 +420,14 @@ customize some stuff.
                    :test 'string=))
       (sorted t)))
 
-  (add-hook 'eshell-mode-hook
-            (lambda ()
-              (setq company-backends '(company-eshell-history))
-              (define-key eshell-mode-map "\C-a" 'eshell-maybe-bol)))
+  (defun my-eshell-hook ()
+    (set (make-local-variable 'company-backends)
+         '(company-eshell-history company-files company-dabbrev))
+    (define-key eshell-mode-map "\C-a" 'eshell-maybe-bol))
 
-  (defun server-eshell ()
-    (lexical-let ((buf (eshell t))
-                  (client (first server-clients))
-                  (frame (selected-frame)))
-      (cl-labels ((close (&optional arg)
-                      (when (not (boundp 'cve/recurse))
-                        (let ((cve/recurse t))
-                          (delete-frame frame)
-                          (kill-buffer buf)
-                          (server-delete-client client)))))
-        (add-hook 'eshell-exit-hook #'close t t)
-        (add-hook 'delete-frame-functions #'close t t))
-      (local-set-key (kbd "C-x #") (lambda () (interactive) (kill-buffer buf)))
-      (delete-other-windows)
-      nil))
-
-  (defun eshell/bookmark (name &optional location)
-    (bookmark-set name)
-    (when location
-      (bookmark-set-filename name location)))
-
-  (defun eshell/bookmarks ()
-    (let ((max-width (apply #'max (mapcar (lambda (x) (length (car x))) bookmark-alist))))
-      (dolist (bookmark bookmark-alist)
-        (eshell-printn
-         (format (format "%%-%ds (%%s)" max-width)
-                               (car bookmark)
-                               (cdr (assq 'filename (cdr bookmark))))))))
+  (add-hook 'eshell-mode-hook #'my-eshell-hook)
 #+END_SRC
-*** bmo eshell stuff
 
-#+BEGIN_SRC emacs-lisp
-  (defun eshell/cdp ()
-    (eshell/cd (projectile-project-root)))
-
-  (defun eshell/cdb (str)
-    (let ((new-dir
-           (let* ((default-directory bz-dir)
-                  (bug-dir (shell-command-to-string (format "bz path '%s'" str))))
-             (with-parsed-tramp-file-name default-directory nil
-               (tramp-make-tramp-file-name method user host bug-dir hop)))))
-      (eshell/cd new-dir)
-      (shell-command-to-string "bz summary")))
-#+END_SRC
 
 ** git-annex
 This just adds a few things to dired mode.
@@ -573,81 +493,139 @@ This just adds a few things to dired mode.
 #+END_SRC
 * communication
 ** email
- #+BEGIN_SRC emacs-lisp
+some utilities
 
-   (defun my-guess-email-account (msg)
-     (let ((maildir (mu4e-message-field msg :maildir)))
-       (if (string-match "^/\\(.*?\\)/" maildir)
-           (match-string 1 maildir)
-         "fastmail")))
-
-   (defun my-guess-trash-folder (msg)
-     (concat "/" (my-guess-email-account msg) "/trash"))
-
-   (defun my-guess-sent-folder (msg)
-     (concat "/" (my-guess-email-account msg) "/sent"))
-
+#+BEGIN_SRC emacs-lisp
    (defun my-imapfilter ()
      (interactive)
      (let ((default-directory (expand-file-name "~/")))
        (async-shell-command "imapfilter" "*imapfilter*")))
+#+END_SRC
 
-   (when (executable-find "mu")
-     (use-package mu4e
-       :commands mu4e
-       :config
-       (progn
-         (setq mu4e-maildir (expand-file-name "~/mail")
-               mu4e-change-filenames-when-moving t
-               mu4e-view-show-images t
-               mu4e-view-show-addresses t
-               mu4e-get-mail-command "mbsync -qa"
-               mu4e-my-email-addresses '( dylan@hardison.net
-                                          dhardison@cpan.org
-                                          dhardison@mozilla.com
-                                          dylan@mozilla.com
-                                          dylanwh@gmail.com ))
+*** mu4e
+    a very fast local email client.
 
-         (when (executable-find "w3m")
-           (setq mu4e-html2text-command "w3m -T text/html"))
-
-         (setq mu4e-sent-folder #'my-guess-sent-folder
-               mu4e-drafts-folder "/fastmail/drafts"
-               mu4e-trash-folder #'my-guess-trash-folder
-               user-mail-address "dylan@hardison.net")))
-     (use-package mu4e-org)
-
-     (use-package mu4e-maildirs-extension :ensure t
-       :config (mu4e-maildirs-extension))
-     (use-package org-mu4e))
- #+END_SRC
-** weechat
-   Configure weechat IRC client.
 #+BEGIN_SRC emacs-lisp
-  (setq weechat-modules
-        '(weechat-sauron weechat-image weechat-button weechat-complete))
+  (use-package mu4e
+    :commands mu4e
+    :if (executable-find "mu")
+    :config
+    (progn
+      (setq mu4e-maildir (expand-file-name "~/mail")
+            mu4e-change-filenames-when-moving t
+            mu4e-view-show-images t
+            mu4e-view-show-addresses t
+            mu4e-get-mail-command "mbsync -qa"
+            mu4e-my-email-addresses '( dylan@hardison.net
+                                       dhardison@cpan.org
+                                       dhardison@mozilla.com
+                                       dylan@mozilla.com
+                                       dylanwh@gmail.com ))
 
-  (use-package weechat
-    :ensure t
+      (when (executable-find "w3m")
+        (setq mu4e-html2text-command "w3m -T text/html"))
+
+
+      (defun my-guess-email-account (msg)
+        (let ((maildir (mu4e-message-field msg :maildir)))
+          (if (string-match "^/\\(.*?\\)/" maildir)
+              (match-string 1 maildir)
+            "fastmail")))
+
+      (defun my-guess-trash-folder (msg)
+        (concat "/" (my-guess-email-account msg) "/trash"))
+
+      (defun my-guess-sent-folder (msg)
+        (concat "/" (my-guess-email-account msg) "/sent"))
+
+
+      (setq mu4e-sent-folder #'my-guess-sent-folder
+            mu4e-drafts-folder "/fastmail/drafts"
+            mu4e-trash-folder #'my-guess-trash-folder
+            user-mail-address "dylan@hardison.net")
+      (use-package mu4e-org)
+
+      (use-package mu4e-maildirs-extension
+        :ensure t
+        :config (mu4e-maildirs-extension))
+      (use-package org-mu4e)))
+#+END_SRC
+** weechat
+   weechat: use irc from inside emacs
+*** package
+#+BEGIN_SRC emacs-lisp
+  (use-package weechat :ensure t
+    :defer t
+    :commands weechat-connect
     :init
     (progn
-      (setq weechat-host-default "lofn-e.hardison.net"
-            weechat-port-default 19000
+      (setq weechat-modules
+            '(weechat-sauron weechat-image weechat-button weechat-complete))
+
+      (setq weechat-host-default       "weechat.hardison.net"
+            weechat-port-default       19000
+            weechat-password-callback  #'my-weechat-password
             weechat-auto-close-buffers t
-            weechat-mode-default 'ssl
-            weechat-auto-monitor-buffers '("hardison.#slug"
+            weechat-mode-default       'ssl)
+
+      (setq weechat-auto-monitor-buffers '("hardison.#slug"
                                            "hardison.#lobby"
                                            "sine.#lobby"
                                            "mozilla.#bteam"
                                            "mozilla.#bmo"
-                                           "mozilla.#bugzilla"))))
+                                           "mozilla.#bugzilla")))
+    :config (use-package weechat-alert :ensure t))
+#+END_SRC
 
+*** auth-sources hack
+    For osx's keychain, the port number must be a string.
+
+#+BEGIN_SRC emacs-lisp
+  (defun my-weechat-password (host port)
+    (when (fboundp 'auth-source-search)
+      (weechat-message "Using auth-source to retrieve weechat relay password")
+      (plist-get
+       (car (auth-source-search
+             :max 1
+             :host host
+             :port (number-to-string port)
+             :require '(:secret)))
+       :secret)))
+#+END_SRC
+
+*** my-weechat-start
+    Connect to weechat relay without prompting for anything
+#+BEGIN_SRC emacs-lisp
   (defun my-weechat-start ()
     (interactive)
     (weechat-connect nil nil))
 #+END_SRC
 
+*** functions for dealing with weechat buffers
+#+BEGIN_SRC emacs-lisp
+  (defun my-weechat-buffers ()
+    (--filter (eq 'weechat-mode (buffer-local-value 'major-mode it))
+             (buffer-list)))
+
+  (defun my-weechat-kill-buffers ()
+    (interactive)
+    (--each (my-weechat-buffers)
+      (kill-buffer it)))
+
+  (defun my-weechat-switch-buffer ()
+    (interactive)
+    (let ((helm-source-weechat-list (helm-make-source "Weechat Buffer" 'helm-source-buffers
+                                      :candidates (--map (buffer-name it) (my-weechat-buffers)))))
+  
+      (helm
+       :buffer "*helm weechat*"
+       :keymap helm-buffer-map
+       :truncate-lines helm-buffers-truncate-lines
+       :sources '(helm-source-weechat-list ))))
+#+END_SRC
+
 ** google-translate
+   use google translate from any buffer.
 #+BEGIN_SRC emacs-lisp
   (use-package google-translate
     :ensure t
@@ -827,6 +805,10 @@ For wrting reports and other documentation.
 #+BEGIN_SRC emacs-lisp
   (use-package rainbow-mode :ensure t)
 #+END_SRC
+** alerts
+#+BEGIN_SRC emacs-lisp
+  (use-package alert :ensure t)
+#+END_SRC
 ** sauron
    Configure sauron for notification support
 
@@ -834,7 +816,8 @@ For wrting reports and other documentation.
   (use-package sauron :ensure t
     :config
     (progn
-      (setq sauron-modules (remove 'sauron-dbus sauron-modules))
+      (add-hook 'sauron-event-added-functions 'sauron-alert-el-adapter)
+      (setq sauron-modules '(sauron-org sauron-notifications))
       (setq sauron-max-line-length nil
             sauron-hide-mode-line t
             sauron-min-priority 3
@@ -865,6 +848,13 @@ For wrting reports and other documentation.
                               ("\x2018" . "'")
                               ("\x2019" . "'"))
                             nil beg end))
+#+END_SRC
+
+** startup stuff I like
+#+BEGIN_SRC emacs-lisp
+  (defun my-services ()
+    (sauron-start)
+    (my-weechat-start))
 #+END_SRC
 * typing utilities
 ** guide-key
@@ -997,10 +987,23 @@ Before loading evil, configure undo-tree.
   (use-package google-this :ensure t)
 #+END_SRC
 ** helm
+** springboard
+
+For when you need to run a command in a different directory.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package springboard :ensure t
+    :config
+    (progn
+      (setq springboard-directories '("~/"))
+      )
+    :bind (([f2] . springboard)))
+#+END_SRC
+
 #+BEGIN_SRC emacs-lisp
   (use-package helm
     :ensure t
-    :config
+    :init
     (progn
       (require 'helm-config)
 
@@ -1032,8 +1035,7 @@ Before loading evil, configure undo-tree.
                     (define-key eshell-mode-map
                       (kbd "C-r") #'helm-eshell-history)))
 
-      (when (executable-find "curl")
-        (setq helm-google-suggest-use-curl-p t))
+      (setq helm-google-suggest-use-curl-p (executable-find "curl"))
 
       ;(use-package helm-company :ensure t)
       (use-package helm-swoop :ensure t)
@@ -1064,38 +1066,66 @@ Before loading evil, configure undo-tree.
   (use-package flycheck :ensure t)
 #+END_SRC
 ** Perl
-*** perltidy, cperl-mode
+*** perltidy
 #+BEGIN_SRC emacs-lisp
   (use-package perltidy)
+#+END_SRC
+
+*** perldoc
+helm perldoc stuff
+#+BEGIN_SRC emacs-lisp
+  (use-package helm-perldoc
+    :ensure t
+    :init (progn
+            (with-eval-after-load 'cperl-mode
+                 (helm-perldoc:setup))
+
+            ;; auto carton setup
+            (add-hook 'cperl-mode-hook 'helm-perldoc:carton-setup)))
+#+END_SRC
+
+*** cperl-mode
+#+BEGIN_SRC emacs-lisp
+  (with-eval-after-load 'cperl-mode
+    (set-face-background 'cperl-array-face nil)
+    (set-face-background 'cperl-hash-face nil))
+
+  (defun my-cperl-mode ()
+    (cperl-set-style "PerlStyle")
+    (setq cperl-indent-level 4
+          cperl-continued-statement-offset 8
+          cperl-font-lock t
+          cperl-highlight-variables-indiscriminately t
+          cperl-electric-lbrace-space nil
+          cperl-electric-parens nil
+          cperl-electric-linefeed nil
+          cperl-electric-keywords nil
+          cperl-info-on-command-no-prompt t
+          cperl-clobber-lisp-bindings t
+          cperl-lazy-help-time 3
+          cperl-invalid-face nil)
+
+    (set (make-local-variable 'font-lock-comment-face) 'cperl-comment-face)
+    (yas-minor-mode 1)
+    (smartparens-mode 1))
+
   (use-package cperl-mode
-    :ensure cperl-mode
     :init
     (progn
       (defalias 'perl-mode 'cperl-mode)
 
+      (add-hook 'cperl-mode-hook #'my-cperl-mode)
 
-      (add-hook 'cperl-mode-hook
-                '(lambda ()
-                   (cperl-set-style "PerlStyle")
-                   (setq cperl-indent-level 4
-                         cperl-continued-statement-offset 8
-                         cperl-font-lock t
-                         cperl-electric-lbrace-space nil
-                         cperl-electric-parens nil
-                         cperl-electric-linefeed nil
-                         cperl-electric-keywords nil
-                         cperl-info-on-command-no-prompt t
-                         cperl-clobber-lisp-bindings t
-                         cperl-lazy-help-time 3)
-                   (set-face-background 'cperl-array-face nil)
-                   (set-face-background 'cperl-hash-face nil)
-                   (setq cperl-invalid-face nil)
+      (make-face 'cperl-comment-face)
+      (set-face-background 'cperl-comment-face nil)
+      (set-face-foreground 'cperl-comment-face "pink")))
 
-                   (yas-minor-mode 1)
-                   (smartparens-mode 1)))))
+#+END_SRC
 
+*** bugzilla bits
 
-  (defun perl-bugzilla? (dir)
+#+BEGIN_SRC emacs-lisp
+  (defun perl-bugilla? (dir)
     (f-exists? (f-join dir "checksetup.pl")))
 
   (defun perl-bugzilla-extension? (perl-dir file)
@@ -1131,57 +1161,32 @@ Before loading evil, configure undo-tree.
     (replace-regexp-in-string "/" "::" (f-no-ext (my-perl-module-file file))))
 #+END_SRC
 
-*** perldoc
-helm perldoc stuff
-#+BEGIN_SRC emacs-lisp
-  (use-package helm-perldoc
-    :ensure t
-    :init (progn
-            (eval-after-load "cperl-mode"
-              '(progn
-                 (helm-perldoc:setup)))
-
-            ;; auto carton setup
-            (add-hook 'cperl-mode-hook 'helm-perldoc:carton-setup)))
-#+END_SRC
-
 ** Javascript
-#+BEGIN_SRC emacs-lisp
-  (defun js-ctrl-c-ctrl-c ()
-    (interactive)
-    (require 'thingatpt)
-    (let ((val (thing-at-point 'list)))
-      ;; inside parameter list?
-      (when (and (equal (substring val 0 1) "(")
-                 (equal (substring val -1) ")"))
-        (if (string-match-p "," val)
-            (my-macro-ng-add-string-for-last-arg)
-          (my-macro-ng-function-to-array-injected)))))
+lots of javascript doo-dads
 
+#+BEGIN_SRC emacs-lisp
   (use-package js2-mode
     :ensure js2-mode
     :mode "\\.js"
+    :interpreter "node"
+    :init
+    (setq js2-highlight-level 3
+          js2-global-externs '("$" "window" "BUGZILLA")
+          js2-basic-offset 4)
     :config
     (progn
-      (add-hook 'js2-mode-hook
-                (lambda ()
-                  (local-set-key (kbd "C-c C-c") 'js-ctrl-c-ctrl-c)))
-      (setq js2-highlight-level 3)
-      (setq js2-global-externs (list "$" "window" "BUGZILLA"))
-      (setq-default js2-basic-offset 4)))
+      (use-package js2-refactor
+        :ensure js2-refactor
+        :init (js2r-add-keybindings-with-prefix "C-c C-m"))
 
-  (use-package js2-refactor
-    :ensure js2-refactor
-    :init (js2r-add-keybindings-with-prefix "C-c C-m"))
-
-  (when (executable-find "tern")
-    (use-package tern :ensure t
-      :init
-      (progn
-        (add-hook 'js2-mode-hook
-                  '(lambda () (tern-mode t)))
-        (eval-after-load 'company-mode
-          (use-package company-tern :ensure t)))))
+      (use-package tern :ensure t
+        :if (executable-find "tern")
+        :init
+        (progn
+          (add-hook 'js2-mode-hook
+                    '(lambda () (tern-mode t)))
+          (eval-after-load 'company-mode
+            (use-package company-tern :ensure t))))))
 #+END_SRC
 ** web
 #+BEGIN_SRC emacs-lisp
@@ -1258,10 +1263,11 @@ Syntax highlighting for ssh config, nginx config, vimrc (haha), yaml and lua.
 things to make elisp hacking for more
 
 #+BEGIN_SRC emacs-lisp
+  (eval-after-load "dash" '(dash-enable-font-lock))
   (add-hook 'emacs-lisp-mode-hook
             '(lambda ()
                (put 'case 'lisp-indent-function 'cond)
-               (setq company-backends '(company-elisp))))
+               (set (make-local-variable 'company-backends) '(company-elisp))))
 #+END_SRC
 
 ** elasticsearch
@@ -1281,6 +1287,8 @@ things to make elisp hacking for more
     (add-hook 'eshell-mode-hook 'shell-switcher-manually-register-shell)
 #+END_SRC
 
+a bunch of global key bindings
+ 
 #+BEGIN_SRC emacs-lisp
   (global-set-key (kbd "M-x") 'helm-M-x)
   (global-set-key (kbd "C-x C-m") 'helm-M-x)
@@ -1297,7 +1305,17 @@ things to make elisp hacking for more
   (global-set-key (kbd "C-c b c") 'bz-checksetup)
   (global-set-key (kbd "C-c m")  'mu4e)
 
-  (global-set-key (kbd "C-c s") 'my-goto-scratch-buffer)
+  (global-set-key (kbd "C-c s s") 'sauron-start)
+  (global-set-key (kbd "C-c s d") 'sauron-stop)
+  (global-set-key (kbd "C-c s t") 'sauron-toggle-hide-show)
+  (global-set-key (kbd "C-c s c") 'sauron-clear)
+
+  (global-set-key (kbd "C-c w s") 'my-weechat-start)
+  (global-set-key (kbd "C-c w d") 'weechat-disconnect)
+  (global-set-key (kbd "C-c w K") 'my-weechat-kill-buffers)
+  (global-set-key (kbd "C-c w r") 'weechat-reload-buffer)
+  (global-set-key (kbd "C-c w m") 'weechat-monitor-buffer)
+  (global-set-key (kbd "C-c w b") 'my-weechat-switch-buffer)
 
   (global-set-key (kbd "C-x b")   #'helm-mini)
   (global-set-key (kbd "C-x C-b") #'helm-buffers-list)
