@@ -1,0 +1,23 @@
+#!/bin/zsh
+
+cmd=$1
+case $cmd in
+    on)
+        if ! ssh -q -O check proxy &>/dev/null; then
+            ssh -q -N -M -f proxy
+            exit 0
+        else
+            exit 1
+        fi
+        ;;
+    off)
+        ssh -q -O exit proxy &>/dev/null
+        ;;
+    status)
+        if ssh -q -O check proxy &>/dev/null; then
+            exit 0
+        else
+            exit 1
+        fi
+        ;; 
+esac
