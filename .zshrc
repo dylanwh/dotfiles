@@ -218,10 +218,8 @@ alias emacsclient='emacsclient -a ""'
 alias ec='emacsclient -c'
 alias et='emacsclient -t'
 alias sudo='command sudo '
-alias p='clipout'
-alias P='clipout |'
-alias c='clipin'
-alias -g C='| clipin'
+alias P='p |'
+alias -g C='| c'
 alias -g L='| less -F'
 alias -g 'G'='|grep '
 
@@ -257,11 +255,11 @@ if [[  ~/.zshrc -nt $PLATFORM_ALIAS_FILE || ! -f $PLATFORM_ALIAS_FILE ]]; then
 
     if have xclip; then
         platform_alias xclip='xclip -selection clipboard'
-        platform_alias clipin='xclip -i'
-        platform_alias clipout='xclip -o'
+        platform_alias c='xclip -i'
+        platform_alias p='xclip -o'
     elif have pbcopy; then
-        platform_alias clipin='pbcopy'
-        platform_alias clipout='pbpaste'
+        platform_alias c='pbcopy'
+        platform_alias p='pbpaste'
     fi
 
     have dnf && platform_alias yum=dnf

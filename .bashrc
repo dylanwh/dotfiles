@@ -25,3 +25,13 @@ fi
 if which dircolors &> /dev/null; then
     eval $(dircolors ~/.config/dircolors-solarized/dircolors.ansi-dark)
 fi
+
+if which xclip &> /dev/null; then
+    alias p='xclip -o'
+    alias c='xclip -i'
+else
+    alias p='pbpaste'
+    alias c='pbcopy'
+fi
+
+
