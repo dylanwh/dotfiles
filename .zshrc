@@ -106,6 +106,15 @@ function save_cwd { echo $PWD >! $XDG_RUNTIME_DIR/last_cwd }
 function hr       { seq -s ' ' 1 $COLUMNS | sed 's/[0-9]\+ \?/-/g' }
 function bzfixperms { sudo chmod -Rc go+rX .; sudo chown -Rc dylan:http . }
 
+if have bz; then
+    function cdb {
+        cd $(bz path "$@")
+        bz summary
+    }
+else
+    function bz { ssh -t bugzilla.vm bz "$@" }
+fi
+
 precmd_functions+=( save_cwd )
 ## }}}
 ## {{{ KEY BINDINGS
@@ -256,12 +265,6 @@ if [[  ~/.zshrc -nt $PLATFORM_ALIAS_FILE || ! -f $PLATFORM_ALIAS_FILE ]]; then
     fi
 
     have dnf && platform_alias yum=dnf
-
-    if have bz; then
-        function cdb { cd $(bz path "$@") }
-    else
-        function bz { ssh -t bugzilla.vm bz "$@" }
-    fi
 
     # alias ls to ls -Fh --color=auto --group-directories-first,
     # but if our version of ls does not support one or more of those,
