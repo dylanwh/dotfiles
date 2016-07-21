@@ -15,6 +15,7 @@ fi
 
 LANG=en_US.UTF-8
 LC_COLLATE=POSIX # sort in POSIX order.
+TZ=US/Eastern
 
 export LC_COLLATE TZ
 
