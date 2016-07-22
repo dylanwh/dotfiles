@@ -44,7 +44,7 @@ sub ARGVAL {
 while ( my $opt = shift @ARGV ) {
     if ( $opt =~ /^-D(.*)$/ ) {
         my ( $k, $v ) = split( /=/, ARGVAL($1), 2 );
-        $define{$k} = $v || 1;
+        $define{$k} = $v // 1;
     }
     elsif ( $opt =~ /^-f(.*)$/ ) {
         my ( $k, $v ) = split( /=/, ARGVAL($1), 2 );

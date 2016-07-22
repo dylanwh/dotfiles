@@ -23,6 +23,7 @@
 /Google Drive
 !.bashrc
 !.config
+!.config/*
 !.data
 !.ctags
 !.cvsignore

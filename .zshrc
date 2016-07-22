@@ -235,15 +235,15 @@ if [[  ~/.zshrc -nt $PLATFORM_ALIAS_FILE || ! -f $PLATFORM_ALIAS_FILE ]]; then
 
     have pinfo    && platform_alias info=pinfo
     have ack-grep && platform_alias ack=ack-grep
-    have gcp      && platform_alias cp=gcp
-    have gmv      && platform_alias mv=gmv
-    have grm      && platform_alias rm=grm
+    have gcp      && platform_alias cp='gcp -i'
+    have gmv      && platform_alias mv='gmv -i'
+    have grm      && platform_alias rm='grm -i'
     have gfind    && platform_alias find='noglob gfind'
     have hub      && platform_alias git=hub
     have mosh     && platform_alias mosh=$'mosh --ssh=\'ssh -o ClearAllForwardings=yes\''
     have vipe     && platform_alias pvc='p | vipe | c'
 
-    have docker && platform_alias runti='docker run -ti'
+    have docker && platform_alias runti='docker run --rm -ti'
     if have cpanm; then
         platform_alias cpanm-test='command cpanm'
         platform_alias cpanm='cpanm --notest'
