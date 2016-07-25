@@ -1,0 +1,19 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+use Text::CSV_XS;
+
+my $out = Text::CSV_XS->new({binary => 1, sep_char => ",", eol => "\n", blank_is_undef => 1});
+
+binmode STDIN, ':encoding(utf-8)';
+binmode STDOUT, ':encoding(utf-8)';
+
+while (my $line = <STDIN>) {
+    my @row = split(/\t/, $line);
+    for (@row) {
+        s/^\s+//;
+        s/\s+$//;
+        $_ = undef if $_ eq 'NULL';
+    }
+    $out->print(\*STDOUT, \@row);
+}
