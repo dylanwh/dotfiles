@@ -160,7 +160,7 @@ Choose font size based on hostname
 
    Install solarized
 
-#+BEGIN_SRC emacs-lisp :tangle no
+#+BEGIN_SRC emacs-lisp
   (setq solarized-distinct-fringe-background t
         solarized-high-contrast-mode-line nil
         solarized-scale-org-headlines t
@@ -169,19 +169,20 @@ Choose font size based on hostname
         solarized-use-variable-pitch nil)
 
   (use-package solarized-theme :ensure t
-    :config (progn
-              (load-theme 'solarized-dark t t)
-              (load-theme 'solarized-light t t)))
-
-  (enable-theme 'solarized-dark)
+    :config
+    (progn
+      (load-theme 'solarized-dark t t)
+      (load-theme 'solarized-light t t)))
 
   (defun my-solarized-toggle ()
     (interactive)
     (cond
      ((member 'solarized-dark custom-enabled-themes)
+      (set-frame-font "Source Code Pro Light-18" nil t)
       (disable-theme 'solarized-dark)
       (enable-theme 'solarized-light))
      ((member 'solarized-light custom-enabled-themes)
+      (set-frame-font "Source Code Pro Light-14" nil t)
       (disable-theme 'solarized-light)
       (enable-theme 'solarized-dark))))
 #+END_SRC
@@ -1136,10 +1137,6 @@ helm perldoc stuff
 
 *** cperl-mode
 #+BEGIN_SRC emacs-lisp
-  (with-eval-after-load 'cperl-mode
-    (set-face-background 'cperl-array-face nil)
-    (set-face-background 'cperl-hash-face nil))
-
   (defun my-cperl-mode ()
     (cperl-set-style "BSD")
     (setq cperl-indent-parens-as-block t
@@ -1154,6 +1151,12 @@ helm perldoc stuff
           cperl-clobber-lisp-bindings t
           cperl-lazy-help-time 3
           cperl-invalid-face nil)
+
+    (make-face 'cperl-comment-face)
+    (set-face-background 'cperl-comment-face nil)
+    (set-face-foreground 'cperl-comment-face "pink")
+    (set-face-background 'cperl-array-face nil)
+    (set-face-background 'cperl-hash-face nil)
 
     (set (make-local-variable 'font-lock-comment-face) 'cperl-comment-face)  
     (yas-minor-mode 1)
