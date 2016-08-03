@@ -113,6 +113,7 @@ let perl_extended_vars           = 1 " matches hash and array subscripts, etc.
 let perl_want_scope_in_variables = 1 " Shows package part of var names in green
 let perl_include_pod             = 1 " Highlight POD with perl files.
 let perl_string_as_statement     = 1 " Highlight quote marks different from string contents
+let perl_sub_signatures          = 1 " subroutine signatures
 
 "-- context-based supertabbing
 let SuperTabDefaultCompletionType = "context"
