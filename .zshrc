@@ -28,11 +28,11 @@ cdpath=(~ ~/src/mozilla ~/Dropbox /media)
 export PS_PERSONALITY=linux
 export KEYTIMEOUT=1 # Kill lag for <esc> bindings.
 
+LS_COLORS=''
+unset LS_COLORS
 for dircolors in dircolors gdircolors; do
     if have $dircolors; then
-        unset LS_COLORS
-
-        eval $($dircolors ~/.config/dircolors-solarized/dircolors.ansi-dark )
+        eval $($dircolors ~/.config/dircolors/zenburn)
         break
     fi
 done

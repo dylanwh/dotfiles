@@ -153,14 +153,17 @@ Choose font size based on hostname
 #+END_SRC
 
 ** theme
-   Install zenburn
+*** Install zenburn
 #+BEGIN_SRC emacs-lisp
-  (use-package zenburn-theme :ensure t)
+  (use-package zenburn-theme :ensure t
+    :config
+    (progn
+      (load-theme 'zenburn t)))
 #+END_SRC
 
-   Install solarized
+*** Install solarized
 
-#+BEGIN_SRC emacs-lisp
+#+BEGIN_SRC emacs-lisp :tangle no
   (setq solarized-distinct-fringe-background t
         solarized-high-contrast-mode-line nil
         solarized-scale-org-headlines t
@@ -187,6 +190,7 @@ Choose font size based on hostname
       (enable-theme 'solarized-dark))))
 #+END_SRC
 
+*** smart mode line
 #+BEGIN_SRC emacs-lisp
   (use-package smart-mode-line :ensure t
     :init
@@ -197,11 +201,11 @@ Choose font size based on hostname
             sml/show-frame-identification t
             sml/shorten-modes t
             sml/no-confirm-load-theme t
-            sml/theme 'respectful)
+            sml/theme 'dark)
       (sml/setup)))
 #+END_SRC
 
-Hide minor modes
+*** Hide minor modes
 #+BEGIN_SRC emacs-lisp
   (use-package rich-minority
     :ensure t
@@ -226,6 +230,15 @@ Turn off most of the GUI features. they're wastes of space.
   (when (display-graphic-p) (fringe-mode 16))
   (when (fboundp 'tool-bar-mode) (tool-bar-mode -1))
   (when (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
+#+END_SRC
+
+*** alect-themes
+#+BEGIN_SRC emacs-lisp :tangle no
+  (use-package alect-themes :ensure t
+    :config
+    (progn
+      (setq alect-display-class '((class color) (min-colors 256)))
+      (load-theme 'alect-black t)))
 #+END_SRC
 
 ** initial buffer settings: just eshell.

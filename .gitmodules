@@ -22,9 +22,6 @@
 [submodule ".vim/bundle/eunuch"]
 	path = .vim/bundle/eunuch
 	url = git://github.com/tpope/vim-eunuch.git
-[submodule ".config/dircolors-solarized"]
-	path = .config/dircolors-solarized
-	url = git://github.com/dylanwh/dircolors-solarized.git
 [submodule ".vim/bundle/html5"]
 	path = .vim/bundle/html5
 	url = git://github.com/othree/html5.vim.git
