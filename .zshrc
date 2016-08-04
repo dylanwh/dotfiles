@@ -98,7 +98,7 @@ fi
 compinit -d $ZCACHE/zcompdump # initialize advanced tab completion
 colors                        # initialize color associative arrays
 promptinit                    # Setup prompt theming
-prompt solarized              # Set the prompt.
+prompt boring              # Set the prompt.
 
 function mdc      { mkdir -p $1 && cd $1 }
 function namedir  { declare -g $1=$2; : ~$1  }
@@ -306,8 +306,7 @@ fi
 
 # }}}
 # NAMED DIRECTORIES# {{{
-namedir progfiles     ~/.wine/drive_c/Program\ Files
-namedir moonshine     ~/src/moonshine
+namedir bmo ~/src/mozilla/bmo
 
 if have xdg-user-dir; then
     namedir docs   $(xdg-user-dir DOCUMENTS)

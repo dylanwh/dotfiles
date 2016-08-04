@@ -85,9 +85,6 @@
 [submodule ".zsh/antigen"]
 	path = .zsh/antigen
 	url = git://github.com/zsh-users/antigen.git
-[submodule ".zsh/bundle/zsh-syntax-highlighting"]
-	path = .zsh/bundle/zsh-syntax-highlighting
-	url = git://github.com/zsh-users/zsh-syntax-highlighting.git
 [submodule ".zsh/bundle/zsh-completions"]
 	path = .zsh/bundle/zsh-completions
 	url = git://github.com/rtyler/zsh-completions.git

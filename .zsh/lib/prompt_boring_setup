@@ -1,0 +1,52 @@
+#!zsh
+# vim: set foldmethod=marker:
+
+local PR_TIME PR_DATE PR_USER PR_DIR PR_JOBS PR_CHAR PR_VCS PR_NAME PR_HOST PR_AT
+PR_TIME="%D{%H:%M}"
+PR_DATE="%D{%Y-%m-%d}"
+PR_NAME="%n"
+PR_HOST="%m"
+PR_DIR="%F{109}%~%f"
+PR_JOBS="%1(j.[%j].)"
+PR_CHAR="%0(?.%#.%F{red}%?%f?)"
+PR_AT="@"
+PR_VCS='${vcs_info_msg_0_}'
+
+autoload -Uz vcs_info title
+
+#zstyle ':vcs_info:*' formats       \
+#   '(%s:%b)'
+
+zstyle ':vcs_info:git*:*' actionformats \
+    '[%K{yellow}%F{black}%b%f%k, %F{9}%a] '
+zstyle ':vcs_info:git*:*' formats \
+    '[%K{yellow}%F{black}%b%f%k] '
+
+zstyle ':vcs_info:(sv[nk]|bzr):*' branchformat '%b:%r'
+
+zstyle ':vcs_info:*' enable svn git
+zstyle ':vcs_info:git*:*' get-revision true
+zstyle ':vcs_info:git*:*' check-for-changes true
+
+zstyle ':vcs_info:svn:*' check-for-changes true
+
+#PROMPT="$PR_TIME $PR_NAME@$PR_HOST:$PR_DIR%# "
+
+if [[ -n $SSH_CLIENT ]]; then
+    PR_USER="$PR_NAME$PR_AT$PR_HOST "
+else
+    PR_USER=''
+fi
+
+PROMPT="$PR_USER$PR_DIR $PR_VCS$PR_JOBS$PR_CHAR "
+unset RPROMPT
+
+setopt transient_rprompt # only show rprompt for current line.
+
+PS2='%_: '
+RPS2=''
+
+precmd_functions+=( title vcs_info )
+prompt_opts=( cr percent subst )
+
+alias norp='unset RPROMPT'

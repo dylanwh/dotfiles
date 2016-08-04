@@ -9,7 +9,7 @@
 !parcellite
 !profile-cleaner.conf
 !solarized
-!dircolors
+!dircolors/*
 !urxvt
 !user-dirs.dirs
 !user-dirs.locale

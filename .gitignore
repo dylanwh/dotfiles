@@ -22,8 +22,8 @@
 /Sites
 /Google Drive
 !.bashrc
+!.iterm2_shell_integration.zsh
 !.config
-!.config/*
 !.data
 !.ctags
 !.cvsignore
