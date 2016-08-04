@@ -77,7 +77,7 @@ setopt auto_resume             # automatically resume jobs from commands
 setopt no_list_beep
 setopt nobeep
 
-[[ $TERM = 'dumb' && $EMACS = t ]] && unsetopt zle
+[[ $TERM = 'dumb' ]] && unsetopt zle
 
 ## }}}
 ## {{{ FUNCTIONS
