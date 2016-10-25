@@ -119,65 +119,13 @@ precmd_functions+=( save_cwd )
 ## }}}
 ## {{{ KEY BINDINGS
 if [[ -o zle ]]; then
-    bindkey -v
+    bindkey -e
 
-    case $TERM in
-        (linux|screen*)
-            bindkey '^[[1~' beginning-of-line
-            bindkey '^[[3~' delete-char
-            bindkey '^[[4~' end-of-line
-            bindkey '^[[5~' up-line-or-history   # PageUp
-            bindkey '^[[6~' down-line-or-history # PageDown
-            bindkey '^[[A'  up-line-or-search    # up arrow for back-history-search
-            bindkey '^[[B'  down-line-or-search  # down arrow for fwd-history-search
-            bindkey '^?'   backward-delete-char
-            bindkey '^H'   backward-delete-char
-            bindkey '^[OM' accept-line
-            ;;
-        (rxvt-unicode)
-            bindkey '^[[7~' beginning-of-line  # home
-            bindkey '^[[5~' up-line-or-history # pgup
-            bindkey '^[[6~' down-line-or-history # pgdown
-            bindkey '^[[8~' end-of-line        # end
-            bindkey '^[[A' up-line-or-search   # up arrow
-            bindkey '^[[B' down-line-or-search # down arrow
-            bindkey '^?'   backward-delete-char
-            bindkey '^H'   backward-delete-char
-        ;;
-    esac
-
-    bindkey -M vicmd ' ' magic-space ## do history expansion on space
-    bindkey -M vicmd '#' vi-pound-insert
-    bindkey -M vicmd Q   quote-line
-    bindkey -M vicmd q   quote-region
-    bindkey -M vicmd u   undo
-    bindkey -M vicmd v   edit-command-line
-    bindkey -M vicmd k   up-line-or-search
-    bindkey -M vicmd j   down-line-or-search
-
-    bindkey '^_' copy-prev-shell-word
-    bindkey '^Q' push-input
-    bindkey '^E' expand-word
-    bindkey '^ ' _expand_alias
-
-    if have fasd; then
-        bindkey -r '^X'
-        bindkey '^X^A' fasd-complete
-        bindkey '^X^F' fasd-complete-f
-        bindkey '^X^D' fasd-complete-d
-    fi
+    bindkey ' ' magic-space ## do history expansion on space
 
     bindkey '^O'   accept-and-infer-next-history
     bindkey '^[^M' accept-and-hold
     bindkey '^F'   insert-files
-
-    bindkey '^P' up-history
-    bindkey '^N' down-history
-    bindkey '^?' backward-delete-char
-    bindkey '^H' backward-delete-char
-    bindkey '^W' backward-kill-word
-    bindkey '^R' history-incremental-search-backward
-    bindkey '^S' zle-sudo
 fi
 ## }}}
 ## {{{ ALIASES
@@ -240,10 +188,14 @@ if [[  ~/.zshrc -nt $PLATFORM_ALIAS_FILE || ! -f $PLATFORM_ALIAS_FILE ]]; then
     have grm      && platform_alias rm='grm -i'
     have gfind    && platform_alias find='noglob gfind'
     have hub      && platform_alias git=hub
-    have mosh     && platform_alias mosh=$'mosh --ssh=\'ssh -o ClearAllForwardings=yes\''
     have vipe     && platform_alias pvc='p | vipe | c'
 
-    have docker && platform_alias runti='docker run --rm -ti'
+    if have docker; then
+        platform_alias runti='docker run --rm -ti'
+    fi
+    if have docker-machine; then
+        platform_alias dmdf='docker-machine ssh default df -h /mnt/sda1'
+    fi
     if have cpanm; then
         platform_alias cpanm-test='command cpanm'
         platform_alias cpanm='cpanm --notest'

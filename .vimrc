@@ -226,6 +226,7 @@ if !exists('autocmds_loaded')
         autocmd BufNewFile,BufRead */.config/i3/config* set ft=i3
         autocmd BufNewFile,BufRead Capfile set ft=ruby
         autocmd BufNewFile,BufRead *.tt2 set ft=tt2
+        autocmd BufNewFile,BufRead *.html.tmpl set ft=tt2html
         autocmd BufNewFile,BufRead /tmp/zshecl* set ft=sh syn=zsh |
                     \ map <buffer> q ZZ
     augroup END

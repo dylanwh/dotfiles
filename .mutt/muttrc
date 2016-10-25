@@ -1,6 +1,35 @@
 set realname="Dylan William Hardison"
 
-set history_file=~/.cache/mutt/history
+set imap_user=dylan@hardison.net
+set imap_pass=`security find-generic-password -s mutt -w`
+set imap_headers="X-Bugzilla-Product X-Bugzilla-Component X-Bugzilla-Assigned-To"
+
+
+set record=+"Sent Items"
+set postponed=+Drafts
+set folder="imaps://mail.messagingengine.com/INBOX"
+set spoolfile="imaps://mail.messagingengine.com/INBOX"
+set mask="."
+
+mailboxes + +mozilla +mozilla.bugmail +mozilla.bugmail.bmo +alerts
+subscribe dev-platform@mozilla\.org \
+          reply\.github\.com \
+          billing@hardison\.net \
+          auto-tools@mozilla.com \
+          lists\.mozilla\.org \
+          developers@bugzilla.org \
+          outreachy-announce-list@gnome\.org \
+          outreachy-list@gnome\.org
+
+alternates dylan@mozilla\.com \
+           dhardison@mozilla\.com \
+           dylan\+[^@]+@hardison\.net \
+           bugzilla-admin@mozilla\.org \
+           all(-moco|-moco-mofo)?@mozilla\.com
+
+alias -group bmo bmo BMO <bugzilla-daemon@mozilla.org>
+
+set history_file=~/.mutt/history
 set history=1000
 set save_history=1000
 
@@ -53,7 +82,6 @@ bind index       <Esc>0C       next-page
 bind index       <Esc>0D       previous-page
 
 macro generic,pager,index <F2> ":toggle arrow_cursor\n"    "toggle arrow cursor"
-macro generic,pager,index <F3>     "!muttprofile\n:source ~/.mutt/profile.active\nm" "New message with profile"
 macro index               A    "T.\n;WO;WN;t"              "mark all as read"
 macro index               S    "D~H spam\n"                "delete all spam"
 macro index,pager         i    "c +inbox\n"                "go to inbox"
@@ -73,4 +101,4 @@ macro generic \e1 ":set display_filter='t-prot -acelmtS=6 -Mmutt --spass -L$HOME
 macro pager \e0 ":unset display_filter; exec exit\n:exec display-message\n" "Turn TOFU protection off"
 macro pager \e1 ":set display_filter='t-prot -acelmtS=6 -Mmutt --spass -L$HOME/.mutt/mlfooters -A$HOME/.mutt/adfooters'; exec exit\n:exec display-message\n" "Turn TOFU protection on"
 
-source ~/.mutt/profile/default
+source ~/.mutt/theme

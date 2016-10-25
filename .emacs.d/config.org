@@ -11,7 +11,7 @@ Copy this file to ~/.emacs.d and add the following to ~/.emacs/init.el:
                            ("org" . "http://orgmode.org/elpa/")
                            ("gnu" .  "http://elpa.gnu.org/packages/"))
         package-enable-at-startup nil)
-  
+
   (package-initialize)
   (unless (package-installed-p 'use-package)
     (unless (assoc 'use-package package-archive-contents)
@@ -19,8 +19,8 @@ Copy this file to ~/.emacs.d and add the following to ~/.emacs/init.el:
     (package-install 'use-package))
 
   (require 'use-package)
-(use-package org :ensure t)
-(org-babel-load-file "~/.emacs.d/config.org")
+  (use-package org :ensure t)
+  (org-babel-load-file "~/.emacs.d/config.org")
 #+END_SRC
 
 * environment
@@ -52,11 +52,11 @@ and ... don't bother loading it. customize settings are nice, but they tend to n
 There are a few packages that need to be loaded before anything else,
 because I use them through out this file.
 #+BEGIN_SRC emacs-lisp
-    (use-package after)
-    (use-package bind)
+    (load-library "after")
+    (load-library "bind")
+    (load-library "my-util")
     (use-package f :ensure t)
     (use-package request :ensure t)
-    (use-package my-util)
 #+END_SRC
 
 ** server
@@ -78,6 +78,10 @@ I always want an emacs server running.
        (exec-path-from-shell-copy-env "PERL5LIB")
        (exec-path-from-shell-copy-env "PERL_MM_OPT")
        (exec-path-from-shell-copy-env "PERL_MB_OPT")
+       (exec-path-from-shell-copy-env "DOCKER_TLS_VERIFY")
+       (exec-path-from-shell-copy-env "DOCKER_HOST")
+       (exec-path-from-shell-copy-env "DOCKER_CERT_PATH")
+       (exec-path-from-shell-copy-env "DOCKER_MACHINE_NAME")
        (exec-path-from-shell-copy-env "GIT_CEILING_DIRECTORIES")))
 
    (setenv "PAGER" "cat")
@@ -261,13 +265,6 @@ and allow 256 xterm colors.
   (which-function-mode t)     ;; display current function
   (blink-cursor-mode -1)      ;; disable blinking cursor
 
-  (use-package xterm-color
-    :ensure t
-    :init
-    (progn (add-hook 'comint-preoutput-filter-functions 'xterm-color-filter)
-           (setq comint-output-filter-functions
-                 (remove 'ansi-color-process-output comint-output-filter-functions))
-           (setq font-lock-unfontify-region-function 'xterm-color-unfontify-region)))
 #+END_SRC
 
 ** better buffer names for duplicates
@@ -408,8 +405,8 @@ Use ethan-wspace to handle whitespace issues.
           eshell-history-size 4096)
     :config
     (progn
-      (use-package dylan-eshell-commands)
-      (use-package dylan-eshell-prompt)))
+      (load-library "dylan-eshell-commands")
+      (load-library "dylan-eshell-prompt")))
 
   (defun eshell-maybe-bol ()
     (interactive)
@@ -509,6 +506,17 @@ This just adds a few things to dired mode.
 #+END_SRC
 * communication
 ** email
+
+setup msmtp
+#+BEGIN_SRC emacs-lisp
+  ; use msmtp
+  (setq message-send-mail-function 'message-send-mail-with-sendmail)
+  (setq sendmail-program "/usr/local/bin/msmtp")
+  ; tell msmtp to choose the SMTP server according to the from field in the outgoing email
+  (setq message-sendmail-extra-arguments '("--read-envelope-from"))
+  (setq message-sendmail-f-is-evil 't)
+#+END_SRC
+
 some utilities
 
 #+BEGIN_SRC emacs-lisp
@@ -714,21 +722,23 @@ some utilities
    #+END_SRC
 ** org-mode
 #+BEGIN_SRC emacs-lisp
-  (require 'org-mouse)
-  (require 'org-protocol)
-  (require 'org-eshell)
-  (require 'org-mobile)
-  (require 'ob-js)
+    (require 'org-mouse)
+    (require 'org-protocol)
+    (require 'org-eshell)
+    (require 'org-mobile)
+    (require 'ob-js)
 
-  (setq org-agenda-files '("~/org/bugzilla.org"
-                           "~/.emacs.d/config.org"
-                           "~/org/elastic-quick-search.org"
-                           "~/org/notes.org"))
+    (setq org-agenda-files '("~/org/bugzilla.org"
+                             "~/org/bmo.org"
+                             "~/org/outreachy.org"
+                             "~/.emacs.d/config.org"
+                             "~/org/elastic-quick-search.org"
+                             "~/org/notes.org"))
 
-  (setq org-babel-load-languages '((emacs-lisp . t)
-                                   (perl . t)
-                                   (sql . t)
-                                   (js . t)))
+    (setq org-babel-load-languages '((emacs-lisp . t)
+                                     (perl . t)
+                                     (sql . t)
+                                     (js . t)))
 
   (setq org-confirm-babel-evaluate              nil
         org-confirm-elisp-link-function         nil
@@ -738,6 +748,8 @@ some utilities
         org-log-into-drawer                     t
         org-open-directory-means-index-dot-org  t
         org-refile-allow-creating-parent-nodes  'confirm
+        org-refile-use-outline-path             'file
+        org-refile-targets '((org-agenda-files :level . 1))
         org-return-follows-link                 t
         org-src-fontify-natively                t
         org-tab-follows-link                    t
@@ -1237,7 +1249,7 @@ lots of javascript doo-dads
     :interpreter "node"
     :init
     (setq js2-highlight-level 3
-          js2-global-externs '("$" "window" "BUGZILLA")
+          js2-global-externs '("$" "window" "BUGZILLA" "localStorage" "jQuery")
           js2-basic-offset 4)
     :config
     (progn
@@ -1265,7 +1277,10 @@ lots of javascript doo-dads
     "Hooks for Web mode."
     (setq web-mode-markup-indent-offset 2
           web-mode-script-padding 2
-          web-mode-code-indent-offset 2))
+          web-mode-code-indent-offset 2)
+  
+    (setf (cdr (assoc "template-toolkit" web-mode-engine-open-delimiter-regexps))
+          "\\[%"))
 
   (add-hook 'web-mode-hook 'my-web-mode-hook)
 
@@ -1571,26 +1586,6 @@ indent text object
 #+BEGIN_SRC emacs-lisp
   (use-package evil-indent-textobject
     :ensure t)
-#+END_SRC
-
-** jumps
-Make emacs jump more like vim.
-#+BEGIN_SRC emacs-lisp
-  (use-package evil-jumper
-    :ensure t
-    :config
-    (progn
-      (setq evil-jumper-auto-center t
-            evil-jumper-auto-save-interval 3600)))
-#+END_SRC
-
-After searching, recenter on the search term.
-#+BEGIN_SRC emacs-lisp
-  (defadvice evil-ex-search-next (after advice-for-evil-ex-search-next activate)
-    (recenter))
-
-  (defadvice evil-ex-search-previous (after advice-for-evil-ex-search-previous activate)
-    (recenter))
 #+END_SRC
 
 ** evil org
