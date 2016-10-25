@@ -77,8 +77,6 @@ setopt auto_resume             # automatically resume jobs from commands
 setopt no_list_beep
 setopt nobeep
 
-[[ $TERM = 'dumb' ]] && unsetopt zle
-
 ## }}}
 ## {{{ FUNCTIONS
 # autoload useful functions distributed with zsh
@@ -98,7 +96,6 @@ fi
 compinit -d $ZCACHE/zcompdump # initialize advanced tab completion
 colors                        # initialize color associative arrays
 promptinit                    # Setup prompt theming
-prompt boring              # Set the prompt.
 
 function mdc      { mkdir -p $1 && cd $1 }
 function namedir  { declare -g $1=$2; : ~$1  }
@@ -287,6 +284,16 @@ if [[ $TERM == xterm ]]; then
     unset ppid
 fi
 
-[[ -f "$HOME/.iterm2_shell_integration.zsh" ]] && source "$HOME/.iterm2_shell_integration.zsh"
+if [[ $TERM = 'dumb' ]]; then
+    unsetopt zle
+    unsetopt prompt_cr
+    unsetopt prompt_subst
+    unfunction precmd
+    unfunction preexec
+    PS1='$ '
+else
+    prompt boring # Set the prompt.
+    [[ -f "$HOME/.iterm2_shell_integration.zsh" ]] && source "$HOME/.iterm2_shell_integration.zsh"
+fi
 
 # vim: set sw=4 ts=4 foldmethod=marker path=.,~/.zsh/lib,~/:
