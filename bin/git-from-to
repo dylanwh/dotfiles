@@ -1,0 +1,11 @@
+#!/bin/bash
+
+branch="$(git rev-parse --abbrev-ref HEAD)"
+remote="$(git remote get-url origin --push)"
+commits=($(
+git log --pretty=oneline --abbrev-commit --no-merges "$@" \
+    | sed -n '1 h; $ { p; g; p; }' \
+    | cut -f 1 -d ' '))
+
+echo "To $remote"
+echo "   ${commits[0]}..${commits[1]}  $branch -> $branch"
