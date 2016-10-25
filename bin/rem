@@ -1,6 +1,6 @@
 #!/usr/bin/env zsh
 
-file=${REMIND_FILE:-"$HOME/var/private/reminders"}
+file=${REMIND_FILE:-"$HOME/annex/private/reminders"}
 opts=()
 
 while [[ -n $1 ]]; do
