@@ -1435,15 +1435,13 @@ Setup evil with some very vim-like defaults.
             evil-want-C-w-in-emacs-state t)
 
       (evil-mode 1)
+      (evil-esc-mode 1)
 
       (add-to-list 'evil-emacs-state-modes 'sauron-mode)
       (add-to-list 'evil-emacs-state-modes 'epresent-mode)
       (add-to-list 'evil-insert-state-modes 'weechat-mode)
       (add-to-list 'evil-insert-state-modes 'sql-interactive-mode)
       (add-to-list 'evil-insert-state-modes 'racket-repl-mode)
-
-      (unless (display-graphic-p)
-        (evil-esc-mode -1))
 
       (define-key evil-normal-state-map (kbd "SPC o") 'imenu)
       (define-key evil-normal-state-map (kbd "SPC b") 'switch-to-buffer)
