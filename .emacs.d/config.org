@@ -1117,6 +1117,7 @@ For when you need to run a command in a different directory.
   (set-register ?b '(file . "~/org/bugzilla.org"))
   (set-register ?q '(file . "~/org/elastic-quick-search.org"))
   (set-register ?i '(file . "~/.imapfilter/config.lua"))
+  (set-register ?g '(file . "~/Google Drive"))
 #+END_SRC
 * programming languages
 ** Flycheck
@@ -1164,35 +1165,44 @@ helm perldoc stuff
 #+BEGIN_SRC emacs-lisp
   (defun my-cperl-mode ()
     (cperl-set-style "BSD")
-    (setq cperl-indent-parens-as-block t
-          cperl-close-paren-offset -4
-          cperl-font-lock t
-          cperl-highlight-variables-indiscriminately t
-          cperl-electric-lbrace-space nil
-          cperl-electric-parens nil
-          cperl-electric-linefeed nil
-          cperl-electric-keywords nil
-          cperl-info-on-command-no-prompt t
-          cperl-clobber-lisp-bindings t
-          cperl-lazy-help-time 3
-          cperl-invalid-face nil)
-
-    (make-face 'cperl-comment-face)
-    (set-face-background 'cperl-comment-face nil)
-    (set-face-foreground 'cperl-comment-face "pink")
-    (set-face-background 'cperl-array-face nil)
-    (set-face-background 'cperl-hash-face nil)
-
-    (set (make-local-variable 'font-lock-comment-face) 'cperl-comment-face)  
+    (set (make-local-variable 'font-lock-comment-face) 'cperl-comment-face)
     (yas-minor-mode 1)
     (smartparens-mode 1))
 
+  (setq cperl-highlight-variables-indiscriminately t)
   (use-package cperl-mode
-    :init
+    :config
     (progn
       (defalias 'perl-mode 'cperl-mode)
 
+      (setq cperl-invalid-face nil)
+      (setq cperl-indent-parens-as-block t
+              cperl-close-paren-offset -4
+              cperl-font-lock t
+              cperl-electric-lbrace-space nil
+              cperl-electric-parens nil
+              cperl-electric-linefeed nil
+              cperl-electric-keywords nil
+              cperl-info-on-command-no-prompt t
+              cperl-clobber-lisp-bindings t
+              cperl-lazy-help-time 3)
+
       (add-hook 'cperl-mode-hook #'my-cperl-mode)
+
+      (make-face 'cperl-comment-face)
+      (set-face-background 'cperl-comment-face nil)
+      (set-face-foreground 'cperl-comment-face "pink")
+
+      (set-face-attribute 'cperl-array-face nil
+                          :inherit font-lock-variable-name-face
+                          :weight 'normal
+                          :foreground nil
+                          :background nil)
+
+      (set-face-attribute 'cperl-hash-face nil
+                          :inherit font-lock-variable-name-face
+                          :foreground nil
+                          :background nil)
 
       (make-face 'cperl-comment-face)
       (set-face-background 'cperl-comment-face nil)
