@@ -1165,6 +1165,21 @@ helm perldoc stuff
 #+BEGIN_SRC emacs-lisp
   (defun my-cperl-mode ()
     (cperl-set-style "BSD")
+    (make-face 'cperl-comment-face)
+    (set-face-background 'cperl-comment-face nil)
+    (set-face-foreground 'cperl-comment-face "pink")
+
+    (set-face-attribute 'cperl-array-face nil
+                        :inherit font-lock-variable-name-face
+                        :weight 'normal
+                        :foreground nil
+                        :background nil)
+
+    (set-face-attribute 'cperl-hash-face nil
+                        :inherit font-lock-variable-name-face
+                        :foreground nil
+                        :background nil)
+
     (set (make-local-variable 'font-lock-comment-face) 'cperl-comment-face)
     (yas-minor-mode 1)
     (smartparens-mode 1))
@@ -1177,37 +1192,17 @@ helm perldoc stuff
 
       (setq cperl-invalid-face nil)
       (setq cperl-indent-parens-as-block t
-              cperl-close-paren-offset -4
-              cperl-font-lock t
-              cperl-electric-lbrace-space nil
-              cperl-electric-parens nil
-              cperl-electric-linefeed nil
-              cperl-electric-keywords nil
-              cperl-info-on-command-no-prompt t
-              cperl-clobber-lisp-bindings t
-              cperl-lazy-help-time 3)
+            cperl-close-paren-offset -4
+            cperl-font-lock t
+            cperl-electric-lbrace-space nil
+            cperl-electric-parens nil
+            cperl-electric-linefeed nil
+            cperl-electric-keywords nil
+            cperl-info-on-command-no-prompt t
+            cperl-clobber-lisp-bindings t
+            cperl-lazy-help-time 3)
 
-      (add-hook 'cperl-mode-hook #'my-cperl-mode)
-
-      (make-face 'cperl-comment-face)
-      (set-face-background 'cperl-comment-face nil)
-      (set-face-foreground 'cperl-comment-face "pink")
-
-      (set-face-attribute 'cperl-array-face nil
-                          :inherit font-lock-variable-name-face
-                          :weight 'normal
-                          :foreground nil
-                          :background nil)
-
-      (set-face-attribute 'cperl-hash-face nil
-                          :inherit font-lock-variable-name-face
-                          :foreground nil
-                          :background nil)
-
-      (make-face 'cperl-comment-face)
-      (set-face-background 'cperl-comment-face nil)
-      (set-face-foreground 'cperl-comment-face "pink")))
-
+      (add-hook 'cperl-mode-hook #'my-cperl-mode)))
 #+END_SRC
 
 *** bugzilla bits
@@ -1434,15 +1429,17 @@ Setup evil with some very vim-like defaults.
 
 ** turn on evil
 #+BEGIN_SRC emacs-lisp
+  (setq evil-search-module           'evil-search
+        evil-magic                   'very-magic
+        evil-want-C-w-delete         nil
+        evil-want-C-i-jump           nil
+        evil-want-C-w-in-emacs-state t)
+
   (use-package evil
     :ensure t
     :config
     (progn
-      (setq evil-search-module           'evil-search
-            evil-symbol-word-search      t
-            evil-magic                   'very-magic
-            evil-want-C-w-delete         nil
-            evil-want-C-w-in-emacs-state t)
+      (setq-default evil-symbol-word-search      t)
 
       (evil-mode 1)
       (evil-esc-mode 1)
@@ -1561,17 +1558,16 @@ Setup evil with some very vim-like defaults.
         "j" 'org-open-at-point
         "C" 'customize-group
         "b d" 'kill-this-buffer
-        "b z" 'bzshell
         "v" (kbd "C-w v C-w l")
         "s" (kbd "C-w s C-w j")
         "P" 'package-list-packages
         "h" help-map
         "h h" 'help-for-help-internal
         "g s" 'magit-status
-        "g b" 'magit-blame-mode
+        "g b" 'magit-blame-popup
         "g a" 'git-gutter+-stage-hunks
         "g r" 'git-gutter+-revert-hunks
-        "g c" 'magit-commit
+        "g c" 'magit-commit-popup
         "T"   'my-solarized-toggle
         "g l" 'magit-log)))
 #+END_SRC

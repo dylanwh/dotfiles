@@ -9,7 +9,7 @@
     co = checkout
     ci = commit
     br = branch
-    st = status
+    st = status --short --branch
     up = !git fetch --all --tags --prune && git pull --rebase
     reword = commit --amend
     top = !pwd

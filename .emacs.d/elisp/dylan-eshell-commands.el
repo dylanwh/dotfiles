@@ -38,9 +38,11 @@
 (defun eshell/cdb (str)
   (let ((new-dir
          (let* ((default-directory bz-dir)
-                (bug-dir (shell-command-to-string (format "bz path '%s'" str))))
-           (with-parsed-tramp-file-name default-directory nil
-             (tramp-make-tramp-file-name method user host bug-dir hop)))))
+                (bug-dir (s-trim (shell-command-to-string (format "bz path '%s'" str)))))
+           (if (tramp-file-name-p default-directory)
+               (with-parsed-tramp-file-name default-directory nil
+                 (tramp-make-tramp-file-name method user host bug-dir hop))
+             bug-dir))))
     (eshell/cd new-dir)
     (shell-command-to-string "bz summary")))
 
