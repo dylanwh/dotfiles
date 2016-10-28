@@ -1,1 +1,0 @@
-desktop-2@thor.sh

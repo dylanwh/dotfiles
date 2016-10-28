@@ -34,8 +34,6 @@ ENSURE_DIRS = $(XDG_DATA_HOME) \
 			  $(XDG_TEMPLATES_DIR) \
 			  $(XDG_VIDEOS_DIR)
 
-ENSURE_LINKS = .pwsafe.dat
-
 ifdef DISPLAY
 	ENSURE_LINKS += .i3status.conf .i3/config
 endif
@@ -50,9 +48,6 @@ links: $(ENSURE_LINKS)
 
 clean-links:
 	rm -v $(ENSURE_LINKS)
-
-.pwsafe.dat: annex/private/pwsafe.dat
-	@ln -svf $< $@
 
 ifdef DISPLAY
 %: %@$(HOST)
