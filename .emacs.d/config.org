@@ -1,6 +1,7 @@
 #+TITLE: emacs configuration file
 #+AUTHOR: Dylan William Hardison
 #+EMAIL: dylan@hardison.net
+#+STARTUP: hidestars indent overview
 #+OPTIONS: ^:nil
 
 * installation
@@ -495,7 +496,6 @@ This just adds a few things to dired mode.
     :config
     (progn
       (add-hook 'shell-mode-hook  'with-editor-export-editor)
-      (add-hook 'term-mode-hook   'with-editor-export-editor)
       (add-hook 'eshell-mode-hook 'with-editor-export-editor)
 
       (define-key (current-global-map)
@@ -586,11 +586,12 @@ some utilities
       (setq weechat-modules
             '(weechat-sauron weechat-image weechat-button weechat-complete))
 
-      (setq weechat-host-default       "weechat.hardison.net"
-            weechat-port-default       19000
-            weechat-password-callback  #'my-weechat-password
-            weechat-auto-close-buffers t
-            weechat-mode-default       'ssl)
+      (setq weechat-host-default             "weechat.hardison.net"
+            weechat-port-default             19000
+            weechat-password-callback        #'my-weechat-password
+            weechat-auto-close-buffers       t
+            weechat-mode-default             'ssl
+            weechat-completing-read-function #'completing-read)
 
       (setq weechat-auto-monitor-buffers '("hardison.#slug"
                                            "hardison.#lobby"
@@ -668,7 +669,7 @@ some utilities
 
    #+BEGIN_SRC emacs-lisp
      (defvar bz-url "http://bugzilla.vm/")
-     (defvar bz-dir "/scp:bugzilla.vm:/opt/bugzilla")
+     (defvar bz-dir "/opt/bugzilla")
 
      (defun bz-browse-site ()
        (interactive)
@@ -812,10 +813,6 @@ For wrting reports and other documentation.
    (add-to-list 'org-link-abbrev-alist '("cpan" . "https://metacpan.org/pod/%h"))
  #+END_SRC
 
-*** mediawiki
-#+BEGIN_SRC emacs-lisp
-(use-package ox-mediawiki :ensure t)
-#+END_SRC
 ** ham-mode
    Html As Markdown. Transparently edit an html file using markdown.
 
@@ -1163,22 +1160,15 @@ helm perldoc stuff
 
 *** cperl-mode
 #+BEGIN_SRC emacs-lisp
+  (custom-set-faces
+   '(cperl-array-face ((t (:inherit font-lock-variable-name-face))))
+   '(cperl-hash-face ((t (:inherit font-lock-variable-name-face)))))
+
   (defun my-cperl-mode ()
     (cperl-set-style "BSD")
     (make-face 'cperl-comment-face)
     (set-face-background 'cperl-comment-face nil)
     (set-face-foreground 'cperl-comment-face "pink")
-
-    (set-face-attribute 'cperl-array-face nil
-                        :inherit font-lock-variable-name-face
-                        :weight 'normal
-                        :foreground nil
-                        :background nil)
-
-    (set-face-attribute 'cperl-hash-face nil
-                        :inherit font-lock-variable-name-face
-                        :foreground nil
-                        :background nil)
 
     (set (make-local-variable 'font-lock-comment-face) 'cperl-comment-face)
     (yas-minor-mode 1)
