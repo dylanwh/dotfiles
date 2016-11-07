@@ -1297,6 +1297,10 @@ Syntax highlighting for ssh config, nginx config, vimrc (haha), yaml and lua.
            ("known_hosts\\'"       . ssh-known-hosts-mode)
            ("authorized_keys2?\\'" . ssh-authorized-keys-mode)))
 
+  (use-package toml-mode
+    :ensure t
+    :mode "\.toml")
+
   (use-package nginx-mode
     :ensure t
     :mode "/etc/nginx/.*")
@@ -1375,6 +1379,7 @@ a bunch of global key bindings
   (global-set-key (kbd "C-=") 'er/expand-region)
 
   (global-set-key (kbd "C-c c") 'org-capture)
+  (global-set-key (kbd "C-c e") 'eshell)
   (global-set-key (kbd "C-c a") 'org-agenda)
   (global-set-key (kbd "C-c l") 'org-store-link)
   (global-set-key (kbd "C-c i") 'my-imapfilter)
