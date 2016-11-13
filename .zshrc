@@ -301,6 +301,9 @@ if [[ $TERM = 'dumb' ]]; then
     PS1='$ '
 else
     prompt boring # Set the prompt.
+    if [[ $TERM_PROGRAM = 'iTerm.app' ]]; then
+        itermize
+    fi
 fi
 
 # vim: set sw=4 ts=4 foldmethod=marker path=.,~/.zsh/lib,~/:
