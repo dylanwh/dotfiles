@@ -102,6 +102,14 @@ function namedir  { declare -g $1=$2; : ~$1  }
 function save_cwd { echo $PWD >! $XDG_RUNTIME_DIR/last_cwd }
 function hr       { seq -s ' ' 1 $COLUMNS | sed 's/[0-9]\+ \?/-/g' }
 function bzfixperms { sudo chmod -Rc go+rX .; sudo chown -Rc dylan:http . }
+function itermize {
+    if [[ -f "$HOME/.iterm2_shell_integration.zsh" ]]; then
+        source "$HOME/.iterm2_shell_integration.zsh"
+    else
+        echo "cannot itermize" >&2
+        return 1
+    fi
+}
 
 if have bz; then
     function cdb {
@@ -293,7 +301,6 @@ if [[ $TERM = 'dumb' ]]; then
     PS1='$ '
 else
     prompt boring # Set the prompt.
-    [[ -f "$HOME/.iterm2_shell_integration.zsh" ]] && source "$HOME/.iterm2_shell_integration.zsh"
 fi
 
 # vim: set sw=4 ts=4 foldmethod=marker path=.,~/.zsh/lib,~/:
