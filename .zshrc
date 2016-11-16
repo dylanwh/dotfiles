@@ -23,7 +23,7 @@ HISTFILE=$ZDATA/history
 
 watch=(all)
 fignore=(.o .hi .pyc)
-cdpath=(~ ~/src/mozilla ~/Dropbox /media)
+cdpath=(~)
 
 export PS_PERSONALITY=linux
 export KEYTIMEOUT=1 # Kill lag for <esc> bindings.
@@ -263,7 +263,8 @@ fi
 
 # }}}
 # NAMED DIRECTORIES# {{{
-namedir bmo ~/src/mozilla/bmo
+namedir bmo ~/src/mozilla/bmo/master
+namedir carton_bundles $HOME/src/mozilla/carton-bundles
 
 if have xdg-user-dir; then
     namedir docs   $(xdg-user-dir DOCUMENTS)
