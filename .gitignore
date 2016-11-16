@@ -25,6 +25,7 @@
 !.iterm2
 !.iterm2_shell_integration.zsh
 !.config
+!.config/iterm/com.googlecode.iterm2.plist
 !.data
 !.ctags
 !.cvsignore
