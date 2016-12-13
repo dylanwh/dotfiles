@@ -1203,15 +1203,17 @@
 	<key>NSWindow Frame Preferences</key>
 	<string>230 214 606 456 0 0 1440 877 </string>
 	<key>NSWindow Frame ProfilesPanel</key>
-	<string>732 724 735 382 0 0 1920 1177 </string>
+	<string>435 451 735 382 0 0 1440 877 </string>
+	<key>NSWindow Frame SUStatusFrame</key>
+	<string>-900 453 400 129 -1920 0 1920 1177 </string>
 	<key>NSWindow Frame SUUpdateAlert</key>
-	<string>410 364 620 392 0 0 1440 877 </string>
+	<string>650 589 620 392 0 0 1920 1177 </string>
 	<key>NSWindow Frame SessionsPreferences</key>
 	<string>377 315 606 456 0 0 1440 877 </string>
 	<key>NSWindow Frame SharedPreferences</key>
-	<string>436 607 796 473 0 0 1920 1177 </string>
+	<string>250 312 937 512 0 0 1440 877 </string>
 	<key>NSWindow Frame iTerm Window 0</key>
-	<string>155 93 652 478 0 0 1440 877 </string>
+	<string>0 4 1440 873 0 0 1440 877 </string>
 	<key>NSWindow Frame iTerm Window 1</key>
 	<string>0 400 650 476 0 0 1440 877 </string>
 	<key>NSWindow Frame iTerm Window 2</key>
@@ -1893,7 +1895,7 @@
 			<key>Shortcut</key>
 			<string></string>
 			<key>Silence Bell</key>
-			<false/>
+			<true/>
 			<key>Smart Cursor Color</key>
 			<true/>
 			<key>Smart Selection Rules</key>
@@ -4342,6 +4344,8 @@
 	<true/>
 	<key>NoSyncHaveShownPromoWithId_4</key>
 	<true/>
+	<key>NoSyncHaveWarnedAboutPasteConfirmationChange</key>
+	<true/>
 	<key>NoSyncInstallationId</key>
 	<string>6EA45182-F007-40FE-AD35-520161D2624C</string>
 	<key>NoSyncLastTipTime</key>
@@ -4512,7 +4516,7 @@
 	<key>SUHasLaunchedBefore</key>
 	<true/>
 	<key>SULastCheckTime</key>
-	<date>2016-11-15T05:29:45Z</date>
+	<date>2016-12-03T04:22:18Z</date>
 	<key>SavePasteHistory</key>
 	<false/>
 	<key>Secure Input</key>
@@ -4549,6 +4553,8 @@
 	<array>
 		<string>Captured Output</string>
 	</array>
+	<key>TraditionalVisualBell</key>
+	<true/>
 	<key>TripleClickSelectsFullWrappedLines</key>
 	<false/>
 	<key>URLHandlersByGuid</key>
@@ -4581,7 +4587,7 @@
 	<key>findRegex_iTerm</key>
 	<false/>
 	<key>iTerm Version</key>
-	<string>3.0.10</string>
+	<string>3.0.12</string>
 	<key>kCPKSelectionViewPreferredModeKey</key>
 	<integer>0</integer>
 	<key>kCPKSelectionViewShowHSBTextFieldsKey</key>

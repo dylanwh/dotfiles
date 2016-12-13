@@ -1447,7 +1447,8 @@ Setup evil with some very vim-like defaults.
     :ensure t
     :config
     (progn
-      (setq-default evil-symbol-word-search      t)
+      (setq-default evil-symbol-word-search t)
+      (setq evil-esc-delay 0.05)
 
       (evil-mode 1)
       (evil-esc-mode 1)

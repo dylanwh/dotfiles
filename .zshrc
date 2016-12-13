@@ -194,6 +194,7 @@ if [[  ~/.zshrc -nt $PLATFORM_ALIAS_FILE || ! -f $PLATFORM_ALIAS_FILE ]]; then
     have gfind    && platform_alias find='noglob gfind'
     have hub      && platform_alias git=hub
     have vipe     && platform_alias pvc='p | vipe | c'
+    have git-annex && platform_alias gan='git annex'
 
     if have docker; then
         platform_alias runti='docker run --rm -ti'
