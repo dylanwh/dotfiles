@@ -1397,7 +1397,8 @@ a bunch of global key bindings
   (global-set-key (kbd "C-=") 'er/expand-region)
 
   (global-set-key (kbd "C-c c") 'org-capture)
-  (global-set-key (kbd "C-c e") 'eshell)
+  (global-set-key (kbd "C-c e") 'shell-switcher-switch-buffer)
+  (global-set-key (kbd "C-c E") 'shell-switcher-new-shell)
   (global-set-key (kbd "C-c a") 'org-agenda)
   (global-set-key (kbd "C-c l") 'org-store-link)
   (global-set-key (kbd "C-c i") 'my-imapfilter)
