@@ -7,7 +7,9 @@
       "")))
 
 (defun my-eshell-prompt ()
-  (concat (propertize (abbreviate-file-name (eshell/pwd)) 'face 'eshell-prompt)
+  (concat (propertize (system-name) 'face 'font-lock-variable-name-face)
+          (propertize ":" 'face 'font-lock-constant-face)
+          (propertize (abbreviate-file-name (eshell/pwd)) 'face 'eshell-prompt)
           (propertize (my-current-git-branch) 'face 'font-lock-function-name-face)
           (propertize " $ " 'face 'font-lock-constant-face)))
 
