@@ -826,6 +826,11 @@ For wrting reports and other documentation.
    (add-to-list 'org-link-abbrev-alist '("cpan" . "https://metacpan.org/pod/%h"))
  #+END_SRC
 
+** git-link
+#+BEGIN_SRC emacs-lisp
+  (use-package git-link :ensure t
+    :config (setq git-link-open-in-browser t ))
+#+END_SRC
 ** ham-mode
    Html As Markdown. Transparently edit an html file using markdown.
 
