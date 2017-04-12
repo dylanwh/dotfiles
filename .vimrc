@@ -225,6 +225,7 @@ if !exists('autocmds_loaded')
         autocmd BufNewFile,BufRead */.i3/config* set ft=i3
         autocmd BufNewFile,BufRead */.config/i3/config* set ft=i3
         autocmd BufNewFile,BufRead Capfile set ft=ruby
+        autocmd BufNewFile,BufRead Vagrantfile set ft=ruby
         autocmd BufNewFile,BufRead *.tt2 set ft=tt2
         autocmd BufNewFile,BufRead *.html.tmpl set ft=tt2html
         autocmd BufNewFile,BufRead /tmp/zshecl* set ft=sh syn=zsh |
@@ -238,7 +239,7 @@ if !exists('autocmds_loaded')
     autocmd FileType make      setl noet nolist
     autocmd FileType man       setl nolist
     autocmd FileType python    setl et
-    autocmd FileType yaml      setl et
+    autocmd FileType yaml      setl et ts=2 sw=2
     autocmd FileType help      setl nolist
     autocmd FileType zsh       setl path=.,~/.zsh/lib
     autocmd FileType html,javascript      setl ts=2 sw=2 et list

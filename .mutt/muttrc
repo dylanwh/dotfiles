@@ -4,11 +4,11 @@ set imap_user=dylan@hardison.net
 set imap_pass=`security find-generic-password -s mutt -w`
 set imap_headers="X-Bugzilla-Product X-Bugzilla-Component X-Bugzilla-Assigned-To"
 
-
 set record=+"Sent Items"
 set postponed=+Drafts
 set folder="imaps://mail.messagingengine.com/INBOX"
 set spoolfile="imaps://mail.messagingengine.com/INBOX"
+set imap_headers='LIST-ID'
 set mask="."
 
 mailboxes + +mozilla +mozilla.bugmail +mozilla.bugmail.bmo +alerts
@@ -25,9 +25,34 @@ alternates dylan@mozilla\.com \
            dhardison@mozilla\.com \
            dylan\+[^@]+@hardison\.net \
            bugzilla-admin@mozilla\.org \
-           all(-moco|-moco-mofo)?@mozilla\.com
+           all(-moco|-moco-mofo)?@mozilla\.com \
+           everyone@mozilla\.org \
+           fx-(team|devtools)@mozilla\.com \
+           [a-z]+-all@mozilla\.com
+
 
 alias -group bmo bmo BMO <bugzilla-daemon@mozilla.org>
+
+group -group democrats \
+      -addr info@democracyforamerica.com \
+      -addr staff@dlcc.org \
+      -addr democraticparty@democrats.org \
+      -addr moveon-help@list.moveon.org \
+      -addr grassroots@fladems.com \
+      -addr info@ourrevolution.com \
+      -addr reply@workingfamilies.org \
+      -addr info@andrewgillum.com \
+      -addr jess@firstnationsrise.org \
+      -addr democraticparty@democrats.org \
+      -addr democratslive@democrats.org
+
+group -group social \
+      -rx [^@]+@facebookmail\.com \
+      -rx [^@]+@linkedin\.com \
+      -rx [^@]+@twitter\.com \
+      -rx [^@]+@meetup\.com
+
+
 
 set history_file=~/.mutt/history
 set history=1000
