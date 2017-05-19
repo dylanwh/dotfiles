@@ -304,6 +304,8 @@ values."
    before packages are loaded. If you are unsure, you should try in setting them in
    `dotspacemacs/user-config' first."
   (push (concat dotspacemacs-directory "elisp") load-path)
+  (defalias 'perl-mode 'cperl-mode)
+  (setq cperl-highlight-variables-indiscriminately t)
   )
 
 (defun dotspacemacs/user-config ()
@@ -315,6 +317,31 @@ explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
   (require 'dylan-eshell-commands)
   (require 'bmo)
+
+  (defun my-cperl-mode ()
+    (cperl-set-style "BSD")
+    (make-face 'cperl-comment-face)
+    (set-face-background 'cperl-comment-face nil)
+    (set-face-foreground 'cperl-comment-face "pink")
+
+    (set (make-local-variable 'font-lock-comment-face) 'cperl-comment-face))
+
+  (use-package cperl-mode
+    :config
+    (progn
+      (setq cperl-invalid-face nil)
+      (setq cperl-indent-parens-as-block t
+            cperl-close-paren-offset -4
+            cperl-font-lock t
+            cperl-electric-lbrace-space nil
+            cperl-electric-parens nil
+            cperl-electric-linefeed nil
+            cperl-electric-keywords nil
+            cperl-info-on-command-no-prompt t
+            cperl-clobber-lisp-bindings t
+            cperl-lazy-help-time 3)
+
+      (add-hook 'cperl-mode-hook #'my-cperl-mode)))
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
@@ -332,4 +359,6 @@ you should place your code here."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+   '(cperl-array-face ((t (:inherit font-lock-variable-name-face))))
+   '(cperl-hash-face ((t (:inherit font-lock-variable-name-face))))
  )
