@@ -31,6 +31,7 @@
 !.cvsignore
 !.dmrc
 !.emacs.d
+!.spacemacs
 !.fasdrc
 !.git
 !.gitconfig
