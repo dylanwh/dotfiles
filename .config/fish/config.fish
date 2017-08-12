@@ -24,6 +24,8 @@ eval "eval ($dircolors_cmd -c)"
 
 source ~/.config/fish/colors.fish
 
+fundle plugin edc/bass
+
 # test $TERM_PROGRAM = iTerm.app
 # and test -e {$HOME}/.iterm2_shell_integration.fish
 # and source {$HOME}/.iterm2_shell_integration.fish
