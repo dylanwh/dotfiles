@@ -26,6 +26,10 @@ source ~/.config/fish/colors.fish
 
 fundle plugin edc/bass
 
+have bass;
+and test -d /opt/rh/sclo-git25
+and bass source /opt/rh/sclo-git25/enable
+
 # test $TERM_PROGRAM = iTerm.app
 # and test -e {$HOME}/.iterm2_shell_integration.fish
 # and source {$HOME}/.iterm2_shell_integration.fish
