@@ -1,0 +1,4 @@
+#!/bin/zsh -l
+
+emacsclient -a "" -t -e '(eshell "new")'
+

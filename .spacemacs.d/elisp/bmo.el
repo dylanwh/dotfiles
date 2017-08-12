@@ -42,13 +42,27 @@
   (switch-to-buffer (dired-noselect bug-dir switches)))
 
 (defun bmo-summary (bug-id)
-  (let ((bug-dir (f-join bz-dir (format "htdocs/%s" bug-id))))
-    (if (f-dir? bug-dir)
-      (f-read (f-join bug-dir "data" "summary"))
-      (let ((response (request (format "https://bugzilla.mozilla.org/rest/bug/%s" bug-id)
-                               :params '( ("include_fields" . "summary") )
-                               :parser 'json-read
-                               :sync t)))
-        (cdr (assq 'summary (aref (cdr (assq 'bugs (request-response-data response))) 0)))))))
+  (let ((response (request (format "https://bugzilla.mozilla.org/rest/bug/%s" bug-id)
+                           :params '( ("include_fields" . "summary") )
+                           :parser 'json-read
+                           :sync t)))
+    (cdr (assq 'summary (aref (cdr (assq 'bugs (request-response-data response))) 0)))))
+
+(defun my-org-describe-link (link description)
+  (cond ((string-match "^bmo:\\([0-9]+\\)" link)
+         (let ((bug-id (match-string 1 link)))
+           (format "Bug %s - %.75s" bug-id (bmo-summary bug-id))))
+        (t (or description link))))
+
+(defun my-org-open-bmo (bug-id)
+  (browse-url (format "https://bugzilla.mozilla.org/show_bug.cgi?id=%s" bug-id)))
+
+(defun my-org-format-bmo (bug-id desc format)
+  (case format ('html
+                (format "<a href='https://bugzilla.mozilla.org/show_bug.cgi?id=%s'>%s</a>" bug-id desc))
+        (otherwise (format "[%s]" desc))))
+
+
+(setq org-make-link-description-function #'my-org-describe-link)
 
 (provide 'bmo)

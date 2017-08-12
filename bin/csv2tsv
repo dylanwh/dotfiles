@@ -1,0 +1,13 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+use Text::CSV_XS;
+
+my $csv = Text::CSV_XS->new({binary => 1, sep_char => ",", eol => "\n", blank_is_undef => 1});
+
+binmode STDIN, ':encoding(utf-8)';
+binmode STDOUT, ':encoding(utf-8)';
+
+while (my $row = $csv->getline(\*STDIN)) {
+    print join("\t", @$row), "\n";
+}

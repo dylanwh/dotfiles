@@ -264,7 +264,7 @@ fi
 
 # }}}
 # NAMED DIRECTORIES# {{{
-namedir bmo ~/src/mozilla/bmo/master
+namedir bmo ~/src/mozilla/bmo
 namedir carton_bundles $HOME/src/mozilla/carton-bundles
 
 if have xdg-user-dir; then

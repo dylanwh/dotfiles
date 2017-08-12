@@ -5,7 +5,7 @@
     (erase-buffer)))
 
 (defun eshell/ag (pattern)
-  (ag pattern default-directory))
+  (ag pattern default-directory)) 
 
 (defun eshell/ff (&rest args)
   "Opens a file in emacs."
