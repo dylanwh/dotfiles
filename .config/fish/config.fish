@@ -1,3 +1,5 @@
+set PATH $HOME/bin $PATH
+
 alias emacsclient='emacsclient -a ""'
 alias ec='emacsclient -c'
 alias et='emacsclient -t'
@@ -15,7 +17,6 @@ have cpanm; and alias cpanm='cpanm --notest'
 
 set ls_cmd ls
 have gls; and set ls_cmd gls
-
 eval "alias ls='$ls_cmd -Fh --color=auto --group-directories-first'"
 
 set dircolors_cmd dircolors
@@ -25,10 +26,17 @@ eval "eval ($dircolors_cmd -c)"
 source ~/.config/fish/colors.fish
 
 fundle plugin edc/bass
+if functions -q bass
+    test -d /opt/rh/sclo-git25; and bass source /opt/rh/sclo-git25/enable
+end
 
-have bass;
-and test -d /opt/rh/sclo-git25
-and bass source /opt/rh/sclo-git25/enable
+switch (uname)
+    case Darwin
+        fundle plugin oh-my-fish/plugin-osx
+        have brew; and fundle plugin oh-my-fish/plugin-brew
+end
+
+have plenv; and source (plenv init -|psub)
 
 # test $TERM_PROGRAM = iTerm.app
 # and test -e {$HOME}/.iterm2_shell_integration.fish
