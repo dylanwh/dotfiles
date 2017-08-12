@@ -7,13 +7,21 @@
 /src
 /tmp
 /perl5
-[A-Z][a-z].+
+Applications/
+Desktop/
+Documents/
+Downloads/
+Library/
+Movies/
+Music/
+Pictures/
 .*
 /Sites
 /Google Drive
 !.bashrc
 !.iterm2
 !.iterm2_shell_integration.zsh
+!.iterm2_shell_integration.fish
 !.config
 !.config/dircolors/*
 !.config/iterm/com.googlecode.iterm2.plist

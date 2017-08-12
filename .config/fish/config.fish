@@ -22,6 +22,8 @@ set dircolors_cmd dircolors
 have gdircolors; and set dircolors_cmd gdircolors
 eval "eval ($dircolors_cmd -c)"
 
+source ~/.config/fish/colors.fish
+
 # test $TERM_PROGRAM = iTerm.app
 # and test -e {$HOME}/.iterm2_shell_integration.fish
 # and source {$HOME}/.iterm2_shell_integration.fish
