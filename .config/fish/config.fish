@@ -1,9 +1,6 @@
 set PATH $HOME/bin $PATH
 
 alias have="command -sq"
-alias emacsclient='emacsclient -a ""'
-alias ec='emacsclient -c'
-alias et='emacsclient -t'
 alias zreload='exec fish'
 
 have cpanm; and alias cpanm='cpanm --notest'
@@ -22,11 +19,9 @@ eval "alias ls='$ls_cmd -Fh --color=auto --group-directories-first'"
 set dircolors_cmd dircolors
 have gdircolors; and set dircolors_cmd gdircolors
 eval "eval ($dircolors_cmd -c)"
-
-source ~/.config/fish/colors.fish
-
 fundle plugin edc/bass
 fundle plugin oh-my-fish/plugin-tab
+fundle plugin oh-my-fish/plugin-emacs
 
 switch (uname)
   case Darwin
@@ -41,11 +36,11 @@ if functions -q bass
 end
 
 if have grc
-  set -U grc_plugin_execs cat cvs df diff dig gcc g++ ifconfig \
+  set -U grc_plugin_execs cvs df diff dig gcc g++ ifconfig \
     make mount mtr netstat ping ps tail traceroute \
-    wdiff blkid du dnf docker docker-machine env id ip iostat \
+    wdiff blkid du dnf docker docker-machine id ip iostat \
     last lsattr lsblk lspci lsmod lsof getfacl getsebool ulimit uptime nmap \
-    fdisk findmnt free semanage sar ss sysctl systemctl stat showmount tune2fs \
+    fdisk findmnt free semanage ss sysctl systemctl stat showmount tune2fs \
     tcpdump tune2fs \
     vmstat w who
 
@@ -63,5 +58,8 @@ function itermize
   and source {$HOME}/.iterm2_shell_integration.fish
 end
 
-test "$TERM_PROGRAM" = iTerm.app
-  and itermize
+test "$TERM_PROGRAM" = iTerm.app; and itermize
+
+abbr --add lofn env MOSH_TITLE_NOPREFIX=1 mosh lofn
+abbr --add vi et
+abbr --add vim et
