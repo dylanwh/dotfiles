@@ -1,4 +1,4 @@
-set PATH $HOME/bin $PATH
+set fish_greeting
 
 alias have="command -sq"
 alias zreload='exec fish'
@@ -51,7 +51,11 @@ if have grc
   end
 end
 
-have plenv; and source (plenv init -|psub)
+if not set -qU fish_user_paths
+  for dir in $HOME/bin $HOME/.plenv/shims
+    set -U fish_user_paths $fish_user_paths $dir
+  end
+end
 
 function itermize
   test -e {$HOME}/.iterm2_shell_integration.fish
