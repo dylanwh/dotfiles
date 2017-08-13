@@ -1,11 +1,12 @@
 set PATH $HOME/bin $PATH
 
+alias have="command -sq"
 alias emacsclient='emacsclient -a ""'
 alias ec='emacsclient -c'
 alias et='emacsclient -t'
-alias have='command -sq'
 alias zreload='exec fish'
 
+have cpanm; and alias cpanm='cpanm --notest'
 have hub; and alias git=hub
 have docker; and alias runti='docker run --rm -ti'
 have git-annex; and alias gan='git annex'
@@ -13,7 +14,6 @@ have gfind; and alias find='gfind'
 have gcp; and alias cp='gcp -i'
 have gmv; and alias mv='gmv -i'
 have grm; and alias rm='grm -i'
-have cpanm; and alias cpanm='cpanm --notest'
 
 set ls_cmd ls
 have gls; and set ls_cmd gls
@@ -27,6 +27,19 @@ source ~/.config/fish/colors.fish
 
 fundle plugin edc/bass
 fundle plugin oh-my-fish/plugin-tab
+
+switch (uname)
+  case Darwin
+    fundle plugin oh-my-fish/plugin-osx
+    have brew; and fundle plugin oh-my-fish/plugin-brew
+end
+
+fundle init
+
+if functions -q bass
+    test -d /opt/rh/sclo-git25; and bass source /opt/rh/sclo-git25/enable
+end
+
 if have grc
   set -U grc_plugin_execs cat cvs df diff dig gcc g++ ifconfig \
     make mount mtr netstat ping ps tail traceroute \
@@ -43,18 +56,12 @@ if have grc
   end
 end
 
-if functions -q bass
-    test -d /opt/rh/sclo-git25; and bass source /opt/rh/sclo-git25/enable
-end
-
-switch (uname)
-    case Darwin
-        fundle plugin oh-my-fish/plugin-osx
-        have brew; and fundle plugin oh-my-fish/plugin-brew
-end
-
 have plenv; and source (plenv init -|psub)
 
-# test $TERM_PROGRAM = iTerm.app
-# and test -e {$HOME}/.iterm2_shell_integration.fish
-# and source {$HOME}/.iterm2_shell_integration.fish
+function itermize
+  test -e {$HOME}/.iterm2_shell_integration.fish
+  and source {$HOME}/.iterm2_shell_integration.fish
+end
+
+test "$TERM_PROGRAM" = iTerm.app
+  and itermize
