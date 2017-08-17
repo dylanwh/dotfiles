@@ -1,4 +1,4 @@
-#!/Users/dylan/.plenv/shims/perl
+#!/usr/bin/env perl
 use strict;
 use warnings FATAL => 'all';
 use 5.10.0;
