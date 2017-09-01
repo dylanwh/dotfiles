@@ -36,9 +36,12 @@ end
 
 fundle init
 
-if functions -q bass
-    test -d /opt/rh/sclo-git25; and bass source /opt/rh/sclo-git25/enable
-end
+set --erase -g EDITOR
+set -Ux EDITOR 'emacsclient -t'
+
+functions -q bass
+and test -d /opt/rh/sclo-git25
+and bass source /opt/rh/sclo-git25/enable
 
 if have grc
   set -U grc_plugin_execs cvs df diff dig gcc g++ ifconfig \
@@ -55,20 +58,3 @@ if have grc
     end
   end
 end
-
-if not set -qU fish_user_paths
-  for dir in $HOME/bin $HOME/.plenv/shims
-    set -U fish_user_paths $fish_user_paths $dir
-  end
-end
-
-function itermize
-  test -e {$HOME}/.iterm2_shell_integration.fish
-  and source {$HOME}/.iterm2_shell_integration.fish
-end
-
-abbr --add lofn env MOSH_TITLE_NOPREFIX=1 mosh lofn
-abbr --add vi et
-abbr --add vim et
-abbr --add cibj circleci build --job
-abbr --add vrp "vagrant rsync; and vagrant provision"
