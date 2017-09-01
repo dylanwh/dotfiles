@@ -14,4 +14,5 @@ function initfish
         and test -d "$rust_sysroot/lib/rustlib/src/rust/src"
         and set -xU RUST_SRC_PATH "$rust_sysroot/lib/rustlib/src/rust/src"
     end
+    return 0
 end
