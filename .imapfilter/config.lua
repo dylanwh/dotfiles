@@ -7,228 +7,82 @@ local callback = require "callback"
 
 local fastmail = IMAP {
     server = 'mail.messagingengine.com',
-    username = 'dylan@hardison.net',
-    password = io.popen("security find-generic-password -s fastmail -w"):read(),
-    ssl = 'tlvs1',
+    username = "dylan@hardison.net",
+    password = io.popen("security find-generic-password -s mutt -w"):read(),
+    ssl = 'auto',
 }
 
-local mozilla = IMAP {
-    server = 'imap.gmail.com',
-    username = 'dhardison@mozilla.com',
-    password = io.popen("security find-generic-password -s mozilla -w"):read(),
-    ssl = 'tlvs1',
-}
-
-function ignore(mbox)
-end
-
-function move_messages_by_year(account, folder, year)
-   local mbox = account[folder]
-   local msgs = mbox:sent_since("01-Jan-" .. year) * mbox:sent_before("01-Jan-" .. (year+1))
-   local year_folder = folder .. "/" .. year
-   if not account[year_folder] then
-      account:create_mailbox(year_folder)
-   end
-   msgs:move_messages( account[year_folder] );
-end
-
-for year = 2002, 2015 do
-   move_messages_by_year(fastmail, "Archive", year)
-end
-
-local mailinglists    = {
-    act               = { fastmail, "act.mongueurs.net",                     },
-    slug              = { fastmail, "slug.suncoastlug.org",                  },
-    phs               = { fastmail, "Pinellas-Hack-Shack-list.meetup.com", delete_older = 7 },
-    boardgames        = { fastmail, "boardgames@406-list.meetup.com"         },
-    ["slug/announce"] = { fastmail, "slug-announce.suncoastlug.org", age = 1 },
-    mongers           = { fastmail, "pm_groups.pm.org", age = 1              },
-    suckless          = { fastmail, "dev.suckless.org", delete_older = 1     },
-    webdev            = { mozilla, "dev-webdev.lists.mozilla.org"            },
-    bugzilla          = { mozilla, "dev-apps-bugzilla.lists.mozilla.org",    },
-    bzdeck            = { fastmail, "bzdeck.bzdeck.github.com", delete_older = 1 },
-    bzdeck            = { fastmail, "bzdeck.bzdeck.github.com", delete_older = 1 },
-    autotools         = { mozilla, "auto-tools.mozilla.com"                  },
-    devplatform       = { mozilla, "dev-platform@lists.mozilla.org"          },
-}
-
-for folder, action in pairs(mailinglists) do
-    local account, list_id = unpack(action)
-    local listmail = account.INBOX:contain_field("List-Id", list_id)
-    if not account[folder] then
-       account:create_mailbox(folder)
-    end
-    if action.age then
-       listmail = listmail * account.INBOX:is_older(action.age)
-    end
-    listmail:move_messages(account[folder])
-    if action.delete_older then
-       local oldmail = account[folder]:is_older(action.delete_older)
-       oldmail:delete_messages()
-    end
-end
-
-function archive(src, dest)
-    local old_msgs = src:is_seen() * src:is_unflagged() * src:is_older(30)
-    old_msgs:move_messages(dest)
-end
-
-do
-   local amazon_from = {
-      "ship-confirm@amazon.com",
-      "auto-confirm@amazon.com",
-      "no-reply@amazon.com",
-      "prime@amazon.com"
-   }
-
-   local amazons
-   for _, email in ipairs(amazon_from) do
-      local v = fastmail.INBOX:contain_from(email)
-      if amazons then
-         amazons = amazons + v
-      else
-         amazons = v
-      end
-   end
-   amazons:move_messages(fastmail.amazon)
-end
-
-if not fastmail.noreply then fastmail:create_mailbox("noreply") end
-fastmail.INBOX:contain_from("noreply"):move_messages(fastmail.noreply)
-fastmail.INBOX:contain_from("noreply"):move_messages(fastmail.noreply)
-fastmail.INBOX:contain_from("do_not_reply"):move_messages(fastmail.noreply)
-fastmail.INBOX:contain_from("no-reply"):move_messages(fastmail.noreply)
-fastmail.INBOX:contain_from("no_reply"):move_messages(fastmail.noreply)
-fastmail.INBOX:contain_from("donotreply"):move_messages(fastmail.noreply)
-fastmail.INBOX:contain_from("do.not.reply"):move_messages(fastmail.noreply)
-fastmail.INBOX:contain_from("DO-NOT-REPLY"):move_messages(fastmail.noreply)
-
-
-do
-   local fbmail = fastmail.INBOX:contain_from("facebookmail.com")
-   local meetmail = fastmail.INBOX:contain_from("info@meetup.com")
-   local twmail = fastmail.INBOX:contain_from("notify@twitter.com")
-   local bounces = fastmail.INBOX:contain_from("bounces@")
-
-   fbmail:delete_messages()
-   meetmail:delete_messages()
-   twmail:delete_messages()
-   bounces:move_messages(fastmail.Archive)
-end
-
-function get_email(s)
-    local m = s:match("<([^>]+)>")
-    if m then
-        return m
-    else
-       m = s:match("From: (.+)")
-       if m then
-          return m
-       else
-          return s
-       end
-    end
-end
-
-do
-   local box = mozilla.INBOX
-   local seen_or_old = (box:is_seen() + box:is_older(2))
-   local crons =  seen_or_old * box:contain_field("List-Id", "cron-bugzilla.mozilla.com")
-   crons:delete_messages()
-
-   local sentry = ( seen_or_old
-                       * box:contain_subject("[Sentry] [BMO]")
-                       * box:contain_from("root@localhost.webapp") )
-   sentry:delete_messages()
-
-   local pto = seen_or_old * box:contain_subject("PTO notification from")
-   if not mozilla.pto then
-      mozilla:create_mailbox("pto")
-   end
-   pto:move_messages(mozilla.pto)
+function trash(messages)
+    messages:move_messages(fastmail.Trash)
 end
 
 
+local mozmail = fastmail.INBOX:contain_field('X-Forwarded-To', 'dylan@mozilla.hardison.net')
+local readmail = fastmail.INBOX:is_seen()
+local not_important = fastmail.INBOX:is_unflagged()
+local docs_mail = fastmail.INBOX:contain_field('X-Gm-Message-State', "docs-share")
+local stale = fastmail.INBOX:is_older(7)
 
--- clean up things
-function cleanup(dir, rule, age)
-   local msgs = rule(dir)
-   if age then
-      msgs = msgs * dir:is_older(age)
-   end
-   msgs:delete_messages()
+function junk(m)
+    return ( 
+           m:contain_subject("Your receipt from Apple.")
+         + m:contain_from("CheapOair@myCheapOair.com")
+         + m:contain_from("Cloud9 Community summary")
+         + m:contain_from("backstage@email.universalorlando.com")
+         + m:contain_from("brian.dehaaff@aha.io")
+         + m:contain_from("democraticparty@democrats.org")
+         + m:contain_from("googlestore-noreply@google.com")
+         + m:contain_from("grassroots@fladems.com")
+         + m:contain_from("info@democracyforamerica.com")
+         + m:contain_from("info@e.supershuttle.com")
+         + m:contain_from("info@ourrevolution.com")
+         + m:contain_from("info@send.grammarly.com")
+         + m:contain_from("marketing@supershuttle.com")
+         + m:contain_from("microsoftrewards@email.microsoftrewards.com")
+         + m:contain_from("moveon-help@list.moveon.org")
+         + m:contain_from("news@kayak.com")
+         + m:contain_from("newsletter@news.strava.com")
+         + m:contain_from("reply@email.stitchfix.com")
+         + m:contain_from("reply@email.stitchfix.com")
+         + m:contain_from("reply@rs.email.nextdoor.com")
+         + m:contain_from("reply@workingfamilies.org")
+         + m:contain_from("starzapp@em.starz.com")
+         + m:contain_from("no-reply@strava.com")
+         + m:contain_from("email@washingtonpost.com")
+         + m:contain_from("newsletter@circleci.com")
+         + m:contain_from("info@BernieSanders.com")
+         + m:contain_to("dylan+dmp@hardison.net")
+         + m:contain_to("dylan+disney@hardison.net")
+    )
 end
 
-function contain_from(from)
-    return function (dir)
-        return dir:contain_from(from)
-    end
+function stale_alerts(m)
+    local sel = m:contain_from("shipment-tracking@amazon.com")
+              + m:contain_from("notify@twitter.com")
+              + m:contain_from("mcinfo@ups.com")
+              + m:contain_from("wiki@mozilla.com")
+              + m:contain_from("auto-confirm@amazon.com")
+              + m:contain_from("no-reply@alertsp.chase.com")
+
+    return sel * (m:is_older(7) + m:is_seen())
 end
 
-local cleanup_rules = {
-   { contain_from("donotreply@seeclickfix.com")              },
-   { contain_from("linkedin.com"),                   age = 0 },
-   { contain_from("@pearltrees.com"),                age = 0 },
-   { contain_from("CostcoNews@online.costco.com"),   age = 0 },
-   { contain_from("email.campaign@sg.booking.com"),  age = 0 },
-   { contain_from("googleplay-noreply@google.com"),  age = 0 },
-   { contain_from("moveon.org")                },
-   { contain_from("info@twitter.com"),               age = 0 },
-   { contain_from("info@e.twitter.com"),             age = 0 },
-   { contain_from("Team@mint.com"),                  age = 0 },
-   { contain_from("mapmyfitness.messages4.com"),     age = 0 },
-   { contain_from("nfo@democracyforAmerica.com")  },
-   { contain_from("@dga.net") },
-   { contain_from("no-reply@duolingo.com"),          age = 0 },
-   { contain_from("no-reply@endomondo.com"),         age = 0 },
-   { contain_from("no-reply@twitch.tv"),             age = 1 },
-   { contain_from("noreply@fitbit.com"),             age = 1 },
-   { contain_from("noreply@soylentnews.org"),        age = 1 },
-   { contain_from("noreply@youtube.com"),            age = 0 },
-   { contain_from("pages.plusgoogle.com"),           age = 1 },
-   { contain_from("targetnews@e.target.com")  },
-   { contain_from("email.vzwshop.com"),              age = 1 },
-   { contain_from("myfitnesspal.com"),               age = 1 },
-   { contain_from("peopleforbikes.org")                      },
-   { contain_from(".codeweavers.com"),               age = 0 },
-   { contain_from("berniesanders.com")  },
-   { contain_from("graysonforcongress.com") },
-   { contain_from("noreply@exact.publix.com"),       age = 0 },
-   { contain_from("no-reply@exact.publix.com"),      age = 0 },
-   { contain_from("@dlcc.org")  },
-   { contain_from("velocity@ac.travelocity.com"),        age = 0 },
-   { contain_from("brighthouse@care.brighthouse.com"),        age = 0 },
-   { contain_from("upershuttle@supershuttle.com"),        age = 0 }
-}
 
-for _, rule in ipairs(cleanup_rules) do
-   local f = unpack(rule)
-   cleanup(fastmail.INBOX, f, rule.age)
-   cleanup(fastmail.noreply, f, rule.age)
-   cleanup(fastmail.billing, f, rule.age)
-end
+local must_read = fastmail.INBOX:contain_from("vhr_mozilla@myworkday.com")
+                + fastmail.INBOX:contain_from("nintendo-noreply@nintendo.net")
 
-fastmail.noreply:contain_subject("Payment"):move_messages(fastmail.billing)
 
-do
-   mozilla.bugmail:contain_field("X-Bugzilla-Type", "request"):move_messages(mozilla['bugmail/request'])
+trash(must_read * readmail)
 
-   local nag = mozilla.bugmail:contain_field("X-Bugzilla-Type", "nag") * mozilla.bugmail:is_older(1)
-   nag:delete_messages()
+trash(junk(fastmail.INBOX))
+stale_alerts(fastmail.INBOX):move_messages(fastmail.alerts)
 
-   local notme = mozilla.bugmail:is_unseen()
-      - mozilla.bugmail:contain_field("X-Bugzilla-Assigned-To", "dylan@mozilla.com")
-      - mozilla.bugmail:contain_field("X-Bugzilla-Assigned-To", "nobody@mozilla.org")
-   notme:mark_seen()
-end
+docs_mail:move_messages(fastmail.gdocs)
 
-(mozilla.bugmail:is_seen() * mozilla.bugmail:is_older(1)):delete_messages()
-mozilla.bugmail:is_older(7):delete_messages()
-mozilla.github:is_older(7):delete_messages()
-mozilla.webdev:is_older(28):delete_messages()
+local move_to_mozilla = (mozmail * (readmail + stale) * not_important)
+move_to_mozilla:move_messages(fastmail.mozilla)
 
-archive(mozilla.INBOX, mozilla.Archive)
-archive(fastmail.INBOX, fastmail.Archive)
-archive(fastmail.billing, fastmail["billing/archive"])
-archive(fastmail.noreply, fastmail.Archive)
+local archive = readmail * stale * not_important
+archive:move_messages(fastmail.Archive)
+
 

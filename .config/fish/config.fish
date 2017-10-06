@@ -1,3 +1,12 @@
+set -x GIT_CEILING_DIRECTORIES "$HOME/src"
+
+set -x REALNAME "Dylan William Hardison"
+set -x EMAIL "dylan@hardison.net"
+set -x MANPAGER 'less -s'
+set -x LANG en_US.UTF-8
+set -x LC_COLLATE POSIX # sort in POSIX order.
+set -x TZ US/Eastern
+
 set fish_greeting
 
 alias have="command -sq"
