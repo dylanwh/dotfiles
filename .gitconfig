@@ -13,6 +13,7 @@
     up = !git fetch --all --tags --prune && git pull --rebase
     reword = commit --amend
     top = !pwd
+	remaster = checkout -B master origin/master
 
 [color]
     ui = auto
