@@ -103,6 +103,3 @@
 [submodule ".vim/bundle/vim-cpanfile"]
 	path = .vim/bundle/vim-cpanfile
 	url = git://github.com/moznion/vim-cpanfile.git
-[submodule ".emacs.d"]
-	path = .emacs.d
-	url = git://github.com/syl20bnr/spacemacs.git
