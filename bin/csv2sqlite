@@ -1,13 +1,18 @@
 #!/usr/bin/env perl
 use strict;
 use warnings;
+use autodie;
 use Text::CSV;
 use Getopt::Long qw(:config gnu_getopt);
 use SQL::Abstract;
+use File::Basename;
 use DBI;
 
 
-my $table = 'data';
+my $file  = shift @ARGV;
+open my $fh, '<:encoding(utf8)', $file;
+binmode STDOUT, ':encoding(utf8)';
+my $table = basename($file, '.csv');
 my $null;
 GetOptions(
     'table|t=s' => \$table,
@@ -16,19 +21,21 @@ GetOptions(
 
 my $dbi   = DBI->connect('dbi:SQLite:dbname=:memory:');
 my $csv   = Text::CSV->new( { binary => 1, blank_is_undef => 1 } );
-my @names = unique_names(map { phrase_to_ident($_) } @{ $csv->getline( \*ARGV ) });
+my @names = unique_names(map { phrase_to_ident($_) } @{ $csv->getline($fh) });
 my $sa    = SQL::Abstract->new;
 
-my $columns = join(",\n\t", map { "$_ TEXT" } @names);
-print qq{BEGIN;\nCREATE TABLE $table (\n\t$columns\n);\n};
-
 $csv->column_names(@names);
-while (my $row = $csv->getline_hr(\*ARGV)) {
+while (my $row = $csv->getline_hr($fh)) {
     foreach my $key (keys %$row) {
         if (defined $null && $row->{$key} && $row->{$key} eq $null) {
             $row->{$key} = undef;
         }
+        elsif ($key eq 'disabledtext' or $key eq 'realname') {
+            $row->{$key} //= "";
+        }
     }
+    delete $row->{is_relationship};
+    delete $row->{reverse_relationship_desc};
     my ($sql, @bind) = $sa->insert($table, $row);
     $sql =~ s/\?/$dbi->quote(shift @bind)/ge;
     print "$sql;\n";

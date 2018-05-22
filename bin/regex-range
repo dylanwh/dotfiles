@@ -1,0 +1,6 @@
+#!/usr/bin/env perl
+use 5.20.0;
+use Regexp::Optimizer;
+
+my $r = join('|', ($ARGV[0] // 0) .. ($ARGV[1] // 1));
+say Regexp::Optimizer->new->optimize(qr/$r/)

@@ -1,1 +1,0 @@
-# harmony-test-fixtures

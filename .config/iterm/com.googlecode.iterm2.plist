@@ -1227,7 +1227,9 @@
 			<string>iTermTouchBarIdentifierColorPreset</string>
 			<string>iTermTouchBarIdentifierFunctionKeys</string>
 			<string>iTermTouchBarIdentifierStatus</string>
-			<string>NSTouchBarItemIdentifierFlexibleSpace</string>
+			<string>iTermTouchBarIdentifierAddMark</string>
+			<string>iTermTouchBarIdentifierPreviousMark</string>
+			<string>iTermTouchBarIdentifierNextMark</string>
 			<string>NSTouchBarItemIdentifierOtherItemsProxy</string>
 		</array>
 		<key>DefaultItems</key>
@@ -1255,11 +1257,11 @@
 	<key>NSWindow Frame SessionsPreferences</key>
 	<string>594 408 606 469 0 0 1440 877 </string>
 	<key>NSWindow Frame SharedPreferences</key>
-	<string>361 477 918 492 0 0 1680 1027 </string>
+	<string>263 363 1016 512 0 0 1440 877 </string>
 	<key>NSWindow Frame UKCrashReporter</key>
-	<string>398 148 592 584 0 0 1920 1177 </string>
+	<string>254 73 592 584 0 0 1440 877 </string>
 	<key>NSWindow Frame iTerm Window 0</key>
-	<string>0 0 1440 877 0 0 1440 877 </string>
+	<string>176 70 652 501 0 0 1440 877 </string>
 	<key>NSWindow Frame iTerm Window 1</key>
 	<string>0 400 650 476 0 0 1440 877 </string>
 	<key>NSWindow Frame iTerm Window 2</key>
@@ -1563,7 +1565,7 @@
 			<key>Guid</key>
 			<string>C7F24399-EDD8-4398-8236-9481BBD279DB</string>
 			<key>Has Hotkey</key>
-			<true/>
+			<false/>
 			<key>Hide After Opening</key>
 			<false/>
 			<key>Horizontal Spacing</key>
@@ -3165,7 +3167,7 @@
 			<key>Guid</key>
 			<string>1C6C542A-7EE9-4C1A-B5C5-8A4F84D670DA</string>
 			<key>Has Hotkey</key>
-			<true/>
+			<false/>
 			<key>Hide After Opening</key>
 			<false/>
 			<key>Horizontal Spacing</key>
@@ -3876,7 +3878,7 @@
 	<key>SUHasLaunchedBefore</key>
 	<true/>
 	<key>SULastCheckTime</key>
-	<date>2018-01-24T14:14:28Z</date>
+	<date>2018-02-07T02:43:52Z</date>
 	<key>SavePasteHistory</key>
 	<false/>
 	<key>Secure Input</key>
@@ -3921,7 +3923,7 @@
 	<key>TripleClickSelectsFullWrappedLines</key>
 	<false/>
 	<key>UKCrashReporterLastCrashReportDate</key>
-	<real>1482331776</real>
+	<real>1517445632</real>
 	<key>URLHandlersByGuid</key>
 	<dict>
 		<key>ssh</key>
