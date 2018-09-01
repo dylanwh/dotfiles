@@ -32,7 +32,12 @@ have gdircolors; and set dircolors_cmd gdircolors
 eval "eval ($dircolors_cmd -c)"
 
 set --erase -g EDITOR
-set -Ux EDITOR 'vim'
+if have emacsclient
+  set -l emacsclient (which emacsclient)
+  set -Ux EDITOR "$emacsclient -t -a \"\""
+else
+  set -Ux EDITOR "nano"
+end
 
 if have plenv
     source (plenv init -|psub)
