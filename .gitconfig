@@ -14,6 +14,7 @@
     reword = commit --amend
     top = !pwd
 	remaster = checkout -B master origin/master
+	redevelopment = checkout -B development origin/development
 
 [color]
     ui = auto

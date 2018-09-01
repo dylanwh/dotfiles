@@ -31,39 +31,15 @@ set dircolors_cmd dircolors
 have gdircolors; and set dircolors_cmd gdircolors
 eval "eval ($dircolors_cmd -c)"
 
-fundle plugin edc/bass
-fundle plugin oh-my-fish/plugin-tab
-fundle plugin oh-my-fish/plugin-emacs
-fundle plugin fisherman/getopts
-fundle plugin fisherman/z
-
-switch (uname)
-  case Darwin
-    fundle plugin oh-my-fish/plugin-osx
-    have brew; and fundle plugin oh-my-fish/plugin-brew
-end
-
-fundle init
-
 set --erase -g EDITOR
-set -Ux EDITOR 'emacsclient -t'
+set -Ux EDITOR 'vim'
 
-functions -q bass
-and test -d /opt/rh/sclo-git25
-and bass source /opt/rh/sclo-git25/enable
-
-if have grc
-  set -U grc_plugin_execs cvs df diff dig gcc g++ ifconfig \
-    make mount mtr netstat ping ps tail traceroute \
-    wdiff blkid du dnf docker docker-machine id ip iostat \
-    last lsattr lsblk lspci lsmod lsof getfacl getsebool ulimit uptime nmap \
-    fdisk findmnt free semanage ss sysctl systemctl stat showmount tune2fs \
-    tcpdump tune2fs \
-    vmstat w who
-
-  for executable in $grc_plugin_execs
-    function $executable --inherit-variable executable --wraps=$executable
-      grc $executable $argv
-    end
-  end
+if have plenv
+    source (plenv init -|psub)
+end
+if have pyenv
+    source (pyenv init -|psub)
+end
+if have pyenv-virtualenv
+    source (pyenv virtualenv-init -|psub)
 end

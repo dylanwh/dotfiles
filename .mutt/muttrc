@@ -19,16 +19,18 @@ subscribe dev-platform@mozilla\.org \
           lists\.mozilla\.org \
           developers@bugzilla.org \
           outreachy-announce-list@gnome\.org \
-          outreachy-list@gnome\.org
+          outreachy-list@gnome\.org \
+          bugzilla-admin@mozilla\.org \
+          all(-moco|-moco-mofo)?@mozilla\.com \
+          everyone@mozilla\.org \
+          fx-(team|devtools)@mozilla\.com \
+          [a-z]+-all@mozilla\.com \
+          release-drivers@mozilla\.org \
+          communications@mozilla\.com
 
 alternates dylan@mozilla\.com \
            dhardison@mozilla\.com \
            dylan\+[^@]+@hardison\.net \
-           bugzilla-admin@mozilla\.org \
-           all(-moco|-moco-mofo)?@mozilla\.com \
-           everyone@mozilla\.org \
-           fx-(team|devtools)@mozilla\.com \
-           [a-z]+-all@mozilla\.com
 
 
 alias -group bmo bmo BMO <bugzilla-daemon@mozilla.org>

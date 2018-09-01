@@ -3,24 +3,57 @@
 -- of the code comes first, and the specific details come later.
 
 package.path = package.path .. ";" .. os.getenv("HOME") .. "/.imapfilter/?.lua"
-local callback = require "callback"
 
-local fastmail = IMAP {
-    server = 'mail.messagingengine.com',
-    username = "dylan@hardison.net",
-    password = io.popen("security find-generic-password -s mutt -w"):read(),
-    ssl = 'auto',
-}
+function main(server)
+    local INBOX = server.INBOX
 
-function trash(messages)
-    messages:move_messages(fastmail.Trash)
+
+    local must_read     = INBOX:contain_from("vhr_mozilla@myworkday.com")
+                        + INBOX:contain_from("nintendo-noreply@nintendo.net")
+    local readmail      = INBOX:is_seen()
+    local mozmail       = INBOX:contain_field('X-Forwarded-To', 'dylan@mozilla.hardison.net')
+    local not_important = INBOX:is_unflagged()
+    local docs_mail     = INBOX:contain_field('X-Gm-Message-State', "docs-share")
+    local stale         = INBOX:is_older(7)
+    local github        = INBOX:contain_from('notifications@github.com')
+    local listmail      = INBOX:contain_field('List-Id', '.')
+
+    local trash_list = {
+        (must_read * readmail),
+        (github * INBOX:is_older(1)),
+        junk(INBOX),
+        junk(server.Archive)
+    }
+
+    for _, msgs in ipairs(trash_list) do
+        msgs:move_messages(server.Trash)
+    end
+
+    is_stale_alert(INBOX):move_messages(server.alerts)
+
+    docs_mail:move_messages(server.gdocs)
+
+    local move_to_mozilla_list = ( listmail * mozmail ) * not_important * stale
+    move_to_mozilla_list:move_messages(server['mozilla.lists'])
+
+    local move_to_mozilla = (mozmail * (readmail + stale) * not_important)
+    move_to_mozilla:move_messages(server.mozilla)
+
+    local archive = ( readmail * stale * not_important )
+    archive:move_messages(server.Archive)
+
+    INBOX:is_older(30):mark_seen()
+
 end
 
-
 function junk(m)
-    return ( 
+    return (
            m:contain_subject("Your receipt from Apple.")
          + m:contain_from("noreply@glassdoor.com")
+         + m:contain_from("email@salamanderresort.com")
+         + m:contain_from("email@salamanderhotels.com")
+         + m:contain_from("andrewgillum.com")
+         + m:contain_from("pearltrees.com")
          + m:contain_from("info@sandersinstitute.com")
          + m:contain_from("Applebees@Applebees.fbmta.com")
          + m:contain_from("CheapOair@myCheapOair.com")
@@ -34,7 +67,7 @@ function junk(m)
          + m:contain_from("facebookmail.com")
          + m:contain_from("googlestore-noreply@google.com")
          + m:contain_from("grassroots@fladems.com")
-         + m:contain_from("grassroots@floridadems.org")
+         + m:contain_from("floridadems.org")
          + m:contain_from("hi@meh.com")
          + m:contain_from("hulu@hulumail.com")
          + m:contain_from("info@BernieSanders.com")
@@ -74,10 +107,11 @@ function junk(m)
          + m:contain_to("dylan+bob@hardison.net")
          + m:contain_to("dylan+disney@hardison.net")
          + m:contain_to("dylan+dmp@hardison.net")
+         + m:contain_from("campaign@marybarzeeflores.com")
     )
 end
 
-function stale_alerts(m)
+function is_stale_alert(m)
     local sel = (
           m:contain_from("VZWMail@ecrmemail.verizonwireless.com")
         + m:contain_from("auto-confirm@amazon.com")
@@ -94,6 +128,7 @@ function stale_alerts(m)
         + m:contain_from("microsoftfamily@microsoft.com")
         + m:contain_subject("PTO notification from")
         + m:contain_subject("moco-ldap-check")
+        + m:contain_subject("no-reply@dtdg.co")
     )
 
     return sel * (m:is_older(2) + m:is_seen())
@@ -103,50 +138,11 @@ function is_old_nag(m)
     return m:contain_field('X-Bugzilla-Type', 'nag') * m:is_older(1)
 end
 
-local must_read = fastmail.INBOX:contain_from("vhr_mozilla@myworkday.com")
-                + fastmail.INBOX:contain_from("nintendo-noreply@nintendo.net")
-local readmail = fastmail.INBOX:is_seen()
-local mozmail = fastmail.INBOX:contain_field('X-Forwarded-To', 'dylan@mozilla.hardison.net')
-local listmail = fastmail.INBOX:contain_field('List-Id', '.')
-local not_important = fastmail.INBOX:is_unflagged()
-local docs_mail = fastmail.INBOX:contain_field('X-Gm-Message-State', "docs-share")
-local stale = fastmail.INBOX:is_older(7)
-
-trash(must_read * readmail)
-
-trash(junk(fastmail.INBOX))
--- trash(junk(fastmail.Archive))
--- for year = 2002, 2015 do
---     trash(junk(fastmail['zz-archives.' .. year]))
--- end
-stale_alerts(fastmail.INBOX):move_messages(fastmail.alerts)
-
-
-bugmails = {
-    fastmail['mozilla.bugmail.bmo'],
-    fastmail['mozilla.bugmail'],
-    fastmail['mozilla.bugmail.websites'],
-    fastmail['bugzilla']
+local fastmail = IMAP {
+    server = 'mail.messagingengine.com',
+    username = "dylan@hardison.net",
+    password = io.popen("security find-generic-password -s mutt -w"):read(),
+    ssl = 'auto',
 }
-for _, bugmail in ipairs(bugmails) do
-    trash( bugmail:is_older(14) )
-end
 
-trash( is_old_nag(fastmail['mozilla.bugmail']) )
-trash( is_old_nag(fastmail['bugzilla']) )
-
-docs_mail:move_messages(fastmail.gdocs)
-
-local yesterday = fastmail.INBOX:is_older(1)
-local move_to_mozilla_list = (mozmail * listmail) * not_important * yesterday
-move_to_mozilla_list:move_messages(fastmail['mozilla.lists'])
-
-local move_to_mozilla = (mozmail * (readmail + stale) * not_important)
-move_to_mozilla:move_messages(fastmail.mozilla)
-
-fastmail.mozilla:contain_field('List-Id', '.'):move_messages(fastmail['mozilla.lists'])
-
-local archive = readmail * stale * not_important
-archive:move_messages(fastmail.Archive)
-
-
+main(fastmail)
