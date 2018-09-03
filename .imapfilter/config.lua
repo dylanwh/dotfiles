@@ -141,7 +141,7 @@ end
 local fastmail = IMAP {
     server = 'mail.messagingengine.com',
     username = "dylan@hardison.net",
-    password = io.popen("security find-generic-password -s mutt -w"):read(),
+    password = io.open(os.getenv("HOME") .. "/.fastmail_password", "r"):read(),
     ssl = 'auto',
 }
 

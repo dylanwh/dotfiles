@@ -1,7 +1,7 @@
 set realname="Dylan William Hardison"
 
 set imap_user=dylan@hardison.net
-set imap_pass=`security find-generic-password -s mutt -w`
+set imap_pass=`cat ~/.fastmail_password`
 set imap_headers="X-Bugzilla-Product X-Bugzilla-Component X-Bugzilla-Assigned-To"
 
 set record=+"Sent Items"
