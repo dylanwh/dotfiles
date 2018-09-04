@@ -138,8 +138,7 @@ values."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(leuven
-                         spacemacs-dark
+   dotspacemacs-themes '(spacemacs-dark
                          spacemacs-light)
    ;; If non nil the cursor color matches the state color in GUI Emacs.
    dotspacemacs-colorize-cursor-according-to-state t
@@ -306,8 +305,9 @@ values."
    dotspacemacs-whitespace-cleanup nil
    ))
 
-(defun on-frame-open (&optional frame)
+(defun dylan-reset-bg (&optional frame)
   "If the FRAME created in terminal don't load background color."
+  (interactive)
   (unless (display-graphic-p frame)
     (set-face-background 'default "unspecified-bg" frame)))
 
@@ -320,7 +320,7 @@ values."
    `dotspacemacs/user-config' first."
   (set-terminal-parameter nil 'background-mode 'light)
   (set-frame-parameter nil 'background-mode 'light)
-  (add-hook 'after-make-frame-functions 'on-frame-open)
+  ;; (add-hook 'after-make-frame-functions 'on-frame-open)
 
   (push (concat dotspacemacs-directory "elisp") load-path)
   (defalias 'perl-mode 'cperl-mode)
