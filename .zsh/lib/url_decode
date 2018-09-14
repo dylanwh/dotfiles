@@ -1,5 +1,0 @@
-#!zsh
-setopt extendedglob
-local url="$1"
-url=${url//\%(#b)([0-F][0-F])/\\\x$match[1]}
-echo ${url//+/ }

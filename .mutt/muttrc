@@ -128,4 +128,4 @@ macro generic \e1 ":set display_filter='t-prot -acelmtS=6 -Mmutt --spass -L$HOME
 macro pager \e0 ":unset display_filter; exec exit\n:exec display-message\n" "Turn TOFU protection off"
 macro pager \e1 ":set display_filter='t-prot -acelmtS=6 -Mmutt --spass -L$HOME/.mutt/mlfooters -A$HOME/.mutt/adfooters'; exec exit\n:exec display-message\n" "Turn TOFU protection on"
 
-source ~/.mutt/theme
+source ~/.mutt/base16

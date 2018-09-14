@@ -31,13 +31,9 @@ set dircolors_cmd dircolors
 have gdircolors; and set dircolors_cmd gdircolors
 eval "eval ($dircolors_cmd -c)"
 
-set --erase -g EDITOR
-if have emacsclient
-  set -l emacsclient (which emacsclient)
-  set -Ux EDITOR "$emacsclient -t -a \"\""
-else
-  set -Ux EDITOR "nano"
-end
+set -l emacsclient (which emacsclient)
+set -Ux ALTERNATE_EDITOR ''
+set -Ux EDITOR "$emacsclient -t"
 
 if have plenv
     source (plenv init -|psub)
@@ -47,4 +43,11 @@ if have pyenv
 end
 if have pyenv-virtualenv
     source (pyenv virtualenv-init -|psub)
+end
+
+if status --is-interactive
+    set BASE16_SHELL "$HOME/.config/base16-shell/"
+    if test -d $BASE16_SHELL
+        source "$BASE16_SHELL/profile_helper.fish"
+    end
 end

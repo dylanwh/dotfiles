@@ -45,7 +45,7 @@ function fish_prompt --description 'Write out the prompt'
       set -qU fish_color_status
       or set -U fish_color_status red
       set -qU fish_color_vcs
-      or set -U fish_color_vcs -b yellow
+      or set -U fish_color_vcs yellow
       set -U __fish_classic_git_prompt_initialized
     end
   end
@@ -59,7 +59,7 @@ function fish_prompt --description 'Write out the prompt'
     set suffix ">"
   end
 
-  set -l vcs_color (set_color $fish_color_vcs)(set_color black)
+  set -l vcs_color (set_color $fish_color_vcs)
   set -l my_fish_vcs_prompt \
     (string replace -ar '\((.+)\)' "[$vcs_color\${1}$normal]" (__fish_vcs_prompt))
 

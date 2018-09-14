@@ -1,2 +1,0 @@
-#!zsh
-LBUFFER="$LBUFFER | less"; (( CURSOR = CURSOR + 7)); zle reset-prompt

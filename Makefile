@@ -1,8 +1,8 @@
-.PHONY: all dirs links clean-links
+.PHONY: all dirs
 
-SHELL = /bin/bash
 PATH  := $(HOME)/bin:$(PATH)
 HOST  := $(shell hostname -s)
+GITHUB_USER := dylanwh
 
 XDG_DATA_HOME   ?= $(HOME)/.local/share
 XDG_CONFIG_HOME ?= $(HOME)/.config
@@ -12,53 +12,21 @@ XDG_CONFIG_HOME := $(patsubst $(HOME)/%,%,$(XDG_CONFIG_HOME))
 XDG_CACHE_HOME  := $(patsubst $(HOME)/%,%,$(XDG_CACHE_HOME))
 XDG_DATA_HOME   := $(patsubst $(HOME)/%,%,$(XDG_DATA_HOME))
 
-ENSURE_DIRS = $(XDG_DATA_HOME) \
-			  $(XDG_CONFIG_HOME) \
-			  $(XDG_CACHE_HOME) \
-			  $(XDG_CACHE_HOME)/ssh \
-			  $(XDG_CACHE_HOME)/zsh \
-			  $(XDG_DATA_HOME)/zsh \
-			  $(XDG_DATA_HOME)/tmux \
-			  $(XDG_DATA_HOME)/vim \
-			  $(XDG_DATA_HOME)/vim/backup \
-			  $(XDG_DATA_HOME)/vim/swap \
-			  $(XDG_DATA_HOME)/vim/undo \
-			  $(XDG_DATA_HOME)/vim/view \
-			  $(XDG_DATA_HOME)/vim/netrw \
-			  $(XDG_DESKTOP_DIR) \
-			  $(XDG_DOCUMENTS_DIR) \
-			  $(XDG_DOWNLOAD_DIR) \
-			  $(XDG_MUSIC_DIR) \
-			  $(XDG_PICTURES_DIR) \
-			  $(XDG_PUBLICSHARE_DIR) \
-			  $(XDG_TEMPLATES_DIR) \
-			  $(XDG_VIDEOS_DIR)
-
-ifdef DISPLAY
-	ENSURE_LINKS += .i3status.conf .i3/config
-endif
-
 -include $(XDG_CACHE_HOME)/user-dirs.mk
 
-all:  links dirs
-
-dirs: $(ENSURE_DIRS)
-
-links: $(ENSURE_LINKS)
-
-clean-links:
-	rm -v $(ENSURE_LINKS)
-
-ifdef DISPLAY
-%: %@$(HOST)
-	@ln -rsvf $< $@
-
-.i3status.conf@$(HOST): /etc/i3status.conf
-	@cp -v $< $@
-endif
+all: .emacs.d $(XDG_CONFIG_HOME)/base16-shell .ssh/authorized_keys
 
 $(XDG_CACHE_HOME)/user-dirs.mk: $(XDG_CONFIG_HOME)/user-dirs.dirs $(XDG_CACHE_HOME) Makefile
 	@sed '/^#/ d; s|$$HOME/||g; s/"//g;' $< > $@
 
-$(ENSURE_DIRS):
-	mkdir -p $@
+$(XDG_CONFIG_HOME)/base16-shell: $(XDG_CONFIG_HOME)
+	git clone https://github.com/chriskempson/base16-shell.git $@
+
+.emacs.d:
+	git clone https://github.com/syl20bnr/spacemacs $@
+
+.ssh:
+	mkdir -m 755 .ssh
+
+.ssh/authorized_keys: .ssh
+	curl https://github.com/$(GITHUB_USER).keys > $@
