@@ -1,18 +1,10 @@
 " Dylan William Hardison's .vimrc file.
 " vim: set fdm=marker:
 
-" INIT {{{1
-if !exists("did_vimrc_init")
-    let did_vimrc_init=1
-    runtime bundle/pathogen/autoload/pathogen.vim
-    call pathogen#infect()
+syntax on
+filetype plugin indent on
 
-    syntax on
-    filetype plugin indent on
-
-    runtime macros/matchit.vim
-end
-" }}}
+runtime macros/matchit.vim
 
 " OPTIONS {{{1
 set tabstop=4              " number of spaces that a literal <Tab> in the file counts for.
