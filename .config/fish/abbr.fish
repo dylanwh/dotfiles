@@ -1,5 +1,3 @@
-abbr vi et
-abbr vim et
 abbr lofn 'env MOSH_TITLE_NOPREFIX=1 mosh lofn'
 abbr cibj 'circleci build --job'
 abbr vrp 'vagrant rsync; and vagrant provision'

@@ -32,6 +32,7 @@ have gdircolors; and set dircolors_cmd gdircolors
 eval "eval ($dircolors_cmd -c)"
 
 set -l emacsclient (which emacsclient)
+set -eg EDITOR
 set -Ux ALTERNATE_EDITOR ''
 set -Ux EDITOR "$emacsclient -t"
 

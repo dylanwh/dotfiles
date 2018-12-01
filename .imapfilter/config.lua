@@ -4,9 +4,19 @@
 
 package.path = package.path .. ";" .. os.getenv("HOME") .. "/.imapfilter/?.lua"
 
-function main(server)
-    local INBOX = server.INBOX
+function sentry(server, mbox)
+  local sentry_prod   = mbox:contain_field('List-id', 'bugzilla-production-aws.operations.localhost')
+  local sentry_stage  = mbox:contain_field('List-id', 'bugzilla-stage-aws.operations.localhost')
+  local sentry_dev    = mbox:contain_field('List-id', 'bugzilla-dev-aws.operations.localhost')
 
+  sentry_prod:move_messages(server['mozilla.sentry.production'])
+  sentry_stage:move_messages(server['mozilla.sentry.stage'])
+  sentry_dev:move_messages(server['mozilla.sentry.dev'])
+end
+
+function main(server)
+    local INBOX   = server.INBOX
+    local Archive = server.Archive
 
     local must_read     = INBOX:contain_from("vhr_mozilla@myworkday.com")
                         + INBOX:contain_from("nintendo-noreply@nintendo.net")
@@ -16,13 +26,16 @@ function main(server)
     local docs_mail     = INBOX:contain_field('X-Gm-Message-State', "docs-share")
     local stale         = INBOX:is_older(7)
     local github        = INBOX:contain_from('notifications@github.com')
-    local listmail      = INBOX:contain_field('List-Id', '.')
+
+    sentry(server, INBOX);
+    sentry(server, server['mozilla.lists'])
+    sentry(server, Archive)
 
     local trash_list = {
         (must_read * readmail),
         (github * INBOX:is_older(1)),
         junk(INBOX),
-        junk(server.Archive)
+        junk(Archive)
     }
 
     for _, msgs in ipairs(trash_list) do
@@ -33,8 +46,8 @@ function main(server)
 
     docs_mail:move_messages(server.gdocs)
 
-    local move_to_mozilla_list = ( listmail * mozmail ) * not_important * stale
-    move_to_mozilla_list:move_messages(server['mozilla.lists'])
+    -- local move_to_mozilla_list = ( listmail * mozmail ) * not_important * stale
+    -- move_to_mozilla_list:move_messages(server['mozilla.lists'])
 
     local move_to_mozilla = (mozmail * (readmail + stale) * not_important)
     move_to_mozilla:move_messages(server.mozilla)
@@ -54,6 +67,8 @@ function junk(m)
          + m:contain_from("email@salamanderhotels.com")
          + m:contain_from("andrewgillum.com")
          + m:contain_from("pearltrees.com")
+         + m:contain_from("mail@info.adobesystems.com")
+         + m:contain_from("jeff@jeffbrandesforstatesenate.com")
          + m:contain_from("info@sandersinstitute.com")
          + m:contain_from("Applebees@Applebees.fbmta.com")
          + m:contain_from("CheapOair@myCheapOair.com")
@@ -69,6 +84,7 @@ function junk(m)
          + m:contain_from("grassroots@fladems.com")
          + m:contain_from("floridadems.org")
          + m:contain_from("hi@meh.com")
+         + m:contain_from("campaign@jeremyring.com")
          + m:contain_from("hulu@hulumail.com")
          + m:contain_from("info@BernieSanders.com")
          + m:contain_from("info@democracyforamerica.com")
@@ -104,6 +120,8 @@ function junk(m)
          + m:contain_from("noreply@mail.23andme.com")
          + m:contain_from("Mozilla@e.mozilla.org")
          + m:contain_from("no-reply@duolingo.com")
+         + m:contain_from("team@mbfforcongress.com")
+         + m:contain_from("backstage@messages.universalorlando.com")
          + m:contain_to("dylan+bob@hardison.net")
          + m:contain_to("dylan+disney@hardison.net")
          + m:contain_to("dylan+dmp@hardison.net")
