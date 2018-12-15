@@ -37,13 +37,7 @@ set -Ux ALTERNATE_EDITOR ''
 set -Ux EDITOR "$emacsclient -t"
 
 if have plenv
-    source (plenv init -|psub)
-end
-if have pyenv
-    source (pyenv init -|psub)
-end
-if have pyenv-virtualenv
-    source (pyenv virtualenv-init -|psub)
+    source (plenv init -| grep -v 'set -gx PATH' |psub)
 end
 
 if status --is-interactive
