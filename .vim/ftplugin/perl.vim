@@ -2,8 +2,9 @@ setlocal foldtext=PerlFoldTextNoLines()
 setlocal expandtab
 setlocal isfname=@,48-57,/,.,_,+,,,#,$,%,~,=,:
 
-setlocal equalprg=perltidy\ -pbp\ -l=120
-setlocal textwidth=120
+setlocal equalprg=perltidy
+setlocal textwidth=80
+setlocal ts=2 sw=2
 
 "-- Do not fold package-level things.
 if expand("%:e") == 'pm'

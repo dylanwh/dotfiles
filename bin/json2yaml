@@ -1,8 +1,0 @@
-#!/usr/bin/env perl
-use strict;
-use warnings;
-use JSON 'from_json';
-use YAML::XS 'Dump';
-
-local $/ = undef;
-print Dump(from_json(scalar readline ARGV));

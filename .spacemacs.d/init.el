@@ -370,14 +370,12 @@ you should place your code here."
   ;; For Javascript
   (add-hook 'js2-mode-hook #'(lambda () (modify-syntax-entry ?_ "w")))
 
-  (require 'ob-perl)
-  (require 'ob-sh)
-  (org-babel-do-load-languages
-   'org-babel-load-languages
-   '( (perl . t)
-      (sh . t)
-      (emacs-lisp . t)
-      ))
+  ;; (require 'ob-perl)
+  ;; (org-babel-do-load-languages
+  ;; 'org-babel-load-languages
+  ;; '( (perl . t)
+  ;;    (emacs-lisp . t)
+  ;;    ))
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
