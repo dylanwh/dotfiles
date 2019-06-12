@@ -20,7 +20,7 @@ define git-clone
 	cd $(2) && git pull; \
 else \
 	echo 'git clone $(1) $(2)'; \
-	git clone $(1) $(2); \
+	git clone --depth 1 -q $(1) $(2); \
 fi
 @touch $(2)
 endef
