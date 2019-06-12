@@ -15,7 +15,7 @@ XDG_DATA_HOME   := $(patsubst $(HOME)/%,%,$(XDG_DATA_HOME))
 -include $(XDG_CACHE_HOME)/user-dirs.mk
 
 define git-clone
-@if [[ -d $(2) ]]; then \
+@if [ -d $(2) ]; then \
 	echo 'cd $(2) && git pull' ; \
 	cd $(2) && git pull; \
 else \
