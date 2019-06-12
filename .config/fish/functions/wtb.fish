@@ -24,6 +24,6 @@ function wtb
     git worktree add $dir $branch
     or return 1
 
-    cd $dir
+    code $dir
     or return 1
 end

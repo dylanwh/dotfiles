@@ -36,7 +36,6 @@ $(XDG_CACHE_HOME)/user-dirs.mk: $(XDG_CONFIG_HOME)/user-dirs.dirs $(XDG_CACHE_HO
 
 $(XDG_CONFIG_HOME)/base16-shell: $(XDG_CONFIG_HOME)
 	$(call git-clone,https://github.com/chriskempson/base16-shell.git,$@)
-	sed -i -e 's/end for/end/' $(XDG_CONFIG_HOME)/base16-shell/profile_helper.fish
 
 .plenv:
 	$(call git-clone,https://github.com/tokuhirom/plenv.git,$@)

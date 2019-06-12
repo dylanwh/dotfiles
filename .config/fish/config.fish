@@ -43,6 +43,6 @@ end
 if status --is-interactive
     set BASE16_SHELL "$HOME/.config/base16-shell/"
     if test -d $BASE16_SHELL
-        source "$BASE16_SHELL/profile_helper.fish"
+        source (sed -e 's/end for/end/' $BASE16_SHELL/profile_helper.fish|psub)
     end
 end
