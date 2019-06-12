@@ -1,4 +1,4 @@
-.PHONY: all dirs plenv
+.PHONY: all plenv emacs ssh base16
 
 PATH  := $(HOME)/bin:$(PATH)
 HOST  := $(shell hostname -s)
@@ -14,25 +14,38 @@ XDG_DATA_HOME   := $(patsubst $(HOME)/%,%,$(XDG_DATA_HOME))
 
 -include $(XDG_CACHE_HOME)/user-dirs.mk
 
-all: .emacs.d $(XDG_CONFIG_HOME)/case16-shell .ssh/authorized_keys
+define git-clone
+@if [[ -d $(2) ]]; then \
+	echo 'cd $(2) && git pull' ; \
+	cd $(2) && git pull; \
+else \
+	echo 'git clone $(1) $(2)'; \
+	git clone $(1) $(2); \
+fi
+@touch $(2)
+endef
 
-plenv: .plenv .plenv/plugins/perl-build
+all:    plenv emacs ssh base16
+plenv:  .plenv .plenv/plugins/perl-build
+emacs:  .emacs.d
+ssh:    .ssh/authorized_keys
+base16: $(XDG_CONFIG_HOME)/base16-shell
 
 $(XDG_CACHE_HOME)/user-dirs.mk: $(XDG_CONFIG_HOME)/user-dirs.dirs $(XDG_CACHE_HOME) Makefile
 	@sed '/^#/ d; s|$$HOME/||g; s/"//g;' $< > $@
 
 $(XDG_CONFIG_HOME)/base16-shell: $(XDG_CONFIG_HOME)
-	git clone https://github.com/chriskempson/base16-shell.git $@
+	$(call git-clone,https://github.com/chriskempson/base16-shell.git,$@)
 	sed -i -e 's/end for/end/' $(XDG_CONFIG_HOME)/base16-shell/profile_helper.fish
 
 .plenv:
-	git clone https://github.com/tokuhirom/plenv.git $@
+	$(call git-clone,https://github.com/tokuhirom/plenv.git,$@)
 
 .plenv/plugins/perl-build: .plenv
-	git clone https://github.com/tokuhirom/Perl-Build.git $@
+	$(call git-clone,https://github.com/tokuhirom/Perl-Build.git,$@)
 
 .emacs.d:
-	git clone https://github.com/syl20bnr/spacemacs $@
+	$(call git-clone,https://github.com/syl20bnr/spacemacs,$@)
 
 .ssh:
 	mkdir -m 755 .ssh
