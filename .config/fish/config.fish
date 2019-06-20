@@ -41,8 +41,8 @@ if have plenv
 end
 
 if status --is-interactive
-    set BASE16_SHELL "$HOME/.config/base16-shell/"
+    set BASE16_SHELL "$HOME/.config/base16-shell"
     if test -d $BASE16_SHELL
-        source (sed -e 's/end for/end/' $BASE16_SHELL/profile_helper.fish|psub)
+        source $BASE16_SHELL/profile_helper.fish
     end
 end
