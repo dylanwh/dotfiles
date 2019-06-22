@@ -42,12 +42,8 @@ if which pyenv-virtualenv-init &> /dev/null; then
     eval "$(pyenv virtualenv-init -)"
 fi
 
-# if which docker-machine &> /dev/null; then
-#     docker_status="$(docker-machine status)"
-#     if [[ "$docker_status" == "Running" ]]; then
-#         eval "$(docker-machine env default)"
-#     fi
-#     unset docker_status
-# fi
+if [[ -x ~/.linuxbrew/bin/brew ]]; then
+    eval $(~/.linuxbrew/bin/brew shellenv)
+fi
 
 export PATH

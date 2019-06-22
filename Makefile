@@ -1,4 +1,3 @@
-.PHONY: all plenv emacs ssh base16
 
 PATH  := $(HOME)/bin:$(PATH)
 HOST  := $(shell hostname -s)
@@ -25,11 +24,13 @@ fi
 @touch $(2)
 endef
 
+.PHONY: all plenv emacs ssh base16 brew
 all:    plenv emacs ssh base16
 plenv:  .plenv .plenv/plugins/perl-build
 emacs:  .emacs.d
 ssh:    .ssh/authorized_keys
 base16: $(XDG_CONFIG_HOME)/base16-shell
+brew:   .linuxbrew/Homebrew .linuxbrew/bin/brew
 
 $(XDG_CACHE_HOME)/user-dirs.mk: $(XDG_CONFIG_HOME)/user-dirs.dirs $(XDG_CACHE_HOME) Makefile
 	@sed '/^#/ d; s|$$HOME/||g; s/"//g;' $< > $@
@@ -46,8 +47,20 @@ $(XDG_CONFIG_HOME)/base16-shell: $(XDG_CONFIG_HOME)
 .emacs.d:
 	$(call git-clone,https://github.com/syl20bnr/spacemacs,$@)
 
+.linuxbrew:
+	mkdir -m 755 $@
+
+.linuxbrew/bin: .linuxbrew
+	mkdir -m 755 $@
+
+.linuxbrew/Homebrew: .linuxbrew
+	$(call git-clone,https://github.com/Homebrew/brew,$@)
+
+.linuxbrew/bin/brew: .linuxbrew/bin
+	ln -s ../Homebrew/bin/brew $@
+
 .ssh:
-	mkdir -m 755 .ssh
+	mkdir -m 755 $@
 
 .ssh/authorized_keys: .ssh
 	curl https://github.com/$(GITHUB_USER).keys > $@
