@@ -36,8 +36,18 @@ set -eg EDITOR
 set -Ux ALTERNATE_EDITOR ''
 set -Ux EDITOR "$emacsclient -t"
 
+if [ -d ~/bin ]
+    add-to-path ~/bin
+end
+
+
 if have plenv
     source (plenv init -| grep -v 'set -gx PATH' |psub)
+end
+
+if [ -x ~/.linuxbrew/bin/brew ]
+    add-to-path ~/.linuxbrew/bin ~/.linuxbrew/sbin
+    source (~/.linuxbrew/bin/brew shellenv | grep -v fish_user_paths | psub)
 end
 
 if status --is-interactive
