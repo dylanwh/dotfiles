@@ -3,7 +3,6 @@ base16-shell
 configstore
 dconf/
 evolution/
-fish/
 gcloud
 git
 gnome-initial-setup-done
