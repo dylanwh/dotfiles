@@ -63,4 +63,7 @@ $(XDG_CONFIG_HOME)/base16-shell: $(XDG_CONFIG_HOME)
 	mkdir -m 755 $@
 
 .ssh/authorized_keys: .ssh
-	curl https://github.com/$(GITHUB_USER).keys > $@
+	curl -s -o $@ https://github.com/$(GITHUB_USER).keys
+	chmod 644 $@
+
+.PHONY: .ssh/authorized_keys
