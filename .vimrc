@@ -221,6 +221,7 @@ if !exists('autocmds_loaded')
         autocmd BufNewFile,BufRead *.html.tmpl set ft=tt2html
         autocmd BufNewFile,BufRead /tmp/zshecl* set ft=sh syn=zsh |
                     \ map <buffer> q ZZ
+        autocmd BufNewFile,BufRead */.ssh/config.d/* set ft=sshconfig
     augroup END
     " }}}
 

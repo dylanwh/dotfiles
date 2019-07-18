@@ -77,6 +77,8 @@ $(XDG_CACHE_HOME):
 
 .ssh/authorized_keys: .ssh
 	curl -s -o $@ https://github.com/$(GITHUB_USER).keys
-	chmod 644 $@
+	@chmod 644 $@
 
-.PHONY: .ssh/authorized_keys
+.ssh/config: $(sort $(wildcard .ssh/config.d/*))
+	cat $^ > $@
+	@chmod 644 $@
