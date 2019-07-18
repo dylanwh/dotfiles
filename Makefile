@@ -11,6 +11,8 @@ XDG_CONFIG_HOME := $(patsubst $(HOME)/%,%,$(XDG_CONFIG_HOME))
 XDG_CACHE_HOME  := $(patsubst $(HOME)/%,%,$(XDG_CACHE_HOME))
 XDG_DATA_HOME   := $(patsubst $(HOME)/%,%,$(XDG_DATA_HOME))
 
+SSH_CONFIG_FILES = $(sort $(wildcard .ssh/config.d/*))
+
 -include $(XDG_CACHE_HOME)/user-dirs.mk
 
 -include $(XDG_CACHE_HOME)/configure.mk
@@ -30,9 +32,8 @@ endef
 all:    plenv emacs ssh base16
 plenv:  .plenv .plenv/plugins/perl-build
 emacs:  .emacs.d
-ssh:    .ssh/authorized_keys
+ssh:    .ssh/authorized_keys .ssh/config
 base16: $(XDG_CONFIG_HOME)/base16-shell
-
 
 $(XDG_CACHE_HOME)/user-dirs.mk: $(XDG_CONFIG_HOME)/user-dirs.dirs $(XDG_CACHE_HOME) Makefile
 	@sed '/^#/ d; s|$$HOME/||g; s/"//g;' $< > $@
@@ -75,10 +76,13 @@ endif
 $(XDG_CACHE_HOME):
 	mkdir -m 755 $@
 
+$(XDG_CACHE_HOME)/ssh:
+	mkdir -m 755 $@
+
 .ssh/authorized_keys: .ssh
 	curl -s -o $@ https://github.com/$(GITHUB_USER).keys
 	@chmod 644 $@
 
-.ssh/config: $(sort $(wildcard .ssh/config.d/*))
-	cat $^ > $@
+.ssh/config: .ssh $(XDG_CACHE_HOME)/ssh $(SSH_CONFIG_FILES)
+	cat $(SSH_CONFIG_FILES) > $@
 	@chmod 644 $@
