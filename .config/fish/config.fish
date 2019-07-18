@@ -1,4 +1,4 @@
-set -x GIT_CEILING_DIRECTORIES "$HOME/src"
+set -x GIT_CEILING_DIRECTORIES "$HOME/Code"
 
 set -x REALNAME "Dylan William Hardison"
 set -x EMAIL "dylan@hardison.net"
@@ -39,17 +39,24 @@ set -Ux ALTERNATE_EDITOR ''
 set -Ux EDITOR "$emacsclient -t"
 
 if [ -d ~/bin ]
-    add-to-path ~/bin
+    path add ~/bin
 end
 
-
-if have plenv
-    source (plenv init -| grep -v 'set -gx PATH' |psub)
+if [ -d ~/.plenv/bin ]
+    path add ~/.plenv/bin ~/.plenv/shims
+    if have plenv
+        source (plenv init -| grep -v 'set -gx PATH' |psub)
+    end
 end
 
 if [ -x ~/.linuxbrew/bin/brew ]
-    add-to-path ~/.linuxbrew/bin ~/.linuxbrew/sbin
+    path add ~/.linuxbrew/bin ~/.linuxbrew/sbin
     source (~/.linuxbrew/bin/brew shellenv | grep -v fish_user_paths | psub)
+end
+
+if have chef
+    source (chef shell-init fish | grep -v 'set -gx PATH' | psub)
+    path add  "/opt/chefdk/bin" "/Users/dylan/.chefdk/gem/ruby/2.5.0/bin" "/opt/chefdk/embedded/bin"
 end
 
 if status --is-interactive
