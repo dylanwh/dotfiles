@@ -27,9 +27,11 @@ set ls_cmd ls
 have gls; and set ls_cmd gls
 eval "alias ls='$ls_cmd -Fh --color=auto --group-directories-first'"
 
-set dircolors_cmd dircolors
-have gdircolors; and set dircolors_cmd gdircolors
-eval "eval ($dircolors_cmd -c)"
+if have dircolors
+    source (dircolors -c | psub)
+elif have gdircolors
+    source (gdircolors -c | psub)
+end
 
 set -l emacsclient (which emacsclient)
 set -eg EDITOR
