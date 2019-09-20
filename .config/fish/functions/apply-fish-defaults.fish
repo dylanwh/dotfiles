@@ -2,11 +2,10 @@ function apply-fish-defaults --description 'apply one-time fish configuration st
     # bump this if any substantial changes are made
     set -l config_version 4
 
-    test -n "$dylan_config_version"
-    or return 0
-
-    test "$config_version" -gt "$dylan_config_version"
-    or return 0
+    if test -n "$dylan_config_version"
+        test "$config_version" -gt "$dylan_config_version"
+        or return 0
+    end
 
     set -U dylan_config_version $config_version
     echo "applying fish defaults"
