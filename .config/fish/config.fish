@@ -1,52 +1,11 @@
-set -x GIT_CEILING_DIRECTORIES "$HOME/Code"
+apply-fish-defaults
 
-set -x REALNAME "Dylan William Hardison"
-set -x EMAIL "dylan@hardison.net"
-set -x MANPAGER 'less -s'
-set -x LANG en_US.UTF-8
-set -x LC_COLLATE POSIX # sort in POSIX order.
-set -x TZ US/Eastern
-
-set fish_greeting
-
-alias have="command -sq"
-alias zreload='exec fish'
-
-have cpanm;     and alias cpanm='cpanm --notest'
-have hub;       and alias git=hub
-have docker;    and alias runti='docker run --rm -ti'
-have git-annex; and alias gan='git annex'
-have gmake;     and alias make='gmake'
-have gdate;     and alias date='gdate'
-have gfind;     and alias find='gfind'
-have gcp;       and alias cp='gcp -i'
-have gmv;       and alias mv='gmv -i'
-have grm;       and alias rm='grm -i'
-
-set ls_cmd ls
-have gls; and set ls_cmd gls
-eval "alias ls='$ls_cmd -Fh --color=auto --group-directories-first'"
-
-if have dircolors
-    source (dircolors -c | psub)
-elif have gdircolors
-    source (gdircolors -c | psub)
+if have plenv
+    #source (plenv init - | grep -v 'set -gx PATH' | psub)
 end
 
-set -l emacsclient (which emacsclient)
-set -eg EDITOR
-set -Ux ALTERNATE_EDITOR ''
-set -Ux EDITOR "$emacsclient -t"
-
-if [ -d ~/bin ]
-    path add ~/bin
-end
-
-if [ -d ~/.plenv/bin ]
-    path add ~/.plenv/bin ~/.plenv/shims
-    if have plenv
-        source (plenv init -| grep -v 'set -gx PATH' |psub)
-    end
+if have pyenv
+    #source (pyenv init - | grep -v 'set -gx PATH' | psub)
 end
 
 if [ -x ~/.linuxbrew/bin/brew ]
@@ -60,10 +19,16 @@ if have chef
 end
 
 if status --is-interactive
-    set BASE16_SHELL "$HOME/.config/base16-shell"
+    set -U BASE16_SHELL "$HOME/.config/base16-shell"
     if test -d $BASE16_SHELL
-        source $BASE16_SHELL/profile_helper.fish
+        # source $BASE16_SHELL/profile_helper.fish
+        # load currently active theme...
+    end
+
+    if test -e ~/.base16_theme
+        set -l SCRIPT_NAME (basename (realpath ~/.base16_theme) .sh)
+        set -gx BASE16_THEME (string match 'base16-*' $BASE16_THEME  | string sub -s (string length 'base16-*'))
+        eval sh '"'(realpath ~/.base16_theme)'"'
     end
 end
-
-test -e {$HOME}/.iterm2_shell_integration.fish ; and source {$HOME}/.iterm2_shell_integration.fish
+#test -e {$HOME}/.iterm2_shell_integration.fish ; and source {$HOME}/.iterm2_shell_integration.fish
