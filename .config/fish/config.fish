@@ -1,16 +1,18 @@
 apply-fish-defaults
 
 if have plenv
-    #source (plenv init - | grep -v 'set -gx PATH' | psub)
+    # commented out because it's slow
+    # source (plenv init - | grep -v 'set -gx PATH' | psub)
 end
 
 if have pyenv
-    #source (pyenv init - | grep -v 'set -gx PATH' | psub)
+    # commented out because it's slow
+    # source (pyenv init - | grep -v 'set -gx PATH' | psub)
 end
 
 if [ -x ~/.linuxbrew/bin/brew ]
-    path add ~/.linuxbrew/bin ~/.linuxbrew/sbin
-    source (~/.linuxbrew/bin/brew shellenv | grep -v fish_user_paths | psub)
+    # commented out because it's slow
+    # source (~/.linuxbrew/bin/brew shellenv | grep -v fish_user_paths | psub)
 end
 
 if have chef
@@ -21,6 +23,7 @@ end
 if status --is-interactive
     set -U BASE16_SHELL "$HOME/.config/base16-shell"
     if test -d $BASE16_SHELL
+        # commented out because it's slow
         # source $BASE16_SHELL/profile_helper.fish
         # load currently active theme...
     end
@@ -31,4 +34,4 @@ if status --is-interactive
         eval sh '"'(realpath ~/.base16_theme)'"'
     end
 end
-#test -e {$HOME}/.iterm2_shell_integration.fish ; and source {$HOME}/.iterm2_shell_integration.fish
+test -e {$HOME}/.iterm2_shell_integration.fish ; and source {$HOME}/.iterm2_shell_integration.fish
