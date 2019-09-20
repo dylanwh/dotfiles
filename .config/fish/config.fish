@@ -2,12 +2,12 @@ apply-fish-defaults
 
 if have plenv
     # commented out because it's slow
-    # source (plenv init - | grep -v 'set -gx PATH' | psub)
+    # source (plenv init - fish | grep -v 'set -gx PATH' | psub)
 end
 
 if have pyenv
     # commented out because it's slow
-    # source (pyenv init - | grep -v 'set -gx PATH' | psub)
+    # source (pyenv init - --no-rehash fish | grep -v 'set -gx PATH' | psub)
 end
 
 if [ -x ~/.linuxbrew/bin/brew ]
