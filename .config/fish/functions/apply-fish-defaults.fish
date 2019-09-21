@@ -1,13 +1,4 @@
 function apply-fish-defaults --description 'apply one-time fish configuration stuff'
-    # bump this if any substantial changes are made
-    set -l config_version 4
-
-    if test -n "$dylan_config_version"
-        test "$config_version" -gt "$dylan_config_version"
-        or return 0
-    end
-
-    set -U dylan_config_version $config_version
     echo "applying fish defaults"
 
     set -Ux GIT_CEILING_DIRECTORIES "$HOME/Code"
@@ -20,7 +11,7 @@ function apply-fish-defaults --description 'apply one-time fish configuration st
     set -Ux LC_COLLATE POSIX # sort in POSIX order.
     set -Ux TZ US/Eastern
 
-    set -U fish_greeting
+    set -U fish_greeting ''
 
     set -l emacsclient (which emacsclient)
     set -eg EDITOR

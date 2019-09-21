@@ -1,4 +1,11 @@
-apply-fish-defaults
+# bump this if any substantial changes are made
+set -l config_version 4
+
+test -z "$dylan_config_version"
+or test "$config_version" -gt "$dylan_config_version"
+and apply-fish-defaults
+
+set -U dylan_config_version $config_version
 
 if have plenv
     # commented out because it's slow
