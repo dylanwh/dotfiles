@@ -23,7 +23,7 @@ if [ -x ~/.linuxbrew/bin/brew ]
 end
 
 if have chef
-    source (chef shell-init fish | grep -v 'set -gx PATH' | psub)
+    # source (chef shell-init fish | grep -v 'set -gx PATH' | psub)
     path add  "/opt/chefdk/bin" "/Users/dylan/.chefdk/gem/ruby/2.5.0/bin" "/opt/chefdk/embedded/bin"
 end
 
