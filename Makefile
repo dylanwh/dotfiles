@@ -28,7 +28,7 @@ fi
 @touch $(2)
 endef
 
-.PHONY: all plenv emacs ssh base16
+.PHONY: all plenv emacs ssh base16 fish
 all:    plenv emacs ssh base16
 plenv:  .plenv .plenv/plugins/perl-build
 emacs:  .emacs.d
@@ -53,23 +53,6 @@ $(XDG_CONFIG_HOME)/base16-shell: $(XDG_CONFIG_HOME)
 .emacs.d:
 	$(call git-clone,https://github.com/syl20bnr/spacemacs,$@)
 
-ifeq ($(UNAME),linux)
-.PHONY: brew
-brew: .linuxbrew/Homebrew .linuxbrew/bin/brew
-
-.linuxbrew:
-	mkdir -m 755 $@
-
-.linuxbrew/bin: .linuxbrew
-	mkdir -m 755 $@
-
-.linuxbrew/Homebrew: .linuxbrew
-	$(call git-clone,https://github.com/Homebrew/brew,$@)
-
-.linuxbrew/bin/brew: .linuxbrew/bin
-	ln -s ../Homebrew/bin/brew $@
-endif
-
 .ssh:
 	mkdir -m 755 $@
 
@@ -86,3 +69,11 @@ $(XDG_CACHE_HOME)/ssh:
 .ssh/config: .ssh $(XDG_CACHE_HOME)/ssh $(SSH_CONFIG_FILES)
 	cat $(SSH_CONFIG_FILES) > $@
 	@chmod 644 $@
+
+fish: .config/fish/pyenv.fish .config/fish/plenv.fish
+
+.config/fish/pyenv.fish:
+	pyenv init - --no-rehash fish | sed '/set -gx PATH/ d' > $@
+
+.config/fish/plenv.fish:
+	plenv init - fish | sed '/set -gx PATH/ d' > $@

@@ -1,5 +1,4 @@
-# bump this if any substantial changes are made
-set -l config_version 4
+set -l config_version (stat -c %Y ~/.config/fish/functions/apply-fish-defaults.fish)
 
 test -z "$dylan_config_version"
 or test "$config_version" -gt "$dylan_config_version"
@@ -7,19 +6,9 @@ and apply-fish-defaults
 
 set -U dylan_config_version $config_version
 
-if have plenv
-    # commented out because it's slow
-    # source (plenv init - fish | grep -v 'set -gx PATH' | psub)
-end
-
-if have pyenv
-    # commented out because it's slow
-    # source (pyenv init - --no-rehash fish | grep -v 'set -gx PATH' | psub)
-end
-
-if [ -x ~/.linuxbrew/bin/brew ]
-    # commented out because it's slow
-    # source (~/.linuxbrew/bin/brew shellenv | grep -v fish_user_paths | psub)
+for env_file in plenv pyenv
+    test -f ~/.config/fish/{$env_file}.fish
+    and source ~/.config/fish/{$env_file}.fish
 end
 
 if have chef
@@ -30,8 +19,9 @@ end
 if status --is-interactive
     set -U BASE16_SHELL "$HOME/.config/base16-shell"
     if test -d $BASE16_SHELL
-        # commented out because it's slow
-        # source $BASE16_SHELL/profile_helper.fish
+        function base16-load
+            source $BASE16_SHELL/profile_helper.fish
+        end
         # load currently active theme...
     end
 
@@ -41,4 +31,5 @@ if status --is-interactive
         eval sh '"'(realpath ~/.base16_theme)'"'
     end
 end
-test -e {$HOME}/.iterm2_shell_integration.fish ; and source {$HOME}/.iterm2_shell_integration.fish
+
+test -f {$HOME}/.iterm2_shell_integration.fish ; and source {$HOME}/.iterm2_shell_integration.fish
