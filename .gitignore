@@ -1,14 +1,14 @@
+/.emacs.d
 /annex
 /logs
 /mail
-/org
 /mnt
+/org
+/perl5
 /pub
 /tmp
-/perl5
-/.emacs.d
-Applications/
 Applications (Parallels)/
+Applications/
 Code/
 Desktop/
 Documents/
@@ -18,9 +18,10 @@ Movies/
 Music/
 Pictures/
 Public/
-.*
+Sync/
 /Sites
-/Google Drive
+/Google Drive*
+.*
 !.bashrc
 !.iterm2
 !.iterm2_shell_integration.zsh
