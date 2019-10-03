@@ -1,20 +1,17 @@
 #!/usr/bin/env fish
-function path -a cmd
-    set -l args $argv[2..-1]
+function path -a cmd dir
     if [ -z $cmd ]
         set cmd list
     end
     switch $cmd
         case add
-            for add in $args
-                if not contains $add $fish_user_paths
-                    set -U fish_user_paths $add $fish_user_paths
-                end
+            if not contains $dir $fish_user_paths
+                set -U fish_user_paths $fish_user_paths $dir
             end
         case remove
             set -l new_user_paths
             for path in $fish_user_paths
-                if not contains $path $args
+                if [ $path != $dir ]
                     set new_user_paths $new_user_paths $path
                 end
             end
@@ -31,6 +28,8 @@ function path -a cmd
                 end
             end
             set -U fish_user_paths $new_user_paths
+        case clear
+            set --erase fish_user_paths
         case '*'
             echo "path $cmd: I don't know how"
             return 1

@@ -27,7 +27,7 @@ fi
 endef
 
 .PHONY: all plenv emacs ssh base16 fish
-all:    plenv emacs ssh base16
+all:    plenv emacs ssh base16 fish
 plenv:  .plenv .plenv/plugins/perl-build
 emacs:  .emacs.d
 ssh:    .ssh/authorized_keys
@@ -64,10 +64,13 @@ $(XDG_CACHE_HOME)/ssh:
 	curl -s -o $@ https://github.com/$(GITHUB_USER).keys
 	@chmod 644 $@
 
-fish: .config/fish/pyenv.fish .config/fish/plenv.fish
+fish: .config/fish/pyenv.fish .config/fish/plenv.fish .config/fish/chef.fish
 
 .config/fish/pyenv.fish:
-	pyenv init - --no-rehash fish | sed '/set -gx PATH/ d' > $@
+	-pyenv init - --no-rehash fish | sed '/set -gx PATH/ d' > $@
 
 .config/fish/plenv.fish:
-	plenv init - fish | sed '/set -gx PATH/ d' > $@
+	-plenv init - fish | sed '/set -gx PATH/ d' > $@
+
+.config/fish/chef.fish:
+	-chef shell-init fish | grep -v 'set -gx PATH' > $@

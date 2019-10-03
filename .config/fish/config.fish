@@ -6,14 +6,9 @@ and apply-fish-defaults
 
 set -U dylan_config_version $config_version
 
-for env_file in plenv pyenv
+for env_file in plenv pyenv chef
     test -f ~/.config/fish/{$env_file}.fish
     and source ~/.config/fish/{$env_file}.fish
-end
-
-if have chef
-    # source (chef shell-init fish | grep -v 'set -gx PATH' | psub)
-    path add  "/opt/chefdk/bin" "/Users/dylan/.chefdk/gem/ruby/2.5.0/bin" "/opt/chefdk/embedded/bin"
 end
 
 if status --is-interactive

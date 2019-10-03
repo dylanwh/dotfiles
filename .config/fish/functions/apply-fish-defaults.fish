@@ -18,29 +18,24 @@ function apply-fish-defaults --description 'apply one-time fish configuration st
     set -Ux ALTERNATE_EDITOR ''
     set -Ux EDITOR "$emacsclient -t"
 
-    if [ -d ~/bin ]
-        path add ~/bin
-    end
-
-    for gnubin in /usr/local/opt/*/libexec/gnubin
-        path add $gnubin
-    end
-
-    if [ -d ~/.plenv/bin ]
-        path add ~/.plenv/bin ~/.plenv/shims
-
-    end
-
-    if [ -d ~/.pyenv/shims ]
-        path add ~/.pyenv/shims
-    end
-
-    if [ -d ~/.cargo/bin ]
-        path add ~/.cargo/bin
-    end
-
     set -Ux GOPATH ~/go
+
+    path clear
+
+    path add ~/bin
+    for gnubin in /usr/local/opt/*/libexec/gnubin
+        path add  $gnubin
+    end
+
+    path add ~/.plenv/bin
+    path add ~/.plenv/shims
+    path add ~/.pyenv/shims
+    path add ~/.cargo/bin
+    path add /opt/chefdk/bin
+    path add ~/.chefdk/gem/ruby/2.5.0/bin
+    path add /opt/chefdk/embedded/bin
     path add $GOPATH/bin
+    path prune
 
     source (dircolors -c | sed 's/setenv/set -Ux/' | psub)
     colorload
