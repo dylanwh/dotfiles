@@ -76,8 +76,8 @@ $(XDG_CACHE_HOME)/ssh:
 	mkdir -m 755 $@
 
 ifdef NIXOS
+# this file is not used on nixos
 .ssh/authorized_keys: .ssh
-	# this file is not used on nixos
 	@touch $@
 	@chmod 644 $@
 else
