@@ -49,7 +49,7 @@ $(XDG_CACHE_HOME)/configure.mk: $(XDG_CACHE_HOME) Makefile
 	@echo check uname
 	@echo 'UNAME='$$(uname) > $@
 	@echo check for nixos
-	@test -d /etc/nixos && echo 'NIXOS=1' >> $@
+	@if test -d /etc/nixos; then echo 'NIXOS=1' >> $@; fi
 	$(call have,plenv) >> $@
 	$(call have,pyenv) >> $@
 	$(call have,chef) >> $@
