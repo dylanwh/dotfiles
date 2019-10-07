@@ -26,7 +26,16 @@ fi
 @touch $(2)
 endef
 
-.PHONY: all plenv emacs ssh base16 fish
+define have
+@echo check for $(1)
+@if which $(1) &> /dev/null; then \
+	echo HAVE_$(1)=1 | tr a-z A-Z | tr - _; \
+else \
+	echo "# Don't have $(1)"; \
+fi
+endef
+
+.PHONY: all plenv emacs ssh base16 fish clean_fish
 all:    plenv emacs ssh base16 fish
 plenv:  .plenv .plenv/plugins/perl-build
 emacs:  .emacs.d
@@ -37,7 +46,13 @@ $(XDG_CACHE_HOME)/user-dirs.mk: $(XDG_CONFIG_HOME)/user-dirs.dirs $(XDG_CACHE_HO
 	@sed '/^#/ d; s|$$HOME/||g; s/"//g;' $< > $@
 
 $(XDG_CACHE_HOME)/configure.mk: $(XDG_CACHE_HOME) Makefile
-	echo 'UNAME='$$(uname) > $@
+	@echo check uname
+	@echo 'UNAME='$$(uname) > $@
+	@echo check for nixos
+	@test -d /etc/nixos && echo 'NIXOS=1' >> $@
+	$(call have,plenv) >> $@
+	$(call have,pyenv) >> $@
+	$(call have,chef) >> $@
 
 $(XDG_CONFIG_HOME)/base16-shell: $(XDG_CONFIG_HOME)
 	$(call git-clone,https://github.com/chriskempson/base16-shell.git,$@)
@@ -60,17 +75,36 @@ $(XDG_CACHE_HOME):
 $(XDG_CACHE_HOME)/ssh:
 	mkdir -m 755 $@
 
+ifdef NIXOS
+.ssh/authorized_keys: .ssh
+	# this file is not used on nixos
+	@touch $@
+	@chmod 644 $@
+else
 .ssh/authorized_keys: .ssh
 	curl -s -o $@ https://github.com/$(GITHUB_USER).keys
 	@chmod 644 $@
+endif
 
-fish: .config/fish/pyenv.fish .config/fish/plenv.fish .config/fish/chef.fish
 
+ifdef HAVE_PYENV
+FISH_FILES += .config/fish/pyenv.fish
 .config/fish/pyenv.fish:
 	-pyenv init - --no-rehash fish | sed '/set -gx PATH/ d' > $@
+endif
 
+ifdef HAVE_PLENV
+FISH_FILES += .config/fish/plenv.fish
 .config/fish/plenv.fish:
 	-plenv init - fish | sed '/set -gx PATH/ d' > $@
+endif
 
+ifdef HAVE_CHEF
+FISH_FILES += .config/fish/chef.fish
 .config/fish/chef.fish:
 	-chef shell-init fish | grep -v 'set -gx PATH' > $@
+endif
+
+fish: $(FISH_FILES)
+clean_fish: 
+	rm -f $(FISH_FILES)
