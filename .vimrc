@@ -129,7 +129,6 @@ let airline#extensions#tabline#enabled = 1
 
 " COLORS {{{1
 set background=dark
-colorscheme zenburn
 " }}}
 
 " MAPPINGS {{{1
