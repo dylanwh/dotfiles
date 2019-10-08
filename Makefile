@@ -28,7 +28,7 @@ endef
 
 define have
 @echo check for $(1)
-@if which $(1) > /dev/null; then \
+@if which $(1) 2> /dev/null > /dev/null; then \
 	echo HAVE_$(1)=1 | tr a-z A-Z | tr - _; \
 else \
 	echo "# Don't have $(1)"; \
