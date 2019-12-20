@@ -38,7 +38,7 @@ local fastmail = IMAP {
     server = 'imap.fastmail.com',
     username = "dylan@hardison.net",
     password = io.open(os.getenv("HOME") .. "/.fastmail_password", "r"):read(),
-    ssl = 'auto',
+    ssl = 'tls1.2',
 }
 
 main(fastmail)

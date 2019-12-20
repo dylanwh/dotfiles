@@ -259,7 +259,6 @@ if !exists('autocmds_loaded')
                 \   setlocal modifiable |
                 \ endif
 
-    autocmd! BufWritePost */.vimrc source $MYVIMRC | AirlineRefresh
 endif
 " }}}
 

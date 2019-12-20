@@ -340,6 +340,7 @@ This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
   (global-hl-line-mode -1)
+  (evil-leader/set-key "/" 'spacemacs/helm-project-do-ag)
 
   (defun my-cperl-mode ()
     (cperl-set-style "CPerl")
@@ -368,12 +369,6 @@ you should place your code here."
   ;; For Javascript
   (add-hook 'js2-mode-hook #'(lambda () (modify-syntax-entry ?_ "w")))
 
-  ;; (require 'ob-perl)
-  ;; (org-babel-do-load-languages
-  ;; 'org-babel-load-languages
-  ;; '( (perl . t)
-  ;;    (emacs-lisp . t)
-  ;;    ))
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
