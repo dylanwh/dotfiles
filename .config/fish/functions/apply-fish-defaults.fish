@@ -24,7 +24,7 @@ function apply-fish-defaults --description 'apply one-time fish configuration st
 
     path add ~/bin
     for gnubin in /usr/local/opt/*/libexec/gnubin
-        path add  $gnubin
+        path add $gnubin
     end
 
     path add ~/.plenv/bin
