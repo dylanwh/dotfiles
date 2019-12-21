@@ -27,8 +27,6 @@ function apply-fish-defaults --description 'apply one-time fish configuration st
         path add  $gnubin
     end
 
-    path add /snap/bin
-
     path add ~/.plenv/bin
     path add ~/.plenv/shims
     path add ~/.pyenv/shims

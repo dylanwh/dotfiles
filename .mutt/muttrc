@@ -11,21 +11,50 @@ set spoolfile="imaps://mail.messagingengine.com/INBOX"
 set imap_headers='LIST-ID'
 set mask="."
 
-mailboxes + ++SaneLater ++SaneNews +Billing +Bugzilla
-subscribe reply\.github\.com \
+mailboxes + +mozilla +mozilla.bugmail +mozilla.bugmail.bmo +alerts
+subscribe dev-platform@mozilla\.org \
+          reply\.github\.com \
           billing@hardison\.net \
+          auto-tools@mozilla.com \
+          lists\.mozilla\.org \
           developers@bugzilla.org \
           outreachy-announce-list@gnome\.org \
           outreachy-list@gnome\.org \
+          bugzilla-admin@mozilla\.org \
+          all(-moco|-moco-mofo)?@mozilla\.com \
+          everyone@mozilla\.org \
+          fx-(team|devtools)@mozilla\.com \
+          [a-z]+-all@mozilla\.com \
+          release-drivers@mozilla\.org \
+          communications@mozilla\.com
 
-alternates dhardison@cpan.org \
+alternates dylan@mozilla\.com \
+           dhardison@mozilla\.com \
            dylan\+[^@]+@hardison\.net \
+
+
+alias -group bmo bmo BMO <bugzilla-daemon@mozilla.org>
+
+group -group democrats \
+      -addr info@democracyforamerica.com \
+      -addr staff@dlcc.org \
+      -addr democraticparty@democrats.org \
+      -addr moveon-help@list.moveon.org \
+      -addr grassroots@fladems.com \
+      -addr info@ourrevolution.com \
+      -addr reply@workingfamilies.org \
+      -addr info@andrewgillum.com \
+      -addr jess@firstnationsrise.org \
+      -addr democraticparty@democrats.org \
+      -addr democratslive@democrats.org
 
 group -group social \
       -rx [^@]+@facebookmail\.com \
       -rx [^@]+@linkedin\.com \
       -rx [^@]+@twitter\.com \
       -rx [^@]+@meetup\.com
+
+
 
 set history_file=~/.mutt/history
 set history=1000
@@ -82,6 +111,9 @@ bind index       <Esc>0D       previous-page
 macro generic,pager,index <F2> ":toggle arrow_cursor\n"    "toggle arrow cursor"
 macro index               A    "T.\n;WO;WN;t"              "mark all as read"
 macro index               S    "D~H spam\n"                "delete all spam"
+macro index,pager         i    "c +inbox\n"                "go to inbox"
+macro index,pager         I    "c +[Gmail]/Important\n"    "go to important"
+
 
 # This all works only if you have mutt-1.3.12 or newer
 # or if you use something like the pagerfilter patch

@@ -54,16 +54,16 @@ $(XDG_CACHE_HOME)/configure.mk: $(XDG_CACHE_HOME) Makefile
 	$(call have,pyenv) >> $@
 	$(call have,chef) >> $@
 
-$(XDG_CONFIG_HOME)/base16-shell: $(XDG_CONFIG_HOME)
+$(XDG_CONFIG_HOME)/base16-shell: $(XDG_CONFIG_HOME) Makefile
 	$(call git-clone,https://github.com/chriskempson/base16-shell.git,$@)
 
-.plenv:
+.plenv: Makefile
 	$(call git-clone,https://github.com/tokuhirom/plenv.git,$@)
 
-.plenv/plugins/perl-build: .plenv
+.plenv/plugins/perl-build: .plenv Makefile
 	$(call git-clone,https://github.com/tokuhirom/Perl-Build.git,$@)
 
-.emacs.d:
+.emacs.d: Makefile
 	$(call git-clone,https://github.com/syl20bnr/spacemacs,$@)
 
 .ssh:
