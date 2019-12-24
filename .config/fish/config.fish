@@ -1,5 +1,3 @@
-set GNU_PATH /usr/local/opt/*/libexec/gnubin
-
 set -l config_version (stat -c %Y ~/.config/fish/functions/apply-fish-defaults.fish)
 
 test -z "$dylan_config_version"
