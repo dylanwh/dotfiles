@@ -20,6 +20,7 @@ function apply-fish-defaults --description 'apply one-time fish configuration st
 
     path clear
 
+    path add /snap/bin
     path add ~/bin
     path add ~/.plenv/bin
     path add ~/.plenv/shims
