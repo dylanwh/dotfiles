@@ -1,8 +1,6 @@
 function apply-fish-defaults --description 'apply one-time fish configuration stuff'
     echo "applying fish defaults"
 
-    set -Ux GIT_CEILING_DIRECTORIES "$HOME/Code"
-
     set -Ux REALNAME "Dylan William Hardison"
     set -Ux EMAIL "dylan@hardison.net"
     set -Ux MANPAGER 'less -s'
@@ -23,10 +21,6 @@ function apply-fish-defaults --description 'apply one-time fish configuration st
     path clear
 
     path add ~/bin
-    for gnubin in /usr/local/opt/*/libexec/gnubin
-        path add $gnubin
-    end
-
     path add ~/.plenv/bin
     path add ~/.plenv/shims
     path add ~/.pyenv/shims
