@@ -36,7 +36,7 @@ fi
 endef
 
 .PHONY: all plenv emacs ssh base16 fish clean_fish
-all:    plenv emacs ssh base16 fish
+all:    plenv emacs base16 fish
 plenv:  .plenv .plenv/plugins/perl-build
 emacs:  .emacs.d
 base16: $(XDG_CONFIG_HOME)/base16-shell
