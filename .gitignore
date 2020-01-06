@@ -7,6 +7,9 @@
 /perl5
 /pub
 /tmp
+/Google Drive*
+/Sites
+/go
 Applications (Parallels)/
 Applications/
 Code/
@@ -19,8 +22,6 @@ Music/
 Pictures/
 Public/
 Sync/
-/Sites
-/Google Drive*
 .*
 !.bashrc
 !.iterm2

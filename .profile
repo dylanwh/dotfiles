@@ -30,7 +30,7 @@ fi
 
 export XDG_DATA_HOME XDG_CONFIG_HOME XDG_CACHE_HOME XDG_RUNTIME_DIR
 
-PATH="$HOME/bin:$PATH"
+PATH="$HOME/bin:/usr/local/bin:$PATH"
 
 if which plenv &>/dev/null; then
     eval "$(plenv init -)"
