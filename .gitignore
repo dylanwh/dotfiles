@@ -1,5 +1,21 @@
 /.emacs.d
+/Applications (Parallels)/
+/Applications/
+/Archives/
+/Code/
+/Desktop/
+/Documents/
+/Downloads/
+/Google Drive*
+/Library/
+/Movies/
+/Music/
+/Pictures/
+/Public/
+/Sites
+/Sync/
 /annex
+/go
 /logs
 /mail
 /mnt
@@ -7,21 +23,6 @@
 /perl5
 /pub
 /tmp
-/Google Drive*
-/Sites
-/go
-Applications (Parallels)/
-Applications/
-Code/
-Desktop/
-Documents/
-Downloads/
-Library/
-Movies/
-Music/
-Pictures/
-Public/
-Sync/
 .*
 !.bashrc
 !.iterm2
