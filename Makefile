@@ -39,8 +39,9 @@ endef
 all:    plenv emacs ssh base16 fish
 plenv:  .plenv .plenv/plugins/perl-build
 emacs:  .emacs.d
-ssh:    .ssh/authorized_keys
 base16: $(XDG_CONFIG_HOME)/base16-shell
+ssh:
+	curl -s -o Sync/ssh/authorized_keys https://github.com/$(GITHUB_USER).keys
 
 $(XDG_CACHE_HOME)/user-dirs.mk: $(XDG_CONFIG_HOME)/user-dirs.dirs $(XDG_CACHE_HOME) Makefile
 	@sed '/^#/ d; s|$$HOME/||g; s/"//g;' $< > $@
@@ -48,8 +49,6 @@ $(XDG_CACHE_HOME)/user-dirs.mk: $(XDG_CONFIG_HOME)/user-dirs.dirs $(XDG_CACHE_HO
 $(XDG_CACHE_HOME)/configure.mk: $(XDG_CACHE_HOME) Makefile
 	@echo check uname
 	@echo 'UNAME='$$(uname) > $@
-	@echo check for nixos
-	@if test -d /etc/nixos; then echo 'NIXOS=1' >> $@; fi
 	$(call have,plenv) >> $@
 	$(call have,pyenv) >> $@
 	$(call have,chef) >> $@
@@ -74,18 +73,6 @@ $(XDG_CACHE_HOME):
 
 $(XDG_CACHE_HOME)/ssh:
 	mkdir -m 755 $@
-
-ifdef NIXOS
-# this file is not used on nixos
-.ssh/authorized_keys: .ssh
-	@touch $@
-	@chmod 644 $@
-else
-.ssh/authorized_keys: .ssh
-	curl -s -o $@ https://github.com/$(GITHUB_USER).keys
-	@chmod 644 $@
-endif
-
 
 ifdef HAVE_PYENV
 FISH_FILES += .config/fish/pyenv.fish

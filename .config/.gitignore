@@ -1,4 +1,5 @@
 Code/
+Thunar/
 alfred/
 base16-shell
 configstore
@@ -10,7 +11,12 @@ gnome-initial-setup-done
 gtk-2.0
 hub
 ibus/
+libaccounts-glib/
+libreoffice/
 monitors.xml
 pulse/
 rclone
+syncthing/
 wireshark
+xfce4/
+xubuntu/

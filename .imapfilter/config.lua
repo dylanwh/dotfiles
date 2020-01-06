@@ -13,6 +13,7 @@ function main(server)
     local SaneCC    = server['+SaneCC']
     local GitHub    = server['GitHub']
     local Nest      = server['Nest']
+    local Billing   = server['Billing']
 
     SaneNews:contain_from("notifications@github.com"):move_messages(GitHub)
     SaneCC:contain_from("notifications@github.com"):move_messages(GitHub)
@@ -24,14 +25,22 @@ function main(server)
     local stale_sanebox = sanebox * stale
     stale_sanebox:delete_messages()
 
-    local unseen_old = SaneLater:is_older(30) * SaneLater:is_unseen()
-    unseen_old:mark_seen()
+    see_unseen_if_old(SaneLater)
+    see_unseen_if_old(SaneNews)
+    see_unseen_if_old(Archive)
+
+    GitHub:is_older(60):move_messages(Trash)
 
     INBOX:contain_from("notify@twitter.com"):move_messages(Trash)
     SaneNews:contain_from("builds@travis-ci.com"):move_messages(Trash)
 
     local old_netflix_recs = SaneLater:contain_from("info@mailer.netflix.com") * SaneLater:is_older(14)
     old_netflix_recs:move_messages(Trash)
+end
+
+function see_unseen_if_old(box)
+    local unseen_old = box:is_older(30) * box:is_unseen()
+    unseen_old:mark_seen()
 end
 
 local fastmail = IMAP {
