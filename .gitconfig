@@ -13,7 +13,6 @@
     up = !git fetch --all --tags --prune && git pull --rebase
     reword = commit --amend
     top = !pwd
-    home = !cd $HOME && git --git-dir=$HOME/.homegit
 
 [color]
     ui = auto

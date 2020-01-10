@@ -6,6 +6,19 @@ and apply-fish-defaults
 
 set -U dylan_config_version $config_version
 
+set -x REALNAME "Dylan William Hardison"
+set -x EMAIL "dylan@hardison.net"
+set -x MANPAGER 'less -s'
+set -x LANG en_US.UTF-8
+set -x LC_COLLATE POSIX # sort in POSIX order.
+set -x TZ US/Eastern
+
+switch "$TERM_PROGRAM"
+    case vscode
+        set -x EDITOR "code -w"
+    case '*'
+        set -x EDITOR (which vim)
+end
 
 for env_file in plenv pyenv chef
     test -f ~/.config/fish/{$env_file}.fish
@@ -28,4 +41,5 @@ if status --is-interactive
     end
 end
 
-test -f {$HOME}/.iterm2_shell_integration.fish ; and source {$HOME}/.iterm2_shell_integration.fish
+test -f {$HOME}/.iterm2_shell_integration.fish
+and source {$HOME}/.iterm2_shell_integration.fish

@@ -33,5 +33,3 @@ else
     alias p='pbpaste'
     alias c='pbcopy'
 fi
-
-

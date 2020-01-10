@@ -8,6 +8,5 @@ function gnu_alias -a cmd
             end
         end
     end
-    alias "$cmd=$cmd $argv[2..-1]"
     return 1
 end

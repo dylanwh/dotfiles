@@ -1,20 +1,7 @@
 function apply-fish-defaults --description 'apply one-time fish configuration stuff'
     echo "applying fish defaults"
 
-    set -Ux REALNAME "Dylan William Hardison"
-    set -Ux EMAIL "dylan@hardison.net"
-    set -Ux MANPAGER 'less -s'
-    set -eg LANG
-    set -Ux LANG en_US.UTF-8
-    set -Ux LC_COLLATE POSIX # sort in POSIX order.
-    set -Ux TZ US/Eastern
-
     set -U fish_greeting ''
-
-    set -l emacsclient (which emacsclient)
-    set -eg EDITOR
-    set -Ux ALTERNATE_EDITOR ''
-    set -Ux EDITOR "$emacsclient -t"
 
     set -Ux GOPATH ~/go
 
