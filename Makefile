@@ -52,6 +52,7 @@ $(XDG_CACHE_HOME)/configure.mk: $(XDG_CACHE_HOME) Makefile
 	$(call have,plenv) >> $@
 	$(call have,pyenv) >> $@
 	$(call have,chef) >> $@
+	$(call have,go) >> $@
 
 $(XDG_CONFIG_HOME)/base16-shell: $(XDG_CONFIG_HOME) Makefile
 	$(call git-clone,https://github.com/chriskempson/base16-shell.git,$@)
@@ -95,3 +96,13 @@ endif
 fish: $(FISH_FILES)
 clean_fish: 
 	rm -f $(FISH_FILES)
+
+
+ifdef HAVE_GO
+.PHONY: gore
+gore:
+	go get -u github.com/motemen/gore/cmd/gore
+	go get -u github.com/k0kubun/pp
+	go get -u github.com/mdempsky/gocode
+
+endif
