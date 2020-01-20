@@ -3,8 +3,6 @@ function apply-fish-defaults --description 'apply one-time fish configuration st
 
     set -U fish_greeting ''
 
-    set -Ux GOPATH ~/go
-
     path clear
 
     path add /snap/bin
@@ -16,7 +14,7 @@ function apply-fish-defaults --description 'apply one-time fish configuration st
     path add /opt/chefdk/bin
     path add ~/.chefdk/gem/ruby/2.5.0/bin
     path add /opt/chefdk/embedded/bin
-    path add $GOPATH/bin
+    path add (go env GOPATH)/bin
     path prune
 
     source (dircolors -c | sed 's/setenv/set -Ux/' | psub)
