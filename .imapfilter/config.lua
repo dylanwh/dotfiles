@@ -14,9 +14,11 @@ function main(server)
     local GitHub    = server['GitHub']
     local Nest      = server['Nest']
     local Billing   = server['Billing']
+    local Junk      = server['Junk Mail']
 
     SaneNews:contain_from("notifications@github.com"):move_messages(GitHub)
     SaneCC:contain_from("notifications@github.com"):move_messages(GitHub)
+    Archive:contain_from("notifications@github.com"):move_messages(GitHub)
     GitHub:contain_body("@dylanwh"):move_messages(INBOX)
     Nest:is_older(1):delete_messages()
 
@@ -36,6 +38,7 @@ function main(server)
 
     local old_netflix_recs = SaneLater:contain_from("info@mailer.netflix.com") * SaneLater:is_older(14)
     old_netflix_recs:move_messages(Trash)
+    SaneLater:contain_from("ebay@reply.ebay.de"):move_messages(Junk)
 end
 
 function see_unseen_if_old(box)
