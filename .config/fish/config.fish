@@ -15,9 +15,17 @@ set -x TZ US/Eastern
 
 switch "$TERM_PROGRAM"
     case vscode
-        set -x EDITOR "code -w"
+        set code code
+        if string match -q "*insider" $TERM_PROGRAM_VERSION
+            abbr -a -g -- code code-insiders
+            set code code-insiders
+        end
+        set -x EDITOR "$code -w"
+        abbr -a -g -- vi $code
+        abbr -a -g -- vim $code
     case '*'
         set -x EDITOR (which vim)
+        abbr -a -g vi vim
 end
 
 for env_file in plenv pyenv chef
@@ -40,6 +48,8 @@ if status --is-interactive
         eval sh '"'(realpath ~/.base16_theme)'"'
     end
 end
+
+
 
 test -f {$HOME}/.iterm2_shell_integration.fish
 and source {$HOME}/.iterm2_shell_integration.fish
