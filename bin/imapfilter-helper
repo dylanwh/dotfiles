@@ -2,3 +2,4 @@
 
 cd ~/.imapfilter
 nq -q -c imapfilter-terse
+nq -q -c imapfilter-notify

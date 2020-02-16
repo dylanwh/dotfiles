@@ -1,0 +1,21 @@
+#!/usr/bin/env perl
+use 5.20.0;
+use warnings;
+use Env qw($HOME);
+use Mojo::UserAgent;
+use Mojo::File qw(path);
+
+
+my $pushcut_url = path($HOME, ".imapfilter", "pushcut_url")->slurp;
+my $imapfilter_log = path($HOME, ".imapfilter", "recent.log")->slurp;
+my $ua = Mojo::UserAgent->new();
+
+chomp $pushcut_url;
+
+unless ($imapfilter_log =~ /\S/) {
+  $imapfilter_log = "nothing filtered.";
+}
+
+my $tx = $ua->post($pushcut_url, json => { text => $imapfilter_log });
+
+say $tx->result->json('/message');
