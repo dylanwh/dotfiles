@@ -1,0 +1,3 @@
+#!/bin/sh
+
+imapfilter | sed 's/dylan@hardison.net@imap.fastmail.com\///g' | tee ~/.imapfilter/recent.log

@@ -1,0 +1,4 @@
+#!/bin/sh
+
+cd ~/.imapfilter
+nq -q -c imapfilter-terse
