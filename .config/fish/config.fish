@@ -24,8 +24,9 @@ switch "$TERM_PROGRAM"
         abbr -a -g -- vi $code
         abbr -a -g -- vim $code
     case '*'
-        set -x EDITOR (which vim)
-        abbr -a -g vi vim
+        set -x ALTERNATE_EDITOR ""
+        set -x EDITOR "emacsclient -t"
+        abbr -a -g vi emacs
 end
 
 for env_file in plenv pyenv chef

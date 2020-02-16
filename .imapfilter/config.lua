@@ -39,6 +39,12 @@ function main(server)
     local old_netflix_recs = SaneLater:contain_from("info@mailer.netflix.com") * SaneLater:is_older(14)
     old_netflix_recs:move_messages(Trash)
     SaneLater:contain_from("ebay@reply.ebay.de"):move_messages(Junk)
+
+    local old_fedex = INBOX:contain_from("fedex.com") * INBOX:contain_subject("Your package ") * stale
+    old_fedex:move_messages(Trash)
+
+    local capone_withdraw = INBOX:contain_from("capitalone@notification.capitalone.com") * INBOX:contain_subject("Withdrawal Notice") * stale
+    capone_withdraw:move_messages(Archive)
 end
 
 function see_unseen_if_old(box)
