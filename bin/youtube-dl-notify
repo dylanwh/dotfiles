@@ -1,0 +1,14 @@
+#!/usr/bin/env perl
+use 5.20.0;
+use warnings;
+use Mojo::UserAgent;
+use Mojo::File qw(path);
+
+my $pushcut_url = path(".pushcut_url")->slurp;
+my $ua = Mojo::UserAgent->new();
+
+chomp $pushcut_url;
+
+my $tx = $ua->post($pushcut_url, json => { text => "Downloaded $ARGV[0]" });
+
+say $tx->result->json('/message');

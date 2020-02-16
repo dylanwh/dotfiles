@@ -1,0 +1,17 @@
+#!/usr/bin/env perl
+use 5.30.1;
+use autodie;
+use warnings;
+
+my $format = 'bestvideo+bestaudio[ext=m4a]/bestvideo+bestaudio/best';
+
+my @args = (
+  '--restrict-filenames',
+  '--write-thumbnail',
+  '--write-info-json',
+  '-o'                    => '%(uploader)s - %(title)s.%(ext)s',
+  '--format'              => $format,
+  '--merge-output-format' => 'mp4',
+);
+
+system('youtube-dl' => @args, @ARGV);

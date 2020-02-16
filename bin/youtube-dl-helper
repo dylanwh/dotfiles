@@ -1,29 +1,5 @@
-#!/usr/bin/env perl
-use 5.20.0;
-use autodie;
-use warnings;
-use File::Spec::Functions qw(catdir rel2abs);
-use Getopt::Long qw(:config gnu_getopt);
-use Env qw($HOME $YOUTUBE_DIR);
+#!/bin/sh
 
-my $dir = $YOUTUBE_DIR || catdir('Movies', 'YouTube');
-my $format       = 'bestvideo+bestaudio[ext=m4a]/bestvideo+bestaudio/best';
-
-GetOptions(
-  'directory|D=s' => \$dir, 
-  'format|f=s' => \$format
-);
-
-my $youtube_url = shift @ARGV or die "usage: $0 <youtube url>";
-
-chdir(rel2abs($dir, $HOME));
-
-exec(
-  'nq', '-q', '-c',
-  'youtube-dl',
-  '--restrict-filenames',
-  '-o' => '%(uploader)s - %(title)s.%(ext)s',
-  '--format'              => $format,
-  '--merge-output-format' => 'mp4',
-  '--write-info-json'     => $youtube_url
-);
+cd ~/Movies/YouTube
+nq -q -c youtube-dl-easy "$1"
+nq -q -c youtube-dl-notify "$1"
