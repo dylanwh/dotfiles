@@ -43,7 +43,7 @@ build_graph(
       ".config/fish/pyenv.fish" =>
         {action => 'env', command => 'pyenv init - fish', depends => ['.pyenv']},
       ".config/fish/chef.fish" =>
-        {action => 'env', command => 'chef shell-init fish', must_have => ['chef']},
+        {action => 'env', command => 'chef shell-init fish', skip  => sub { not have 'chef' }},
       ".config/fish/brew.fish" => {
         action  => "env",
         command => 'brew command-not-found-init',

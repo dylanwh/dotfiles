@@ -19,13 +19,22 @@ function main(server)
     SaneNews:contain_from("notifications@github.com"):move_messages(GitHub)
     SaneCC:contain_from("notifications@github.com"):move_messages(GitHub)
     Archive:contain_from("notifications@github.com"):move_messages(GitHub)
-    GitHub:contain_body("@dylanwh"):move_messages(INBOX)
+
+    local github_at = GitHub:contain_body("@dylanwh")
+    github_at:mark_flagged()
+    github_at:move_messages(INBOX)
     Nest:is_older(1):delete_messages()
 
     local sanebox       = INBOX:contain_from("message-digest@sanebox.com") + INBOX:contain_from("reports@sanebox.com")
+    local toggl         = INBOX:contain_subject("Toggl weekly report")
     local stale         = INBOX:is_older(1)
     local stale_sanebox = sanebox * stale
+    local stale_toggl   = toggl   * stale
     stale_sanebox:delete_messages()
+    stale_toggl:delete_messages()
+    
+    local more_toggl = Archive:contain_subject("Toggl weekly report")
+    more_toggl:delete_messages()
 
     see_unseen_if_old(SaneLater)
     see_unseen_if_old(SaneNews)
@@ -45,11 +54,45 @@ function main(server)
 
     local capone_withdraw = INBOX:contain_from("capitalone@notification.capitalone.com") * INBOX:contain_subject("Withdrawal Notice") * stale
     capone_withdraw:move_messages(Archive)
+
+    SaneNews:contain_from("dev-apps-bugzilla-bounces@lists.mozilla.org"):move_messages(Trash)
+
+    local later_ignore = {
+      "HeyGary@SFBags.com",
+      "eero@delighted.com",
+      "invites@mailer.surveygizmo.com",
+      "mail@floridasportfishing.com",
+      "no-reply@customers.instacartemail.com",
+      "no-reply@duolingo.com",
+      "no-reply@lyftmail.com",
+      "orders@instacart.com",
+      "community@email.withings.com",
+    }
+
+    local later_trash = any_from(SaneLater, later_ignore) * SaneLater:is_older(1)
+    later_trash:move_messages(Trash)
+
+    SaneLater:is_older(30):move_messages(Archive)
+
+    local archive_inbox =  INBOX:is_older(30) * INBOX:is_unflagged() * INBOX:is_seen()
+    archive_inbox:move_messages(Archive)
 end
 
 function see_unseen_if_old(box)
     local unseen_old = box:is_older(30) * box:is_unseen()
     unseen_old:mark_seen()
+end
+
+function any_from(box, from_list) 
+  local from = nil
+  for _, f in ipairs(from_list) do
+    if from == nil then
+      from = box:contain_from(f)
+    else
+      from = from + box:contain_from(f)
+    end
+  end
+  return from
 end
 
 local fastmail = IMAP {
