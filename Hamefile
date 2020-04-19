@@ -1,0 +1,115 @@
+#!/usr/bin/env perl
+
+build_graph(
+  'Sync/ssh/authorized_keys' =>
+    {action => 'download', url => "https://github.com/$GITHUB_USER.keys", parents => 1},
+  ".ssh" => {action => 'mkdir', mode => 0700,},
+  ".ssh/authorized_keys" =>
+    {action => "link", path => "$HOME/Sync/ssh/authorized_keys", parents => 1},
+  '.pyenv' => {action => 'git', url => 'https://github.com/pyenv/pyenv.git'},
+  '.plenv' => {action => 'git', url => 'https://github.com/tokuhirom/plenv.git'},
+  '.plenv/plugins/perl-build' => {
+    action  => 'git',
+    url     => 'https://github.com/tokuhirom/perl-build.git',
+    parents => 1
+  },
+  '.emacs.d' => {action => 'git', url => 'https://github.com/syl20bnr/spacemacs'},
+  ".config/base16-shell" =>
+    {action => 'git', url => 'https://github.com/chriskempson/base16-shell.git'},
+  "go/bin/gore" => {
+    action   => 'go',
+    packages => [
+      'github.com/motemen/gore/cmd/gore', 'github.com/k0kubun/pp',
+      'github.com/mdempsky/gocode',
+    ],
+  },
+  'Archives' => {
+    action => 'link',
+    path   => 'Library/Mobile Documents/com~apple~CloudDocs/Archives',
+    os     => 'darwin',
+  },
+  '.replyrc' => {
+    action       => 'template',
+    reply_script => "$HOME/.reply.pl",
+    depends      => ["$HOME/.reply.pl", __FILE__]
+  },
+  group(
+    fish_env => (
+      ".config/fish/plenv.fish" =>
+        {action => 'env', command => 'plenv init - fish', depends => ['.plenv']},
+      ".config/fish/pyenv.fish" =>
+        {action => 'env', command => 'pyenv init - fish', depends => ['.pyenv']},
+      ".config/fish/chef.fish" =>
+        {action => 'env', command => 'chef shell-init fish', must_have => ['chef']},
+    )
+  ),
+  group(
+    go_emacs => (
+      'go/bin/gopls' => {
+        action   => 'go',
+        env      => ['GO111MODULE=on'],
+        packages => ['golang.org/x/tools/gopls@latest']
+      },
+      'go/bin/golangci-lint' => {
+        action   => 'go',
+        env      => ['GO111MODULE=on', 'CGO_ENABLED=0'],
+        args     => ['-trimpath', '-ldflags', '-s -w'],
+        packages => ['github.com/golangci/golangci-lint/cmd/golangci-lint'],
+      },
+      'go/bin/godoc' =>
+        {action => 'go', packages => ['golang.org/x/tools/cmd/godoc']},
+      'go/bin/goimports' =>
+        {action => 'go', packages => ['golang.org/x/tools/cmd/goimports']},
+      'go/bin/gorename' =>
+        {action => 'go', packages => ['golang.org/x/tools/cmd/gorename']},
+      'go/bin/guru' => {action => 'go', packages => ['golang.org/x/tools/cmd/guru']},
+      'go/bin/gotests' =>
+        {action => 'go', packages => ['github.com/cweill/gotests/...']},
+      'go/bin/fillstruct' => {
+        action   => 'go',
+        packages => ['github.com/davidrjenni/reftools/cmd/fillstruct']
+      },
+      'go/bin/gomodifytags' =>
+        {action => 'go', packages => ['github.com/fatih/gomodifytags']},
+      'go/bin/godoctor' =>
+        {action => 'go', packages => ['github.com/godoctor/godoctor']},
+      'go/bin/gopkgs' =>
+        {action => 'go', packages => ['github.com/haya14busa/gopkgs/cmd/gopkgs']},
+      'go/bin/impl'   => {action => 'go', packages => ['github.com/josharian/impl']},
+      'go/bin/gocode' => {action => 'go', packages => ['github.com/mdempsky/gocode']},
+      'go/bin/godef'  => {action => 'go', packages => ['github.com/rogpeppe/godef']},
+      'go/bin/gogetdoc' => {action => 'go', packages => ['github.com/zmb3/gogetdoc']},
+    )
+  ),
+);
+
+
+__DATA__
+
+@@ .replyrc.ep
+% my $lines = Mojo::File->new($reply_script)->slurp;
+% my $i = 1;
+% foreach my $line (split(/\n/, $lines)) {
+% next unless $line =~ /\S/;
+script_line<%= $i++ %> = <%= $line %>
+% }
+
+[Autocomplete::Commands]
+[Autocomplete::Functions]
+[Autocomplete::Globals]
+[Autocomplete::Lexicals]
+[Autocomplete::Methods]
+[Autocomplete::Packages]
+[Colors]
+[DataPrinter]
+[FancyPrompt]
+[Hints]
+[Interrupt]
+[LexicalPersistence]
+[Packages]
+[ReadLine]
+[ResultCache]
+[CollapseStack]
+num_lines = 2
+[Timer]
+mintime = 0.01

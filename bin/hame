@@ -1,0 +1,512 @@
+#!/usr/bin/env perl
+package Hame;
+use 5.18.4;
+use strict;
+
+use English qw($PERL_VERSION $EXECUTABLE_NAME);
+use Env qw(
+  $HOME @PATH
+  $HOST
+  $XDG_DATA_HOME
+  $XDG_CONFIG_HOME
+  $XDG_CACHE_HOME
+  $GITHUB_USER
+);
+use Sys::Hostname;
+use File::Path qw(make_path);
+
+BEGIN {
+  $INC{'Hame.pm'} = __FILE__;
+  $GITHUB_USER     //= 'dylanwh';
+  $XDG_DATA_HOME   //= "$HOME/.local/share";
+  $XDG_CONFIG_HOME //= "$HOME/.config";
+  $XDG_CACHE_HOME  //= "$HOME/.cache";
+  $HOST            //= hostname() =~ s/\.+$//gr;
+
+  my $hame     = "$XDG_CACHE_HOME/hame/$PERL_VERSION";
+  my $hame_bin = "$hame/bin";
+  my $hame_lib = "$hame/lib";
+  make_path($hame_bin);
+  unless (-f "$hame_bin/cpanm") {
+    say "installing cpanm...";
+    system("curl", "-s", "https://cpanmin.us", "-o", "$hame_bin/cpanm");
+    chmod 0755, "$hame_bin/cpanm";
+  }
+  my $cpanm = sub {
+    my ($cb,   $module_file) = @_;
+    my (undef, $file)        = caller;
+    return undef unless $file eq __FILE__;
+    my $package = $module_file;
+    $package =~ s{/}{::}g;
+    $package =~ s/\.pm$//s;
+
+    unless (-f "$hame_lib/perl5/$module_file") {
+      local @PATH = ($hame_bin, @PATH);
+      say "installing $package...";
+      system("cpanm", "-q", "-L$hame", "--notest", $package);
+    }
+  };
+  unshift @INC, "$hame_lib/perl5";
+  push @INC, $cpanm, "$hame_lib/perl5";
+}
+
+use autodie;
+use Fcntl;
+use AnyDBM_File;
+use Graph;
+use List::Util qw(any all first max);
+use Mojo::File qw(path tempfile);
+use Mojo::Util qw(sha1_sum);
+use Mojo::Loader qw(data_section);
+use Mojo::Template;
+use Data::Printer;
+use Text::ParseWords qw(shellwords);
+use Carp;
+use Getopt::Long qw(:config gnu_getopt);
+use Exporter qw(import);
+use Term::ProgressBar;
+
+our @EXPORT = qw(
+  $GITHUB_USER $HOST $HOME @PATH
+  $XDG_DATA_HOME $XDG_CONFIG_HOME $XDG_CACHE_HOME
+
+  $Update $Verbose $Check $DumpRules $DumpGraph
+
+  build_graph group os path have
+);
+
+our ($Update, $Verbose, $Check, $DumpRules, $DumpGraph);
+
+GetOptions(
+  'update|u'   => \$Update,
+  'check|c'    => \$Check,
+  'verbose|v'  => \$Verbose,
+  'dump-rules' => \$DumpRules,
+  'dump-graph' => \$DumpGraph,
+);
+
+my ($Graph, %Checksum);
+
+my $checksum_file = path($XDG_CACHE_HOME, 'hame', 'checksum');
+tie %Checksum, 'AnyDBM_File', "$checksum_file", O_RDWR | O_CREAT, 0600
+  or die "Error opening $checksum_file: $!\n";
+
+my $hamefile = path($HOME, 'Hamefile')->to_rel;
+my $tempfile = tempfile(
+  DIR      => path($XDG_CACHE_HOME, "hame"),
+  TEMPLATE => 'Hamefile_XXXXX',
+  SUFFIX   => '.pm'
+);
+
+my @preamble = (
+  "package Hamefile;",
+  "use 5.18.4;",
+  "use Hame;",
+  'our @ISA = ("Hame");',
+  qq{#line 1 "$hamefile"},
+);
+my $code = $hamefile->slurp;
+$code =~ s/^__DATA__$/1;\n__DATA__/m;
+$tempfile->spurt(join("\n", @preamble) . "\n" . $code);
+
+chdir $HOME;
+require $tempfile;
+
+if ($Check) {
+  check_graph();
+}
+elsif ($DumpGraph) {
+  dump_graph();
+}
+else {
+  eval_graph();
+}
+
+sub build_graph {
+  my %rules = @_;
+  if ($DumpRules) {
+    p %rules;
+    exit 1;
+  }
+  $Graph = Graph->new(directed => 1);
+
+  my $home = path($HOME)->to_abs;
+  $Graph->add_vertex($home);
+  $Graph->set_vertex_attribute($home, action => 'exists');
+
+RULE: foreach my $rule_key (keys %rules) {
+    my $rule   = $rules{$rule_key};
+    my $target = path($rule_key)->to_abs;
+    my $action = $rule->{action};
+    my $mt = Mojo::Template->new->vars(1);
+
+    my $depends = delete $rule->{depends} // [];
+
+    next RULE if $rule->{os} && $rule->{os} ne $^O;
+
+    my @deps = invoke("dep_$action", $target, $rule);
+    push @$depends, @deps;
+
+    $rule->{leaf} = 1;
+
+    $Graph->add_vertex($target);
+    $Graph->add_edge($target, $home);
+    $Graph->set_vertex_attribute($target, $_, $rule->{$_}) for keys %$rule;
+
+    my @depends = map { path($_)->to_abs } @$depends;
+    foreach my $depend (@depends) {
+      $Graph->add_edge($depend, $target);
+      unless ($Graph->has_vertex_attribute($depend, 'action')) {
+        $Graph->set_vertex_attribute($depend, 'action', 'exists');
+      }
+    }
+  }
+
+  foreach my $file ($Graph->vertices) {
+    my $parents = $Graph->get_vertex_attribute($file, 'parents');
+    my @path    = $file->to_rel->to_array->@*;
+
+    next unless $parents;
+
+    while (@path > 1) {
+      last if $path[0] eq '..';
+      my $last   = pop @path;
+      my $target = path(@path, $last)->to_abs;
+      my $depend = path(@path)->to_abs;
+      $Graph->add_edge($depend, $target);
+
+      unless ($Graph->has_vertex_attribute($depend, 'action')) {
+        $Graph->set_vertex_attribute($depend, 'action', 'mkdir');
+      }
+    }
+  }
+
+  return 1;
+}
+
+sub eval_graph {
+  my @files  = $Graph->topological_sort;
+  my $config = {name => 'hame', count => 0 + @files, remove => 1,};
+  my $progress = Term::ProgressBar->new($config);
+
+  foreach my $file (@files) {
+    my $attr   = $Graph->get_vertex_attributes($file);
+    my $action = $attr->{action} or die "no action for " . shorten($file);
+
+    invoke("pre_$action", $file, $attr);
+    my $action_msg = $attr->{action_msg} // $action;
+    my $before_msg = $attr->{before_msg};
+    if ($Verbose) {
+        $before_msg //= sprintf "%s %s", $action_msg, shorten($file);
+    }
+    $progress->message($before_msg) if $before_msg;
+    my $success = invoke("run_$action", $file, $attr);
+
+    my $new_checksum = checksum($file);
+    my $old_checksum = $Checksum{$file} // '';
+    my $updated  = $new_checksum ne $old_checksum;
+
+    $Checksum{$file} = $new_checksum;
+    $attr->{updated} = $updated;
+    $attr->{success} = $success;
+
+    if ($updated) {
+      foreach my $succ ($Graph->successors($file)) {
+        my $succ_attr = $Graph->get_vertex_attributes($succ);
+        push @{$succ_attr->{updated_files}}, $file;
+      }
+    }
+
+    invoke("end_$action", $file, $attr);
+    my $after_msg = $attr->{after_msg};
+    if ($Verbose) {
+        $after_msg //= do {
+            my @msg;
+            push @msg, "ok" if $success;
+            push @msg, "updated" if $updated;
+            @msg ? '  ' . join(", ", @msg) : '';
+        };
+    }
+    $progress->message($after_msg) if $after_msg;
+  }
+  continue {
+    $progress->update;
+  }
+}
+
+sub check_graph {
+  my @files = sort $Graph->vertices;
+  my $len   = max map { length $_->to_rel } @files;
+  foreach my $file (@files) {
+    printf "%-${len}s  %s\n", shorten($file), $Checksum{$file} // '(missing)';
+  }
+
+}
+
+sub dump_graph {
+  print_graph(0, path($HOME)->to_abs);
+}
+
+sub print_graph {
+  my ($depth, @files) = @_;
+
+  foreach my $file (@files) {
+    say "  " x $depth, shorten($file);
+    print_graph($depth + 1, $Graph->predecessors($file));
+  }
+
+}
+
+sub shorten {
+  my ($file) = @_;
+
+  if ($file =~ /^$HOME/) {
+    my $rel = $file->to_rel;
+    return sprintf "~/%s", $rel eq '.' ? '' : $rel;
+  }
+  elsif (any { $file->dirname eq $_ } @PATH) {
+    return $file->basename;
+  }
+  else {
+    return $file . "";
+  }
+}
+
+sub group {
+  my ($value, @rules) = @_;
+
+  return label(group => $value, @rules);
+}
+
+sub os {
+  my ($value, @rules) = @_;
+
+  return label(os => $value, @rules);
+}
+
+sub label {
+  my ($name, $value, @rules) = @_;
+  foreach my $i (0 .. @rules / 2 - 1) {
+    $rules[$i * 2 + 1]{$name} = $value;
+  }
+  return @rules;
+}
+
+sub invoke {
+  my ($name, $file, $meta) = @_;
+  local $_ = $file;
+  local *_ = $meta;
+
+  my $code = Hamefile->can($name);
+  if ($code) {
+    return $code->();
+  }
+  elsif ($name =~ /^run_/) {
+    croak "invoke $name failed: missing subroutine" unless $code;
+  }
+  return ();
+}
+
+sub run_env {
+  if (-f $_) {
+    my @files    = shell_depends($_);
+    my $all_deps = all { -f $_ } @files;
+    return 0 if $all_deps;
+  }
+  my $name  = $_->basename('.fish');
+  my $lines = `$_{command}`;
+  $lines =~ s/^(set\s+-gx\s+PATH.+)$/capture_path($name, $1)/mge;
+  $_->spurt($lines);
+  return 1;
+}
+
+sub pre_exists {$_{before_msg} = '' }
+
+sub run_exists {
+  die "$0: Cannot make '$_'" unless -e $_;
+  return 0;
+}
+
+sub pre_git {
+    if (-d $_) {
+        $_{action_msg} = 'git pull';
+    } else {
+        $_{action_msg} = 'git clone';
+    }
+}
+
+sub run_git {
+  if (-d $_) {
+    return 0 unless $Update;
+    my $old_cwd = path();
+    eval {
+      chdir $_;
+      system qw( git pull -q );
+      $_{note} = 'git pull';
+    };
+    my $error = $@;
+    chdir $old_cwd;
+    die $error if $error;
+  }
+  else {
+    system qw( git clone --depth 1 -q ), $_{url}, $_;
+    $_{note} = 'git clone';
+  }
+  return 1;
+}
+
+sub pre_go {
+    return unless $Verbose;
+    $_{before_msg} = sprintf 'go get %s', $_->basename;
+}
+
+sub run_go {
+  return 0 if -x $_ && !$Update;
+  my @cmd = qw(go get -u);
+  if ($_{args}) {
+    push @cmd, $_{args}->@*;
+  }
+  if ($_{env}) {
+    unshift @cmd, 'env', $_{env}->@*;
+  }
+  system @cmd, $_{packages}->@*;
+  return 1;
+}
+
+sub run_download {
+  return 0 if -f $_ && !$Update;
+  system qw( curl -s -o ), $_, $_{url};
+  return 1;
+}
+
+sub run_mkdir {
+  my $stat = $_->stat;
+  if ($_{mode}) {
+    if ($stat && -d $stat) {
+      my $mode = $stat->mode & 0777;
+      return 0 if $mode == $_{mode};
+      chmod $_{mode}, $_;
+      $_{note} = sprintf 'chmod 0%3o', $_{mode};
+      return 1;
+    }
+    elsif ($stat) {
+      die "$_ is not a directory";
+    }
+    else {
+      $_{note} = sprintf 'mkdir _, 0%3o', $_{mode};
+      mkdir $_, $_{mode};
+      return 1;
+    }
+  }
+
+  return 0 if -d $stat;
+  mkdir $_;
+  return 1;
+}
+
+sub pre_link {
+    return unless $Verbose;
+    $_{before_msg} = sprintf "link %s to %s", shorten($_), shorten(path($_{path}));
+}
+
+sub run_link {
+  my $path = path($_{path})->to_abs;
+
+  unless (-e $path) {
+    die "symlink target does not exist: $path";
+  }
+  if (-l $_) {
+    return 0 if readlink($_) eq $path;
+    unlink $_;
+  }
+  symlink $path, $_;
+  return 1;
+}
+
+sub dep_template { path($HOME, 'Hamefile') }
+
+sub run_template {
+  if (-f $_ && !$_{updated_files}) {
+    return 0;
+  }
+  my $mt = Mojo::Template->new->vars(1);
+  $_->spurt($mt->render(data_section('Hamefile', $_->basename . ".ep"), {%_}));
+  return 1;
+}
+
+sub shell_depends {
+  my ($file) = @_;
+
+  my $code     = $file->slurp;
+  my @commands = map { [shellwords($_)] } split(/\n+/, $code);
+  my @files;
+
+  foreach my $cmd (@commands) {
+    next if any { $_ =~ /psub/ } @$cmd;
+
+    if ($cmd->[0] eq 'source' || $cmd->[0] eq '.') {
+      my $path = path($cmd->[1]);
+      push @files, eval { $path->realpath } // $path->to_abs;
+    }
+  }
+
+  return @files;
+}
+
+
+sub have {
+  my ($cmd) = @_;
+  state $cache = {};
+
+  return $cache->{$cmd} //= first { -x $_ } map { path($_, $cmd) } @PATH;
+}
+
+sub checksum {
+  my ($file) = Mojo::File->new(@_);
+
+  return 'h:' . sha1_sum("HOME") if $file eq $HOME;
+
+  if (-l $file) {
+    return 'l:' . sha1_sum(readlink $file);
+  }
+  elsif (-d _ ) {
+    if (-d $file->child('.git')) {
+      my $head = $file->child('.git/HEAD')->slurp;
+      if ($head =~ /^ref:\s+(.+)\s+$/s) {
+        my $ref = $file->child('.git', $1)->slurp;
+        chomp $ref;
+        return 'g:' . $ref;
+      }
+      else {
+        return '?:' . $head;
+      }
+    }
+    else {
+      return 'd:' . sha1_sum($file->list->sort->join("\n"));
+    }
+  }
+  elsif (-f _ ) {
+    return 'f:' . sha1_sum($file->slurp);
+  }
+}
+
+sub capture_path {
+  my ($name, $line) = @_;
+  my ($cmd,  @args) = shellwords($line);
+
+  my @dirs;
+  foreach my $arg (@args) {
+    next if $arg =~ /^-/;
+    next if $arg eq '$PATH';
+    next if $arg eq 'PATH';
+    push @dirs, fish_quote($arg);
+  }
+
+  return "set -U ${name}_paths @dirs";
+}
+
+sub fish_quote {
+  my ($s) = @_;
+
+  return q{'} . $s =~ s/(['\\])/\\$1/grs . q{'};
+}

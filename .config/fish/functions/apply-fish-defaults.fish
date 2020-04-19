@@ -8,6 +8,7 @@ function apply-fish-defaults --description 'apply one-time fish configuration st
     path add /snap/bin
     path add ~/bin
     path add ~/.plenv/bin
+    path add ~/.pyenv/bin
     path add ~/.plenv/shims
     path add ~/.pyenv/shims
     path add ~/.cargo/bin
