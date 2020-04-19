@@ -29,7 +29,7 @@ switch "$TERM_PROGRAM"
         abbr -a -g vi emacs
 end
 
-for env_file in plenv pyenv chef
+for env_file in plenv pyenv chef brew
     test -f ~/.config/fish/{$env_file}.fish
     and source ~/.config/fish/{$env_file}.fish
 end
