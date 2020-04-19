@@ -3,7 +3,7 @@ package Hame;
 use 5.18.4;
 use strict;
 
-use English qw($PERL_VERSION $EXECUTABLE_NAME);
+use English qw($PERL_VERSION $OSNAME $EXECUTABLE_NAME);
 use Env qw(
   $HOME @PATH
   $HOST
@@ -26,6 +26,10 @@ BEGIN {
   my $hame     = "$XDG_CACHE_HOME/hame/$PERL_VERSION";
   my $hame_bin = "$hame/bin";
   my $hame_lib = "$hame/lib";
+  my @lib_dirs = ( "$hame_lib/perl5");
+  if ($OSNAME eq 'darwin') {
+    push @lib_dirs, $lib_dirs[0] . "/darwin-thread-multi-2level";
+  }
   make_path($hame_bin);
   unless (-f "$hame_bin/cpanm") {
     say "installing cpanm...";
@@ -43,11 +47,11 @@ BEGIN {
     unless (-f "$hame_lib/perl5/$module_file") {
       local @PATH = ($hame_bin, @PATH);
       say "installing $package...";
-      system("cpanm", "-q", "-L$hame", "--notest", $package);
+      system($EXECUTABLE_NAME, "$hame_bin/cpanm", "-q", "-L$hame", "--notest", $package);
     }
   };
-  unshift @INC, "$hame_lib/perl5";
-  push @INC, $cpanm, "$hame_lib/perl5";
+  unshift @INC, @lib_dirs;
+  push @INC, $cpanm, @lib_dirs;
 }
 
 use autodie;
@@ -55,16 +59,16 @@ use Fcntl;
 use AnyDBM_File;
 use Graph;
 use List::Util qw(any all first max);
+use Sub::Util ();
 use Mojo::File qw(path tempfile);
 use Mojo::Util qw(sha1_sum);
 use Mojo::Loader qw(data_section);
 use Mojo::Template;
-use Data::Printer;
 use Text::ParseWords qw(shellwords);
+use Data::Dumper;
 use Carp;
 use Getopt::Long qw(:config gnu_getopt);
 use Exporter qw(import);
-use Term::ProgressBar;
 
 our @EXPORT = qw(
   $GITHUB_USER $HOST $HOME @PATH
@@ -125,7 +129,7 @@ else {
 sub build_graph {
   my %rules = @_;
   if ($DumpRules) {
-    p %rules;
+    say Dumper(%rules);
     exit 1;
   }
   $Graph = Graph->new(directed => 1);
@@ -164,7 +168,7 @@ RULE: foreach my $rule_key (keys %rules) {
 
   foreach my $file ($Graph->vertices) {
     my $parents = $Graph->get_vertex_attribute($file, 'parents');
-    my @path    = $file->to_rel->to_array->@*;
+    my @path    = @{ $file->to_rel->to_array };
 
     next unless $parents;
 
@@ -186,8 +190,6 @@ RULE: foreach my $rule_key (keys %rules) {
 
 sub eval_graph {
   my @files  = $Graph->topological_sort;
-  my $config = {name => 'hame', count => 0 + @files, remove => 1,};
-  my $progress = Term::ProgressBar->new($config);
 
   foreach my $file (@files) {
     my $attr   = $Graph->get_vertex_attributes($file);
@@ -199,7 +201,7 @@ sub eval_graph {
     if ($Verbose) {
         $before_msg //= sprintf "%s %s", $action_msg, shorten($file);
     }
-    $progress->message($before_msg) if $before_msg;
+    say $before_msg if $before_msg;
     my $success = invoke("run_$action", $file, $attr);
 
     my $new_checksum = checksum($file);
@@ -227,10 +229,7 @@ sub eval_graph {
             @msg ? '  ' . join(", ", @msg) : '';
         };
     }
-    $progress->message($after_msg) if $after_msg;
-  }
-  continue {
-    $progress->update;
+    say $after_msg  if $after_msg;
   }
 }
 
@@ -364,12 +363,12 @@ sub run_go {
   return 0 if -x $_ && !$Update;
   my @cmd = qw(go get -u);
   if ($_{args}) {
-    push @cmd, $_{args}->@*;
+    push @cmd, @{ $_{args} };
   }
   if ($_{env}) {
-    unshift @cmd, 'env', $_{env}->@*;
+    unshift @cmd, 'env', @{ $_{env} };
   }
-  system @cmd, $_{packages}->@*;
+  system @cmd, @{ $_{packages} };
   return 1;
 }
 
