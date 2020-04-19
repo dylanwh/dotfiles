@@ -147,7 +147,12 @@ RULE: foreach my $rule_key (keys %rules) {
 
     my $depends = delete $rule->{depends} // [];
 
-    next RULE if $rule->{os} && $rule->{os} ne $^O;
+    next RULE if $rule->{os} && $rule->{os} ne $OSNAME;
+    if ($rule->{skip}) {
+      local $_ = $target;
+      $rule->{skip};
+      next RULE;
+    }
 
     my @deps = invoke("dep_$action", $target, $rule);
     push @$depends, @deps;
@@ -316,10 +321,12 @@ sub run_env {
   my $name = $_->basename('.fish');
   if ($_{source}) {
     my ($line) = `$_{command}`;
+    die "`$_{command}` returned error" if $?;
     $_->spurt("source $line");
   }
   else {
     my $lines = `$_{command}`;
+    die "`$_{command}` returned error" if $?;
     $lines =~ s/^(set\s+-gx\s+PATH.+)$/capture_path($name, $1)/mge;
     $_->spurt($lines);
   }
