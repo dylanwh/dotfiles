@@ -1,8 +1,11 @@
 #!/usr/bin/env perl
 
 build_graph(
-  'Sync/ssh/authorized_keys' =>
-    {action => 'download', url => "https://github.com/$GITHUB_USER.keys", parents => 1},
+  'Sync/ssh/authorized_keys' => {
+    action  => 'download',
+    url     => "https://github.com/$GITHUB_USER.keys",
+    parents => 1
+  },
   ".ssh" => {action => 'mkdir', mode => 0700,},
   ".ssh/authorized_keys" =>
     {action => "link", path => "$HOME/Sync/ssh/authorized_keys", parents => 1},
@@ -41,6 +44,12 @@ build_graph(
         {action => 'env', command => 'pyenv init - fish', depends => ['.pyenv']},
       ".config/fish/chef.fish" =>
         {action => 'env', command => 'chef shell-init fish', must_have => ['chef']},
+      ".config/fish/brew.fish" => {
+        action  => "env",
+        command => 'brew command-not-found-init',
+        os      => 'darwin',
+        source  => 1,
+      },
     )
   ),
   group(
