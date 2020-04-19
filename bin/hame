@@ -326,6 +326,8 @@ sub run_exists {
   return 0;
 }
 
+sub end_exists {$_{after_msg} = '' }
+
 sub pre_git {
     if (-d $_) {
         $_{action_msg} = 'git pull';
