@@ -4,6 +4,19 @@ function path -a cmd dir
         set cmd list
     end
     switch $cmd
+        case default
+            path add ~/bin
+            for env in pyenv plenv
+                path add ~/.$env/bin
+                path add ~/.$env/shims
+            end
+            path add $GOPATH/bin
+            path add /snap/bin
+            path add ~/.cargo/bin
+            path add /opt/chefdk/bin
+            path add ~/.chefdk/gem/ruby/2.5.0/bin
+            path add /opt/chefdk/embedded/bin
+            path prune
         case add
             if not contains $dir $fish_user_paths
                 set -U fish_user_paths $fish_user_paths $dir
@@ -19,6 +32,12 @@ function path -a cmd dir
         case list
             for path in $fish_user_paths
                 echo $path
+            end
+        case empty
+            if test (count $fish_user_paths) -eq 0
+                return 0
+            else
+                return 1
             end
         case prune
             set -l new_user_paths
