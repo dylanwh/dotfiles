@@ -139,6 +139,9 @@ sub build_graph {
   $Graph->add_vertex($home);
   $Graph->set_vertex_attribute($home, action => 'exists');
 
+  $Graph->add_vertex($hamefile);
+  $Graph->set_vertex_attribute($hamefile, action => 'exists');
+
 RULE: foreach my $rule_key (keys %rules) {
     my $rule   = $rules{$rule_key};
     my $target = path($rule_key)->to_abs;
@@ -210,8 +213,8 @@ sub eval_graph {
     say $before_msg if $before_msg;
     my $success = invoke("run_$action", $file, $attr);
 
-    my $new_checksum = checksum($file);
     my $old_checksum = $Checksum{$file} // '';
+    my $new_checksum = checksum($file);
     my $updated      = $new_checksum ne $old_checksum;
 
     $Checksum{$file} = $new_checksum;
@@ -312,13 +315,23 @@ sub invoke {
   return ();
 }
 
+sub dep_env {$hamefile}
+
 sub run_env {
   if (-f $_) {
-    my @files    = shell_depends($_);
-    my $all_deps = all { -f $_ } @files;
-    return 0 if $all_deps;
+    my @files         = shell_depends($_);
+    my $all_deps      = all { -f $_ } @files;
+    my @updated_files = $_{updated_files} ? @{$_{updated_files}} : ();
+
+    return 0 if $all_deps && !@updated_files;
   }
-  my $name = $_->basename('.fish');
+  my $name     = $_->basename('.fish');
+  my $bin_dir  = path($HOME, ".$name", "bin");
+  my @old_path = @PATH;
+  unless (have($name)) {
+    unshift @PATH, $bin_dir if -d $bin_dir;
+  }
+
   if ($_{source}) {
     my ($line) = `$_{command}`;
     die "`$_{command}` returned error" if $?;
@@ -327,9 +340,10 @@ sub run_env {
   else {
     my $lines = `$_{command}`;
     die "`$_{command}` returned error" if $?;
-    $lines =~ s/^(set\s+-gx\s+PATH.+)$/capture_path($name, $1)/mge;
+    $lines =~ s/^(set\s+-gx\s+PATH.+)$//mge;
     $_->spurt($lines);
   }
+  @PATH = @old_path;
   return 1;
 }
 
@@ -439,7 +453,7 @@ sub run_link {
   return 1;
 }
 
-sub dep_template { path($HOME, 'Hamefile') }
+sub dep_template {$hamefile}
 
 sub run_template {
   if (-f $_ && !$_{updated_files}) {
@@ -472,9 +486,8 @@ sub shell_depends {
 
 sub have {
   my ($cmd) = @_;
-  state $cache = {};
 
-  return $cache->{$cmd} //= first { -x $_ } map { path($_, $cmd) } @PATH;
+  return first { -x $_ } map { path($_, $cmd) } @PATH;
 }
 
 sub checksum {
@@ -504,21 +517,6 @@ sub checksum {
   elsif (-f _ ) {
     return 'f:' . sha1_sum($file->slurp);
   }
-}
-
-sub capture_path {
-  my ($name, $line) = @_;
-  my ($cmd,  @args) = shellwords($line);
-
-  my @dirs;
-  foreach my $arg (@args) {
-    next if $arg =~ /^-/;
-    next if $arg eq '$PATH';
-    next if $arg eq 'PATH';
-    push @dirs, fish_quote($arg);
-  }
-
-  return "set -U ${name}_paths @dirs";
 }
 
 sub fish_quote {
