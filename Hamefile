@@ -52,7 +52,7 @@ build_graph(
         command => 'brew command-not-found-init',
         os      => 'darwin',
         source  => 1,
-        skip    => sub { system('brew command successt-found-init &>/dev/null') != 0 }
+        skip    => sub { system('brew command command-not-found-init &>/dev/null') != 0 }
       },
     )
   ),

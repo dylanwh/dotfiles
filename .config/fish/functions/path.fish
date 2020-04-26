@@ -16,6 +16,10 @@ function path -a cmd dir
             path add /opt/chefdk/bin
             path add ~/.chefdk/gem/ruby/2.5.0/bin
             path add /opt/chefdk/embedded/bin
+            if [ -d $HOME/.wasmtime ]
+                set -Ux WASMTIME_HOME "$HOME/.wasmtime"
+                path add $WASMTIME_HOME/bin
+            end
             path prune
         case add
             if not contains $dir $fish_user_paths

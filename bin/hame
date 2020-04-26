@@ -153,8 +153,7 @@ RULE: foreach my $rule_key (keys %rules) {
     next RULE if $rule->{os} && $rule->{os} ne $OSNAME;
     if ($rule->{skip}) {
       local $_ = $target;
-      $rule->{skip};
-      next RULE;
+      next RULE if $rule->{skip}->();
     }
 
     my @deps = invoke("dep_$action", $target, $rule);
