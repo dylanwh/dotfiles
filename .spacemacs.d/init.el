@@ -433,7 +433,7 @@ you should place your code here."
    (quote
     ((perl . t)
      (ruby . t)
-     (sh . t)
+     (shell . t)
      (python . t)
      (emacs-lisp . t))))
  '(package-selected-packages
