@@ -35,9 +35,8 @@ if status --is-interactive
             abbr -a -g -- vi $code
             abbr -a -g -- vim $code
         case '*'
-            set -x ALTERNATE_EDITOR ""
-            set -x EDITOR "emacsclient -t"
-            abbr -a -g vi emacs
+            set -x EDITOR "vim"
+            abbr -a -g vi vim
     end
 
     for env_file in plenv pyenv chef brew
@@ -45,19 +44,19 @@ if status --is-interactive
         and source ~/.config/fish/{$env_file}.fish
     end
 
-    set -U BASE16_SHELL "$HOME/.config/base16-shell"
-    if test -d $BASE16_SHELL
-        function base16-load
-            source $BASE16_SHELL/profile_helper.fish
-        end
-        # load currently active theme...
-    end
-
-    if test -e ~/.base16_theme
-        set -l SCRIPT_NAME (basename (realpath ~/.base16_theme) .sh)
-        set -gx BASE16_THEME (string match 'base16-*' $BASE16_THEME  | string sub -s (string length 'base16-*'))
-        eval sh '"'(realpath ~/.base16_theme)'"'
-    end
+# set -U BASE16_SHELL "$HOME/.config/base16-shell"
+# if test -d $BASE16_SHELL
+#     function base16-load
+#         source $BASE16_SHELL/profile_helper.fish
+#     end
+#     # load currently active theme...
+# end
+# 
+# if test -e ~/.base16_theme
+#     set -l SCRIPT_NAME (basename (realpath ~/.base16_theme) .sh)
+#     set -gx BASE16_THEME (string match 'base16-*' $BASE16_THEME  | string sub -s (string length 'base16-*'))
+#     eval sh '"'(realpath ~/.base16_theme)'"'
+# end
 
     test -f {$HOME}/.iterm2_shell_integration.fish
     and source {$HOME}/.iterm2_shell_integration.fish

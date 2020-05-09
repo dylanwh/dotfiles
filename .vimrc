@@ -128,7 +128,9 @@ let airline#extensions#tabline#enabled = 1
 " }}}
 
 " COLORS {{{1
+set termguicolors
 set background=dark
+colorscheme solarized8_high
 " }}}
 
 " MAPPINGS {{{1
@@ -261,7 +263,6 @@ if !exists('autocmds_loaded')
 
 endif
 " }}}
-
 
 if filereadable(expand("~/.vimrc.local", 1))
   source ~/.vimrc.local
