@@ -32,7 +32,7 @@ function main(server)
     local stale_toggl   = toggl   * stale
     stale_sanebox:delete_messages()
     stale_toggl:delete_messages()
-    
+
     local more_toggl = Archive:contain_subject("Toggl weekly report")
     more_toggl:delete_messages()
 
@@ -52,10 +52,13 @@ function main(server)
     local old_fedex = INBOX:contain_from("fedex.com") * INBOX:contain_subject("Your package ") * stale
     old_fedex:move_messages(Trash)
 
-    local capone_withdraw = INBOX:contain_from("capitalone@notification.capitalone.com") * INBOX:contain_subject("Withdrawal Notice") * stale
+    local capone_withdraw = INBOX:contain_from("capitalone@notification.capitalone.com") * INBOX:contain_subject("Withdrawal Notice") * INBOX:is_seen()
     capone_withdraw:move_messages(Archive)
 
     SaneNews:contain_from("dev-apps-bugzilla-bounces@lists.mozilla.org"):move_messages(Trash)
+
+    move_cpan(server, INBOX)
+    move_cpan(server, Archive)
 
     local later_ignore = {
       "HeyGary@SFBags.com",
@@ -93,6 +96,11 @@ function any_from(box, from_list)
     end
   end
   return from
+end
+
+function move_cpan(server, box)
+  local cpan = box:contain_field("X-Original-Delivered-to", "dhardison@cpan.org")
+  cpan:move_messages(server['CPAN'])
 end
 
 local fastmail = IMAP {
