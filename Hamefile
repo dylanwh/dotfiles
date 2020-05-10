@@ -17,8 +17,6 @@ build_graph(
     parents => 1
   },
   '.emacs.d' => {action => 'git', url => 'https://github.com/syl20bnr/spacemacs'},
-  ".config/base16-shell" =>
-    {action => 'git', url => 'https://github.com/chriskempson/base16-shell.git'},
   "go/bin/gore" => {
     action   => 'go',
     packages => [
@@ -45,7 +43,7 @@ build_graph(
       ".config/fish/chef.fish" => {
         action  => 'env',
         command => 'chef shell-init fish',
-        skip    => sub { not have 'chef' }
+        skip    => sub { not have('chef') },
       },
       ".config/fish/brew.fish" => {
         action  => "env",
