@@ -11,8 +11,7 @@ if [ -x /usr/libexec/path_helper ]
 end
 set -U fish_user_paths $fish_user_paths
 
-set -l config_version (stat -c %Y ~/.config/fish/functions/apply-fish-defaults.fish)
-
+set -l config_version (perl -MFile::stat -E 'say stat($ARGV[0])->mtime' ~/.config/fish/functions/apply-fish-defaults.fish)
 test -z "$dylan_config_version"
 or test "$config_version" -gt "$dylan_config_version"
 and apply-fish-defaults

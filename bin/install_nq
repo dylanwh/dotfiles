@@ -1,0 +1,7 @@
+#!/bin/sh
+
+cd /tmp
+git clone https://github.com/leahneukirchen/nq
+cd nq
+make
+sudo make install

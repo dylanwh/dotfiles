@@ -45,15 +45,10 @@ build_graph(
         command => 'chef shell-init fish',
         skip    => sub { not have('chef') },
       },
-      ".config/fish/brew.fish" => {
-        action  => "env",
-        command => 'brew command-not-found-init',
-        os      => 'darwin',
-        source  => 1,
-        skip => sub { system('brew command command-not-found-init &>/dev/null') != 0 }
-      },
     )
   ),
+  "Library/LaunchAgents/syncthing.plist" =>
+    {action => "template", os => 'darwin',},
   group(
     vim => (
       ".vim/pack/dylan/opt/solarized8" =>
@@ -149,6 +144,44 @@ build_graph(
 
 __DATA__
 
+@@ syncthing.plist.ep
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+	<dict>
+		<key>Label</key>
+		<string>net.syncthing.syncthing</string>
+
+		<key>ProgramArguments</key>
+		<array>
+			<string>/opt/local/bin/syncthing</string>
+		</array>
+
+		<key>EnvironmentVariables</key>
+		<dict>
+			<key>HOME</key>
+			<string>/Users/dylan</string>
+			<key>STNORESTART</key>
+			<string>1</string>
+		</dict>
+
+		<key>KeepAlive</key>
+		<true/>
+
+		<key>LowPriorityIO</key>
+		<true/>
+
+		<key>ProcessType</key>
+		<string>Background</string>
+
+		<key>StandardOutPath</key>
+		<string>/Users/dylan/Library/Logs/Syncthing.log</string>
+
+		<key>StandardErrorPath</key>
+		<string>/Users/dylan/Library/Logs/Syncthing-Errors.log</string>
+	</dict>
+</plist>
+
 @@ .replyrc.ep
 % my $lines = Mojo::File->new($reply_script)->slurp;
 % my $i = 1;
@@ -156,7 +189,6 @@ __DATA__
 % next unless $line =~ /\S/;
 script_line<%= $i++ %> = <%= $line %>
 % }
-
 [Autocomplete::Commands]
 [Autocomplete::Functions]
 [Autocomplete::Globals]

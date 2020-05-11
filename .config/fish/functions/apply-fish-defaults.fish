@@ -6,7 +6,8 @@ function apply-fish-defaults --description 'apply one-time fish configuration st
     path clear
     path default
 
-    source (dircolors -c | sed 's/setenv/set -Ux/' | psub)
+    have dircolors
+    and source (dircolors -c | sed 's/setenv/set -Ux/' | psub)
     colorload
     abbrload
 end

@@ -11,6 +11,7 @@ function path -a cmd dir
                 path add ~/.$env/shims
             end
             path add $GOPATH/bin
+            path add /opt/local/bin
             path add /snap/bin
             path add ~/.cargo/bin
             path add /opt/chefdk/bin
