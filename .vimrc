@@ -1,7 +1,7 @@
 " Dylan William Hardison's .vimrc file.
 " vim: set fdm=marker:
 
-syntax on
+syntax enable
 filetype plugin indent on
 
 runtime macros/matchit.vim

@@ -67,8 +67,12 @@ build_graph(
         {action => 'git', url => "https://github.com/tpope/vim-commentary.git"},
       ".vim/pack/dylan/start/cpanfile" =>
         {action => 'git', url => "https://github.com/moznion/vim-cpanfile.git"},
+      ".vim/pack/dylan/start/endwise" =>
+        {action => 'git', url => "https://github.com/tpope/vim-endwise.git"},
       ".vim/pack/dylan/start/eunuch" =>
         {action => 'git', url => "https://github.com/tpope/vim-eunuch.git"},
+      ".vim/pack/dylan/start/fish" =>
+        {action => 'git', url => "https://github.com/vim-syntastic/syntastic.git"},
       ".vim/pack/dylan/start/fugitive" =>
         {action => 'git', url => "https://github.com/tpope/vim-fugitive.git"},
       ".vim/pack/dylan/start/gitgutter" =>
@@ -87,6 +91,8 @@ build_graph(
         {action => 'git', url => "https://github.com/ervandew/supertab.git"},
       ".vim/pack/dylan/start/surround" =>
         {action => 'git', url => "https://github.com/tpope/vim-surround.git"},
+      ".vim/pack/dylan/start/syntastic" =>
+        {action => 'git', url => "https://github.com/vim-syntastic/syntastic.git"},
       ".vim/pack/dylan/start/tabular" =>
         {action => 'git', url => "https://github.com/godlygeek/tabular.git"},
       ".vim/pack/dylan/start/textobj-rubyblock" => {
