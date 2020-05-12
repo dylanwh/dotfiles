@@ -67,6 +67,7 @@
 !.screenrc
 !.smartcd
 !.spacemacs.d
+!.doom.d
 !.ssh
 !.surfraw.bookmarks
 !.surfraw.conf
