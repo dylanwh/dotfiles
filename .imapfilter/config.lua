@@ -58,7 +58,6 @@ function main(server)
     SaneNews:contain_from("dev-apps-bugzilla-bounces@lists.mozilla.org"):move_messages(Trash)
 
     move_cpan(server, INBOX)
-    move_cpan(server, Archive)
 
     local later_ignore = {
       "HeyGary@SFBags.com",
