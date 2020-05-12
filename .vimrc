@@ -111,10 +111,6 @@ let SuperTabDefaultCompletionType = "context"
 
 let redcode_highlight_numbers=1
 
-let solarized_bold      = 0
-let solarized_underline = 0
-let solarized_italic    = 1
-
 "let snippets_dir="$HOME/.vim/snippets"
 
 let jedi#squelch_py_warning = 1
@@ -134,7 +130,7 @@ if exists('+termguicolors') && exists('$TMUX')
 endif
 set termguicolors
 set background=dark
-colorscheme solarized8_high
+colorscheme gruvbox
 " }}}
 
 " MAPPINGS {{{1

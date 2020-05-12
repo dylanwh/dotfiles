@@ -53,6 +53,8 @@ build_graph(
     vim => (
       ".vim/pack/dylan/opt/solarized8" =>
         {action => 'git', url => 'https://github.com/lifepillar/vim-solarized8.git'},
+      ".vim/pack/dylan/opt/gruvbox" =>
+        {action => 'git', 'url' => 'https://github.com/morhetz/gruvbox.git'},
       ".vim/pack/dylan/start/abolish" =>
         {action => 'git', url => "https://github.com/tpope/vim-abolish.git"},
       ".vim/pack/dylan/start/ag" =>
