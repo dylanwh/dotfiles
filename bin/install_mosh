@@ -2,9 +2,11 @@
 
 mkdir -p ~/.cache/build
 cd ~/.cache/build
-git clone https://github.com/leahneukirchen/nq
-cd nq
-make
+git clone https://github.com/mobile-shell/mosh
+cd mosh
+./autogen.sh
+./configure
+make -j 16
 sudo make install
 cd ~
 rm -vfr ~/.cache/build

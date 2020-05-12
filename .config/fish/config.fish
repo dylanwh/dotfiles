@@ -7,7 +7,7 @@ set -x TZ US/Eastern
 set -x GOPATH $HOME/go
 
 if [ -x /usr/libexec/path_helper ]
-    source (/usr/libexec/path_helper -c | psub)
+    source (env -i /usr/libexec/path_helper -c | psub)
 end
 set -U fish_user_paths $fish_user_paths
 
@@ -20,6 +20,19 @@ set -U dylan_config_version $config_version
 
 if path empty
     path default
+end
+
+set -g shell_parent (ps -o ppid= $fish_pid | xargs ps -o comm=)
+
+if have caffeinate; and have nq
+    switch $shell_parent
+        case 'ssh*' 'mosh*'
+            mkdir -p $HOME/.cache
+            # I'm not sure why, but if I don't run nq inside nq, it sometimes fails to clean up its files
+            # Might be a bug, or something about how macOS handles the session leader being teriminated?
+            # Anyway, this pretty much ensures remove logins prevent the mac from going to sleep (as long as it is running on AC)
+            env "NQDIR=$HOME/.cache/caffinate" nq -c -q -- nq -c -q -- caffeinate -s -w $fish_pid
+    end
 end
 
 if status --is-interactive
