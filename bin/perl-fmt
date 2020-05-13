@@ -1,0 +1,18 @@
+#!/usr/bin/env perl
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+#
+# This Source Code Form is "Incompatible With Secondary Licenses", as
+# defined by the Mozilla Public License, v. 2.0.
+
+use 5.10.1;
+use strict;
+use warnings;
+
+use File::Basename qw(dirname basename);
+use Cwd qw(realpath);
+
+my $file = realpath(shift @ARGV);
+chdir dirname($file);
+exec( perltidy => "--profile=.../.perltidyrc", '-nst', '-b', '-bext=/', '-conv', basename($file));

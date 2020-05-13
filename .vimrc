@@ -75,6 +75,7 @@ set wildignore+=*.pyc                                    " Python byte code
 set wildignore+=*.spl                                    " compiled spelling word lists
 set wildignore+=*.sw?                                    " Vim swap files
 
+set foldlevel=3
 set foldopen=tag,search,quickfix,undo,jump,mark,percent
 set fillchars=fold:\ ,stl:\ ,stlnc:\  " borders
 set listchars=tab:>\ ,trail:-,extends:>,precedes:<,nbsp:+
@@ -118,7 +119,7 @@ let jedi#squelch_py_warning = 1
 let ctrlp_extensions    = ['Z', 'F']
 let ctrlp_custom_ignore = '\v[\/]\.(git|hg|svn)$'
 
-let airline_powerline_fonts            = 0
+let airline_powerline_fonts            = 1
 let airline_inactive_collapse          = 1
 let airline#extensions#tabline#enabled = 1
 " }}}
@@ -129,8 +130,13 @@ if exists('+termguicolors') && exists('$TMUX')
     let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
 endif
 set termguicolors
-set background=dark
-colorscheme gruvbox
+if $ITERM_PROFILE == 'selenized-white'
+    set background=light
+    colorscheme selenized_bw
+else
+    set background=dark
+    colorscheme selenized_bw
+end
 " }}}
 
 " MAPPINGS {{{1
@@ -220,8 +226,6 @@ if !exists('autocmds_loaded')
         autocmd BufNewFile,BufRead Vagrantfile set ft=ruby
         autocmd BufNewFile,BufRead *.tt2 set ft=tt2
         autocmd BufNewFile,BufRead *.html.tmpl set ft=tt2html
-        autocmd BufNewFile,BufRead /tmp/zshecl* set ft=sh syn=zsh |
-                    \ map <buffer> q ZZ
         autocmd BufNewFile,BufRead */.ssh/config.d/* set ft=sshconfig
     augroup END
     " }}}

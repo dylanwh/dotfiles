@@ -16,7 +16,8 @@ build_graph(
     url     => 'https://github.com/tokuhirom/perl-build.git',
     parents => 1
   },
-  '.emacs.d' => {action => 'git', url => 'https://github.com/syl20bnr/spacemacs'},
+  '.emacs.d' =>
+    {action => 'git', url => 'https://github.com/hlissner/doom-emacs'},
   "go/bin/gore" => {
     action   => 'go',
     packages => [
@@ -51,10 +52,14 @@ build_graph(
     {action => "template", os => 'darwin',},
   group(
     vim => (
+      ".vim/pack/dylan/opt/code-dark" =>
+        {action => 'git', url => 'https://github.com/tomasiser/vim-code-dark'},
+      ".vim/pack/dylan/opt/gruvbox" => {
+        action => 'git',
+        'url'  => 'https://github.com/gruvbox-community/gruvbox.git'
+      },
       ".vim/pack/dylan/opt/solarized8" =>
         {action => 'git', url => 'https://github.com/lifepillar/vim-solarized8.git'},
-      ".vim/pack/dylan/opt/gruvbox" =>
-        {action => 'git', 'url' => 'https://github.com/morhetz/gruvbox.git'},
       ".vim/pack/dylan/start/abolish" =>
         {action => 'git', url => "https://github.com/tpope/vim-abolish.git"},
       ".vim/pack/dylan/start/ag" =>
@@ -74,7 +79,7 @@ build_graph(
       ".vim/pack/dylan/start/eunuch" =>
         {action => 'git', url => "https://github.com/tpope/vim-eunuch.git"},
       ".vim/pack/dylan/start/fish" =>
-        {action => 'git', url => "https://github.com/vim-syntastic/syntastic.git"},
+        {action => 'git', url => "https://github.com/dag/vim-fish.git"},
       ".vim/pack/dylan/start/fugitive" =>
         {action => 'git', url => "https://github.com/tpope/vim-fugitive.git"},
       ".vim/pack/dylan/start/gitgutter" =>
