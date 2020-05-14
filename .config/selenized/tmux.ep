@@ -63,26 +63,20 @@ set-window-option -g window-status-current-format <%=
     ''
 %>
 
+<% my $flag_styles = style [ fg $s_fg_0, bg $s_bg_2],
+    if_(window_activity_flag)->then( style [ fg $s_yellow] ),
+    if_(window_silence_flag)->then( style [ fg $s_br_green] ),
+    if_(window_bell_flag)->then( style [ fg $s_br_cyan] );
+%>
+
 set-window-option -g window-status-format <%=
     style [fg $s_fg_0,bg $s_bg_2, noitalics],
     '',
-    style [fg $s_fg_0,bg $s_bg_2],
-    if_( window_activity_flag )->then(
-        style [fg $s_yellow, bg $s_bg_2]
-    ),
-    if_( window_bell_flag )->then(
-        style[fg $s_br_cyan,italics],
-    ),
+    $flag_styles,
     ' #I',
     style [fg $s_fg_0],
     ' ',
-    style[fg $s_fg_0, bg $s_bg_2,italics],
-    if_( window_activity_flag )->then(
-        style[fg $s_yellow,italics],
-    ),
-    if_( window_bell_flag )->then(
-        style[fg $s_br_cyan,italics],
-    ),
+    $flag_styles,
     ' #W#F ',
     style [fg $s_bg_2, bg $s_fg_0, noitalics],
     ''

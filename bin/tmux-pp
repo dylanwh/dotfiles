@@ -9,7 +9,8 @@ use constant WORDS => qw(
   underscore nounderscore
   window_activity_flag
   window_bell_flag
-  green red blue
+  window_silence_flag
+  green red blue cyan magenta white black
 );
 use constant + {map { ($_ => $_) } WORDS};
 
