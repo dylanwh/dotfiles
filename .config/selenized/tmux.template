@@ -1,22 +1,24 @@
 
 # default statusbar color
-set-option -g status-style "bg=$s_bg_2,fg=$s_br_cyan" # bg=bg1, fg=fg1
+set-option -g status-style "bg=$s_fg_0,fg=$s_bg_0" # bg=bg1, fg=fg1
 
 # default window title colors
 set-window-option -g window-status-style "bg=$s_orange,fg=green" # bg=yellow, fg=bg1
 
 # default window with an activity alert
-set-window-option -g window-status-activity-style "bg=$s_bg_2,fg=$s_fg_1" # bg=bg1, fg=fg3
+#set-window-option -g window-status-activity-style "bg=$s_bg_2,fg=$s_yellow, noitalics, bold"
+set-window-option -g window-status-activity-style "none"
 
 # active window title colors
-set-window-option -g window-status-current-style "bg=red,fg=green" # fg=bg1
+#set-window-option -g window-status-current-style "bg=red,fg=green" # fg=bg1
+set-window-option -g window-status-current-style "" # fg=bg1
 
 # pane border
 set-option -g pane-active-border-style "fg=$s_fg_0" #fg2
 set-option -g pane-border-style "fg=$s_dim_0" #bg1
 
 # message infos
-set-option -g message-style "bg=$s_bg_2,fg=$s_fg_0" # bg=bg2, fg=fg1
+set-option -g message-style "bg=$s_fg_1,fg=$s_bg_0,bold" # bg=bg2, fg=fg1
 
 # writing commands inactive
 set-option -g message-command-style "bg=$s_bg_1,fg=$s_br_cyan" # bg=fg3, fg=bg1
@@ -39,8 +41,10 @@ set-option -g status-right-style none
 set-option -g status-right-length "80"
 set-window-option -g window-status-separator ""
 
-set-option -g status-left "#[fg=$s_bg_0, bg=$s_fg_1] #S #[fg=$s_fg_1, bg=$s_bg_0, nobold, noitalics, nounderscore]"
+set-option -g status-left "#[fg=$s_bg_0, bg=$s_fg_0, bold] #S "
 
-set-option -g status-right "#[fg=$s_fg_1, bg=$s_bg_2, nobold, nounderscore, noitalics]#[fg=$s_br_violet, bg=$s_fg_1, bold, nounderscore, noitalics]#[fg=$s_bg_0,bg=$s_br_violet] #h #[fg=$s_fg_1, bg=$s_br_violet, bold, noitalics, nounderscore]#[fg=$s_bg_2, bg=$s_fg_1] %H:%M "
-set-window-option -g window-status-current-format "#[fg=$s_bg_0, bg=$s_orange, nobold, noitalics, nounderscore]#[fg=$s_bg_0, bg=$s_orange] #I #[fg=$s_bg_0, bg=$s_orange, bold] #W #[fg=$s_orange, bg=$s_bg_2, nobold, noitalics, nounderscore]"
-set-window-option -g window-status-format "#[fg=$s_bg_2,bg=$s_dim_0,noitalics]#[fg=$s_bg_2,bg=$s_dim_0] #I #[fg=$s_bg_0, bg=$s_dim_0, italics] #W #[fg=$s_dim_0, bg=$s_bg_2, noitalics]"
+set-option -g status-right "#[fg=$s_violet, bg=$s_fg_0, bold, nounderscore, noitalics]#[fg=$s_bg_0,bg=$s_violet] #h #[fg=$s_fg_0, bg=$s_violet, bold, noitalics, nounderscore]#[fg=$s_bg_2, bg=$s_fg_0] %H:%M "
+
+set-window-option -g window-status-current-format "#[fg=$s_fg_0, bg=$s_orange, nobold, noitalics, nounderscore]#[fg=$s_bg_0, bg=$s_orange] #I #[fg=$s_bg_0, bg=$s_orange, bold] #W#F #[fg=$s_orange, bg=$s_fg_0, nobold, noitalics, nounderscore]"
+
+set-window-option -g window-status-format "#[fg=$s_fg_0,bg=$s_bg_2,noitalics]#{?window_activity_flag,#[fg=$s_yellow#,bg=$s_bg_2],#[fg=$s_fg_0#,bg=$s_bg_2]} #I#[fg=$s_fg_0] #{?window_activity_flag,#[fg=$s_yellow#,italics],#[fg=$s_fg_0#, bg=$s_bg_2#,italics]} #W#F #[fg=$s_bg_2, bg=$s_fg_0, noitalics]"

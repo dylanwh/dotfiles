@@ -1,3 +1,3 @@
 function fish_title
-    echo (hostname -s):(prompt_pwd)
+    hostname -s
 end

@@ -273,3 +273,7 @@ endif
 if filereadable(expand("~/.vimrc.local", 1))
   source ~/.vimrc.local
 endif
+
+if filereadable(expand("~/.vim/theme.vim", 1))
+  source ~/.vim/theme.vim
+endif

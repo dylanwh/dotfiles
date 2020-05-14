@@ -1,3 +1,4 @@
 *.spl
 doc/tags
 pack/
+theme.vim

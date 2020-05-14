@@ -5,20 +5,26 @@ open=0
 # <sequence> ST, and for all ESCs in <sequence> to be replaced with ESC ESC. It
 # only accepts ESC backslash for ST.
 function print_osc() {
-    if [[ $TERM == screen* ]] ; then
-        printf "\033Ptmux;\033\033]"
-    else
-        printf "\033]"
-    fi
+    case $TERM in
+        screen*|tmux*)
+            printf "\033Ptmux;\033\033]"
+            ;;
+        *)
+            printf "\033]"
+            ;;
+    esac
 }
 
 # More of the tmux workaround described above.
 function print_st() {
-    if [[ $TERM == screen* ]] ; then
-        printf "\a\033\\"
-    else
-        printf "\a"
-    fi
+    case $TERM in
+        screen*|tmux*)
+            printf "\a\033\\"
+            ;;
+        *)
+            printf "\a"
+            ;;
+    esac
 }
 
 # set_color key rgb

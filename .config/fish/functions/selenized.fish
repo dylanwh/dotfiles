@@ -122,16 +122,23 @@ set -g selenized_{$variant}_br_orange ba3700 a62300
 set -g selenized_{$variant}_br_violet 6b40c3 542bb9
 
 function selenized
-    argparse 'v/variant=' 'm/modules=+' -- $argv
+    argparse 'v/variant=' 'm/modules=+' 'E/env' -- $argv
     if [ -z $_flag_variant ]
         set _flag_variant black
     end
     if [ -z $_flag_modules ]
-        set _flag_modules fish vivid grep tmux
+        set _flag_modules term fish vivid grep tmux vim
+    end
+    set -l s_scope ''
+    if [ -n $_flag_env ]
+        set s_scope '-gx'
     end
     for color in $selenized_colors
         set -l var selenized_{$_flag_variant}_{$color}[2]
-        set s_$color $$var
+        set $s_scope s_$color $$var
+    end
+    if [ $_flag_env ]
+        return
     end
 
     for module in $_flag_modules
@@ -194,7 +201,7 @@ function selenized
                 set --erase -g LS_COLORS
                 set -Ux LS_COLORS (vivid generate $vivid_theme.yml)
                 command rm $vivid_theme.yml
-                echo $LS_COLORS > ~/.config/fish/ls_colors
+                echo $LS_COLORS >~/.config/fish/ls_colors
             case grep
                 echo "Configuring GREP_COLOR"
                 set -Ux GREP_COLOR '7;33'
@@ -206,11 +213,36 @@ function selenized
                     set tmux_vars $tmux_vars "$var=#$$var"
                 end
                 set -l tmux_theme (mktemp -t selenized-XXXXXX)
-                env $tmux_vars envsubst < $HOME/.config/selenized/tmux.template > $tmux_theme
+                env $tmux_vars tmux-pp < $HOME/.config/selenized/tmux.ep >$tmux_theme
                 if tmux info &>/dev/null
                     tmux source $tmux_theme
                 end
                 command mv $tmux_theme ~/.tmux.theme.conf
+            case term
+                echo "Configuring terminal"
+                it2setcolor preset "selenized-$_flag_variant"
+            case vim
+                echo "Configuring vim"
+                set -l vim_bg
+                set -l vim_colorscheme
+                switch $_flag_variant
+                    case black
+                        set vim_bg dark
+                        set vim_colorscheme selenized_bw
+                    case dark
+                        set vim_bg dark
+                        set vim_colorscheme selenized
+                    case white
+                        set vim_bg light
+                        set vim_colorscheme selenized_bw
+                    case light
+                        set vim_bg light
+                        set vim_colorscheme selenized
+                end
+                begin
+                    echo "set bg=$vim_bg"
+                    echo "colorscheme $vim_colorscheme"
+                end >$HOME/.vim/theme.vim
         end
     end
 end

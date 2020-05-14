@@ -1,0 +1,89 @@
+# default statusbar color
+set-option -g status-style <%= list bg $s_fg_0, fg $s_bg_0 %> # bg=bg1, fg=fg1
+
+# default window title colors
+set-window-option -g window-status-style <%= list bg $s_orange, fg green %> # bg=yellow, fg=bg1
+
+# default window with an activity alert
+#set-window-option -g window-status-activity-style <%= list bg $s_bg_2,fg $s_yellow, noitalics, bold %>
+set-window-option -g window-status-activity-style "none"
+
+# active window title colors
+#set-window-option -g window-status-current-style <%= list bg red,fg green %> # fg=bg1
+set-window-option -g window-status-current-style "" # fg=bg1
+
+# pane border
+set-option -g pane-active-border-style <%= list fg $s_fg_0 %>  #fg2
+set-option -g pane-border-style <%= fg $s_dim_0 %> #bg1
+
+# message infos
+set-option -g message-style <%= list bg $s_fg_1,fg $s_bg_0, bold %> # bg bg2, fg fg1
+
+# writing commands inactive
+set-option -g message-command-style <%= bg $s_bg_1,fg $s_br_cyan %> # bg fg3, fg bg1
+
+# pane number display
+set-option -g display-panes-active-colour <%= c $s_fg_1 %> #fg2
+set-option -g display-panes-colour <%= c $s_dim_0 %> #bg1
+
+# clock
+set-window-option -g clock-mode-colour <%= c $s_cyan %> #blue
+
+# bell
+set-window-option -g window-status-bell-style <%= list bg $s_red, fg $s_bg_0 %> # bg red, fg bg
+
+## Theme settings mixed with colors (unfortunately, but there is no cleaner way)
+set-option -g status-justify "left"
+set-option -g status-left-style none
+set-option -g status-left-length "80"
+set-option -g status-right-style none
+set-option -g status-right-length "80"
+set-window-option -g window-status-separator ""
+
+set-option -g status-left <%= style [fg $s_bg_0, bg $s_fg_0, bold], " #S " %>
+
+set-option -g status-right <%=
+    style [fg $s_violet, bg $s_fg_0, bold, nounderscore, noitalics],
+    '',
+    style [fg $s_bg_0, bg $s_violet], ' #h ',
+    style [fg $s_fg_0, bg $s_violet, bold, noitalics, nounderscore],
+    '',
+    style [fg $s_bg_2, bg $s_fg_0],
+    ' %H:%M '
+%>
+
+set-window-option -g window-status-current-format <%=
+    style [fg $s_fg_0, bg $s_orange, nobold, noitalics, nounderscore],
+    '',
+    style [fg $s_bg_0, bg $s_orange],
+    ' #I ',
+    style [fg $s_bg_0, bg $s_orange, bold],
+    ' #W#F ',
+    style [fg $s_orange, bg $s_fg_0, nobold, noitalics, nounderscore],
+    ''
+%>
+
+set-window-option -g window-status-format <%=
+    style [fg $s_fg_0,bg $s_bg_2, noitalics],
+    '',
+    style [fg $s_fg_0,bg $s_bg_2],
+    if_( window_activity_flag )->then(
+        style [fg $s_yellow, bg $s_bg_2]
+    ),
+    if_( window_bell_flag )->then(
+        style[fg $s_br_cyan,italics],
+    ),
+    ' #I',
+    style [fg $s_fg_0],
+    ' ',
+    style[fg $s_fg_0, bg $s_bg_2,italics],
+    if_( window_activity_flag )->then(
+        style[fg $s_yellow,italics],
+    ),
+    if_( window_bell_flag )->then(
+        style[fg $s_br_cyan,italics],
+    ),
+    ' #W#F ',
+    style [fg $s_bg_2, bg $s_fg_0, noitalics],
+    ''
+%>
