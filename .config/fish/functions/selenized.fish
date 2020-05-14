@@ -176,7 +176,7 @@ function selenized
                 if not have vivid
                     echo "vivid not found; cargo install vivid?" >&2
                     set -Ux LS_COLORS (cat ~/.config/fish/ls_colors)
-                    break
+                    continue
                 end
                 echo "configuring LS_COLORS..."
                 set -lx VIVID_DATABASE $HOME/.config/selenized/vivid_filetypes.yml
