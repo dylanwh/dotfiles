@@ -214,7 +214,7 @@ function selenized
                 end
                 set -l tmux_theme (mktemp -t selenized-XXXXXX)
                 env $tmux_vars tmux-pp < $HOME/.config/selenized/tmux.ep >$tmux_theme
-                if tmux info &>/dev/null
+                if tmux info >/dev/null ^/dev/null
                     tmux source $tmux_theme
                 end
                 command mv $tmux_theme ~/.tmux.theme.conf
