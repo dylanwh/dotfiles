@@ -175,6 +175,7 @@ function selenized
             case vivid
                 if not have vivid
                     echo "vivid not found; cargo install vivid?" >&2
+                    set -Ux LS_COLORS (cat ~/.config/fish/ls_colors)
                     break
                 end
                 echo "configuring LS_COLORS..."
@@ -193,6 +194,7 @@ function selenized
                 set --erase -g LS_COLORS
                 set -Ux LS_COLORS (vivid generate $vivid_theme.yml)
                 command rm $vivid_theme.yml
+                echo $LS_COLORS > ~/.config/fish/ls_colors
             case grep
                 echo "Configuring GREP_COLOR"
                 set -Ux GREP_COLOR '7;33'
