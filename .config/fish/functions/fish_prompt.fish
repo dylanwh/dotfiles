@@ -53,18 +53,17 @@ function fish_prompt --description 'Write out the prompt'
   set -l suffix
   set -l prompt_status
   if test $last_status -ne 0
-    set prompt_status (set_color $fish_color_status) (printf "%2d" $last_status) "$normal"
+    set prompt_status (set_color $fish_color_status) $last_status "$normal"
     set suffix "?"
   else
-    set suffix "-->"
+    set suffix ">"
   end
 
   set -l vcs_color (set_color $fish_color_vcs)
   set -l my_fish_vcs_prompt \
     (string replace -ar '\((.+)\)' "[$vcs_color\${1}$normal]" (__fish_vcs_prompt))
 
-  test -n "$SSH_CLIENT"
-  and echo -n -s "$USER" $normal @ (prompt_hostname) ' '
+  echo -n -s (set_color blue) " $USER" $normal @ (prompt_hostname) ' '
   echo -n -s (set_color $fish_color_cwd) (prompt_pwd) $normal
   echo -n -s $my_fish_vcs_prompt $normal " " $prompt_status $normal $suffix " "
 end
