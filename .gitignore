@@ -40,7 +40,6 @@
 !.gitignore
 !.gitmodules
 !.guile
-!.gvimrc
 !.i3status.conf@*
 !.imapfilter
 !.inputrc
@@ -81,7 +80,6 @@
 !.userContent.css
 !.vim
 !.vimoutlinerrc
-!.vimrc
 !.wyrdrc
 !.xbindkeysrc.scm
 !.xinitrc
