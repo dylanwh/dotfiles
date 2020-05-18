@@ -5,6 +5,7 @@ set -x LANG en_US.UTF-8
 set -x LC_COLLATE POSIX # sort in POSIX order.
 set -x TZ US/Eastern
 set -x GOPATH $HOME/go
+set -g OS (uname)
 
 if [ -x /usr/libexec/path_helper ]
     source (env -i /usr/libexec/path_helper -c | psub)
@@ -38,11 +39,6 @@ if status --is-interactive
         case '*'
             set -x EDITOR "vim"
             abbr -a -g vi vim
-    end
-
-    for env_file in plenv pyenv chef brew
-        test -f ~/.config/fish/{$env_file}.fish
-        and source ~/.config/fish/{$env_file}.fish
     end
 
     test -f {$HOME}/.iterm2_shell_integration.fish
