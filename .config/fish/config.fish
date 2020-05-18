@@ -11,17 +11,6 @@ if [ -x /usr/libexec/path_helper ]
 end
 set -U fish_user_paths $fish_user_paths
 
-set -l config_version (perl -MFile::stat -E 'say stat($ARGV[0])->mtime' ~/.config/fish/functions/apply-fish-defaults.fish)
-test -z "$dylan_config_version"
-or test "$config_version" -gt "$dylan_config_version"
-and apply-fish-defaults
-
-set -U dylan_config_version $config_version
-
-if path empty
-    path default
-end
-
 set -g shell_parent (ps -o ppid= $fish_pid | xargs ps -o comm=)
 
 if have caffeinate; and have nq
@@ -58,4 +47,14 @@ if status --is-interactive
 
     test -f {$HOME}/.iterm2_shell_integration.fish
     and source {$HOME}/.iterm2_shell_integration.fish
+end
+
+set -l config_version (perl -MFile::stat -E 'say stat($ARGV[0])->mtime' ~/.config/fish/functions/apply-fish-defaults.fish)
+test -z "$dylan_config_version"
+or test "$config_version" -gt "$dylan_config_version"
+and apply-fish-defaults
+set -U dylan_config_version $config_version
+
+if path empty
+    path default
 end
