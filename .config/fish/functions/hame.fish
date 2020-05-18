@@ -18,6 +18,8 @@ function hame
 
     hame-env
     hame-vim
+    hame-emacs
+    hame-rust
 
     if have cargo
         path add ~/.cargo/bin
@@ -26,8 +28,10 @@ function hame
         or hame-nq cargo install exa
         have vivid
         or hame-nq cargo install vivid
+        have fd
+        or hame-nq cargo install fd-find
         have rg
-        or hame-nq cargo install ripgrep
+        or hame-nq cargo install ripgrep --features pcre2
     end
 
     if have go
