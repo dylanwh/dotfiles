@@ -32,14 +32,6 @@ function hame
     hame-emacs
     hame-rust
 
-    set -l default_perl 5.30.2
-    if not [ -d ~/.plenv/versions/$default_perl ]
-        hame-nq plenv install $default_perl
-        hame-nq env PLENV_VERSION=$default_perl plenv install-cpanm
-        hame-nq plenv global $default_perl
-        hame-nq plenv local $default_perl
-    end
-
     if have cargo
         path add ~/.cargo/bin
 
@@ -68,5 +60,14 @@ function hame
             hame-nq go get github.com/motemen/gore/cmd/gore
         end
     end
+
+    set -l default_perl 5.30.2
+    if not [ -d ~/.plenv/versions/$default_perl ]
+        hame-nq plenv install $default_perl
+        hame-nq env PLENV_VERSION=$default_perl plenv install-cpanm
+        hame-nq plenv global $default_perl
+        hame-nq plenv local $default_perl
+    end
+
 end
 

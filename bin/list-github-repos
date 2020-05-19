@@ -1,7 +1,7 @@
 #!/bin/sh
 fd \
   --exec-batch \
-    rg --no-heading -Nor '$1' \
+    rg --no-heading -INor '$1' \
     'url\s+=\s+(?:(?:git@)?github.com:|(?:https|git)://github.com/)([^.]+)' \
     '{}/config' \
   ';' \
