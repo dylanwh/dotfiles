@@ -40,9 +40,6 @@ if status --is-interactive
             set -x EDITOR "vim"
             abbr -a -g vi vim
     end
-
-    test -f {$HOME}/.iterm2_shell_integration.fish
-    and source {$HOME}/.iterm2_shell_integration.fish
 end
 
 set -l config_version (perl -MFile::stat -E 'say stat($ARGV[0])->mtime' ~/.config/fish/functions/apply-fish-defaults.fish)
@@ -54,3 +51,4 @@ set -U dylan_config_version $config_version
 if path empty
     path default
 end
+

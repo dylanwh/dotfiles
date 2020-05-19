@@ -1,11 +1,9 @@
 #!/bin/sh
 fd \
-  --exclude vendor/  \
-  --exclude node_modules/ \
   --exec-batch \
-    rg --no-heading -NIor '$1' \
+    rg --no-heading -Nor '$1' \
     'url\s+=\s+(?:(?:git@)?github.com:|(?:https|git)://github.com/)([^.]+)' \
     '{}/config' \
   ';' \
-  -FHtd '.git' \
-  "$@" 
+  -Htd '^\.git$' \
+  ~/Code | sort -u 

@@ -7,6 +7,12 @@ function hame
         set HAME_FLAGS "--force"
     end
 
+    switch $OS
+        case Darwin
+            test -f /etc/sudoers.d/99-port
+            or echo 'dylan ALL = (root) NOPASSWD: /opt/local/bin/port' | sudo tee /etc/sudoers.d/99-port
+    end
+
     if not have mosh
         echo installing mosh
         install_mosh
@@ -15,11 +21,24 @@ function hame
         echo installing nq
         install_nq
     end
+    if not have fzy
+        sudo port install fzy
+    end
+
+    hame-fq
 
     hame-env
     hame-vim
     hame-emacs
     hame-rust
+
+    set -l default_perl 5.30.2
+    if not [ -d ~/.plenv/versions/$default_perl ]
+        hame-nq plenv install $default_perl
+        hame-nq env PLENV_VERSION=$default_perl plenv install-cpanm
+        hame-nq plenv global $default_perl
+        hame-nq plenv local $default_perl
+    end
 
     if have cargo
         path add ~/.cargo/bin
@@ -32,6 +51,12 @@ function hame
         or hame-nq cargo install fd-find
         have rg
         or hame-nq cargo install ripgrep --features pcre2
+        have bat
+        or hame-nq cargo install bat
+        have broot
+        or hame-nq cargo install broot
+        have starship
+        or hame-nq cargo install starship
     end
 
     if have go

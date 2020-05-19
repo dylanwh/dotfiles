@@ -1,0 +1,21 @@
+[cmd_duration]
+min_time = 500
+prefix = "underwent "
+
+[username]
+show_always = true
+disabled = false
+
+[hostname]
+style = "fg:15"
+ssh_only = false
+trim_at = ".local"
+disabled = false
+
+[python]
+disabled = true
+
+[directory]
+style="fg:blue bold"
+truncate_to_repo = true
+truncation_length = 1
