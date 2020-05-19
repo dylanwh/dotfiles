@@ -1,6 +1,0 @@
-_FASD_VIMINFO=$HOME/.data/vim/info
-_FASD_RECENTLY_USED_XBEL="$HOME/.data/recently-used.xbel"
-_FASD_BACKENDS="native viminfo recently-used"
-_FASD_BACKEND="native viminfo recently-used"
-
-export _FASD_VIMINFO _FASD_BACKENDS _FASD_RECENTLY_USED_XBEL
