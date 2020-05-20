@@ -5,7 +5,7 @@ function path -a cmd dir
     end
     switch $cmd
         case default
-            path add ~/bin
+            path add ~/.local/bin
             for env in pyenv plenv
                 path add ~/.$env/bin
                 path add ~/.$env/shims

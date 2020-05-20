@@ -3,7 +3,7 @@ function jg --argument term
     test -n "$term"
     and set fzy_args -q $term
 
-    pushd ~/Git
+    pushd ~/Git/github.com
     set dir (fd -Htd .git | sed 's/\.git$//' | fzy $fzy_args)
     and cd $dir
     or popd

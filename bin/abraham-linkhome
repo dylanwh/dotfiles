@@ -13,15 +13,15 @@ use autodie qw(:default);
 
 my $REPO = realpath(catdir(dirname(__FILE__), '..'));
 
-provide('bin');
-provide('fish',                           '.config/fish');
-provide('selenized',                      '.config/selenized');
-provide('starship.toml',                  '.config/starship.toml');
-provide('imapfilter',                     '.imapfilter');
-provide('terminfo',                       '.terminfo');
-provide('iterm2',                         '.iterm2');
-provide('vim',                            '.vim');
-provide('doom',                           '.doom.d');
+provide('bin',           '.local/bin');
+provide('fish',          '.config/fish');
+provide('selenized',     '.config/selenized');
+provide('starship.toml', '.config/starship.toml');
+provide('imapfilter',    '.imapfilter');
+provide('terminfo',      '.terminfo');
+provide('iterm2',        '.iterm2');
+provide('vim',           '.vim');
+provide('doom',          '.doom.d');
 
 my @dotfiles = (
   'ctags',         'cvsignore',
