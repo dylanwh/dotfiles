@@ -1,20 +1,28 @@
-[cmd_duration]
-min_time = 500
-prefix = "underwent "
+
+[git_branch]
+style="fg:#a67bf5"
 
 [username]
 disabled = false
 
+[git_state]
+style="fg:green"
+
+[git_status]
+style="fg:#a67bf5"
+stashed = 'S'
+deleted = 'D'
+
 [hostname]
 style = "fg:15"
 ssh_only = true
-trim_at = ".local"
 disabled = false
 
 [python]
 disabled = true
 
 [directory]
-style="fg:blue bold"
-truncate_to_repo = true
-truncation_length = 1
+style="fg:12 bold"
+truncate_to_repo = false
+truncation_length = 2
+fish_style_pwd_dir_length = 1
