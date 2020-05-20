@@ -24,7 +24,7 @@ provide('vim',           '.vim');
 provide('doom',          '.doom.d');
 
 my @dotfiles = (
-  'ctags',         'cvsignore',
+  'ctags',         'cvsignore', 'fdignore',
   'gitmodules',    'iterm2_shell_integration.fish',
   'mailcap',       'minicpanrc',
   'msmtprc',       'offlineimap.py',
@@ -52,7 +52,6 @@ sub provide {
   mkpath(dirname($t));
 
   my $stat = lstat $t;
-  say "$source -> $target";
   if ($stat) {
     if (-l $stat) {
       unless (readlink($t) eq $s) {
