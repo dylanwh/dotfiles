@@ -3,7 +3,7 @@ use feature 'say';
 use strict;
 use warnings;
 use Env;
-use File::Path qw(mkpath);
+use File::Path qw(mkpath rmtree);
 use File::Basename qw(dirname);
 use File::Spec::Functions qw(catdir rel2abs);
 use File::stat qw(lstat);
@@ -40,6 +40,13 @@ provide("$HOME/Sync/ssh/authorized_keys", ".ssh/authorized_keys");
 
 mkpath "$HOME/.ssh";
 mkpath "$HOME/.local/go";
+
+if (-d "$HOME/bin") {
+  rmtree("$HOME/bin");
+}
+if (-d "$HOME/.git") {
+  rename("$HOME/.git", "$HOME/.oldgit");
+}
 
 open my $fh, '>', "$HOME/.ssh/config";
 print $fh "Include $REPO/ssh/config.d/*\n";
