@@ -38,7 +38,8 @@ provide($_, ".$_") for @dotfiles;
 
 provide("$HOME/Sync/ssh/authorized_keys", ".ssh/authorized_keys");
 
-mkdir "$HOME/.ssh" unless -d "$HOME/.ssh";
+mkpath "$HOME/.ssh";
+mkpath "$HOME/.local/go";
 
 open my $fh, '>', "$HOME/.ssh/config";
 print $fh "Include $REPO/ssh/config.d/*\n";

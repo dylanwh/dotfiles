@@ -11,6 +11,10 @@ function hame
         case Darwin
             test -f /etc/sudoers.d/99-port
             or echo 'dylan ALL = (root) NOPASSWD: /opt/local/bin/port' | sudo tee /etc/sudoers.d/99-port
+
+            if not have fzy
+                sudo port install fzy
+            end
     end
 
     if not have mosh
@@ -20,9 +24,6 @@ function hame
     if not have nq
         echo installing nq
         install_nq
-    end
-    if not have fzy
-        sudo port install fzy
     end
 
     hame-fq
