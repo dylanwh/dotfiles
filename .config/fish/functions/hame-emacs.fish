@@ -1,5 +1,5 @@
 function hame-emacs
-    if [ .emacs.d ]
+    if [ -d .emacs.d ]
         pushd .emacs.d
         if git remote -v | grep -q spacemacs
             popd
