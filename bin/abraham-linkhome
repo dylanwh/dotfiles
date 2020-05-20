@@ -1,0 +1,76 @@
+#!/usr/bin/env perl
+use feature 'say';
+use strict;
+use warnings;
+use Env;
+use File::Path qw(mkpath);
+use File::Basename qw(dirname);
+use File::Spec::Functions qw(catdir rel2abs);
+use File::stat qw(lstat);
+use IO::File;
+use Cwd qw(realpath);
+use autodie qw(:default :system);
+
+my $REPO = realpath(catdir(dirname(__FILE__), '..'));
+
+provide('bin');
+provide('fish',                           '.config/fish');
+provide('selenized',                      '.config/selenized');
+provide('starship.toml',                  '.config/starship.toml');
+provide('imapfilter',                     '.imapfilter');
+provide('terminfo',                       '.terminfo');
+provide('iterm2',                         '.iterm2');
+provide('vim',                            '.vim');
+provide('doom',                           '.doom.d');
+
+my @dotfiles = (
+  'ctags',         'cvsignore',
+  'gitmodules',    'iterm2_shell_integration.fish',
+  'mailcap',       'minicpanrc',
+  'msmtprc',       'offlineimap.py',
+  'offlineimaprc', 'quotes',
+  'reply.pl',      'screenrc',
+,  'tmux.conf',
+  'todorc',        'wyrdrc'
+);
+
+provide($_, ".$_") for @dotfiles;
+
+provide("$HOME/Sync/ssh/authorized_keys", ".ssh/authorized_keys");
+
+mkdir "$HOME/.ssh" unless -d "$HOME/.ssh";
+
+open my $fh, '>', "$HOME/.ssh/config";
+print $fh "Include $REPO/ssh/config.d/*\n";
+close $fh;
+
+sub provide {
+  my ($source, $target) = @_;
+  $target //= $source;
+  my $s = rel2abs($source, $REPO);
+  my $t = rel2abs($target, $HOME);
+  mkpath(dirname($t));
+
+  my $stat = lstat $t;
+  say "$source -> $target";
+  if ($stat) {
+    if (-l $stat) {
+      unless (readlink($t) eq $s) {
+        unlink($t);
+        symlink($s, $t);
+      }
+    }
+    elsif (-f $stat) {
+      rename($t, "$t.civil-war-backup");
+      symlink($s, $t);
+    }
+    elsif (-d $stat) {
+      rename($t, "$t.civil-war-backup");
+      symlink($s, $t);
+    }
+  }
+  else {
+    symlink($s, $t);
+  }
+}
+
