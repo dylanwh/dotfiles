@@ -30,8 +30,8 @@ my @dotfiles = (
   'msmtprc',       'offlineimap.py',
   'offlineimaprc', 'quotes',
   'reply.pl',      'screenrc',
-,  'tmux.conf',
-  'todorc',        'wyrdrc'
+  'tmux.conf',     'todorc',
+  'wyrdrc'
 );
 
 provide($_, ".$_") for @dotfiles;
