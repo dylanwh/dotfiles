@@ -1,11 +1,17 @@
-function jg --argument term
-    set -l fzy_args
-    test -n "$term"
-    and set fzy_args -q $term
-
+function jg -a term
     pushd ~/Git
-    set dir (fd -Htd .git | sed 's/\.git$//' | fzy $fzy_args)
-    and cd $dir
-    or popd
-    return
+    set -l fzy_args 
+    if [ -n "$term" ]
+        set fzy_args -e $term
+    end
+    set results (fd -Htd '^\.git$' | sed 's/\.git$//' | fzy $fzy_args)
+    set result $results[1]
+    if [ (count $results) -gt 1 ]
+        if not set result (string collect $results | fzy)
+            popd
+            return
+        end
+    end
+    test -n "$result"
+    and cd $result
 end

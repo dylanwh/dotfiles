@@ -1,3 +1,4 @@
+abbr -a -U -- ag rg
 abbr -a -U -- ci 'git commit'
 abbr -a -U -- gap 'git add -p'
 abbr -a -U -- gco 'git checkout'

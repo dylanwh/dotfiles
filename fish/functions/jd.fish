@@ -1,18 +1,19 @@
-function jd
-    argparse "a/all" -- $argv
-    set dir $argv[1]
-    set -l fd_args "-td"
+function jd -a term
     set -l fzy_args
-    if [ -n "$dir" ]
-        set -a fzy_args -q $dir
+    if [ -n "$term" ]
+        set fzy_args -e $term
     end
-    if [ $_flag_all ]
-        set -a fd_args "-H"
-    end
-    set dir (begin
-        echo ".."
-        fd $fd_args
+    set results (begin
+        echo ..
+        fd -td
     end | fzy $fzy_args)
-    and cd $dir
-    return
+
+    set result $results[1]
+    if [ (count $results) -gt 1 ]
+        if not set result (string collect $results | fzy )
+            return
+        end
+    end
+    test -n "$result"
+    and cd $result
 end
