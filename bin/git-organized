@@ -27,13 +27,14 @@ while (my $git_dir = <ARGV>) {
     $
   }xs;
   my %origin = %+;
-  if ($matches && $origin{host} =~ /github\.com/i) {
-    my $new_dir = catdir($HOME, "Git", $origin{path});
+  if ($matches) {
+    my $root = $origin{host} =~ /github\.com/i ? "Git" : "Git/$origin{host}";
+    my $new_dir = catdir($HOME, $root, $origin{path});
     next if $dir eq $new_dir;
     if (-d $new_dir) {
       my $i = 2;
       do {
-        $new_dir = catdir($HOME, "Git", $origin{path} . '_' . $i++);
+        $new_dir = catdir($HOME, $root, $origin{path} . '_' . $i++);
       } while -d $new_dir;
     }
     say "mkdir -p ", dirname($new_dir) unless -d dirname($new_dir);
