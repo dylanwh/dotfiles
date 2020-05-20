@@ -24,8 +24,8 @@ provide('vim',           '.vim');
 provide('doom',          '.doom.d');
 
 my @dotfiles = (
-  'ctags',         'cvsignore', 'fdignore',
-  'gitmodules',    'iterm2_shell_integration.fish',
+  'ctags',         'cvsignore',
+  'fdignore',      'iterm2_shell_integration.fish',
   'mailcap',       'minicpanrc',
   'msmtprc',       'offlineimap.py',
   'offlineimaprc', 'quotes',
