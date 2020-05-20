@@ -3,12 +3,11 @@ min_time = 500
 prefix = "underwent "
 
 [username]
-show_always = true
 disabled = false
 
 [hostname]
 style = "fg:15"
-ssh_only = false
+ssh_only = true
 trim_at = ".local"
 disabled = false
 

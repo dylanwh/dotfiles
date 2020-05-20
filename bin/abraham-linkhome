@@ -9,7 +9,7 @@ use File::Spec::Functions qw(catdir rel2abs);
 use File::stat qw(lstat);
 use IO::File;
 use Cwd qw(realpath);
-use autodie qw(:default :system);
+use autodie qw(:default);
 
 my $REPO = realpath(catdir(dirname(__FILE__), '..'));
 

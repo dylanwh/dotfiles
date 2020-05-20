@@ -145,6 +145,9 @@ function selenized
         switch $module
             case fish
                 echo "Configuring fish_color_*"
+                for var in (set -ng | grep fish_color)
+                    set --erase -g $var
+                end
                 set -U fish_color_autosuggestion $s_dim_0 brblack
                 set -U fish_color_cancel -r
                 set -U fish_color_command $s_br_yellow bryellow --bold
