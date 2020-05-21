@@ -26,3 +26,12 @@ style="fg:12 bold"
 truncate_to_repo = false
 truncation_length = 2
 fish_style_pwd_dir_length = 1
+
+[ruby]
+symbol = "ruby "
+
+#[python]
+#symbol = "python "
+
+[golang]
+symbol = "go "
