@@ -42,7 +42,13 @@ mkpath "$HOME/.ssh";
 mkpath "$HOME/.local/go";
 
 if (-d "$HOME/bin") {
-  rmtree("$HOME/bin");
+  rename("$HOME/bin", "$HOME/bin.civil-war-backup");
+}
+if (-d "$HOME/go") {
+  rename("$HOME/go", "$HOME/go.civil-war-backup");
+}
+if (-f "$HOME/.vimrc") {
+  rename("$HOME/.vimrc", "$HOME/.vimrc.civil-war-backup");
 }
 if (-d "$HOME/.git") {
   rename("$HOME/.git", "$HOME/.oldgit");
