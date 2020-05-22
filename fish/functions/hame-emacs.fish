@@ -8,6 +8,7 @@ function hame-emacs
             popd
         end
     end
+
     hame-git -n doom-emacs -p .emacs.d -u 'hlissner/doom-emacs'
     path add ~/.emacs.d/bin
     if not [ -d .emacs.d/.local ]

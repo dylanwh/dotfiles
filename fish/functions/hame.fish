@@ -9,12 +9,7 @@ function hame
 
     switch $OS
         case Darwin
-            test -f /etc/sudoers.d/99-port
-            or echo 'dylan ALL = (root) NOPASSWD: /opt/local/bin/port' | sudo tee /etc/sudoers.d/99-port
-
-            if not have fzy
-                sudo port install fzy
-            end
+            hame-macos
     end
 
     if not have mosh

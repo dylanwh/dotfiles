@@ -6,4 +6,5 @@ fd \
     '{}/config' \
   ';' \
   -Htd '^\.git$' \
-  ~/Git/github.com | sort -u
+  -d3 \
+  ~/Git | sort -u
