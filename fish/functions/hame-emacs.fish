@@ -1,7 +1,7 @@
 function hame-emacs
     pushd $HOME
     if [ -d .emacs.d ]
-        if git -C .emacs.d remote -v | grep -q spacemacs
+        if command git -C .emacs.d remote -v | grep -q spacemacs
             mv .emacs.d .emacs.spacemacs
         end
     end

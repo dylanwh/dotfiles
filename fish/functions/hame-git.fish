@@ -20,7 +20,6 @@ function hame-git
             mkdir -vp $parent
         end
         echo git clone $_flag_name
-        pwd
         command git clone --depth 1 https://github.com/$_flag_url $_flag_path
     end
     popd
