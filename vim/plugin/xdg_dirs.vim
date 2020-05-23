@@ -10,6 +10,9 @@
 if exists("g:loaded_xdg_dirs")
     finish
 endif
+if has("nvim")
+    finish
+endif
 
 let g:loaded_xdg_dirs = 1
 

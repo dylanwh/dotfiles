@@ -41,7 +41,9 @@ set sidescrolloff=1        " see above
 set scrolloff=5            " always show 5 lines of context when scrolling j/k
 set splitright             " split to the right
 set mouse=a                " enable mouse
+if !has("nvim")
 set cb=autoselectplus      " don't automatically put stuff in the clipboard.
+endif
 set visualbell             " visual bell
 set backup                 " do keep backups.
 set undofile               " persistent undo

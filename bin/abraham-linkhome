@@ -21,6 +21,7 @@ provide('imapfilter',    '.imapfilter');
 provide('terminfo',      '.terminfo');
 provide('iterm2',        '.iterm2');
 provide('vim',           '.vim');
+provide('vim',           '.config/nvim');
 provide('doom',          '.doom.d');
 
 my @dotfiles = (
