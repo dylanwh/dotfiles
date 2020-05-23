@@ -12,6 +12,8 @@ function hame
     path add ~/.local/bin
     path add /opt/local/bin
 
+    mkdir -p ~/.cache/hame
+
     abbr -U -- ag rg
     abbr -U -- grep rg
     abbr -U -- s srep
