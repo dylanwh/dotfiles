@@ -22,6 +22,7 @@ provide('terminfo',      '.terminfo');
 provide('iterm2',        '.iterm2');
 provide('vim',           '.vim');
 provide('vim',           '.config/nvim');
+provide('mutt',          '.mutt');
 provide('doom',          '.doom.d');
 
 my @dotfiles = (

@@ -1,3 +1,3 @@
 #!/usr/bin/env fish
 
-fd -Htd '^\.git$' ~/Git |git-organized
+fd -Htd '^\.git$' . |git-organized
