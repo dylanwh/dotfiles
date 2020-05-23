@@ -4,23 +4,27 @@ function hame
 
     set -U fish_greeting ''
     set -Ux SKIM_DEFAULT_OPTIONS '--preview-window right:70% --bind \'?:toggle-preview,ctrl-o:execute-silent(open {})\''
+    set -Ux SKIM_DEFAULT_COMMAND 'fd --type f'
+    set -Ux SKIM_ALT_C_COMMAND 'fd -L -t d -E /sys -E /proc -E /dev -E /tmp'
+    set -Ux SKIM_CTRL_T_COMMAND 'fd -L -t f -t d -t l -E /sys -E /proc -E /dev -E /tmp'
 
     path clear
     path add ~/.local/bin
     path add /opt/local/bin
 
-    abbr -a -U -- ag rg
-    abbr -a -U -- grep rg
-    abbr -a -U -- ci 'git commit'
-    abbr -a -U -- gap 'git add -p'
-    abbr -a -U -- gco 'git checkout'
-    abbr -a -U -- gdc 'git diff --cached'
-    abbr -a -U -- gr 'git rebase'
-    abbr -a -U -- gs 'git status --short'
-    abbr -a -U -- pt 'perltidy --profile=.../.perltidyrc -b  -bext=/'
-    abbr -a -U -- pull 'git pull'
-    abbr -a -U -- push 'git push'
-    abbr -a -U -- runti 'docker run --rm -ti'
+    abbr -U -- ag rg
+    abbr -U -- grep rg
+    abbr -U -- s srep
+    abbr -U -- ci 'git commit'
+    abbr -U -- gap 'git add -p'
+    abbr -U -- gco 'git checkout'
+    abbr -U -- gdc 'git diff --cached'
+    abbr -U -- gr 'git rebase'
+    abbr -U -- gs 'git status --short'
+    abbr -U -- pt 'perltidy --profile=.../.perltidyrc -b  -bext=/'
+    abbr -U -- pull 'git pull'
+    abbr -U -- push 'git push'
+    abbr -U -- runti 'docker run --rm -ti'
 
     set -lx HAME_FLAGS ""
     if [ $_flag_force ]
