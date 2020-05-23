@@ -26,8 +26,13 @@ function hame-vim
     hame-git  -n textobj-user       -p "$vim/start/textobj-user"       -u "kana/vim-textobj-user"
     hame-git  -n unimpaired         -p "$vim/start/unimpaired"         -u "tpope/vim-unimpaired"
     hame-git  -n vinegar            -p "$vim/start/vinegar"            -u "tpope/vim-vinegar"
-    hame-git  -n fzy                -p "$vim/start/fzy"                -u "bfrg/vim-fzy"
-    hame-git  -n fzy-builtins       -p "$vim/start/fzy-builtins"       -u "bfrg/vim-fzy-builtins"
-    hame-git  -n fzy-find           -p "$vim/start/fzy-find"           -u "bfrg/vim-fzy-find"
+
+    for old in "$vim/start/fzy" "$vim/start/fzy-builtins" "$vim/start/fzy-find"
+        test -d "$old"
+        and echo "hame-vim: rm $old"
+        and rm -fr $old
+    end
+
+    return 0
 end
 
