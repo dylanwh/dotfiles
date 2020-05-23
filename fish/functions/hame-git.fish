@@ -9,9 +9,9 @@ function hame-git
     pushd $HOME
     if [ -d "$_flag_path/.git" ]
         if [ $HAME_UPDATE ]
-            pushd $path
+            pushd $_flag_path
             echo -n "$_flag_name: "
-            git pull
+            command git pull
             popd
         end
     else
@@ -20,7 +20,8 @@ function hame-git
             mkdir -vp $parent
         end
         echo git clone $_flag_name
-        git clone --depth 1 https://github.com/$_flag_url $_flag_path
+        pwd
+        command git clone --depth 1 https://github.com/$_flag_url $_flag_path
     end
     popd
 end

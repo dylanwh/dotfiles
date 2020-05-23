@@ -1,5 +1,6 @@
 function hame-vim
 
+    pushd $HOME
     set -l vim .vim/pack/dylan
     hame-git  -n solarized8         -p "$vim/opt/solarized8"           -u "lifepillar/vim-solarized8"
     hame-git  -n abolish            -p "$vim/start/abolish"            -u "tpope/vim-abolish"
@@ -33,6 +34,7 @@ function hame-vim
         and rm -fr $old
     end
 
+    popd
     return 0
 end
 

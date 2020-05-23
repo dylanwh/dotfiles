@@ -1,11 +1,8 @@
 function hame-emacs
+    pushd $HOME
     if [ -d .emacs.d ]
-        pushd .emacs.d
-        if git remote -v | grep -q spacemacs
-            popd
+        if git -C .emacs.d remote -v | grep -q spacemacs
             mv .emacs.d .emacs.spacemacs
-        else
-            popd
         end
     end
 
@@ -14,5 +11,6 @@ function hame-emacs
     if not [ -d .emacs.d/.local ]
         hame-nq doom -y install --no-fonts
     end
+    popd
 end
 
