@@ -1,6 +1,26 @@
 function hame
     argparse "f/force" -- $argv
-    cd $HOME
+    pushd $HOME
+
+    set -U fish_greeting ''
+    set -Ux SKIM_DEFAULT_OPTIONS '--preview-window right:70% --bind \'?:toggle-preview,ctrl-o:execute-silent(open {})\''
+
+    path clear
+    path add ~/.local/bin
+    path add /opt/local/bin
+
+    abbr -a -U -- ag rg
+    abbr -a -U -- grep rg
+    abbr -a -U -- ci 'git commit'
+    abbr -a -U -- gap 'git add -p'
+    abbr -a -U -- gco 'git checkout'
+    abbr -a -U -- gdc 'git diff --cached'
+    abbr -a -U -- gr 'git rebase'
+    abbr -a -U -- gs 'git status --short'
+    abbr -a -U -- pt 'perltidy --profile=.../.perltidyrc -b  -bext=/'
+    abbr -a -U -- pull 'git pull'
+    abbr -a -U -- push 'git push'
+    abbr -a -U -- runti 'docker run --rm -ti'
 
     set -lx HAME_FLAGS ""
     if [ $_flag_force ]
@@ -26,27 +46,8 @@ function hame
     hame-env
     hame-vim
     hame-emacs
+
     hame-rust
-
-    if have cargo
-        path add ~/.cargo/bin
-
-        have exa
-        or hame-nq cargo install exa
-        have vivid
-        or hame-nq cargo install vivid
-        have fd
-        or hame-nq cargo install fd-find
-        have rg
-        or hame-nq cargo install ripgrep --features pcre2
-        have bat
-        or hame-nq cargo install bat
-        have broot
-        or hame-nq cargo install broot
-        have starship
-        or hame-nq cargo install starship
-    end
-
     if have go
         path add $GOPATH/bin
         if not have gore
@@ -65,5 +66,7 @@ function hame
         hame-nq plenv local $default_perl
     end
 
+   selenized
+   popd
 end
 

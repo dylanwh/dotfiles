@@ -4,27 +4,9 @@ function path -a cmd dir
         set cmd list
     end
     switch $cmd
-        case default
-            path add ~/.local/bin
-            for env in pyenv plenv
-                path add ~/.$env/bin
-                path add ~/.$env/shims
-            end
-            path add $GOPATH/bin
-            path add /opt/local/bin
-            path add /snap/bin
-            path add ~/.cargo/bin
-            path add /opt/chefdk/bin
-            path add ~/.chefdk/gem/ruby/2.5.0/bin
-            path add /opt/chefdk/embedded/bin
-            if [ -d $HOME/.wasmtime ]
-                set -Ux WASMTIME_HOME "$HOME/.wasmtime"
-                path add $WASMTIME_HOME/bin
-            end
-            path prune
         case add
             if not contains $dir $fish_user_paths
-                set -U fish_user_paths $fish_user_paths $dir
+                set -aU fish_user_paths $dir
             end
         case remove
             set -l new_user_paths

@@ -41,14 +41,3 @@ if status --is-interactive
             abbr -a -g vi vim
     end
 end
-
-set -l config_version (perl -MFile::stat -E 'say stat($ARGV[0])->mtime' ~/.config/fish/functions/apply-fish-defaults.fish)
-test -z "$dylan_config_version"
-or test "$config_version" -gt "$dylan_config_version"
-and apply-fish-defaults
-set -U dylan_config_version $config_version
-
-if path empty
-    path default
-end
-

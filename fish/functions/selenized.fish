@@ -127,7 +127,7 @@ function selenized
         set _flag_variant black
     end
     if [ -z $_flag_modules ]
-        set _flag_modules term fish vivid grep tmux vim
+        set _flag_modules fish vivid grep tmux vim
     end
     set -l s_scope ''
     if [ -n $_flag_env ]
@@ -144,7 +144,6 @@ function selenized
     for module in $_flag_modules
         switch $module
             case fish
-                echo "Configuring fish_color_*"
                 for var in (set -ng | grep fish_color)
                     set --erase -g $var
                 end
@@ -188,7 +187,6 @@ function selenized
                     set -Ux LS_COLORS (cat ~/.config/fish/ls_colors)
                     continue
                 end
-                echo "configuring LS_COLORS..."
                 set -lx VIVID_DATABASE $HOME/.config/selenized/vivid_filetypes.yml
                 set -l vivid_theme (mktemp -t selenized-XXXXXX)
                 command rm $vivid_theme
@@ -206,10 +204,8 @@ function selenized
                 command rm $vivid_theme.yml
                 echo $LS_COLORS >~/.config/fish/ls_colors
             case grep
-                echo "Configuring GREP_COLOR"
                 set -Ux GREP_COLOR '7;33'
             case tmux
-                echo "Configuring tmux..."
                 set -l tmux_vars
                 for color in $selenized_colors
                     set -l var s_$color
@@ -221,11 +217,7 @@ function selenized
                     tmux source $tmux_theme
                 end
                 command mv $tmux_theme ~/.tmux.theme.conf
-            case term
-                echo "Configuring terminal"
-                it2setcolor preset "selenized-$_flag_variant"
             case vim
-                echo "Configuring vim"
                 set -l vim_bg
                 set -l vim_colorscheme
                 switch $_flag_variant

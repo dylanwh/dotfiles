@@ -22,5 +22,6 @@ function hame-git
         echo git clone $_flag_name
         git clone --depth 1 https://github.com/$_flag_url $_flag_path
     end
+    popd
 end
 
