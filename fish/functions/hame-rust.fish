@@ -8,20 +8,22 @@ function hame-rust
     end
 
     if have cargo
-        have exa
-        or hame-nq cargo install exa
-        have vivid
-        or hame-nq cargo install vivid
+        have sk
+        or hame-nq cargo install skim
         have fd
         or hame-nq cargo install fd-find
         have rg
         or hame-nq cargo install ripgrep --features pcre2
+        have exa
+        or hame-nq cargo install exa
         have bat
         or hame-nq cargo install bat
-        have broot
-        or hame-nq cargo install broot
+        have vivid
+        or hame-nq cargo install vivid
         have starship
         or hame-nq cargo install starship
+        have broot
+        and hame-nq cargo uninstall broot
     end
 end
 

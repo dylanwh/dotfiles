@@ -202,7 +202,7 @@ function selenized
                 set --erase -g LS_COLORS
                 set -Ux LS_COLORS (vivid generate $vivid_theme.yml)
                 command rm $vivid_theme.yml
-                echo $LS_COLORS >~/.config/fish/ls_colors
+                echo $LS_COLORS | tr ':' "\n" | sort -r | tr '\n' ':'  > ~/.config/fish/ls_colors
             case grep
                 set -Ux GREP_COLOR '7;33'
             case tmux
