@@ -21,7 +21,7 @@ if have caffeinate; and have nq
             # I'm not sure why, but if I don't run nq inside nq, it sometimes fails to clean up its files
             # Might be a bug, or something about how macOS handles the session leader being teriminated?
             # Anyway, this pretty much ensures remove logins prevent the mac from going to sleep (as long as it is running on AC)
-            env "NQDIR=$HOME/.cache/caffinate.$$" nq -c -q -- nq -c -q -- caffeinate -s -w $fish_pid
+            env "NQDIR=$HOME/.cache/caffinate.$fish_pid" nq -c -q -- nq -c -q -- caffeinate -s -w $fish_pid
     end
 end
 
