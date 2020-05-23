@@ -69,7 +69,12 @@ function hame
         hame-nq cpanm --notest Mojolicious
     end
 
+    # plenv, pyenv, etc should be before /opt/local/bin in the path
+    path remove /opt/local/bin
+    path add /opt/local/bin
+
    selenized
    popd
+   path prune
 end
 
