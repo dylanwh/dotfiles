@@ -65,6 +65,9 @@ function hame
         hame-nq plenv global $default_perl
         hame-nq plenv local $default_perl
     end
+    if not perl -MMojolicious -e 1 &>/dev/null
+        hame-nq cpanm --notest Mojolicious
+    end
 
    selenized
    popd
