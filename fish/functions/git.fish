@@ -1,8 +1,14 @@
-# Defined in - @ line 1
-
 function git --description 'alias git=hub'
     if [ "$PWD" = "$HOME" ]
-        set argv "-C" ~/Git/dylanwh/home $argv
+        switch $argv[1]
+            case 'clone'
+                set name (git-repo-name $argv[2])
+                set dir ~/Git/(dirname $name)
+                mkdir -p $dir
+                set argv "-C" "$dir" $argv
+            case '*'
+                set argv "-C" ~/Git/dylanwh/home $argv
+        end
     end
-    hub $argv;
+    hub $argv
 end

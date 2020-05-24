@@ -16,4 +16,9 @@ my $matches = $url =~ m{
   $
 }xs or die "cannot understand $url\n";
 
-say "$+{host}/$+{path}";
+if ($+{host} eq 'github.com') {
+  say $+{path};
+}
+else {
+  say "$+{host}/$+{path}";
+}
