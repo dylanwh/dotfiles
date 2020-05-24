@@ -4,8 +4,8 @@ use strict;
 use warnings;
 use Env;
 use File::Path qw(mkpath rmtree);
-use File::Basename qw(dirname);
-use File::Spec::Functions qw(catdir rel2abs);
+use File::Basename qw(dirname basename);
+use File::Spec::Functions qw(catdir rel2abs abs2rel);
 use File::stat qw(lstat);
 use IO::File;
 use Cwd qw(realpath);
@@ -13,7 +13,6 @@ use autodie qw(:default);
 
 my $REPO = realpath(catdir(dirname(__FILE__), '..'));
 
-provide('bin',           '.local/bin');
 provide('fish',          '.config/fish');
 provide('selenized',     '.config/selenized');
 provide('starship.toml', '.config/starship.toml');
@@ -38,10 +37,27 @@ my @dotfiles = (
 
 provide($_, ".$_") for @dotfiles;
 
-provide("$HOME/Sync/ssh/authorized_keys", ".ssh/authorized_keys");
+if (-f "$HOME/Sync/ssh/authorized_keys") {
+  provide("$HOME/Sync/ssh/authorized_keys", ".ssh/authorized_keys");
+}
+else {
+  system('ssh-import-id', 'gh:dylanwh');
+}
 
 mkpath "$HOME/.ssh";
 mkpath "$HOME/.local/go";
+
+if (-l "$HOME/.local/bin") {
+  unlink "$HOME/.local/bin";
+}
+mkpath "$HOME/.local/bin";
+
+foreach my $file (glob "$REPO/bin/*") {
+  my $repo_file = abs2rel($file, $REPO);
+  my $home_file = abs2rel("$HOME/.local/bin/" . basename($repo_file), $HOME);
+
+  provide($repo_file, $home_file);
+}
 
 if (-d "$HOME/bin") {
   rename("$HOME/bin", "$HOME/bin.civil-war-backup");
