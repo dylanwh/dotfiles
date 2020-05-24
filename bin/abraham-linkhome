@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use Env;
 use Env qw(@PATH);
-use File::Path qw(mkpath rmtree);
+use File::Path qw(mkpath);
 use File::Basename qw(dirname basename);
 use File::Spec::Functions qw(catdir rel2abs abs2rel);
 use File::stat qw(lstat);
@@ -38,14 +38,6 @@ my @dotfiles = (
 
 provide($_, ".$_") for @dotfiles;
 
-if (-f "$HOME/Sync/ssh/authorized_keys") {
-  provide("$HOME/Sync/ssh/authorized_keys", ".ssh/authorized_keys");
-}
-else {
-  system('ssh-import-id', 'gh:dylanwh');
-}
-
-mkpath "$HOME/.ssh";
 mkpath "$HOME/.local/go";
 
 if (-l "$HOME/.local/bin") {
@@ -73,6 +65,13 @@ if (-d "$HOME/.git") {
   rename("$HOME/.git", "$HOME/.oldgit");
 }
 
+mkpath "$HOME/.ssh";
+if (-f "$HOME/Sync/ssh/authorized_keys") {
+  provide("$HOME/Sync/ssh/authorized_keys", ".ssh/authorized_keys");
+}
+else {
+  system('ssh-import-id', 'gh:dylanwh');
+}
 open my $fh, '>', "$HOME/.ssh/config";
 print $fh "Include $REPO/ssh/config.d/*\n";
 close $fh;
