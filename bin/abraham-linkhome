@@ -3,6 +3,7 @@ use feature 'say';
 use strict;
 use warnings;
 use Env;
+use Env qw(@PATH);
 use File::Path qw(mkpath rmtree);
 use File::Basename qw(dirname basename);
 use File::Spec::Functions qw(catdir rel2abs abs2rel);
@@ -11,7 +12,7 @@ use IO::File;
 use Cwd qw(realpath);
 use autodie qw(:default);
 
-my $REPO = realpath(catdir(dirname(__FILE__), '..'));
+my $REPO = realpath(catdir(dirname(realpath(__FILE__)), '..'));
 
 provide('fish',          '.config/fish');
 provide('selenized',     '.config/selenized');
@@ -53,7 +54,7 @@ if (-l "$HOME/.local/bin") {
 mkpath "$HOME/.local/bin";
 
 foreach my $file (glob "$REPO/bin/*") {
-  my $repo_file = abs2rel($file, $REPO);
+  my $repo_file = abs2rel($file,                                      $REPO);
   my $home_file = abs2rel("$HOME/.local/bin/" . basename($repo_file), $HOME);
 
   provide($repo_file, $home_file);
@@ -82,25 +83,31 @@ sub provide {
   my $s = rel2abs($source, $REPO);
   my $t = rel2abs($target, $HOME);
   mkpath(dirname($t));
-
   my $stat = lstat $t;
   if ($stat) {
     if (-l $stat) {
       unless (readlink($t) eq $s) {
+        printf "%s: %s -> %s\n", $t, readlink($t), $s;
         unlink($t);
         symlink($s, $t);
       }
     }
     elsif (-f $stat) {
+      printf "%s: conflicting file\n", $t;
       rename($t, "$t.civil-war-backup");
       symlink($s, $t);
     }
     elsif (-d $stat) {
+      printf "%s: conflicting directory\n", $t;
       rename($t, "$t.civil-war-backup");
       symlink($s, $t);
     }
+    else {
+      printf "%s: unknown type\n", $t;
+    }
   }
   else {
+    printf "%s: new file or directory\n", $t;
     symlink($s, $t);
   }
 }
