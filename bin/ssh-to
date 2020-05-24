@@ -1,3 +1,0 @@
-#!/bin/zsh
-
-exec ssh ${0:t} "$@"

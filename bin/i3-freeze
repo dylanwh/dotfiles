@@ -1,6 +1,0 @@
-#!/bin/zsh
-
-tempfile=$(mktemp i3-freeze-XXXXXX.png)
-scrot $tempfile
-i3lock -p win -u -i $tempfile 
-rm -v $tempfile

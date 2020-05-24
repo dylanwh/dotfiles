@@ -1,6 +1,0 @@
-#!/bin/zsh
-
-file=$(fasd "$@" -Rl | dymenu -t -l 10)
-if [[ -n $file ]]; then
-    xdg-open $file
-fi
