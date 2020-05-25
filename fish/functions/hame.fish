@@ -82,6 +82,9 @@ function hame
 
    selenized
    popd
+   set new_fish_user_path $fish_user_path
+   set --erase -g fish_user_path
+   set -U fish_user_path $new_fish_user_path
    path prune
 end
 
