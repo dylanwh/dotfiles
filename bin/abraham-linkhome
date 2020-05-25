@@ -14,16 +14,16 @@ use autodie qw(:default);
 
 my $REPO = realpath(catdir(dirname(realpath(__FILE__)), '..'));
 
+provide('doom',          '.doom.d');
 provide('fish',          '.config/fish');
+provide('imapfilter',    '.imapfilter');
+provide('iterm2',        '.iterm2');
+provide('mutt',          '.mutt');
 provide('selenized',     '.config/selenized');
 provide('starship.toml', '.config/starship.toml');
-provide('imapfilter',    '.imapfilter');
 provide('terminfo',      '.terminfo');
-provide('iterm2',        '.iterm2');
-provide('vim',           '.vim');
 provide('vim',           '.config/nvim');
-provide('mutt',          '.mutt');
-provide('doom',          '.doom.d');
+provide('vim',           '.vim');
 
 my @dotfiles = (
   'ctags',         'cvsignore',
@@ -39,10 +39,7 @@ my @dotfiles = (
 provide($_, ".$_") for @dotfiles;
 
 mkpath "$HOME/.local/go";
-
-if (-l "$HOME/.local/bin") {
-  unlink "$HOME/.local/bin";
-}
+unlink "$HOME/.local/bin" if -l "$HOME/.local/bin";
 mkpath "$HOME/.local/bin";
 
 foreach my $file (glob "$REPO/bin/*") {

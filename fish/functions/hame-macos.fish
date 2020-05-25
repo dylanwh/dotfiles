@@ -10,4 +10,13 @@ function hame-macos
 
     test -f /etc/sudoers.d/99-port
     or echo 'dylan ALL = (root) NOPASSWD: /opt/local/bin/port' | sudo tee /etc/sudoers.d/99-port
+
+    set REPO (realpath (readlink $HOME/.config/fish)/..)
+
+    set st_plist $HOME/Library/LaunchAgents/syncthing.plist
+    if not test -f $st_plist
+        set st_temp (mktemp)
+        mojo-pp $REPO/syncthing.plist.ep > $st_temp
+        and command mv -v $st_temp $st_plist
+    end
 end
