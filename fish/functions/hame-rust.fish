@@ -22,6 +22,8 @@ function hame-rust
         or hame-nq cargo install vivid
         have starship
         or hame-nq cargo install starship
+        have procs
+        or hame-nq cargo install procs
         have broot
         and hame-nq cargo uninstall broot
     end

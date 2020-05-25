@@ -15,6 +15,7 @@ function hame
 
     mkdir -p ~/.cache/hame
 
+    abbr -U -- ps procs
     abbr -U -- ag rg
     abbr -U -- grep rg
     abbr -U -- s srep
