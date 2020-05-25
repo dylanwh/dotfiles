@@ -38,8 +38,7 @@ function hame-vim
         for dir in $packdir/*
             cd $dir
             for docdir in */doc
-                echo "helptags $docdir"
-                vim -u NONE -c "helptags $docdir" -c q
+                hame-nq vim -u NONE -c "helptags $docdir" -c q
             end
         end
     end
