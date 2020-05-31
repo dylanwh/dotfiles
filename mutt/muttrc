@@ -11,7 +11,9 @@ set spoolfile="imaps://mail.messagingengine.com/INBOX"
 set imap_headers='LIST-ID'
 set mask="."
 
-mailboxes + +mozilla +mozilla.bugmail +mozilla.bugmail.bmo +alerts
+save-hook . +Archive
+
+mailboxes + =+SaneLater =+SaneNews =+Bugzilla =+Billing
 subscribe dev-platform@mozilla\.org \
           reply\.github\.com \
           billing@hardison\.net \
@@ -128,4 +130,4 @@ macro generic \e1 ":set display_filter='t-prot -acelmtS=6 -Mmutt --spass -L$HOME
 macro pager \e0 ":unset display_filter; exec exit\n:exec display-message\n" "Turn TOFU protection off"
 macro pager \e1 ":set display_filter='t-prot -acelmtS=6 -Mmutt --spass -L$HOME/.mutt/mlfooters -A$HOME/.mutt/adfooters'; exec exit\n:exec display-message\n" "Turn TOFU protection on"
 
-source ~/.mutt/base16
+source ~/.mutt/theme

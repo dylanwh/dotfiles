@@ -1,6 +1,6 @@
 # vim: set ft=muttrc: 
 
-color normal     white default
+color normal     default default
 color attachment blue default
 color hdrdefault cyan default
 color indicator  black white
@@ -11,7 +11,7 @@ color quoted     brightblue default
 color quoted1     cyan default
 
 color signature  magenta default
-color status     white blue
+color status     color0 color15
 color tilde      blue default
 color tree       red default
 
@@ -22,12 +22,33 @@ color body red black "(https?|ftp)://[\-\.,/%~_:?&=\#a-zA-Z0-9]+"
 color body    brightblack  default    "^\\[---.*"
 color body    green        default    "^#v[-+]"
 
+## Weak
+color index  white  default  "~R"        # read messages
+color index  brightwhite  default  "~d >45d"   # older than 45 days
+color index  brightwhite  default  "~v~(!~N)"  # collapsed thread with no unread
+color index  brightwhite  default  "~Q"        # messages that have been replied to
 
-color index magenta default '!~p !~l'
-color index green default '~l'
-color index brightred default '~H spam'
-color index brightyellow default '~T'
-color index brightblack default '~D'
+## Strong
+color index  default  default  "(~U|~N|~O)"     # unread, new, old messages
+color index  default  default  "~v~(~U|~N|~O)"  # collapsed thread with unread
+
+## Highlight
+### Trusted
+color index  cyan  default  "~g"  # PGP signed messages
+color index  cyan  default  "~G"  # PGP encrypted messages
+
+### Odd
+color index  red  default  "~E"  # past Expires: header date
+color index  red  default  "~="  # duplicated
+color index  red  default  "~S"  # marked by Supersedes: header
+
+### Flagged
+color index  blue  default  "~F"       # flagged messages
+color index  blue  default  "~v~(~F)"  # collapsed thread with flagged inside
+
+# Selection
+color index  yellow  default   "~T"  # tagged messages
+color index  brightblack  default   "~D"  # deleted messages
 
 # Formatting options.
 set to_chars=" =TCFL"

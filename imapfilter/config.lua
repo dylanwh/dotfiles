@@ -20,11 +20,6 @@ function main(server)
     SaneCC:contain_from("notifications@github.com"):move_messages(GitHub)
     Archive:contain_from("notifications@github.com"):move_messages(GitHub)
 
-    local github_at = GitHub:contain_body("@dylanwh")
-    github_at:mark_flagged()
-    github_at:move_messages(INBOX)
-    Nest:is_older(1):delete_messages()
-
     local sanebox       = INBOX:contain_from("message-digest@sanebox.com") + INBOX:contain_from("reports@sanebox.com")
     local toggl         = INBOX:contain_subject("Toggl weekly report")
     local stale         = INBOX:is_older(1)
@@ -52,8 +47,8 @@ function main(server)
     local old_fedex = INBOX:contain_from("fedex.com") * INBOX:contain_subject("Your package ") * stale
     old_fedex:move_messages(Trash)
 
-    local capone_withdraw = INBOX:contain_from("capitalone@notification.capitalone.com") * INBOX:contain_subject("Withdrawal Notice") * INBOX:is_seen()
-    capone_withdraw:move_messages(Archive)
+    local capone = INBOX:contain_from("capitalone@notification.capitalone.com") * INBOX:is_seen()
+    capone:move_messages(Archive)
 
     SaneNews:contain_from("dev-apps-bugzilla-bounces@lists.mozilla.org"):move_messages(Trash)
 
