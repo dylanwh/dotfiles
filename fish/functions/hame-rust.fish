@@ -24,6 +24,10 @@ function hame-rust
         or hame-nq cargo install starship
         have procs
         or hame-nq cargo install procs
+        have dust
+        or hame-nq cargo install du-dust
+        have delta
+        or hame-nq cargo install git-delta
         have broot
         and hame-nq cargo uninstall broot
     end
