@@ -47,7 +47,7 @@ foreach my $file (glob "$REPO/bin/*") {
   my $repo_file = abs2rel($file, $REPO);
   my $home_file = ".local/bin/" . basename($repo_file);
 
-  provide($repo_file, $home_file);
+  provide($repo_file, $home_file, {replace => 1});
 }
 
 
@@ -77,7 +77,7 @@ mkpath "$HOME/.ssh/config.d";
 foreach my $file (glob "$REPO/ssh/config.d/*") {
   my $repo_file = abs2rel($file, $REPO);
   my $home_file = ".ssh/config.d/" . basename($file);
-  provide($repo_file, $home_file);
+  provide($repo_file, $home_file, {replace => 1});
 }
 
 open my $fh, '>', "$HOME/.ssh/config";
@@ -85,7 +85,7 @@ print $fh "Include config.d/*\n";
 close $fh;
 
 sub provide {
-  my ($source, $target) = @_;
+  my ($source, $target, $option) = @_;
   $target //= $source;
   my $s = rel2abs($source, $REPO);
   my $t = rel2abs($target, $HOME);
@@ -101,7 +101,12 @@ sub provide {
     }
     elsif (-f $stat) {
       printf "%s: conflicting file\n", $t;
-      rename($t, "$t.civil-war-backup");
+      if ($option->{replace}) {
+        unlink($t);
+      }
+      else {
+        rename($t, "$t.civil-war-backup");
+      }
       symlink($s, $t);
     }
     elsif (-d $stat) {
