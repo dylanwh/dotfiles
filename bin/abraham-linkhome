@@ -11,6 +11,7 @@ use File::stat qw(lstat);
 use IO::File;
 use Cwd qw(realpath);
 use autodie qw(:default);
+sub rm_if_link ($);
 
 my $REPO = realpath(catdir(dirname(realpath(__FILE__)), '..'));
 
@@ -39,15 +40,16 @@ my @dotfiles = (
 provide($_, ".$_") for @dotfiles;
 
 mkpath "$HOME/.local/go";
-unlink "$HOME/.local/bin" if -l "$HOME/.local/bin";
+rm_if_link "$HOME/.local/bin";
 mkpath "$HOME/.local/bin";
 
 foreach my $file (glob "$REPO/bin/*") {
-  my $repo_file = abs2rel($file,                                      $REPO);
-  my $home_file = abs2rel("$HOME/.local/bin/" . basename($repo_file), $HOME);
+  my $repo_file = abs2rel($file, $REPO);
+  my $home_file = ".local/bin/" . basename($repo_file);
 
   provide($repo_file, $home_file);
 }
+
 
 if (-d "$HOME/bin") {
   rename("$HOME/bin", "$HOME/bin.civil-war-backup");
@@ -69,8 +71,17 @@ if (-f "$HOME/Sync/ssh/authorized_keys") {
 else {
   system('ssh-import-id', 'gh:dylanwh');
 }
+
+rm_if_link "$HOME/.ssh/config.d";
+mkpath "$HOME/.ssh/config.d";
+foreach my $file (glob "$REPO/ssh/config.d/*") {
+  my $repo_file = abs2rel($file, $REPO);
+  my $home_file = ".ssh/config.d/" . basename($file);
+  provide($repo_file, $home_file);
+}
+
 open my $fh, '>', "$HOME/.ssh/config";
-print $fh "Include $REPO/ssh/config.d/*\n";
+print $fh "Include config.d/*\n";
 close $fh;
 
 sub provide {
@@ -108,3 +119,7 @@ sub provide {
   }
 }
 
+sub rm_if_link ($) {
+  my ($path) = @_;
+  unlink $path if -l $path;
+}
