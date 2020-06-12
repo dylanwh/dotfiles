@@ -9,9 +9,12 @@ or git clone https://github.com/mobile-shell/mosh
 
 cd mosh
 
+mkdir -p $HOME/.local/stow/mosh
 ./autogen.sh
-and ./configure
+and ./configure --prefix=$HOME/.local/stow/mosh
 and make -j 16
-and sudo make install
+and make install
 and cd ~
 and rm -vfr ~/.cache/build
+and cd $HOME/.local/stow
+and stow mosh
