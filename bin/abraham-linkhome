@@ -67,7 +67,7 @@ if (-d "$HOME/.git") {
 mkpath "$HOME/.ssh";
 if ($OSNAME eq 'darwin') {
   if (-f "$HOME/Sync/ssh/authorized_keys") {
-    system('cp', '-fvl', "$HOME/Sync/ssh/authorized_keys",
+    system('ln', '-fv', "$HOME/Sync/ssh/authorized_keys",
       "$HOME/.ssh/authorized_keys");
   }
   else {
