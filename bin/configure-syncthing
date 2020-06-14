@@ -1,3 +1,4 @@
+#!/usr/bin/env perl
 use 5.30.2;
 use Env;
 use English;
