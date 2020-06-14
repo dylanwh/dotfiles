@@ -51,7 +51,6 @@ foreach my $file (glob "$REPO/bin/*") {
   provide($repo_file, $home_file, {replace => 1});
 }
 
-
 if (-d "$HOME/bin") {
   rename("$HOME/bin", "$HOME/bin.civil-war-backup");
 }
@@ -67,16 +66,23 @@ if (-d "$HOME/.git") {
 
 mkpath "$HOME/.ssh";
 if ($OSNAME eq 'darwin') {
-  rm_if_link "$HOME/.ssh/authorized_keys";
-  system('curl', '-s', '-o', "$HOME/.ssh/authorized_keys",
-    "https://github.com/dylanwh.keys");
-}
-elsif (-f "$HOME/Sync/ssh/authorized_keys") {
-  provide("$HOME/Sync/ssh/authorized_keys", ".ssh/authorized_keys");
+  if (-f "$HOME/Sync/ssh/authorized_keys") {
+    system('cp', '-fvl', "$HOME/Sync/ssh/authorized_keys",
+      "$HOME/.ssh/authorized_keys");
+  }
+  else {
+    system('curl', '-s', '-o', "$HOME/.ssh/authorized_keys",
+      "https://github.com/dylanwh.keys");
+  }
 }
 else {
-  rm_if_link "$HOME/.ssh/authorized_keys";
-  system('ssh-import-id', 'gh:dylanwh');
+  if (-f "$HOME/Sync/ssh/authorized_keys") {
+    provide("$HOME/Sync/ssh/authorized_keys", ".ssh/authorized_keys");
+  }
+  else {
+    rm_if_link "$HOME/.ssh/authorized_keys";
+    system('ssh-import-id', 'gh:dylanwh');
+  }
 }
 
 rm_if_link "$HOME/.ssh/config.d";
