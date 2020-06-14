@@ -4,6 +4,7 @@ use strict;
 use warnings;
 use Env;
 use Env qw(@PATH);
+use English qw($OSNAME);
 use File::Path qw(mkpath);
 use File::Basename qw(dirname basename);
 use File::Spec::Functions qw(catdir rel2abs abs2rel);
@@ -65,10 +66,16 @@ if (-d "$HOME/.git") {
 }
 
 mkpath "$HOME/.ssh";
-if (-f "$HOME/Sync/ssh/authorized_keys") {
+if ($OSNAME eq 'darwin') {
+  rm_if_link "$HOME/.ssh/authorized_keys";
+  system('curl', '-s', '-o', "$HOME/.ssh/authorized_keys",
+    "https://github.com/dylanwh.keys");
+}
+elsif (-f "$HOME/Sync/ssh/authorized_keys") {
   provide("$HOME/Sync/ssh/authorized_keys", ".ssh/authorized_keys");
 }
 else {
+  rm_if_link "$HOME/.ssh/authorized_keys";
   system('ssh-import-id', 'gh:dylanwh');
 }
 
