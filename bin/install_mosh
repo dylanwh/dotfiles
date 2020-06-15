@@ -1,20 +1,20 @@
 #!/usr/bin/env fish
 
-test -d ~/.cache/build
-or mkdir -p ~/.cache/build
+have mosh
+and exit 0
+
+mkdir -p ~/.cache/build
 cd ~/.cache/build
 
 test -d mosh
 or git clone https://github.com/mobile-shell/mosh
 
 cd mosh
-
 mkdir -p $HOME/.local/stow/mosh
+
 ./autogen.sh
-and ./configure --prefix=$HOME/.local/stow/mosh
-and make -j 16
-and make install
-and cd ~
-and rm -vfr ~/.cache/build
-and cd $HOME/.local/stow
-and stow mosh
+and ./configure
+and make -j 4
+and sudo make install
+and cd $HOME
+and rm -vfr ~/.cache/build/mosh
