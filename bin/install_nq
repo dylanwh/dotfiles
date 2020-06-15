@@ -11,7 +11,6 @@ or git clone https://github.com/leahneukirchen/nq
 
 cd nq
 make -j 4
-and make install
 and sudo make install
 and cd $HOME
 and rm -vfr ~/.cache/build/nq
