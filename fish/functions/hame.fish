@@ -65,9 +65,12 @@ function hame
             hame-nq go get github.com/mdempsky/gocode
             hame-nq go get github.com/motemen/gore/cmd/gore
         end
+        if not have gron
+            hame-nq go get -u github.com/tomnomnom/gron
+        end
     end
 
-    set -l default_perl 5.30.2
+    set -l default_perl 5.32.0
     if not [ -d ~/.plenv/versions/$default_perl ]
         hame-nq plenv install $default_perl
         hame-nq env PLENV_VERSION=$default_perl plenv install-cpanm
