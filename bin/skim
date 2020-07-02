@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+query="$@"
+results="$(mktemp)"
+sk --ansi -i -m \
+    -c 'rg --color=always --line-number "{}"' \
+    --preview 'preview.sh {}' \
+    --preview-window right:70% \
+    --bind '?:toggle-preview,ctrl-o:execute-silent(open {})' \
+    --delimiter ':' --nth 1 --cmd-query "$query" > $results || exit 1
+vim -q $results
+rm $results

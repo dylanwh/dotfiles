@@ -7,7 +7,7 @@ function hame
     set -Ux SKIM_DEFAULT_COMMAND 'fd --type f'
     set -Ux SKIM_ALT_C_COMMAND 'fd -L -t d -E /sys -E /proc -E /dev -E /tmp'
     set -Ux SKIM_CTRL_T_COMMAND 'fd -L -t f -t d -t l -E /sys -E /proc -E /dev -E /tmp'
-    set -Ux SKIM_CTRL_T_OPTS '--preview \'bat --color always {1}; or exa --color always {1}\''
+    set -Ux SKIM_CTRL_T_OPTS '--preview \'preview.sh {}\''
 
     set -g fish_user_path $fish_user_path
     path clear
@@ -66,7 +66,7 @@ function hame
             hame-nq go get github.com/motemen/gore/cmd/gore
         end
         if not have gron
-            hame-nq go get -u github.com/tomnomnom/gron
+            hame-nq go get github.com/tomnomnom/gron
         end
     end
 

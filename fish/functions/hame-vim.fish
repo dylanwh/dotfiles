@@ -13,6 +13,7 @@ function hame-vim
     hame-git -n  eunuch            -p  "$vim/start/eunuch"            -u  "tpope/vim-eunuch"
     hame-git -n  fish              -p  "$vim/start/fish"              -u  "dag/vim-fish"
     hame-git -n  fugitive          -p  "$vim/start/fugitive"          -u  "tpope/vim-fugitive"
+    hame-git -n  fzf               -p  "$vim/start/fzf"               -u  "junegunn/fzf.vim"
     hame-git -n  gitgutter         -p  "$vim/start/gitgutter"         -u  "airblade/vim-gitgutter"
     hame-git -n  html5             -p  "$vim/start/html5"             -u  "othree/html5.vim"
     hame-git -n  perl              -p  "$vim/start/perl"              -u  "vim-perl/vim-perl"
@@ -26,8 +27,8 @@ function hame-vim
     hame-git -n  textobj-rubyblock -p  "$vim/start/textobj-rubyblock" -u  "nelstrom/vim-textobj-rubyblock"
     hame-git -n  textobj-user      -p  "$vim/start/textobj-user"      -u  "kana/vim-textobj-user"
     hame-git -n  unimpaired        -p  "$vim/start/unimpaired"        -u  "tpope/vim-unimpaired"
-    hame-git -n  vinegar           -p  "$vim/start/vinegar"           -u  "tpope/vim-vinegar"
     hame-git -n  vim-go            -p  "$vim/start/go"                -u  "fatih/vim-go.git"
+    hame-git -n  vinegar           -p  "$vim/start/vinegar"           -u  "tpope/vim-vinegar"
 
     for old in "$vim/start/fzy" "$vim/start/fzy-builtins" "$vim/start/fzy-find"
         test -d "$old"
