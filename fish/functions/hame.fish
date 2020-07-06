@@ -19,7 +19,7 @@ function hame
     abbr -U -- ps procs
     abbr -U -- ag rg
     abbr -U -- grep rg
-    abbr -U -- s srep
+    abbr -U --erase s
     abbr -U -- ci 'git commit'
     abbr -U -- gap 'git add -p'
     abbr -U -- gco 'git checkout'

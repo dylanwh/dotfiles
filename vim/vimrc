@@ -261,15 +261,6 @@ if !exists('autocmds_loaded')
 
     au BufWritePre /tmp/*,*/.git/COMMIT_EDITMSG setlocal noundofile
     au BufWritePost,FileWritePost */.config/i3/config.tt make -C $HOME .config/i3/config
-
-    " set nomodifiable if the file is read-only
-    autocmd BufReadPost ?*
-                \ if &readonly |
-                \   setlocal nomodifiable |
-                \ else |
-                \   setlocal modifiable |
-                \ endif
-
 endif
 " }}}
 
