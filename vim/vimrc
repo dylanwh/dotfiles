@@ -120,13 +120,6 @@ let jedi#squelch_py_warning = 1
 
 let ctrlp_extensions    = ['Z', 'F']
 let ctrlp_custom_ignore = '\v[\/]\.(git|hg|svn)$'
-
-let g:airline_powerline_fonts            = 1
-let g:airline_inactive_collapse          = 1
-let g:airline#extensions#tabline#enabled = 1
-let g:airline#themes#base16#constant = 1
-let g:airline_theme='base16_vim'
-let g:airline#extensions#tabline#formatter = 'unique_tail_improved'
 " }}}
 
 " COLORS {{{1

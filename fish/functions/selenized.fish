@@ -237,6 +237,7 @@ function selenized
                 begin
                     echo "set bg=$vim_bg"
                     echo "colorscheme $vim_colorscheme"
+                    echo "let g:lightline = {  'colorscheme': 'selenized_$_flag_variant' }"
                 end >$HOME/.vim/theme.vim
         end
     end
