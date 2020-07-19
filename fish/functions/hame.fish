@@ -2,6 +2,8 @@ function hame
     argparse "f/force" -- $argv
     pushd $HOME
 
+    $HOME/Git/dylanwh/home/bin/abraham-linkhome
+
     set -U fish_greeting ''
     set -Ux SKIM_DEFAULT_OPTIONS '--preview-window right:70% --bind \'?:toggle-preview,ctrl-o:execute-silent(open {})\''
     set -Ux SKIM_DEFAULT_COMMAND 'fd --type f'
@@ -19,7 +21,9 @@ function hame
     abbr -U -- ps procs
     abbr -U -- ag rg
     abbr -U -- grep rg
-    abbr -U --erase s
+
+    abbr -Uq s
+    and abbr -U --erase s
     abbr -U -- ci 'git commit'
     abbr -U -- gap 'git add -p'
     abbr -U -- gco 'git checkout'
