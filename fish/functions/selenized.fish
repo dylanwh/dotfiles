@@ -216,7 +216,7 @@ function selenized
                 if tmux info >/dev/null ^/dev/null
                     tmux source $tmux_theme
                 end
-                command mv $tmux_theme ~/.tmux.theme.conf
+                command mv $tmux_theme ~/.tmux/theme.conf
             case vim
                 set -l vim_bg
                 set -l vim_colorscheme

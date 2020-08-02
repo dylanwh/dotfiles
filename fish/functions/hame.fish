@@ -61,6 +61,7 @@ function hame
     hame-emacs
 
     hame-rust
+    hame-tmux
     if have go
         path add $GOPATH/bin
         if not have gore
@@ -81,13 +82,16 @@ function hame
         hame-nq plenv global $default_perl
         hame-nq plenv local $default_perl
     end
-    if not perl -MMojolicious -e 1 &>/dev/null
-        hame-nq cpanm --notest Mojolicious
-    end
-
     # plenv, pyenv, etc should be before /opt/local/bin in the path
     path remove /opt/local/bin
     path add /opt/local/bin
+
+    pushd $HOME
+    if not perl -MMojolicious -e 1 &>/dev/null
+        hame-nq cpanm --notest Mojolicious
+    end
+    popd
+
 
    selenized
    popd
