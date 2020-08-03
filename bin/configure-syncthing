@@ -6,6 +6,7 @@ use Mojo::DOM;
 use Mojo::File qw(path);
 use Sys::Hostname;
 
+chdir $HOME;
 
 my $SYNCTHING
   = $OSNAME eq 'darwin'
@@ -39,13 +40,13 @@ my $dom   = Mojo::DOM->new("$xml_prefix$input");
 
 $dom->find('gui user')->map('remove');
 $dom->find('gui password')->map('remove');
+$dom->at('gui')->append_content($dom->new_tag(user     => $user));
+$dom->at('gui')->append_content($dom->new_tag(password => $password));
 
 if ($OSNAME eq 'darwin') {
   $dom->at('gui address')->content("127.0.0.1:8384");
 }
 else {
-  $dom->at('gui')->append_content($dom->new_tag(user     => $user));
-  $dom->at('gui')->append_content($dom->new_tag(password => $password));
   $dom->at('gui address')->content("${hostname}:8384");
 }
 
