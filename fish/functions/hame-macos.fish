@@ -4,6 +4,8 @@ function hame-macos
         defaults write com.apple.screencapture location ~/Documents/Screenshots
         killall SystemUIServer
     end
+    defaults write com.apple.dock autohide-time-modifier -float 0.15
+    killall Dock
 
     command find ~/.config/alfred -type f -xattrname com.apple.quarantine -print0 | xargs -0 xattr -vd com.apple.quarantine
     command find ~/Sync -type f -xattrname com.apple.quarantine -print0 | xargs -0 xattr -vd com.apple.quarantine

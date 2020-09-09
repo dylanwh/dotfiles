@@ -35,3 +35,6 @@ symbol = "ruby "
 
 [golang]
 symbol = "go "
+
+[java]
+disabled = true
