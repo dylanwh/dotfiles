@@ -2,8 +2,6 @@ function hame
     argparse "f/force" -- $argv
     pushd $HOME
 
-    $HOME/Git/dylanwh/home/bin/abraham-linkhome
-
     set -U fish_greeting ''
     set -Ux SKIM_DEFAULT_OPTIONS '--preview-window right:70% --bind \'?:toggle-preview,ctrl-o:execute-silent(open {})\''
     set -Ux SKIM_DEFAULT_COMMAND 'fd --type f'
@@ -45,10 +43,6 @@ function hame
             hame-macos
     end
 
-    if not have mosh
-        echo installing mosh
-        install_mosh
-    end
     if not have nq
         echo installing nq
         install_nq
@@ -82,22 +76,26 @@ function hame
         hame-nq plenv global $default_perl
         hame-nq plenv local $default_perl
     end
+    
     # plenv, pyenv, etc should be before /opt/local/bin in the path
     path remove /opt/local/bin
     path add /opt/local/bin
 
-    pushd $HOME
     if not perl -MMojolicious -e 1 &>/dev/null
         hame-nq cpanm --notest Mojolicious
     end
+    if not [ -f $HOME/.local/bin/got ]
+        hame-nq cpanm --notest App::GitGot
+        hame-nq cpanm --notest Path::Iterator::Rule
+        hame-nq cpanm --notest JSON
+        hame-nq ln -s $HOME/.plenv/versions/$default_perl/bin/got $HOME/.local/bin/got
+    end
+
+    selenized
     popd
-
-
-   selenized
-   popd
-   set new_fish_user_path $fish_user_path
-   set --erase -g fish_user_path
-   set -U fish_user_path $new_fish_user_path
-   path prune
+    set new_fish_user_path $fish_user_path
+    set --erase -g fish_user_path
+    set -U fish_user_path $new_fish_user_path
+    path prune
 end
 
