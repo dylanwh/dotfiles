@@ -11,6 +11,7 @@ function hame-emacs
     if not [ -d .emacs.d/.local ]
         hame-nq doom -y install --no-fonts
     end
+    doom sync
     popd
 end
 

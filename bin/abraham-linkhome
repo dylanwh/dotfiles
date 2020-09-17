@@ -65,26 +65,6 @@ if (-d "$HOME/.git") {
 }
 
 mkpath "$HOME/.ssh";
-if ($OSNAME eq 'darwin') {
-  if (-f "$HOME/Sync/ssh/authorized_keys") {
-    system('ln', '-fv', "$HOME/Sync/ssh/authorized_keys",
-      "$HOME/.ssh/authorized_keys");
-  }
-  else {
-    system('curl', '-s', '-o', "$HOME/.ssh/authorized_keys",
-      "https://github.com/dylanwh.keys");
-  }
-}
-else {
-  if (-f "$HOME/Sync/ssh/authorized_keys") {
-    provide("$HOME/Sync/ssh/authorized_keys", ".ssh/authorized_keys");
-  }
-  else {
-    rm_if_link "$HOME/.ssh/authorized_keys";
-    system('ssh-import-id', 'gh:dylanwh');
-  }
-}
-
 rm_if_link "$HOME/.ssh/config.d";
 mkpath "$HOME/.ssh/config.d";
 foreach my $file (glob "$REPO/ssh/config.d/*") {
