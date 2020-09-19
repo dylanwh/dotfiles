@@ -1,4 +1,3 @@
-
 [git_branch]
 style="fg:#a67bf5"
 
@@ -18,9 +17,6 @@ style = "fg:15"
 ssh_only = true
 disabled = false
 
-[python]
-disabled = true
-
 [directory]
 style="fg:12 bold"
 truncate_to_repo = false
@@ -30,11 +26,11 @@ fish_style_pwd_dir_length = 1
 [ruby]
 symbol = "ruby "
 
-#[python]
-#symbol = "python "
-
 [golang]
 symbol = "go "
+
+[python]
+disabled = true
 
 [java]
 disabled = true
