@@ -91,7 +91,6 @@ function hame
         hame-nq ln -s $HOME/.plenv/versions/$default_perl/bin/got $HOME/.local/bin/got
     end
 
-    selenized
     popd
     set new_fish_user_path $fish_user_path
     set --erase -g fish_user_path

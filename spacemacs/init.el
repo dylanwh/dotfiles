@@ -355,10 +355,6 @@ you should place your code here."
 
   (add-to-list 'auto-mode-alist '("\\.t\\'" . perl-mode))
 
-  (use-package cperl-mode
-    :config
-    (progn
-      (add-hook 'cperl-mode-hook #'my-cperl-mode)))
 
   ;; For python
   (add-hook 'python-mode-hook #'(lambda () (modify-syntax-entry ?_ "w")))

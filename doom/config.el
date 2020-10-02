@@ -3,7 +3,6 @@
 ;; Place your private configuration here! Remember, you do not need to run 'doom
 ;; sync' after modifying this file!
 
-
 ;; Some functionality uses this to identify you, e.g. GPG configuration, email
 ;; clients, file templates and snippets.
 (setq user-full-name "Dylan Hardison"
@@ -40,7 +39,7 @@
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
 (setq display-line-numbers-type t)
 
-
+(load! "perltidy.el")
 ;; Here are some additional functions/macros that could help you configure Doom:
 ;;
 ;; - `load!' for loading external *.el files relative to this one
@@ -57,3 +56,23 @@
 ;;
 ;; You can also try 'gd' (or 'C-c g d') to jump to their definition and see how
 ;; they are implemented.
+
+(defalias 'perl-mode 'cperl-mode)
+
+(defun my-cperl-mode ()
+  (cperl-set-style "Whitesmith"))
+
+(after! cperl-mode
+    (define-key cperl-mode-map "{" nil)
+    (setq cperl-highlight-variables-indiscriminately t)
+
+(add-hook 'cperl-mode-hook #'my-cperl-mode))
+
+;; For python
+(add-hook 'python-mode-hook #'(lambda () (modify-syntax-entry ?_ "w")))
+;; For perl
+(add-hook 'cperl-mode-hook #'(lambda () (modify-syntax-entry ?_ "w")))
+;; For ruby
+(add-hook 'ruby-mode-hook #'(lambda () (modify-syntax-entry ?_ "w")))
+;; For Javascript
+(add-hook 'js2-mode-hook #'(lambda () (modify-syntax-entry ?_ "w")))
