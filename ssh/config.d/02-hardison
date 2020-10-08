@@ -10,4 +10,3 @@ Host *.hardison.net
     ControlPersist yes
     StrictHostKeyChecking yes
     ForwardAgent yes
-    AddressFamily inet6
