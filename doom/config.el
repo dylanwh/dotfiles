@@ -76,3 +76,5 @@
 (add-hook 'ruby-mode-hook #'(lambda () (modify-syntax-entry ?_ "w")))
 ;; For Javascript
 (add-hook 'js2-mode-hook #'(lambda () (modify-syntax-entry ?_ "w")))
+
+(add-hook 'ruby-mode-hook 'evil-ruby-text-objects-mode)
