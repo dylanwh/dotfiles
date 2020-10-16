@@ -7,6 +7,9 @@ function hame-macos
     defaults write com.apple.dock autohide-time-modifier -float 0.15
     killall Dock
 
+    defaults write com.microsoft.VSCode ApplePressAndHoldEnabled -bool false
+    defaults write -g AppleShowAllExtensions -bool true
+
     command find ~/.config/alfred -type f -xattrname com.apple.quarantine -print0 | xargs -0 xattr -vd com.apple.quarantine
     command find ~/Sync -type f -xattrname com.apple.quarantine -print0 | xargs -0 xattr -vd com.apple.quarantine
 
