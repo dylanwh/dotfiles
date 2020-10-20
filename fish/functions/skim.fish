@@ -3,7 +3,7 @@
 function skim
     set query "$argv"
     set results (mktemp)
-    sk --ansi -i -m \
+    sk-tmux --ansi -i -m \
         -c 'rg --color=always --line-number \'{}\'' \
         --preview 'preview.sh {}' \
         --preview-window 'right:70%' \

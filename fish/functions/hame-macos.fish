@@ -1,11 +1,14 @@
 function hame-macos
-
-    if not defaults read com.apple.screencapture location |grep -q Screenshots
+    pushd $HOME
+    if not defaults read com.apple.screencapture location | grep -q Screenshots
         defaults write com.apple.screencapture location ~/Documents/Screenshots
         killall SystemUIServer
     end
-    defaults write com.apple.dock autohide-time-modifier -float 0.15
-    killall Dock
+
+    if not test (defaults read com.apple.dock autohide-time-modifier) -eq 0.15
+        defaults write com.apple.dock autohide-time-modifier -float 0.15
+        killall Dock
+    end
 
     defaults write com.microsoft.VSCode ApplePressAndHoldEnabled -bool false
     defaults write -g AppleShowAllExtensions -bool true
@@ -19,9 +22,11 @@ function hame-macos
     set REPO (realpath (readlink $HOME/.config/fish)/..)
 
     set st_plist $HOME/Library/LaunchAgents/syncthing.plist
-    if not test -f $st_plist
+    not test -f $st_plist
+    and if have syncthing
         set st_temp (mktemp)
         mojo-pp $REPO/syncthing.plist.ep > $st_temp
         and command mv -v $st_temp $st_plist
     end
+    popd
 end
