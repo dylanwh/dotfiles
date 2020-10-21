@@ -1,7 +1,9 @@
-# Defined in /var/folders/ch/9q4qpbxn3yxczpxmqzpb4xjw0000gn/T//fish.TfflIJ/gd.fish @ line 1
+# Defined in /var/folders/ch/9q4qpbxn3yxczpxmqzpb4xjw0000gn/T//fish.bHGcgb/gd.fish @ line 2
 function gd --argument query
     test -n "$query"
     and set sk_args -q "$query"
-    set dir (list-github-repos | sk $sk_args -p 'cd> ')
+    set -lx SKIM_DEFAULT_COMMAND list-github-repos
+    set dir (sk-tmux $sk_args -p 'cd> ')
     and cd ~/Git/$dir
+    commandline -f repaint
 end
