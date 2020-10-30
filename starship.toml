@@ -4,6 +4,9 @@ style="fg:#a67bf5"
 [username]
 disabled = false
 
+[gcloud]
+disabled = true
+
 [git_state]
 style="fg:green"
 
