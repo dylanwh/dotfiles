@@ -1,4 +1,4 @@
-set -x REALNAME "Dylan William Hardison"
+set -x REALNAME "Dylan Hardison"
 set -x EMAIL "dylan@hardison.net"
 set -x MANPAGER 'less -s'
 set -x LANG en_US.UTF-8
@@ -7,9 +7,9 @@ set -x TZ US/Eastern
 set -x GOPATH $HOME/.local/go
 set -g OS (uname)
 
-if [ -x /usr/libexec/path_helper ]
-    source (env -i /usr/libexec/path_helper -c | psub)
-end
+test -x /usr/libexec/path_helper
+and source (env -i /usr/libexec/path_helper -c | psub)
+
 set -U fish_user_paths $fish_user_paths
 
 set -g shell_parent (ps -o ppid= $fish_pid | xargs ps -o comm=)
@@ -41,3 +41,6 @@ if status --is-interactive
             abbr -a -g vi vim
     end
 end
+
+test -f $HOME/.config/fish/local.fish
+and source $HOME/.config/fish/local.fish
