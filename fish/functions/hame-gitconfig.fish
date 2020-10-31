@@ -14,5 +14,6 @@ function hame-gitconfig
    git config --global color.status auto
    git config --global color.branch auto
    git config --global core.excludesfile "~/.cvsignore"
+   git config --global pull.ff only
 end
 

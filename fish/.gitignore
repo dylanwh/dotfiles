@@ -5,3 +5,4 @@ pyenv.fish
 plenv.fish
 chef.fish
 brew.fish
+local.fish
