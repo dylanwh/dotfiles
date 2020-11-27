@@ -23,6 +23,9 @@ function hame
 
     abbr -Uq s
     and abbr -U --erase s
+    abbr -U -- rm 'rm -i'
+    abbr -U -- mv 'mv -i'
+    abbr -U -- cp 'cp -i'
     abbr -U -- ci 'git commit'
     abbr -U -- gap 'git add -p'
     abbr -U -- gco 'git checkout'
