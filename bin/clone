@@ -1,0 +1,35 @@
+#!/usr/bin/env perl
+use Mojo::Base -signatures;
+use Env qw($HOME @PATH);
+use Mojo::File qw(path);
+use List::Util qw(any);
+
+my $repo = shift @ARGV;
+$repo =~ m{
+  ^
+  (?: (?<protocol> https? | git )://
+    | (?: (?<user> [^@]+?)@)? )
+  (?<host> [a-zA-Z0-9.-]+)
+  [:/]
+  (?<path> .+?)
+  (?:\.git)?
+  $
+}xs or die "cannot understand $repo\n";
+
+my $name = $+{host} eq 'github.com' ? $+{path} : "$+{host}/$+{path}";
+my $host = $+{host};
+my $path = path($HOME, "Git", $name);
+
+if (not -d $path) {
+  $path->dirname->make_path;
+  my $have_hub = any { -x "$_/hub" } @PATH;
+  my $git_cmd  = $have_hub ? 'hub' : 'git';
+  if (!$have_hub && !$host) {
+    $repo = 'git@github.com:' . $repo;
+  }
+  system($git_cmd, 'clone', '-q', $repo, $path) == 0 or die "clone failed\n";
+}
+else {
+  warn "already cloned $repo\n";
+}
+say $path;
