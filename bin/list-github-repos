@@ -1,4 +1,7 @@
 #!/bin/sh
+GITHUB_CHECKOUT_DIR="${GITHUB_CHECKOUT_DIR:-$HOME/Git}"
+GITHUB_CHECKOUT_DIR="${GITHUB_CHECKOUT_DIR//\~/$HOME}"
+export GITHUB_CHECKOUT_DIR
 fd \
   --exec-batch \
     rg --no-heading -INor '$1' \
@@ -6,5 +9,5 @@ fd \
     '{}/config' \
   ';' \
   -Htd '^\.git$' \
-  -d3 \
-  ~/Git | sort -u
+  -d${GITHUB_CHECKOUT_DEPTH:-3} \
+  $GITHUB_CHECKOUT_DIR | sort -u
