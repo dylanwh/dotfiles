@@ -55,6 +55,7 @@ function hame
     hame-fq
 
     hame-env
+    hame-git
     hame-vim
     hame-emacs
 

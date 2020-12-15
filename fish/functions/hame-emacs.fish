@@ -6,7 +6,7 @@ function hame-emacs
         end
     end
 
-    hame-git -n doom-emacs -p .emacs.d -u 'hlissner/doom-emacs'
+    hame-clone -n doom-emacs -p .emacs.d -u 'hlissner/doom-emacs'
     path add ~/.emacs.d/bin
     if not [ -d .emacs.d/.local ]
         hame-nq doom -y install --no-fonts

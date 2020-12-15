@@ -1,8 +1,8 @@
 function hame-env
 
-    hame-git -n plenv      -p .plenv                    -u 'tokuhirom/plenv.git'
-    hame-git -n perl-build -p .plenv/plugins/perl-build -u 'tokuhirom/perl-build.git'
-    hame-git -n pyenv      -p .pyenv                    -u 'pyenv/pyenv.git'
+    hame-clone -n plenv      -p .plenv                    -u 'tokuhirom/plenv.git'
+    hame-clone -n perl-build -p .plenv/plugins/perl-build -u 'tokuhirom/perl-build.git'
+    hame-clone -n pyenv      -p .pyenv                    -u 'pyenv/pyenv.git'
 
     path add ~/.plenv/bin
     path add ~/.plenv/shims

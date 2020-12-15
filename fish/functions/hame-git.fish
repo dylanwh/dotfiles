@@ -1,27 +1,19 @@
 function hame-git
-    argparse 'n/name=' 'p/path=' 'u/url=' -- $argv
-    or return 1
-
-    if not [ -n "$_flag_path" -a -n "$_flag_url" -a "$_flag_name" ]
-        return 2
-    end
-
-    pushd $HOME
-    if [ -d "$_flag_path/.git" ]
-        if [ $HAME_UPDATE ]
-            pushd $_flag_path
-            echo -n "$_flag_name: "
-            command git pull
-            popd
-        end
-    else
-        set -l parent (dirname $_flag_path)
-        if [ "$parent" != "." ]
-            mkdir -vp $parent
-        end
-        echo git clone $_flag_name
-        command git clone --depth 1 https://github.com/$_flag_url $_flag_path
-    end
-    popd
+   git config --global push.default simple
+   git config --global user.email $EMAIL
+   git config --global user.name "$REALNAME"
+   git config --global alias.co checkout
+   git config --global alias.ci commit
+   git config --global alias.br branch
+   git config --global alias.st "status --short --branch"
+   git config --global alias.up "!git fetch --all --tags --prune && git pull --rebase"
+   git config --global alias.reword "commit --amend"
+   git config --global alias.top "!pwd"
+   git config --global color.ui auto
+   git config --global color.diff auto
+   git config --global color.status auto
+   git config --global color.branch auto
+   git config --global core.excludesfile "~/.cvsignore"
+   git config --global pull.ff only
 end
 
