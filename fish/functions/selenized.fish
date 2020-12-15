@@ -8,6 +8,7 @@ set -g selenized_colors \
     br_yellow br_blue \
     br_magenta br_cyan \
     br_orange br_violet
+set -g selenized_variants dark black light white
 
 set -l variant dark
 set -g selenized_{$variant}_bg_0 103c48 112e38
@@ -34,8 +35,6 @@ set -g selenized_{$variant}_br_magenta ff84cd fb69c4
 set -g selenized_{$variant}_br_cyan 53d6c7 50cfba
 set -g selenized_{$variant}_br_orange fd9456 f67e41
 set -g selenized_{$variant}_br_violet bd96fa ab80fc
-
-
 
 # Selenized black
 
@@ -128,15 +127,23 @@ function selenized
     end
     if [ -z $_flag_modules ]
         set _flag_modules fish vivid grep tmux vim
+        if [ -n $WSL_DISTRO_NAME ]
+            set _flag_modules $_flag_modules winterm
+        end
     end
     set -l s_scope ''
     if [ -n $_flag_env ]
         set s_scope '-gx'
     end
+    set -l s_colors
+    set -l selenized_env s_variant=$_flag_variant
     for color in $selenized_colors
         set -l var selenized_{$_flag_variant}_{$color}[2]
+        set -l env s_$color
         set $s_scope s_$color $$var
+        set selenized_env $selenized_env "$env=#$$var"
     end
+
     if [ $_flag_env ]
         return
     end
@@ -180,7 +187,15 @@ function selenized
                 set -U fish_color_user $s_br_green brgreen
                 set -U fish_color_valid_path $s_fg_1 white --underline
                 set -U fish_color_vcs $s_violet magenta
+            case winterm
+                set -l winterm_dir /mnt/c/Users/dylan/AppData/Local/Packages/Microsoft.WindowsTerminal_*/LocalState
+                set -l s_dir   $HOME/.config/selenized
+                set -l tempfile (mktemp -t winterm-settings-XXXXXX)
 
+                sed -f $s_dir/winterm.sed < $winterm_dir/settings.json | env $selenized_env jq -f $s_dir/winterm.jq > $tempfile
+                and jq < $tempfile > /dev/null
+                and jq < $tempfile > $winterm_dir/settings.json
+                rm $tempfile
             case vivid
                 if not have vivid
                     echo "vivid not found; cargo install vivid?" >&2
@@ -201,18 +216,14 @@ function selenized
                 end >$vivid_theme.yml
                 set --erase -g LS_COLORS
                 set -Ux LS_COLORS (vivid generate $vivid_theme.yml)
+                set -l s
                 command rm $vivid_theme.yml
                 echo $LS_COLORS | tr ':' "\n" | sort -r | tr '\n' ':'  > ~/.config/fish/ls_colors
             case grep
                 set -Ux GREP_COLOR '7;33'
             case tmux
-                set -l tmux_vars
-                for color in $selenized_colors
-                    set -l var s_$color
-                    set tmux_vars $tmux_vars "$var=#$$var"
-                end
                 set -l tmux_theme (mktemp -t selenized-XXXXXX)
-                env $tmux_vars tmux-pp < $HOME/.config/selenized/tmux.ep >$tmux_theme
+                env $selenized_env tmux-pp < $HOME/.config/selenized/tmux.ep >$tmux_theme
                 if tmux info >/dev/null ^/dev/null
                     tmux source $tmux_theme
                 end
