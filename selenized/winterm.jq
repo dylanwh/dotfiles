@@ -30,7 +30,8 @@
         antialiasingMode:  "cleartype",
         cursorShape:       "filledBox",
         fontFace:          "Source Code Pro for Powerline",
-        fontSize:          12
+        fontSize:          12,
+        fontWeight:        "medium"
       },
       list: [{
           guid: "{61c54bbd-c2c6-5271-96e7-009a87ff44bf}",

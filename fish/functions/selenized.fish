@@ -227,6 +227,7 @@ function selenized
                 if tmux info >/dev/null ^/dev/null
                     tmux source $tmux_theme
                 end
+                mkdir -p ~/.tmux
                 command mv $tmux_theme ~/.tmux/theme.conf
             case vim
                 set -l vim_bg

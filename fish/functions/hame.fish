@@ -45,6 +45,9 @@ function hame
     switch $OS
         case Darwin
             hame-macos
+        case Linux
+            [ -f /etc/debian_version ]
+            and hame-debian
     end
 
     if not have nq
