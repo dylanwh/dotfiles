@@ -2,16 +2,23 @@ function hame-debian
     test -f /etc/sudoers.d/99-apt
     or echo "$USER ALL = (root) NOPASSWD: /usr/bin/apt, /usr/bin/apt-get" | sudo tee /etc/sudoers.d/99-apt
 
-    set packages \
-        build-essential \
-        libssl-dev \
-        nq \
-        tmux \
-        git \
-        hub \
-        autoconf \
+    set packages          \
+        autoconf          \
+        build-essential   \
+        emacs-nox         \
+        git               \
+        golang-go         \
+        hub               \
+        libncurses-dev    \
+        libssl-dev        \
+        moreutils         \
+        nmap              \
+        nq                \
         protobuf-compiler \
-        emacs-nox
+        pv                \
+        tmux              \
+        vim-nox
+
 
     for pkg in $packages
         echo $pkg
