@@ -7,6 +7,7 @@ function hame-debian
         build-essential   \
         curl              \
         emacs-nox         \
+        fd-find           \
         git               \
         golang-go         \
         hub               \
@@ -19,6 +20,7 @@ function hame-debian
         nq                \
         protobuf-compiler \
         pv                \
+        ripgrep           \
         tmux              \
         vim-nox
 
@@ -30,4 +32,8 @@ function hame-debian
     and md5sum -c ~/.cache/hame/packages.md5 ^/dev/null >/dev/null
     or sudo apt install -y $packages
     md5sum ~/.cache/hame/packages.txt > ~/.cache/hame/packages.md5 ^/dev/null
+
+    [ -f /usr/lib/cargo/bin/fd ]
+    and not [ -f ~/.local/bin/fd ]
+    and ln -sv /usr/lib/cargo/bin/fd ~/.local/bin/fd
 end
