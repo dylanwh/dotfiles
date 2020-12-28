@@ -127,7 +127,7 @@ function selenized
     end
     if [ -z $_flag_modules ]
         set _flag_modules fish vivid grep tmux vim
-        if [ -n $WSL_DISTRO_NAME ]
+        if [ -n "$WSL_DISTRO_NAME" ]
             set _flag_modules $_flag_modules winterm
         end
     end
@@ -199,6 +199,7 @@ function selenized
             case vivid
                 if not have vivid
                     echo "vivid not found; cargo install vivid?" >&2
+                    set --erase -g LS_COLORS
                     set -Ux LS_COLORS (cat ~/.config/fish/ls_colors)
                     continue
                 end
