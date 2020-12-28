@@ -5,10 +5,12 @@ function hame-debian
     set packages          \
         autoconf          \
         build-essential   \
+        curl              \
         emacs-nox         \
         git               \
         golang-go         \
         hub               \
+        jq                \
         libncurses-dev    \
         libssl-dev        \
         moreutils         \
@@ -19,7 +21,6 @@ function hame-debian
         pv                \
         tmux              \
         vim-nox
-
 
     for pkg in $packages
         echo $pkg
