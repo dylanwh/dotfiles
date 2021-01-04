@@ -8,9 +8,11 @@ disabled = false
 disabled = true
 
 [git_state]
+disabled = true
 style="fg:green"
 
 [git_status]
+disabled = true
 style="fg:#a67bf5"
 stashed = 'S'
 deleted = 'D'
