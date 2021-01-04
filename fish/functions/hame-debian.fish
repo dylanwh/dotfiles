@@ -12,6 +12,7 @@ function hame-debian
         libncurses-dev    \
         libssl-dev        \
         moreutils         \
+        ncdu              \
         nmap              \
         nq                \
         protobuf-compiler \

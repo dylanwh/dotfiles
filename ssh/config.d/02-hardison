@@ -1,7 +1,7 @@
 # short aliases, to work around new ssh versions re-reading configuration values.
-Host freya frigg idun kvasir lofn lofn-* njord odin sjofn *.dur.me
+Host freya frigg idun kvasir lofn lofn-* njord odin sjofn
     CanonicalizeHostname always
-    CanonicalDomains dur.me
+    CanonicalDomains hardison.net
     ControlPersist yes
     StrictHostKeyChecking yes
     ForwardAgent yes
