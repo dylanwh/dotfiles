@@ -12,17 +12,17 @@ and source (env -i /usr/libexec/path_helper -c | psub)
 
 set -U fish_user_paths $fish_user_paths
 
-set -g shell_parent (ps -o ppid= $fish_pid | xargs ps -o comm=)
+set -xg shell_parent (ps -o ppid= $fish_pid | xargs ps -o comm=)
 
-if have caffeinate; and have nq
-    switch $shell_parent
-        case 'ssh*' 'mosh*'
+switch $shell_parent
+    case 'ssh*' 'mosh*'
+        if have caffeinate; and have nq
             mkdir -p $HOME/.cache
             # I'm not sure why, but if I don't run nq inside nq, it sometimes fails to clean up its files
             # Might be a bug, or something about how macOS handles the session leader being teriminated?
             # Anyway, this pretty much ensures remove logins prevent the mac from going to sleep (as long as it is running on AC)
             env "NQDIR=$HOME/.cache/caffinate.$fish_pid" nq -c -q -- nq -c -q -- caffeinate -s -w $fish_pid
-    end
+        end
 end
 
 if status --is-interactive
