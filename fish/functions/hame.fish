@@ -14,6 +14,7 @@ function hame
     path clear
     path add ~/.local/bin
     path add /opt/local/bin
+    path add /snap/bin
 
     mkdir -p ~/.cache/hame
 
