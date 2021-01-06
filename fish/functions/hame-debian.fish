@@ -9,7 +9,6 @@ function hame-debian
         emacs-nox         \
         fd-find           \
         git               \
-        golang-go         \
         hub               \
         jq                \
         libncurses-dev    \
