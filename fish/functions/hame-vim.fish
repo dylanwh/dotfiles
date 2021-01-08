@@ -30,6 +30,7 @@ function hame-vim
     hame-clone -n  vim-go            -p  "$vim/start/go"                -u  "fatih/vim-go.git"
     hame-clone -n  vinegar           -p  "$vim/start/vinegar"           -u  "tpope/vim-vinegar"
     hame-clone -n  applescript       -p  "$vim/start/applescript"       -u  "dearrrfish/vim-applescript"
+    hame-clone -n  jsonnet           -p  "$vim/start/jsonnet"           -u  "google/vim-jsonnet"
 
     set rm_packs  "$vim/start/fzy" \
                   "$vim/start/fzy-builtins" \

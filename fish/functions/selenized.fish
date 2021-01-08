@@ -136,13 +136,6 @@ function selenized
         set s_scope '-gx'
     end
     set -l s_colors
-    set -l selenized_env s_variant=$_flag_variant
-    for color in $selenized_colors
-        set -l var selenized_{$_flag_variant}_{$color}[2]
-        set -l env s_$color
-        set $s_scope s_$color $$var
-        set selenized_env $selenized_env "$env=#$$var"
-    end
 
     if [ $_flag_env ]
         return
@@ -190,12 +183,13 @@ function selenized
             case winterm
                 set -l winterm_dir /mnt/c/Users/dylan/AppData/Local/Packages/Microsoft.WindowsTerminal_*/LocalState
                 set -l s_dir   $HOME/.config/selenized
-                set -l tempfile (mktemp -t winterm-settings-XXXXXX)
-
-                sed -f $s_dir/winterm.sed < $winterm_dir/settings.json | env $selenized_env jq -f $s_dir/winterm.jq > $tempfile
-                and jq < $tempfile > /dev/null
-                and jq < $tempfile > $winterm_dir/settings.json
-                rm $tempfile
+                set -l jsonnet_args -A "WSL_DISTRO_NAME=$WSL_DISTRO_NAME" -A "s_variant=$_flag_variant"
+                for color in $selenized_colors
+                    set -l var selenized_{$_flag_variant}_{$color}[2]
+                    set -l name s_$color
+                    set -a jsonnet_args -A "$name=#$$var"
+                end
+                jsonnet $jsonnet_args $s_dir/winterm.jsonnet #> $winterm_dir/settings.json
             case vivid
                 if not have vivid
                     echo "vivid not found; cargo install vivid?" >&2
@@ -224,6 +218,13 @@ function selenized
                 set -Ux GREP_COLOR '7;33'
             case tmux
                 set -l tmux_theme (mktemp -t selenized-XXXXXX)
+                set -l selenized_env s_variant=$_flag_variant
+                for color in $selenized_colors
+                    set -l var selenized_{$_flag_variant}_{$color}[2]
+                    set -l env s_$color
+                    set $s_scope s_$color $$var
+                    set -a selenized_env "$env=#$$var"
+                end
                 env $selenized_env tmux-pp < $HOME/.config/selenized/tmux.ep >$tmux_theme
                 if tmux info >/dev/null ^/dev/null
                     tmux source $tmux_theme

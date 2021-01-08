@@ -76,6 +76,9 @@ function hame
         if not have gron
             hame-nq go get github.com/tomnomnom/gron
         end
+        if not have jsonnet
+            hame-nq go get github.com/google/go-jsonnet/cmd/jsonnet
+        end
     end
 
     set -l default_perl 5.32.0
