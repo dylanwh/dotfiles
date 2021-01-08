@@ -99,6 +99,6 @@ disabled = true
 disabled = true
 
 [env_var]
-variable = "shell_parent"
-format = "via [mosh]($style) "
+variable = "shell_via"
+format = "via [$env_value]($style) "
 style="green"
