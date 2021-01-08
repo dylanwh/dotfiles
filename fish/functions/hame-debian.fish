@@ -9,8 +9,10 @@ function hame-debian
         emacs-nox         \
         fd-find           \
         git               \
+        gron              \
         hub               \
         jq                \
+        jsonnet           \
         libncurses-dev    \
         libssl-dev        \
         moreutils         \

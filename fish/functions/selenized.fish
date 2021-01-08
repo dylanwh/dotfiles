@@ -137,6 +137,11 @@ function selenized
     end
     set -l s_colors
 
+    for color in $selenized_colors
+        set -l var selenized_{$_flag_variant}_{$color}[2]
+        set $s_scope s_$color $$var
+    end
+
     if [ $_flag_env ]
         return
     end
@@ -189,7 +194,7 @@ function selenized
                     set -l name s_$color
                     set -a jsonnet_args -A "$name=#$$var"
                 end
-                jsonnet $jsonnet_args $s_dir/winterm.jsonnet #> $winterm_dir/settings.json
+                jsonnet $jsonnet_args $s_dir/winterm.jsonnet > $winterm_dir/settings.json
             case vivid
                 if not have vivid
                     echo "vivid not found; cargo install vivid?" >&2

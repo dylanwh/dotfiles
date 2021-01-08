@@ -1,4 +1,11 @@
 local wsl_guid = '{07b52e3e-de2c-5db4-bd2d-ba144ed6c273}';
+local profile_defaults = {
+  antialiasingMode: 'cleartype',
+  cursorShape: 'filledBox',
+  fontFace: 'Source Code Pro for Powerline',
+  fontSize: 12,
+  fontWeight: 'medium',
+};
 local scheme(var) = 'Selenized ' + var;
 
 function(WSL_DISTRO_NAME,
@@ -26,6 +33,9 @@ function(WSL_DISTRO_NAME,
          s_br_orange,
          s_br_violet)
   {
+    '$schema': 'https://aka.ms/terminal-profiles-schema',
+    copyFormatting: false,
+    copyOnSelect: false,
     defaultProfile: wsl_guid,
     schemes: [{
       name: scheme(s_variant),
@@ -51,13 +61,7 @@ function(WSL_DISTRO_NAME,
       brightWhite: s_fg_1,
     }],
     profiles: {
-      defaults: {
-        antialiasingMode: 'cleartype',
-        cursorShape: 'filledBox',
-        fontFace: 'Source Code Pro for Powerline',
-        fontSize: 12,
-        fontWeight: 'medium',
-      },
+      defaults: profile_defaults,
       list: [
         {
           guid: '{61c54bbd-c2c6-5271-96e7-009a87ff44bf}',
