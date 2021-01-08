@@ -95,6 +95,9 @@ symbol = "go "
 [python]
 disabled = true
 
+[perl]
+disabled = true
+
 [java]
 disabled = true
 
