@@ -15,8 +15,6 @@ set -U fish_user_paths $fish_user_paths
 set -g shell_parent (ps -o ppid= $fish_pid | xargs ps -o comm=)
 
 switch $shell_parent
-    case 'ssh*'
-        set -x shell_via ssh
     case 'mosh*'
         set -x shell_via mosh
 end
