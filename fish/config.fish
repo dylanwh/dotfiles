@@ -17,6 +17,8 @@ set -g shell_parent (ps -o ppid= $fish_pid | xargs ps -o comm=)
 switch $shell_parent
     case 'mosh*'
         set -x shell_via mosh
+    case '*'
+        set --erase shell_via
 end
 
 switch $shell_parent
