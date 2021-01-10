@@ -19,6 +19,7 @@ function hame-debian
         ncdu              \
         nmap              \
         nq                \
+        pkg-config        \
         protobuf-compiler \
         pv                \
         ripgrep           \

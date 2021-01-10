@@ -97,6 +97,20 @@ function(WSL_DISTRO_NAME,
     actions: [
       {
         command: {
+          action: 'adjustFontSize',
+          delta: 1,
+        },
+        keys: 'ctrl+shift+i',
+      },
+      {
+        command: {
+          action: 'adjustFontSize',
+          delta: -1,
+        },
+        keys: 'ctrl+shift+o',
+      },
+      {
+        command: {
           action: 'copy',
           singleLine: false,
         },
@@ -113,6 +127,10 @@ function(WSL_DISTRO_NAME,
       {
         command: { action: 'splitPane', split: 'auto', splitMode: 'duplicate' },
         keys: 'alt+shift+d',
+      },
+      {
+        command: 'commandPalette',
+        keys: 'ctrl+shift+p',
       },
     ],
   }
