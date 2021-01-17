@@ -47,13 +47,13 @@ if ($OSNAME eq 'darwin') {
   $dom->at('gui address')->content("127.0.0.1:8384");
 }
 else {
-  $dom->at('gui address')->content("${hostname}:8384");
+  $dom->at('gui address')->content("0.0.0.0:8384");
 }
 
 
 $dom->find('options listenAddress')->map('remove');
 $dom->at('options')
-  ->prepend_content($dom->new_tag(listenAddress => "tcp://0.0.0.0:8384"));
+  ->prepend_content($dom->new_tag(listenAddress => "default"));
 # $dom->at('options')
 #   ->prepend_content( $dom->new_tag(listenAddress => "dynamic+https://relays.syncthing.net/endpoint"));
 $dom->at('options globalAnnounceEnabled')->content('false');
