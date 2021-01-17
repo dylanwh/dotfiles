@@ -67,6 +67,7 @@ $dom->at('options startBrowser')->content('false');
 say "devices: ";
 $dom->find("device[name]")->each(sub {
   my $name = $_->attr('name');
+  say "fixing $name";
   $_->find('address')->map('remove');
   $_->append_content($dom->new_tag(address => "quic://$name.hardison.net:22000"));
   $_->append_content($dom->new_tag(address => "tcp://$name.hardison.net:22000"));
