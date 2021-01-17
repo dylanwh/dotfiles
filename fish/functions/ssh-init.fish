@@ -1,4 +1,7 @@
+# Defined in /tmp/fish.TqkGIr/ssh-init.fish @ line 2
 function ssh-init
+    set -q XDG_RUNTIME_DIR
+    or set XDG_RUNTIME_DIR /tmp
     switch (uname)
     case Linux
         set -l socket $XDG_RUNTIME_DIR/ssh-agent.socket
