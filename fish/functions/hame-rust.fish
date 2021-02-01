@@ -1,5 +1,6 @@
 function hame-rust
     path add ~/.cargo/bin
+    pushd $HOME
     if not [ -f .cargo/bin/rustup ]
         set rustup_init (mktemp)
         curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs > $rustup_init
@@ -28,8 +29,11 @@ function hame-rust
         or hame-nq cargo install du-dust
         have delta
         or hame-nq cargo install git-delta
+        have xsv
+        or hame-nq cargo install xsv
         have broot
         and hame-nq cargo uninstall broot
     end
+    popd
 end
 

@@ -37,6 +37,7 @@ function hame
     abbr -U -- pull 'git pull'
     abbr -U -- push 'git push'
     abbr -U -- runti 'docker run --rm -ti'
+    abbr -U -- upstream 'git push --set-upstream origin (git branch --show-current)'
 
     set -lx HAME_FLAGS ""
     if [ $_flag_force ]
