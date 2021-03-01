@@ -15,7 +15,6 @@ my $SYNCTHING
 
 my $name        = (split(/\./, hostname()))[0];
 my $user        = $LOGNAME || 'dylan';
-my $hostname    = "$name.dur.me";
 my $password    = path("$HOME/.st_password_hash")->slurp;
 my $config_file = $SYNCTHING->child("config.xml");
 my $backup_file = $SYNCTHING->child("config.xml~");
