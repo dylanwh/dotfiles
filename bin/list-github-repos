@@ -5,7 +5,7 @@ export GITHUB_CHECKOUT_DIR
 fd \
   --exec-batch \
     rg --no-heading -INor '$1' \
-    'url\s+=\s+(?:(?:git@)?github.com:|(?:https|git)://github.com/)([^.]+)' \
+    'url\s+=\s+(?:(?:git@)?github.com:|(?:https|git)://github.com/)([^.]+(?:\.wiki)?)' \
     '{}/config' \
   ';' \
   -Htd '^\.git$' \
