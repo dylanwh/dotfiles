@@ -18,8 +18,16 @@ set --erase shell_via
 switch $shell_parent
     case 'mosh*'
         set -x shell_via mosh
-    case 'sshd'
+    case 'sshd*'
         ssh-init adopt
+    case 'login' '/usr/bin/login'
+        switch $OS
+            case Darwin
+                ssh-add -q -A
+                or for file in ~/.ssh/id_ed25519 ~/.ssh/id_rsa
+                    ssh-add -K $file
+                end
+        end
 end
 
 switch $shell_parent
