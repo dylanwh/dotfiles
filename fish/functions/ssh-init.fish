@@ -7,6 +7,7 @@ function ssh-init -a cmd
     switch $cmd
         case adopt
             if test -n $SSH_AUTH_SOCK
+                chmod go-wrx $SSH_AUTH_SOCK
                 if test "$SSH_AUTH_SOCK" = "$socket"
                     echo "unable to adopt self" >&2
                     return 1
