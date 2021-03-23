@@ -1,5 +1,5 @@
 # short aliases, to work around new ssh versions re-reading configuration values.
-Host freya freya-vm frigg idun jord kvasir lofn lofn-* loki njord odin odin-wifi sjofn wednesday
+Host freya freya-wifi freya-vm frigg bragi jord kvasir lofn lofn-* loki njord odin odin-wifi sjofn wednesday
     CanonicalizeHostname always
     CanonicalDomains hardison.net
     ControlPersist yes
