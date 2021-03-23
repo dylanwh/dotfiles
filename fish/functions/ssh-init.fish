@@ -16,6 +16,10 @@ function ssh-init -a cmd
                         echo "orphaned $old_socket" >&2
                         rm $socket
                     end
+                else if test -S "$socket"
+                    set --erase -U SSH_AUTH_SOCK
+                    set -gx SSH_AUTH_SOCK $socket
+                    return 0
                 end
 
                 ln -fs $SSH_AUTH_SOCK $socket
