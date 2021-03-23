@@ -47,4 +47,5 @@
 ;(package! builtin-package :recipe (:branch "develop"))
 
 (package! evil-ruby-text-objects)
+(package! fish-mode)
 
