@@ -18,9 +18,8 @@ function ssh-adopt -a cmd
             and return 0
         else if test -S "$SSH_AUTH_SOCK"
             return 0
-        else
-            ln -fs $ORIGINAL_SSH_AUTH_SOCK $SSH_AUTH_SOCK
         end
+        ln -fs $ORIGINAL_SSH_AUTH_SOCK $SSH_AUTH_SOCK
     else if test -e $socket
         set -gx SSH_AUTH_SOCK $socket
     end
