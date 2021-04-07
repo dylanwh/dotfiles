@@ -1,0 +1,51 @@
+#!/usr/bin/env fish
+
+argparse --name=tot 'o/open' 'r/read' 'c/clear' -- $argv
+or exit
+set dot $argv[1]
+set file $argv[2]
+
+
+
+if [ -z "$argv" -o -z "$dot" ]
+    echo "usage: tot [ -o | -r | <file> | - ] <dot>"
+    echo ''
+    echo 'options:'
+    echo '  -o      open dot in window with keyboard focus'
+    echo '  -r      read contents of dot'
+    echo '  -c      clear contents of dot'
+    echo '  <file>  append contents of regular file to dot'
+    echo '  -       append standard input to dot'
+    echo ''
+    echo 'examples:'
+    echo '  $ cal -h | tot 1 -    # put a calendar in first dot'
+    echo '  $ tot 2 MyApp.crash   # put a crash report in second dot'
+    echo ''
+    exit 1
+end
+
+if [ -n "$_flag_o" ]
+    # open dot
+    osascript -e "tell application \"Tot\" to open location \"tot://$dot\""
+    osascript -e "tell application \"Tot\" to activate"
+else if [ -n "$_flag_r" ]
+    # get contents of dot
+    osascript -e "tell application \"Tot\" to open location \"tot://$dot/content\""
+else if [ -n "$_flag_c" ]
+    echo clear contents of dot
+    osascript -e "tell application \"Tot\" to open location \"tot://$dot/replace?text=\""
+else if [ -n "$file" ]
+    if [ "$file" = "-" ]
+        set file ( mktemp -t tot ) || exit 1
+        cat /dev/stdin >$file
+    else if not [ -f "$file" ]
+        then
+        echo "error: not a regular file"
+        exit 1
+    end
+    set text ( string escape -n --style=url < $file | string join '%0a' )
+    osascript -e "tell application \"Tot\" to open location \"tot://$dot/append?text=$text\""
+else
+    echo "error: no dot action specified"
+    exit 1
+end
