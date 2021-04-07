@@ -5,8 +5,10 @@ Host freya freya-wifi freya-vm frigg bragi jord kvasir lofn lofn-* loki njord od
     ControlPersist yes
     StrictHostKeyChecking yes
     ForwardAgent yes
+    AddressFamily inet
 
 Host *.hardison.net
     ControlPersist yes
     StrictHostKeyChecking yes
     ForwardAgent yes
+    AddressFamily inet

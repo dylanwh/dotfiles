@@ -19,7 +19,7 @@ switch $shell_parent
     case 'mosh*'
         set -x shell_via mosh
     case 'sshd*'
-        ssh-adopt
+        smart-ssh-agent
     case 'login' '/usr/bin/login'
         switch $OS
             case Darwin

@@ -1,4 +1,4 @@
-function ssh-adopt -a cmd
+function smart-ssh-agent
     set -q XDG_RUNTIME_DIR
     or set -l XDG_RUNTIME_DIR /tmp
     set -l socket $XDG_RUNTIME_DIR/ssh-agent.socket
@@ -22,5 +22,13 @@ function ssh-adopt -a cmd
         ln -fs $ORIGINAL_SSH_AUTH_SOCK $SSH_AUTH_SOCK
     else if test -e $socket
         set -gx SSH_AUTH_SOCK $socket
+    else
+        test -f $state
+        and source $state
+        or source (ssh-agent -c | tee $state | psub)
+        set -gx ORIGINAL_SSH_AUTH_SOCK $SSH_AUTH_SOCK
+        set -gx SSH_AUTH_SOCK $socket
+        chmod go-wrx $ORIGINAL_SSH_AUTH_SOCK
+        ln -fs $ORIGINAL_SSH_AUTH_SOCK $SSH_AUTH_SOCK
     end
 end
