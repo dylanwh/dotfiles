@@ -21,6 +21,7 @@ function hame
     abbr -U -- ps procs
     abbr -U -- ag rg
     abbr -U -- grep rg
+    abbr -U -- yo yoink
 
     abbr -Uq s
     and abbr -U --erase s

@@ -5,6 +5,7 @@ function hame-vim
     hame-clone -n solarized8        -p "$vim/opt/solarized8"          -u "lifepillar/vim-solarized8"
     hame-clone -n abolish           -p "$vim/start/abolish"           -u "tpope/vim-abolish"
     hame-clone -n ag                -p "$vim/start/ag"                -u "epmatsw/ag.vim"
+    hame-clone -n applescript       -p "$vim/start/applescript"       -u "dearrrfish/vim-applescript"
     hame-clone -n commentary        -p "$vim/start/commentary"        -u "tpope/vim-commentary"
     hame-clone -n cpanfile          -p "$vim/start/cpanfile"          -u "moznion/vim-cpanfile"
     hame-clone -n endwise           -p "$vim/start/endwise"           -u "tpope/vim-endwise"
@@ -14,7 +15,10 @@ function hame-vim
     hame-clone -n fzf               -p "$vim/start/fzf"               -u "junegunn/fzf.vim"
     hame-clone -n gitgutter         -p "$vim/start/gitgutter"         -u "airblade/vim-gitgutter"
     hame-clone -n html5             -p "$vim/start/html5"             -u "othree/html5.vim"
+    hame-clone -n jq                -p "$vim/start/jq"                -u "bfrg/vim-jq"
+    hame-clone -n jsonnet           -p "$vim/start/jsonnet"           -u "google/vim-jsonnet"
     hame-clone -n lightline         -p "$vim/start/lightline"         -u "itchyny/lightline.vim"
+    hame-clone -n osc52             -p "$vim/start/osc52"             -u "fcpg/vim-osc52"
     hame-clone -n perl              -p "$vim/start/perl"              -u "vim-perl/vim-perl"
     hame-clone -n racket            -p "$vim/start/racket"            -u "wlangstroth/vim-racket"
     hame-clone -n rails             -p "$vim/start/rails"             -u "tpope/vim-rails"
@@ -29,9 +33,6 @@ function hame-vim
     hame-clone -n unimpaired        -p "$vim/start/unimpaired"        -u "tpope/vim-unimpaired"
     hame-clone -n vim-go            -p "$vim/start/go"                -u "fatih/vim-go.git"
     hame-clone -n vinegar           -p "$vim/start/vinegar"           -u "tpope/vim-vinegar"
-    hame-clone -n applescript       -p "$vim/start/applescript"       -u "dearrrfish/vim-applescript"
-    hame-clone -n jsonnet           -p "$vim/start/jsonnet"           -u "google/vim-jsonnet"
-    hame-clone -n osc52             -p "$vim/start/osc52"             -u "fcpg/vim-osc52"
 
     set rm_packs  "$vim/start/fzy" \
                   "$vim/start/fzy-builtins" \
