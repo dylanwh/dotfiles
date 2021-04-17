@@ -24,6 +24,7 @@ function hame-vim
     hame-clone -n rails             -p "$vim/start/rails"             -u "tpope/vim-rails"
     hame-clone -n repeat            -p "$vim/start/repeat"            -u "tpope/vim-repeat"
     hame-clone -n rhubarb           -p "$vim/start/rhubarb"           -u "tpope/vim-rhubarb"
+    hame-clone -n splitjoin         -p "$vim/start/splitjoin"         -u "AndrewRadev/splitjoin.vim"
     hame-clone -n supertab          -p "$vim/start/supertab"          -u "ervandew/supertab"
     hame-clone -n surround          -p "$vim/start/surround"          -u "tpope/vim-surround"
     hame-clone -n syntastic         -p "$vim/start/syntastic"         -u "vim-syntastic/syntastic"
