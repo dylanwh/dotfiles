@@ -6,7 +6,7 @@ set -x LC_COLLATE POSIX # sort in POSIX order.
 set -x TZ US/Eastern
 set -x GOPATH $HOME/.local/go
 set -g OS (uname)
-set -gx CDPATH ~ ~/Git
+set --erase CDPATH
 
 test -x /usr/libexec/path_helper
 and source (env -i /usr/libexec/path_helper -c | psub)
