@@ -1,4 +1,6 @@
 function hame-vim
+    argparse "t/helptags" -- $argv
+    or return
 
     pushd $HOME
     set -l vim .vim/pack/dylan
@@ -46,7 +48,7 @@ function hame-vim
         and rm -fr $pack
     end
 
-    if [ -n "$HAME_HELPTAGS" ]
+    if [ -n "$_flag_t" ]
         for packdir in ~/.vim/pack/*
             for dir in $packdir/*
                 cd $dir
