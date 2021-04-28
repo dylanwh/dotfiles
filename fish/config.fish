@@ -17,6 +17,8 @@ if status --is-interactive
             set -x shell_via mosh
         case 'sshd*'
             smart-ssh-agent
+        case 'login' '/usr/bin/login'
+            smart-ssh-agent
     end
 
     switch $shell_parent
