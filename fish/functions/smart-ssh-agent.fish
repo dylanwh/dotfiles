@@ -6,21 +6,23 @@ function smart-ssh-agent
     set -l socket $XDG_RUNTIME_DIR/ssh-agent.socket
     set -l state $XDG_RUNTIME_DIR/ssh-agent.fish
 
-    if test -n $_flag_revert
-        set -gx SSH_AUTH_SOCK $ORIGINAL_SSH_AUTH_SOCK
+    echo "$_flag_revert"
+    echo $socket
+    if test -n "$_flag_revert" -a -n "$ORIGINAL_SSH_AUTH_SOCK"
+        set -gx SSH_AUTH_SOCK "$ORIGINAL_SSH_AUTH_SOCK"
         return
     end
 
-    if test -n $_flag_force -a -n $ORIGINAL_SSH_AUTH_SOCK
-        set -gx SSH_AUTH_SOCK $ORIGINAL_SSH_AUTH_SOCK
+    if test -n "$_flag_force" -a -n "$ORIGINAL_SSH_AUTH_SOCK"
+        set -gx SSH_AUTH_SOCK "$ORIGINAL_SSH_AUTH_SOCK"
     end
 
-    if test -S $socket -a ! -n $_flag_force
+    if test -S "$socket" -a ! -n "$_flag_force"
         test -n "$SSH_AUTH_SOCK"
-        and set -gx ORIGINAL_SSH_AUTH_SOCK $SSH_AUTH_SOCK
-        set -gx SSH_AUTH_SOCK $socket
+        and set -gx ORIGINAL_SSH_AUTH_SOCK "$SSH_AUTH_SOCK"
+        set -gx SSH_AUTH_SOCK "$socket"
     else if test -n "$SSH_AUTH_SOCK"
-        test $SSH_AUTH_SOCK = $socket
+        test "$SSH_AUTH_SOCK" = "$socket"
         and return 1
 
         set -gx ORIGINAL_SSH_AUTH_SOCK $SSH_AUTH_SOCK
