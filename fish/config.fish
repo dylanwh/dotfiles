@@ -8,11 +8,6 @@ set -x GOPATH $HOME/.local/go
 set -g OS (uname)
 set --erase CDPATH
 
-test -x /usr/libexec/path_helper
-and source (env -i /usr/libexec/path_helper -c | psub)
-
-set -U fish_user_paths $fish_user_paths
-
 if status --is-interactive
     set -g shell_parent (ps -o ppid= $fish_pid | xargs ps -o comm=)
     set --erase shell_via
@@ -22,14 +17,6 @@ if status --is-interactive
             set -x shell_via mosh
         case 'sshd*'
             smart-ssh-agent
-        case 'login' '/usr/bin/login'
-            switch $OS
-                case Darwin
-                    ssh-add -q -A
-                    or for file in ~/.ssh/id_ed25519 ~/.ssh/id_rsa
-                        ssh-add -K $file
-                    end
-            end
     end
 
     switch $shell_parent
