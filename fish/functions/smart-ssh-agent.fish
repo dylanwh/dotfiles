@@ -6,8 +6,6 @@ function smart-ssh-agent
     set -l socket $XDG_RUNTIME_DIR/ssh-agent.socket
     set -l state $XDG_RUNTIME_DIR/ssh-agent.fish
 
-    echo "$_flag_revert"
-    echo $socket
     if test -n "$_flag_revert" -a -n "$ORIGINAL_SSH_AUTH_SOCK"
         set -gx SSH_AUTH_SOCK "$ORIGINAL_SSH_AUTH_SOCK"
         return
