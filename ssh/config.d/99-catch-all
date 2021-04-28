@@ -1,6 +1,7 @@
 Host *
     ControlPath ~/.ssh/%r@%h:%p.ctrl
     ControlMaster auto
+    ControlPersist 1h
     ExitOnForwardFailure no
     GatewayPorts no
 

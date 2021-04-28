@@ -15,9 +15,7 @@ if status --is-interactive
     switch $shell_parent
         case 'mosh*'
             set -x shell_via mosh
-        case 'sshd*'
-            smart-ssh-agent
-        case 'login' '/usr/bin/login'
+        case 'sshd*' 'login' '/usr/bin/login' 'tmux*'
             smart-ssh-agent
     end
 
