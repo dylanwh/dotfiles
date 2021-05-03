@@ -39,7 +39,6 @@ else if [ -n "$file" ]
         set file ( mktemp -t tot ) || exit 1
         cat /dev/stdin >$file
     else if not [ -f "$file" ]
-        then
         echo "error: not a regular file"
         exit 1
     end
