@@ -1,7 +1,22 @@
 function hame
-    argparse "f/force" -- $argv
-    pushd $HOME
+    argparse "f/force" "v/verbose" -- $argv
 
+    set -lx HAME_FLAGS ""
+    if [ -n "$_flag_force" ]
+        set HAME_FLAGS "--force"
+    end
+
+    set -lx HAME_VERBOSE
+    if [ -n "$_flag_verbose" ]
+        set HAME_VERBOSE 1
+    end
+
+    pushd $HOME/Git/dylanwh/home
+    git pull
+    popd
+
+    pushd $HOME
+    hame-echo configuring fish
     set -U fish_greeting ''
     set -Ux SKIM_DEFAULT_OPTIONS '--preview-window right:70% --bind \'?:toggle-preview,ctrl-o:execute-silent(open {})\''
     set -Ux SKIM_DEFAULT_COMMAND 'fd --type f'
@@ -40,10 +55,6 @@ function hame
     abbr -U -- runti 'docker run --rm -ti'
     abbr -U -- upstream 'git push --set-upstream origin (git branch --show-current)'
 
-    set -lx HAME_FLAGS ""
-    if [ $_flag_force ]
-        set HAME_FLAGS "--force"
-    end
 
     switch $OS
         case Darwin
@@ -54,7 +65,7 @@ function hame
     end
 
     if not have nq
-        echo installing nq
+        hame-echo installing nq
         install_nq
     end
 
@@ -68,37 +79,43 @@ function hame
     hame-rust
     hame-tmux
     if have go
+        hame-echo configuring go suff
         path add $GOPATH/bin
         if not have gore
-            echo installing gore
+            hame-echo installing gore
             hame-nq go get github.com/k0kubun/pp
             hame-nq go get github.com/mdempsky/gocode
             hame-nq go get github.com/motemen/gore/cmd/gore
         end
         if not have gron
+            hame-echo installing gron
             hame-nq go get github.com/tomnomnom/gron
         end
         if not have jsonnet
+            hame-echo installing jsonnet
             hame-nq go get github.com/google/go-jsonnet/cmd/jsonnet
         end
     end
 
     set -l default_perl 5.32.0
     if not [ -d ~/.plenv/versions/$default_perl ]
+        hame-echo installing perl $default_perl
         hame-nq plenv install $default_perl
         hame-nq env PLENV_VERSION=$default_perl plenv install-cpanm
         hame-nq plenv global $default_perl
         hame-nq plenv local $default_perl
     end
-    
+
     # plenv, pyenv, etc should be before /opt/local/bin in the path
     path remove /opt/local/bin
     path add /opt/local/bin
 
     if not perl -MMojolicious -e 1 &>/dev/null
+        hame-echo installing Mojolicious
         hame-nq cpanm --notest Mojolicious
     end
     if not [ -f $HOME/.local/bin/got ]
+        hame-echo installing gitgot
         hame-nq cpanm --notest App::GitGot
         hame-nq cpanm --notest Path::Iterator::Rule
         hame-nq cpanm --notest JSON
@@ -106,6 +123,7 @@ function hame
     end
 
     popd
+    hame-echo setting fish_user_path
     set new_fish_user_path $fish_user_path
     set --erase -g fish_user_path
     set -U fish_user_path $new_fish_user_path
