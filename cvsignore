@@ -3,6 +3,9 @@ tags
 *~
 \#*#
 .perl_version
+.ignore
+.rgignore
+.fdignore
 .tramp_history
 .vscode/perl-lang
 .vscode/

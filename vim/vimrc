@@ -165,16 +165,6 @@ nmap <Leader>t :Tab/
 vmap <Leader>t :Tab/
 nmap <Leader>w :Ag <cword><CR>
 
-nnoremap <Left>   <C-w>h
-nnoremap <Down>   <C-w>j
-nnoremap <Up>     <C-w>k
-nnoremap <Right>  <C-w>l
-
-inoremap <Left>  <C-o><C-w>h
-inoremap <Down>  <C-o><C-w>j
-inoremap <Up>    <C-o><C-w>k
-inoremap <Right> <C-o><C-w>l
-
 " make <c-l> clear the highlight as well as redraw
 nnoremap <C-L> :nohls<CR><C-L>
 inoremap <C-L> <C-O>:nohls<CR>
