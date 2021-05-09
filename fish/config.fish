@@ -19,18 +19,6 @@ if status --is-interactive
             smart-ssh-agent
     end
 
-    switch $shell_parent
-        case 'ssh*' 'mosh*'
-            if have caffeinate; and have nq
-                mkdir -p $HOME/.cache
-                # I'm not sure why, but if I don't run nq inside nq, it sometimes fails to clean up its files
-                # Might be a bug, or something about how macOS handles the session leader being teriminated?
-                # Anyway, this pretty much ensures remove logins prevent the mac from going to sleep
-                # (as long as it is running on AC)
-                env "NQDIR=$HOME/.cache/caffinate.$fish_pid" nq -c -q -- nq -c -q -- caffeinate -s -w $fish_pid
-            end
-    end
-
     switch "$TERM_PROGRAM"
         case vscode
             set code code
