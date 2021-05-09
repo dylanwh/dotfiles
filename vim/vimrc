@@ -120,6 +120,9 @@ let jedi#squelch_py_warning = 1
 
 let ctrlp_extensions    = ['Z', 'F']
 let ctrlp_custom_ignore = '\v[\/]\.(git|hg|svn)$'
+
+let g:markdown_syntax_conceal = 1
+let g:markdown_fenced_languages = ['perl']
 " }}}
 
 " COLORS {{{1
