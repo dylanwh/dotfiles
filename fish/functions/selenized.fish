@@ -194,7 +194,8 @@ function selenized
                     set -l name s_$color
                     set -a jsonnet_args -A "$name=#$$var"
                 end
-                jsonnet $jsonnet_args $s_dir/winterm.jsonnet > $winterm_dir/settings.json
+                jsonnet $jsonnet_args $s_dir/winterm.jsonnet > $winterm_dir/settings.json.new
+                command mv -f $winterm_dir/settings.json.new $winterm_dir/settings.json
             case vivid
                 if not have vivid
                     echo "vivid not found; cargo install vivid?" >&2
