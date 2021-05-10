@@ -30,6 +30,7 @@ function smart-ssh-agent
     else
         test -f $state
         and source $state
+        and kill -0 $SSH_AGENT_PID ^/dev/null
         or source (ssh-agent -c | tee $state | psub)
         set -gx ORIGINAL_SSH_AUTH_SOCK $SSH_AUTH_SOCK
         set -gx SSH_AUTH_SOCK $socket
