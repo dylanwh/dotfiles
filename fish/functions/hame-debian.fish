@@ -4,6 +4,7 @@ function hame-debian
 
     set packages          \
         autoconf          \
+        bind9-dnsutils    \
         build-essential   \
         curl              \
         emacs-nox         \
@@ -24,7 +25,8 @@ function hame-debian
         pv                \
         ripgrep           \
         tmux              \
-        vim-nox
+        vim-nox           \
+        whois
 
     for pkg in $packages
         echo $pkg
