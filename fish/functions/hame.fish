@@ -12,7 +12,8 @@ function hame
     end
 
     pushd $HOME/Git/dylanwh/home
-    git pull
+    hame-echo updating "~/Git/dylanwh/home"
+    git pull -q
     popd
 
     pushd $HOME

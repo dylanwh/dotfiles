@@ -16,8 +16,8 @@ function hame-macos
     defaults write -g AppleShowAllExtensions -bool true
 
     pushd ~/.config/alfred
-    echo updating alfred...
-    git pull
+    hame-echo updating "~/.config/alfred"
+    git pull -q
     popd
     command find ~/.config/alfred -type f -xattrname com.apple.quarantine -print0 | xargs -0 xattr -vd com.apple.quarantine
 

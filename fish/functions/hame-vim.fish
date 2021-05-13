@@ -3,6 +3,7 @@ function hame-vim
     or return
 
     pushd $HOME
+    hame-echo installing vim packages
     set -l vim .vim/pack/dylan
     hame-clone -n solarized8        -p "$vim/opt/solarized8"          -u "lifepillar/vim-solarized8"
     hame-clone -n abolish           -p "$vim/start/abolish"           -u "tpope/vim-abolish"
@@ -44,7 +45,7 @@ function hame-vim
                   "$vim/start/airline-themes"
     for pack in $rm_packs
         test -d "$pack"
-        and echo "hame-vim: rm $pack"
+        and hame-echo "hame-vim: rm $pack"
         and rm -fr $pack
     end
 

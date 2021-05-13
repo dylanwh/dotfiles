@@ -2,6 +2,7 @@ function hame-rust
     path add ~/.cargo/bin
     pushd $HOME
     if not [ -f .cargo/bin/rustup ]
+        hame-echo installing rust
         set rustup_init (mktemp)
         curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs > $rustup_init
         hame-nq sh $rustup_init -y --no-modify-path

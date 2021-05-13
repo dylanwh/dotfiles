@@ -12,7 +12,7 @@ function hame-clone
         if [ "$parent" != "." ]
             mkdir -vp $parent
         end
-        echo git clone $_flag_name
+        hame-echo git clone $_flag_name
         command git clone --depth 1 https://github.com/$_flag_url $_flag_path
     end
     popd
