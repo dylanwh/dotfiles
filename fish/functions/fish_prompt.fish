@@ -71,5 +71,3 @@ else
         echo -n -s $my_fish_vcs_prompt $normal " " $prompt_status $normal $suffix " "
     end
 end
-test -f {$HOME}/.iterm2_shell_integration.fish
-and source {$HOME}/.iterm2_shell_integration.fish
