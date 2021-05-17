@@ -96,6 +96,10 @@ function hame
             hame-echo installing jsonnet
             hame-nq go get github.com/google/go-jsonnet/cmd/jsonnet
         end
+        if not have jsonnetfmt
+            hame-echo installing jsonnetfmt
+            hame-nq go get github.com/google/go-jsonnet/cmd/jsonnetfmt
+        end
     end
 
     set -l default_perl 5.32.0

@@ -130,6 +130,9 @@ function selenized
         if [ -n "$WSL_DISTRO_NAME" ]
             set _flag_modules $_flag_modules winterm
         end
+        if test -d /Applications/MacPorts/Alacritty.app
+            set _flag_modules $_flag_modules alacritty
+        end
     end
     set -l s_scope ''
     if [ -n $_flag_env ]
@@ -188,14 +191,26 @@ function selenized
             case winterm
                 set -l winterm_dir /mnt/c/Users/dylan/AppData/Local/Packages/Microsoft.WindowsTerminal_*/LocalState
                 set -l s_dir   $HOME/.config/selenized
+                set -l s_file  $winterm_dir/settings.json
                 set -l jsonnet_args -A "WSL_DISTRO_NAME=$WSL_DISTRO_NAME" -A "s_variant=$_flag_variant"
                 for color in $selenized_colors
                     set -l var selenized_{$_flag_variant}_{$color}[2]
                     set -l name s_$color
                     set -a jsonnet_args -A "$name=#$$var"
                 end
-                jsonnet $jsonnet_args $s_dir/winterm.jsonnet > $winterm_dir/settings.json.new
-                command mv -f $winterm_dir/settings.json.new $winterm_dir/settings.json
+                jsonnet $jsonnet_args $s_dir/winterm.jsonnet > $s_file.new
+                command mv -f $s_file.new $s_file
+            case alacritty
+                set -l s_dir   $HOME/.config/selenized
+                set -l s_file  $HOME/.config/alacritty/alacritty.yml
+                set -l jsonnet_args -A SHELL=$SHELL -A "s_variant=$_flag_variant"
+                for color in $selenized_colors
+                    set -l var selenized_{$_flag_variant}_{$color}[2]
+                    set -l name s_$color
+                    set -a jsonnet_args -A "$name=$$var"
+                end
+                mkdir -p (dirname $s_file)
+                jsonnet -y $jsonnet_args $s_dir/alacritty.jsonnet > $s_file
             case vivid
                 if not have vivid
                     echo "vivid not found; cargo install vivid?" >&2
