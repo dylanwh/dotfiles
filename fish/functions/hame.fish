@@ -102,7 +102,7 @@ function hame
         end
     end
 
-    set -l default_perl 5.32.0
+    set -l default_perl 5.34.0
     if not [ -d ~/.plenv/versions/$default_perl ]
         hame-echo installing perl $default_perl
         hame-nq plenv install $default_perl
