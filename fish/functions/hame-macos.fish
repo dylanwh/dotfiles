@@ -25,4 +25,53 @@ function hame-macos
         hame-echo 'allowing passwordless "sudo port"'
         echo 'dylan ALL = (root) NOPASSWD: /opt/local/bin/port' | sudo tee /etc/sudoers.d/99-port
     end
+
+    set macports        \
+        autoconf        \
+        automake        \
+        bat             \
+        binplist        \
+        coreutils       \
+        curlie          \
+        fd              \
+        findutils       \
+        git             \
+        go              \
+        gron            \
+        hey             \
+        htop            \
+        httpie          \
+        hub             \
+        jq              \
+        less            \
+        man             \
+        moreutils       \
+        ncdu            \
+        protobuf-c      \
+        pstree          \
+        pv              \
+        py38-black      \
+        py38-jupyterlab \
+        py38-numpy      \
+        py38-openpyxl   \
+        py38-pandas     \
+        ripgrep         \
+        skim            \
+        socat           \
+        tmux            \
+        tmux-pasteboard \
+        trash           \
+        vim             \
+        wget            \
+        xml2            \
+        xsv
+
+    for macport in $macports
+        echo $macport
+    end | sort > ~/.cache/hame/macports.txt
+
+    [ -f ~/.cache/hame/macports.md5 ]
+    and cmp -s ~/.cache/hame/macports.md5 (md5 -r ~/.cache/hame/macports.txt|psub)
+    or sudo port install $macports
+    md5 -r ~/.cache/hame/macports.txt > ~/.cache/hame/macports.md5 ^/dev/null
 end
