@@ -40,7 +40,6 @@ function hame-macos
         gron            \
         hey             \
         htop            \
-        httpie          \
         hub             \
         jq              \
         less            \
@@ -50,11 +49,11 @@ function hame-macos
         protobuf-c      \
         pstree          \
         pv              \
-        py38-black      \
-        py38-jupyterlab \
-        py38-numpy      \
-        py38-openpyxl   \
-        py38-pandas     \
+        py39-black      \
+        py39-jupyterlab \
+        py39-numpy      \
+        py39-openpyxl   \
+        py39-pandas     \
         ripgrep         \
         skim            \
         socat           \
@@ -64,7 +63,8 @@ function hame-macos
         vim             \
         wget            \
         xml2            \
-        xsv
+        xsv             \
+        youtube-dl
 
     for macport in $macports
         echo $macport
@@ -72,6 +72,6 @@ function hame-macos
 
     [ -f ~/.cache/hame/macports.md5 ]
     and cmp -s ~/.cache/hame/macports.md5 (md5 -r ~/.cache/hame/macports.txt|psub)
-    or sudo port install $macports
+    or sudo port -N install $macports
     md5 -r ~/.cache/hame/macports.txt > ~/.cache/hame/macports.md5 ^/dev/null
 end
