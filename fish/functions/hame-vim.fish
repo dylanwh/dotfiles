@@ -11,6 +11,7 @@ function hame-vim
     hame-clone -n applescript       -p "$vim/start/applescript"       -u "dearrrfish/vim-applescript"
     hame-clone -n commentary        -p "$vim/start/commentary"        -u "tpope/vim-commentary"
     hame-clone -n cpanfile          -p "$vim/start/cpanfile"          -u "moznion/vim-cpanfile"
+    hame-clone -n editorconfig      -p "$vim/start/editorconfig"      -u "editorconfig/editorconfig-vim"
     hame-clone -n endwise           -p "$vim/start/endwise"           -u "tpope/vim-endwise"
     hame-clone -n eunuch            -p "$vim/start/eunuch"            -u "tpope/vim-eunuch"
     hame-clone -n fish              -p "$vim/start/fish"              -u "dag/vim-fish"
