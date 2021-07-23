@@ -122,6 +122,8 @@ function hame
     # plenv, pyenv, etc should be before /opt/local/bin in the path
     path remove /opt/local/bin
     path add /opt/local/bin
+    path remove /snap/bin
+    path add /snap/bin
 
     if not perl -MMojolicious -e 1 &>/dev/null
         hame-echo installing Mojolicious
