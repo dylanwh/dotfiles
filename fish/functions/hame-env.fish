@@ -7,7 +7,7 @@ function hame-env
     hame-clone -n node-build -p .nodenv/plugins/node-build -u 'nodenv/node-build.git'
 
     path add ~/.plenv/bin
-    path add ~/.plenv/shimr
+    path add ~/.plenv/shims
     plenv init - fish | grep -v 'set -gx PATH' > ~/.config/fish/functions/plenv.fish
 
     path add ~/.pyenv/bin
