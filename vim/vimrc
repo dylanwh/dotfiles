@@ -125,6 +125,7 @@ let g:markdown_syntax_conceal = 1
 let g:markdown_fenced_languages = ['perl']
 " }}}
 
+
 " COLORS {{{1
 if exists('+termguicolors') && exists('$TMUX') || $TERM=='tmux-24bit'
     let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"

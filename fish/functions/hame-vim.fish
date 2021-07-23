@@ -9,6 +9,7 @@ function hame-vim
     hame-clone -n abolish           -p "$vim/start/abolish"           -u "tpope/vim-abolish"
     hame-clone -n ag                -p "$vim/start/ag"                -u "epmatsw/ag.vim"
     hame-clone -n applescript       -p "$vim/start/applescript"       -u "dearrrfish/vim-applescript"
+    hame-clone -n coc               -p "$vim/start/coc"               -u "neoclide/coc.nvim" -b release
     hame-clone -n commentary        -p "$vim/start/commentary"        -u "tpope/vim-commentary"
     hame-clone -n cpanfile          -p "$vim/start/cpanfile"          -u "moznion/vim-cpanfile"
     hame-clone -n editorconfig      -p "$vim/start/editorconfig"      -u "editorconfig/editorconfig-vim"

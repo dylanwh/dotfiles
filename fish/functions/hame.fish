@@ -111,6 +111,14 @@ function hame
         hame-nq plenv local $default_perl
     end
 
+    set -l default_node 16.5.0
+    if not [ -d ~/.nodenv/versions/$default_node ]
+        hame-echo installing node $default_node
+        hame-nq nodenv install $default_node
+        hame-nq nodenv global $default_node
+        hame-nq nodenv local $default_node
+    end
+
     # plenv, pyenv, etc should be before /opt/local/bin in the path
     path remove /opt/local/bin
     path add /opt/local/bin
