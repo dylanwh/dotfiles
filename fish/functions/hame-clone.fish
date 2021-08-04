@@ -17,7 +17,7 @@ function hame-clone
         if [ -n "$_flag_branch" ]
             set git_args $git_args --branch=$_flag_branch
         end
-        command git clone --depth 1 https://github.com/$_flag_url $_flag_path
+        command git clone $git_args https://github.com/$_flag_url $_flag_path
     end
     popd
 end
