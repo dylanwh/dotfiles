@@ -134,7 +134,8 @@ function hame
         hame-nq cpanm --notest App::GitGot
         hame-nq cpanm --notest Path::Iterator::Rule
         hame-nq cpanm --notest JSON
-        hame-nq ln -s $HOME/.plenv/versions/$default_perl/bin/got $HOME/.local/bin/got
+        hame-nq sed "1 s|^#!.*|#!$HOME/.plenv/versions/$default_perl/bin/perl|" \
+            $HOME/.plenv/versions/$default_perl/bin/got > $HOME/.local/bin/got
     end
 
     popd

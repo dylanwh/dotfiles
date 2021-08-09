@@ -1,3 +1,3 @@
 function clone
-cd (command clone $argv)
+    cd (command clone $argv)
 end
