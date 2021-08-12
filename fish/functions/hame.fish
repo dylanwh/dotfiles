@@ -11,7 +11,7 @@ function hame
         set HAME_VERBOSE 1
     end
 
-    pushd $HOME/Git/dylanwh/home
+    pushd $HOME/Git/dylanwh/dotfiles
     hame-echo updating "~/Git/dylanwh/home"
     git pull -q
     popd
