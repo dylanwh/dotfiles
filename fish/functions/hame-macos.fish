@@ -73,5 +73,5 @@ function hame-macos
     [ -f ~/.cache/hame/macports.md5 ]
     and cmp -s ~/.cache/hame/macports.md5 (md5 -r ~/.cache/hame/macports.txt|psub)
     or sudo port -N install $macports
-    md5 -r ~/.cache/hame/macports.txt > ~/.cache/hame/macports.md5 ^/dev/null
+    md5 -r ~/.cache/hame/macports.txt > ~/.cache/hame/macports.md5 2>/dev/null
 end

@@ -247,7 +247,7 @@ function selenized
                     set -a selenized_env "$env=#$$var"
                 end
                 env $selenized_env tmux-pp < $HOME/.config/selenized/tmux.ep >$tmux_theme
-                if tmux info >/dev/null ^/dev/null
+                if tmux info >/dev/null 2>/dev/null
                     tmux source $tmux_theme
                 end
                 mkdir -p ~/.tmux

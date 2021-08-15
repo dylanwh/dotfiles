@@ -1,3 +1,3 @@
 function fpr
- gh pr view -w (gh pr list ^/dev/null | fzy | cut -f 1) ^/dev/null;
+ gh pr view -w (gh pr list 2>/dev/null | fzy | cut -f 1) 2>/dev/null;
 end
