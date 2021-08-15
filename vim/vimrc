@@ -180,7 +180,7 @@ imap <C-w>=  <C-o><C-w>=
 " }}}
 
 " ABBREVS {{{1
-iab  dwh Dylan William Hardison
+iab  dwh Dylan Hardison
 iab <expr> dmail $EMAIL
 iab  teh the
 iab  hte the
