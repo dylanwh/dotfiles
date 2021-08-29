@@ -1,7 +1,7 @@
 function hame-env
-    set -Ux PLENV_ROOT $HOME/.plenv
-    set -Ux PYENV_ROOT $HOME/.pyenv
-    set -Ux NODENV_ROOT $HOME/.nodenv
+    set -U PLENV_ROOT $HOME/.plenv
+    set -U PYENV_ROOT $HOME/.pyenv
+    set -U NODENV_ROOT $HOME/.nodenv
 
     if [ -d /opt/env ]
         for env in plenv pyenv nodenv
