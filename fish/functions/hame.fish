@@ -103,7 +103,7 @@ function hame
     end
 
     set -l default_perl 5.34.0
-    if not [ -d ~/.plenv/versions/$default_perl ]
+    if not [ -d $plenv_root/versions/$default_perl ]
         hame-echo installing perl $default_perl
         hame-nq plenv install $default_perl
         hame-nq env PLENV_VERSION=$default_perl plenv install-cpanm
@@ -112,7 +112,7 @@ function hame
     end
 
     set -l default_node 16.5.0
-    if not [ -d ~/.nodenv/versions/$default_node ]
+    if not [ -d $nodenv_root/versions/$default_node ]
         hame-echo installing node $default_node
         hame-nq nodenv install $default_node
         hame-nq nodenv global $default_node
@@ -134,8 +134,8 @@ function hame
         hame-nq cpanm --notest App::GitGot
         hame-nq cpanm --notest Path::Iterator::Rule
         hame-nq cpanm --notest JSON
-        hame-nq sed "1 s|^#!.*|#!$HOME/.plenv/versions/$default_perl/bin/perl|" \
-            $HOME/.plenv/versions/$default_perl/bin/got > $HOME/.local/bin/got
+        hame-nq sed "1 s|^#!.*|#!$plenv_root/versions/$default_perl/bin/perl|" \
+            $plenv_root/versions/$default_perl/bin/got > $HOME/.local/bin/got
     end
 
     popd
