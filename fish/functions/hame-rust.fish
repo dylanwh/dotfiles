@@ -1,12 +1,19 @@
 function hame-rust
-    path add ~/.cargo/bin
+    if [ -d /opt/rust ]
+        set -Ux CARGO_HOME /opt/rust/cargo
+        set -Ux RUSTUP_HOME /opt/rust/rustup
+        path add $CARGO_HOME/bim
+    else
+        path add ~/.cargo/bin
+    end
+
     pushd $HOME
-    if not [ -f .cargo/bin/rustup ]
+    if not have rustup
         hame-echo installing rust
         set rustup_init (mktemp)
         curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs > $rustup_init
-        hame-nq sh $rustup_init -y --no-modify-path
-        hame-nq rm $rustup_init
+        sh $rustup_init -y --no-modify-path
+        rm $rustup_init
     end
 
     if have cargo
