@@ -1,7 +1,4 @@
 function hame-debian
-    test -f /etc/sudoers.d/99-apt
-    or echo "$USER ALL = (root) NOPASSWD: /usr/bin/apt, /usr/bin/apt-get" | sudo tee /etc/sudoers.d/99-apt
-
     set packages          \
         autoconf          \
         bind9-dnsutils    \
