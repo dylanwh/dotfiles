@@ -1,6 +1,6 @@
 HashKnownHosts no
 Compression yes
-UserKnownHostsFile ~/.ssh/known_hosts ~/Sync/ssh/known_hosts
+UserKnownHostsFile ~/.ssh/known_hosts ~/.ssh/known_hosts.local
 
 PermitLocalCommand yes
 
