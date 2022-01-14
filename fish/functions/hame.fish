@@ -80,13 +80,13 @@ function hame
     hame-rust
     hame-tmux
     if have go
-        hame-echo configuring go suff
+        hame-echo configuring go stuff
         path add $GOPATH/bin
         if not have gore
             hame-echo installing gore
             hame-nq go get github.com/k0kubun/pp
             hame-nq go get github.com/mdempsky/gocode
-            hame-nq go get github.com/motemen/gore/cmd/gore
+            hame-nq go get github.com/x-motemen/gore/cmd/gore
         end
         if not have gron
             hame-echo installing gron

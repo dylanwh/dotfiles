@@ -31,14 +31,16 @@ function hame-rust
         or hame-nq cargo install vivid
         have starship
         or hame-nq cargo install starship
-        have procs
-        or hame-nq cargo install procs
         have dust
         or hame-nq cargo install du-dust
         have delta
         or hame-nq cargo install git-delta
+        have uq
+        or hame-nq cargo install uq
         have xsv
         or hame-nq cargo install xsv
+        have procs
+        and hame-nq cargo uninstall procs
         have broot
         and hame-nq cargo uninstall broot
     end

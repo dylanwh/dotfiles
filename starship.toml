@@ -101,10 +101,13 @@ disabled = true
 [java]
 disabled = true
 
-[aws]
-disabled = true
-
 [env_var]
 variable = "shell_via"
 format = "via [$env_value]($style) "
 style="green"
+
+[nodejs]
+disabled = true
+
+[aws]
+disabled = true
