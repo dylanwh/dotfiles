@@ -22,10 +22,6 @@ my %config = (
     PRE_PROCESS  => \@pre_process, # prefix each template
     WRAPPER      => \@wrapper,     # wrappers
     VARIABLES => {
-        foo => sub {
-            warn "@_";
-            return 1;
-        }
     }
 );
 
