@@ -1,0 +1,21 @@
+#!/usr/bin/env perl
+use 5.20.3;
+use strict;
+use warnings;
+use Term::ANSIColor;
+
+my $current_branch = `git rev-parse --abbrev-ref HEAD`;
+chomp $current_branch;
+
+my @cmd = (
+  'git', 'for-each-ref', '--sort=-committerdate',
+  '--format=%(refname)%09%(committerdate)', 'refs/heads'
+);
+$ENV{LC_TIME} = 'C';
+open my $fh, '-|',  @cmd or die $!;
+while (my $line = <$fh>) {
+    chomp $line;
+    my ($branch, $date) = $line =~ m{^refs/heads/(.+)\t(.+)$};
+
+    printf " %s %s\n", $branch eq $current_branch ? "*" : " ", $branch;
+}

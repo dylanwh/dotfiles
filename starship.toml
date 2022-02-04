@@ -1,7 +1,6 @@
 format = """
 $username\
 $hostname\
-$env_var\
 $shlvl\
 $kubernetes\
 $directory\
@@ -50,6 +49,7 @@ $jobs\
 $battery\
 $time\
 $status\
+$env_var\
 $character"""
 
 [git_branch]
@@ -80,9 +80,9 @@ format = "[$hostname]($style) "
 
 [directory]
 style="fg:12 bold"
-truncate_to_repo = false
-truncation_length = 2
-fish_style_pwd_dir_length = 1
+truncate_to_repo = true
+truncation_length = 0
+#fish_style_pwd_dir_length = 1
 format = "in [$path]($style)[$read_only]($read_only_style) "
 
 
@@ -101,13 +101,13 @@ disabled = true
 [java]
 disabled = true
 
-[env_var]
-variable = "shell_via"
-format = "via [$env_value]($style) "
-style="green"
+[aws]
+disabled = true
 
 [nodejs]
 disabled = true
 
-[aws]
-disabled = true
+[env_var]
+variable = "my_shell"
+format = "[$env_value]($style) "
+style="green"

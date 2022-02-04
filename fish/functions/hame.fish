@@ -34,13 +34,11 @@ function hame
 
     mkdir -p ~/.cache/hame
 
-    abbr -U -- ps procs
+    abbr -Uq ps; and abbr -U --erase ps
     abbr -U -- ag rg
     abbr -U -- grep rg
     abbr -U -- yo yoink
-
-    abbr -Uq s
-    and abbr -U --erase s
+    abbr -Uq s; and abbr -U --erase s
     abbr -U -- rm 'rm -i'
     abbr -U -- mv 'mv -i'
     abbr -U -- cp 'cp -i'
@@ -55,6 +53,7 @@ function hame
     abbr -U -- push 'git push'
     abbr -U -- runti 'docker run --rm -ti'
     abbr -U -- upstream 'git push --set-upstream origin (git branch --show-current)'
+    abbr -U -- hm history merge
 
 
     switch $OS
