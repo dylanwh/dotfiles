@@ -1,3 +1,3 @@
 #!/usr/bin/env fish
 
-fd -tl . ~/.local/bin | perl -nE 'use autodie; chomp; -f $_ or unlink $_'
+fd -tl . ~/.local/bin | perl -nE 'use autodie; chomp; unless (-f $_) { unlink $_; say $_ }'

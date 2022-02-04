@@ -1,0 +1,6 @@
+#!/bin/bash
+
+git for-each-ref --sort='-committerdate' --format='%(refname)' refs/heads \
+    | sed -e 's-refs/heads/--' -e '/master\|main/ d' \
+    | sk -m -p "git branch -D " \
+    | xargs -IBRANCH git branch -D BRANCH

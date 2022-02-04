@@ -17,5 +17,5 @@ while (my $line = <$fh>) {
     chomp $line;
     my ($branch, $date) = $line =~ m{^refs/heads/(.+)\t(.+)$};
 
-    printf " %s %s\n", $branch eq $current_branch ? "*" : " ", $branch;
+    print $branch eq $current_branch ? "* " . colored($branch, "green") : "  $branch", "\n";
 }
