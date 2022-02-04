@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 git for-each-ref --sort='-committerdate' --format='%(refname)' refs/heads \
     | sed -e 's-refs/heads/--' -e '/master\|main/ d' \
