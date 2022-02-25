@@ -9,9 +9,11 @@ use File::Path qw(mkpath);
 use File::Basename qw(dirname basename);
 use File::Spec::Functions qw(catdir rel2abs abs2rel);
 use File::stat qw(lstat);
+use Digest::MD5 qw(md5);
 use IO::File;
 use Cwd qw(realpath);
 use autodie qw(:default);
+
 sub rm_if_link ($);
 
 my $REPO = realpath(catdir(dirname(realpath(__FILE__)), '..'));
@@ -73,9 +75,8 @@ foreach my $file (glob "$REPO/ssh/config.d/*") {
   provide($repo_file, $home_file, {replace => 1});
 }
 
-open my $fh, '>', "$HOME/.ssh/config";
-print $fh "Include config.d/*\n";
-close $fh;
+my $ssh_config = "Include config.d/*\n";
+write_file("$HOME/.ssh/config", $ssh_config);
 
 sub provide {
   my ($source, $target, $option) = @_;
@@ -116,6 +117,28 @@ sub provide {
     symlink($s, $t);
   }
 }
+
+sub write_file {
+  my ($filename, $content) = @_;
+  local $/ = undef;
+
+  if (-f $filename) {
+    open my $input, '<', $filename;
+    my $old_content = <$input>;
+    close $input;
+    if (md5($old_content) eq md5($content)) {
+      return 1;
+    }
+    else {
+      rename($filename, "$filename.civil-war-backup");
+    }
+  }
+  printf "%s: writing.\n", $filename;
+  open my $output, '>', $filename;
+  print $output $content;
+  close $output;
+}
+
 
 sub rm_if_link ($) {
   my ($path) = @_;
