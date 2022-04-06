@@ -49,11 +49,11 @@ function hame-macos
         protobuf-c      \
         pstree          \
         pv              \
-        py39-black      \
-        py39-jupyterlab \
-        py39-numpy      \
-        py39-openpyxl   \
-        py39-pandas     \
+        py310-black      \
+        py310-jupyterlab \
+        py310-numpy      \
+        py310-openpyxl   \
+        py310-pandas     \
         ripgrep         \
         skim            \
         socat           \
