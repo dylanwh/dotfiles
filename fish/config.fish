@@ -12,7 +12,7 @@ if status --is-interactive
     set -g shell_parent (ps -o ppid= $fish_pid | xargs ps -o comm=)
     set --erase shell_via
 
-    switch $shell_parent
+    switch "$shell_parent"
         case 'mosh*'
             set -x shell_via mosh
         case 'sshd*' 'login' '/usr/bin/login' 'tmux*'
