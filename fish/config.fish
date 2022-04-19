@@ -3,7 +3,7 @@ set -x EMAIL "dylan@hardison.net"
 set -x MANPAGER 'less -s'
 set -x LANG en_US.UTF-8
 set -x LC_COLLATE POSIX # sort in POSIX order.
-set -x TZ US/Eastern
+set -x TZ US/Pacific
 set -x GOPATH $HOME/.local/go
 set -g OS (uname)
 set --erase CDPATH
