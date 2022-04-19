@@ -111,3 +111,4 @@ disabled = true
 variable = "my_shell"
 format = "[$env_value]($style) "
 style="green"
+

@@ -76,7 +76,7 @@ foreach my $file (glob "$REPO/ssh/config.d/*") {
 }
 
 my $ssh_config = "Include config.d/*\n";
-write_file("$HOME/.ssh/config", $ssh_config);
+write_file("$HOME/.ssh/config", $ssh_config, {immutable => 1});
 
 sub provide {
   my ($source, $target, $option) = @_;
@@ -119,7 +119,8 @@ sub provide {
 }
 
 sub write_file {
-  my ($filename, $content) = @_;
+  my ($filename, $content, $meta) = @_;
+  $meta //= {};
   local $/ = undef;
 
   if (-f $filename) {
@@ -130,14 +131,42 @@ sub write_file {
       return 1;
     }
     else {
+      make_mutable($filename) if $meta->{immutable};
       rename($filename, "$filename.civil-war-backup");
     }
   }
   printf "%s: writing.\n", $filename;
+  make_mutable($filename) if -f $filename && $meta->{immutable};
   open my $output, '>', $filename;
   print $output $content;
   close $output;
+  make_immutable($filename) if $meta->{immutable};
 }
+
+sub make_immutable {
+  my ($filename) = @_;
+  if ($OSNAME eq 'darwin') {
+    printf "%s: making immutable.\n", $filename;
+    system('chflags', 'uchg', $filename);
+  }
+  elsif ($OSNAME eq 'linux') {
+    printf "%s: making immutable.\n", $filename;
+    system('chattr', '+i', $filename);
+  }
+}
+
+sub make_mutable {
+  my ($filename) = @_;
+  if ($OSNAME eq 'darwin') {
+    printf "%s: making mutable.\n", $filename;
+    system('chflags', 'nouchg', $filename);
+  }
+  elsif ($OSNAME eq 'linux') {
+    printf "%s: making mutable.\n", $filename;
+    system('chattr', '-i', $filename);
+  }
+}
+
 
 
 sub rm_if_link ($) {
