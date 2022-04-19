@@ -83,21 +83,21 @@ function hame
         path add $GOPATH/bin
         if not have gore
             hame-echo installing gore
-            hame-nq go get github.com/k0kubun/pp
-            hame-nq go get github.com/mdempsky/gocode
-            hame-nq go get github.com/x-motemen/gore/cmd/gore
+            hame-nq go install github.com/k0kubun/pp@latest
+            hame-nq go install github.com/mdempsky/gocode@latest
+            hame-nq go install github.com/x-motemen/gore/cmd/gore@latest
         end
         if not have gron
             hame-echo installing gron
-            hame-nq go get github.com/tomnomnom/gron
+            hame-nq go install github.com/tomnomnom/gron@latest
         end
         if not have jsonnet
             hame-echo installing jsonnet
-            hame-nq go get github.com/google/go-jsonnet/cmd/jsonnet
+            hame-nq go install github.com/google/go-jsonnet/cmd/jsonnet@latest
         end
         if not have jsonnetfmt
             hame-echo installing jsonnetfmt
-            hame-nq go get github.com/google/go-jsonnet/cmd/jsonnetfmt
+            hame-nq go install github.com/google/go-jsonnet/cmd/jsonnetfmt@latest
         end
     end
 

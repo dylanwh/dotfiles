@@ -1,46 +1,46 @@
 function hame-godev
     have gopls
-    or hame-nq env GO111MODULE=on go get golang.org/x/tools/gopls@latest
+    or hame-nq env GO111MODULE=on go install golang.org/x/tools/gopls@latest
 
     have golangci-lint
-    or hame-nq env GO111MODULE=on CGO_ENABLED=0 go get -trimpath -ldflags '-s -w' github.com/golangci/golangci-lint/cmd/golangci-lint 
+    or hame-nq env GO111MODULE=on CGO_ENABLED=0 go install -trimpath -ldflags '-s -w' github.com/golangci/golangci-lint/cmd/golangci-lint@latest
 
     have godoc
-    or hame-nq go get golang.org/x/tools/cmd/godoc
+    or hame-nq go install golang.org/x/tools/cmd/godoc@latest
 
     have goimports
-    or hame-nq go get golang.org/x/tools/cmd/goimports
+    or hame-nq go install golang.org/x/tools/cmd/goimports@latest
 
     have gorename
-    or hame-nq go get golang.org/x/tools/cmd/gorename
+    or hame-nq go install golang.org/x/tools/cmd/gorename@latest
 
     have guru
-    or hame-nq go get golang.org/x/tools/cmd/guru
+    or hame-nq go install golang.org/x/tools/cmd/guru@latest
 
     have gotests
-    or hame-nq go get github.com/cweill/gotests/...
+    or hame-nq go install github.com/cweill/gotests/...@latest
 
     have fillstruct
-    or hame-nq go get github.com/davidrjenni/reftools/cmd/fillstruct
+    or hame-nq go install github.com/davidrjenni/reftools/cmd/fillstruct@latest
 
     have gomodifytags
-    or hame-nq go get github.com/fatih/gomodifytags
+    or hame-nq go install github.com/fatih/gomodifytags@latest
 
     have godoctor
-    or hame-nq go get github.com/godoctor/godoctor
+    or hame-nq go install github.com/godoctor/godoctor@latest
 
     have gopkgs
-    or hame-nq go get github.com/haya14busa/gopkgs/cmd/gopkgs
+    or hame-nq go install github.com/haya14busa/gopkgs/cmd/gopkgs@latest
 
     have impl
-    or hame-nq go get github.com/josharian/impl
+    or hame-nq go install github.com/josharian/impl@latest
 
     have gocode
-    or hame-nq go get github.com/mdempsky/gocode
+    or hame-nq go install github.com/mdempsky/gocode@latest
 
     have godef
-    or hame-nq go get github.com/rogpeppe/godef
+    or hame-nq go install github.com/rogpeppe/godef@latest
 
     have gogetdoc
-    or hame-nq go get github.com/zmb3/gogetdoc
+    or hame-nq go install github.com/zmb3/gogetdoc@latest
 end
