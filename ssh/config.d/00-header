@@ -9,6 +9,7 @@ ServerAliveCountMax 10
 ConnectTimeout 120
 
 SendEnv LANG LC_* TERM_PROGRAM
+#ControlPath ~/.ssh/%C.ctrl
 
 # This cannot be set in a host block...
 PreferredAuthentications publickey,keyboard-interactive,password
