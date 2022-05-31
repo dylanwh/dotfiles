@@ -1,0 +1,66 @@
+#!/usr/bin/env python3
+class gron:
+    def __init__(self, name="json", val=None):
+        if isinstance(val, dict):
+            my_dict = val
+        else:
+            my_dict = dict()
+        if isinstance(val, list):
+            my_list = val
+        else:
+            my_list = list()
+        object.__setattr__(self, "_gron__dict", my_dict)
+        object.__setattr__(self, "_gron__list", my_list)
+
+    def __str__(self):
+        import json as _json
+
+        return _json.dumps(self.__json(), default=lambda x: x.__json())
+
+    def __json(self):
+        if len(self.__list):
+            return self.__list
+        else:
+            return self.__dict
+
+    def __setitem__(self, item, val):
+        if isinstance(item, int):
+            l = self.__list
+            while len(l) <= item:
+                l.append(None)
+
+            l[item] = val
+        else:
+            self.__setattr__(item, val)
+
+    def __setattr__(self, key, val):
+        if isinstance(val, (dict, list)):
+            val = gron(key, val)
+        self.__dict[key] = val
+        return
+
+    def __getattr__(self, key):
+        if key in self.__dict:
+            return self.__dict[key]
+        else:
+            self.__dict[key] = gron(key)
+            return self.__dict[key]
+
+
+if __name__ == "__main__":
+    import sys
+
+    json = gron()
+    for line in sys.stdin:
+        exec(
+            line,
+            {},
+            {
+                "json": json,
+                "true": True,
+                "false": False,
+                "null": None,
+                "undefined": None,
+            },
+        )
+    print(json)
