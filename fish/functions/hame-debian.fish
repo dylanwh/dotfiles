@@ -5,6 +5,7 @@ function hame-debian
         build-essential   \
         curl              \
         emacs-nox         \
+        exa               \
         fd-find           \
         git               \
         gron              \
