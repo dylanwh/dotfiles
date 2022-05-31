@@ -2,6 +2,7 @@ function hame-debian
     set packages          \
         autoconf          \
         bind9-dnsutils    \
+        black             \
         build-essential   \
         curl              \
         emacs-nox         \
@@ -9,6 +10,7 @@ function hame-debian
         fd-find           \
         git               \
         gron              \
+        httpie            \
         hub               \
         jq                \
         jsonnet           \
