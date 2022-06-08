@@ -16,7 +16,7 @@ if status --is-interactive
         case 'mosh*'
             set -x shell_via mosh
         case 'sshd*' 'login' '/usr/bin/login' 'tmux*'
-            smart-ssh-agent
+            #smart-ssh-agent
     end
 
     switch "$TERM_PROGRAM"

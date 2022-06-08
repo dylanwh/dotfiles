@@ -13,6 +13,8 @@ function hame-macos
 
     defaults write com.microsoft.VSCode \
         ApplePressAndHoldEnabled -bool false
+    defaults write com.valvesoftware.steamlink \
+        ApplePressAndHoldEnabled -bool false
     defaults write -g AppleShowAllExtensions -bool true
 
     pushd ~/.config/alfred

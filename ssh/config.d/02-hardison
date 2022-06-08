@@ -12,3 +12,7 @@ Host *.home.arpa
     StrictHostKeyChecking yes
     ForwardAgent yes
     AddressFamily inet
+
+Host *.home.arpa
+    AddressFamily inet
+    ForwardAgent yes

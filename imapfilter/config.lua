@@ -97,10 +97,16 @@ function move_cpan(server, box)
   cpan:move_messages(server['CPAN'])
 end
 
+local file = io.open(os.getenv("HOME") .. "/.fastmail_password", "r")
+local password
+if file then
+    password = file:read("*line")
+end
+
 local fastmail = IMAP {
     server = 'imap.fastmail.com',
     username = "dylan@hardison.net",
-    password = io.open(os.getenv("HOME") .. "/.fastmail_password", "r"):read(),
+    password = password,
     ssl = 'tls1.2',
 }
 

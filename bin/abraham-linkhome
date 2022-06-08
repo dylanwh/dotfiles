@@ -37,7 +37,7 @@ my @dotfiles = (
   'offlineimaprc', 'quotes',
   'reply.pl',      'screenrc',
   'tmux.conf',     'todorc',
-  'wyrdrc'
+  'wyrdrc',        'dataprinter',
 );
 
 provide($_, ".$_") for @dotfiles;
