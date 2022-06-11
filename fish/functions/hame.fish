@@ -83,7 +83,7 @@ function hame
         path add $GOPATH/bin
         if not have gore
             hame-echo installing gore
-            hame-nq go install github.com/k0kubun/pp@latest
+            hame-nq go get github.com/k0kubun/pp@latest
             hame-nq go install github.com/mdempsky/gocode@latest
             hame-nq go install github.com/x-motemen/gore/cmd/gore@latest
         end
