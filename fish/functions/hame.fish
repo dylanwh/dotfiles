@@ -77,29 +77,8 @@ function hame
     hame-emacs
 
     hame-rust
+    hame-go
     hame-tmux
-    if have go
-        hame-echo configuring go stuff
-        path add $GOPATH/bin
-        if not have gore
-            hame-echo installing gore
-            hame-nq go get github.com/k0kubun/pp@latest
-            hame-nq go install github.com/mdempsky/gocode@latest
-            hame-nq go install github.com/x-motemen/gore/cmd/gore@latest
-        end
-        if not have gron
-            hame-echo installing gron
-            hame-nq go install github.com/tomnomnom/gron@latest
-        end
-        if not have jsonnet
-            hame-echo installing jsonnet
-            hame-nq go install github.com/google/go-jsonnet/cmd/jsonnet@latest
-        end
-        if not have jsonnetfmt
-            hame-echo installing jsonnetfmt
-            hame-nq go install github.com/google/go-jsonnet/cmd/jsonnetfmt@latest
-        end
-    end
 
     set -l default_perl 5.34.0
     if not [ -d $PLENV_ROOT/versions/$default_perl ]

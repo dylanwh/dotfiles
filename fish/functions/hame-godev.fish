@@ -1,4 +1,16 @@
 function hame-godev
+    have go
+    or return 1
+
+    hame-echo installing go development tools
+
+    if not have gore
+        hame-echo installing gore
+        hame-nq go get github.com/k0kubun/pp@latest
+        hame-nq go install github.com/mdempsky/gocode@latest
+        hame-nq go install github.com/x-motemen/gore/cmd/gore@latest
+    end
+
     have gopls
     or hame-nq env GO111MODULE=on go install golang.org/x/tools/gopls@latest
 
