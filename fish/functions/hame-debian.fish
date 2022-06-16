@@ -35,7 +35,7 @@ function hame-debian
     [ -f ~/.cache/hame/packages.md5 ]
     and md5sum -c ~/.cache/hame/packages.md5 2>/dev/null >/dev/null
     or sudo apt install -y $packages
-    md5sum ~/.cache/hame/packages.txt > ~/.cache/hame/packages.md5 2>/dev/null
+    and md5sum ~/.cache/hame/packages.txt > ~/.cache/hame/packages.md5 2>/dev/null
 
     [ -f /usr/lib/cargo/bin/fd ]
     and not [ -f ~/.local/bin/fd ]

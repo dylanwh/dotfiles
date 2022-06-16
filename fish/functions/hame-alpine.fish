@@ -54,5 +54,5 @@ function hame-alpine
     [ -f ~/.cache/hame/packages.md5 ]
     and md5sum -c ~/.cache/hame/packages.md5 2>/dev/null >/dev/null
     or $sudo apk add $packages
-    md5sum ~/.cache/hame/packages.txt > ~/.cache/hame/packages.md5 2>/dev/null
+    and md5sum ~/.cache/hame/packages.txt > ~/.cache/hame/packages.md5 2>/dev/null
 end
