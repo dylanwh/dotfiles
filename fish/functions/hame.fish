@@ -62,6 +62,8 @@ function hame
         case Linux
             [ -f /etc/debian_version ]
             and hame-debian
+            [ -f /etc/alpine-release ]
+            and hame-alpine
     end
 
     if not have nq
