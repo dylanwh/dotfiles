@@ -1,5 +1,5 @@
 function hame
-    argparse "f/force" "v/verbose" -- $argv
+    argparse "f/force" "v/verbose" "n/foreground" -- $argv
 
     set -lx HAME_FLAGS ""
     if [ -n "$_flag_force" ]
@@ -9,6 +9,11 @@ function hame
     set -lx HAME_VERBOSE
     if [ -n "$_flag_verbose" ]
         set HAME_VERBOSE 1
+    end
+
+    set -lx HAME_FOREGROUND
+    if [ -n "$_flag_foreground" ]
+        set HAME_FOREGROUND 1
     end
 
     pushd $HOME/Git/dylanwh/dotfiles

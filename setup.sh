@@ -1,4 +1,4 @@
 #!/bin/sh
 
 perl ./bin/abraham-linkhome
-fish -c 'hame -v'
+fish -c 'hame -v -n'
