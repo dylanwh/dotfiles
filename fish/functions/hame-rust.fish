@@ -33,8 +33,10 @@ function hame-rust
         or hame-nq cargo install starship
         have dust
         or hame-nq cargo install du-dust
-        have delta
-        or hame-nq cargo install git-delta
+        if [ (uname -sm) != "Linux aarch64" ]
+            have delta
+            or hame-nq cargo install git-delta
+        end
         have uq
         or hame-nq cargo install uq
         have xsv
