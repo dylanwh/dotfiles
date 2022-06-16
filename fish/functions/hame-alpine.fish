@@ -46,8 +46,13 @@ function hame-alpine
         echo $pkg
     end | sort > ~/.cache/hame/packages.txt
 
+    set sudo "sudo"
+    if not have sudo
+        set sudo doas
+    end
+
     [ -f ~/.cache/hame/packages.md5 ]
     and md5sum -c ~/.cache/hame/packages.md5 2>/dev/null >/dev/null
-    or sudo apk add $packages
+    or $sudo apk add $packages
     md5sum ~/.cache/hame/packages.txt > ~/.cache/hame/packages.md5 2>/dev/null
 end
