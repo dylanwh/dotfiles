@@ -28,44 +28,46 @@ function hame-macos
         echo 'dylan ALL = (root) NOPASSWD: /opt/local/bin/port' | sudo tee /etc/sudoers.d/99-port
     end
 
-    set macports        \
-        autoconf        \
-        automake        \
-        bat             \
-        binplist        \
-        coreutils       \
-        curlie          \
-        fd              \
-        findutils       \
-        git             \
-        go              \
-        gron            \
-        hey             \
-        htop            \
-        hub             \
-        jq              \
-        less            \
-        man             \
-        moreutils       \
-        ncdu            \
-        protobuf-c      \
-        pstree          \
-        pv              \
+    set macports         \
+        autoconf         \
+        automake         \
+        bat              \
+        binplist         \
+        coreutils        \
+        curlie           \
+        fd               \
+        findutils        \
+        git              \
+        go               \
+        gron             \
+        hey              \
+        htop             \
+        hub              \
+        jq               \
+        less             \
+        man              \
+        moreutils        \
+        ncdu             \
+        neovim           \
+        nodejs16         \
+        protobuf-c       \
+        pstree           \
+        pv               \
         py310-black      \
         py310-jupyterlab \
         py310-numpy      \
         py310-openpyxl   \
         py310-pandas     \
-        ripgrep         \
-        skim            \
-        socat           \
-        tmux            \
-        tmux-pasteboard \
-        trash           \
-        vim             \
-        wget            \
-        xml2            \
-        xsv             \
+        ripgrep          \
+        skim             \
+        socat            \
+        tmux             \
+        tmux-pasteboard  \
+        trash            \
+        vim              \
+        wget             \
+        xml2             \
+        xsv              \
         youtube-dl
 
     string join \n $macports | sort > ~/.cache/hame/macports.txt
