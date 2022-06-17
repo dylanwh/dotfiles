@@ -1,5 +1,12 @@
 function gen_selenized_vars
     set -l json_file $HOME/.config/selenized/variants.json
+    set -l fish_file $HOME/.config/selenized/variants.fish
+
+    if not have jq
+        cat $fish_file
+        return
+    end
+
     set -l dump_vars '
         . as $in 
         | keys_unsorted[] 
@@ -13,14 +20,14 @@ function gen_selenized_vars
         | "\($var) \($values)"
     '
 
+    begin
+        echo -n "set -g selenized_colors "
+        jq -r '.black | keys_unsorted | join(" ")' <$json_file
 
-    echo -n "set -g selenized_colors "
-    jq -r '.black | keys_unsorted | join(" ")' <$json_file
+        echo -n "set -g selenized_variants "
+        jq -r '. | keys_unsorted | join(" ")' <$json_file
 
-    echo -n "set -g selenized_variants "
-    jq -r '. | keys_unsorted | join(" ")' <$json_file
-
-
-    jq -r $dump_vars <$json_file | sed 's/^/set -g /'
+        jq -r $dump_vars <$json_file | sed 's/^/set -g /'
+    end | tee $fish_file
 
 end

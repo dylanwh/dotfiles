@@ -6,13 +6,23 @@ function selenized
         set _flag_variant black
     end
     if [ -z $_flag_modules ]
-        set _flag_modules fish vivid grep tmux vim
-        if [ -n "$WSL_DISTRO_NAME" ]
-            set _flag_modules $_flag_modules winterm
+        set _flag_modules fish grep vim
+
+        if have vivid
+            set _flag_modules $_flag_modules vivid
+        else
+            set _flag_modules $_flag_modules ls_colors
         end
-        if test -d /Applications/MacPorts/Alacritty.app
-            set _flag_modules $_flag_modules alacritty
-        end
+
+        have tmux
+        and echo test | tmux-pp &> /dev/null
+        and set _flag_modules $_flag_modules tmux
+
+        [ -n "$WSL_DISTRO_NAME" ]
+        and set _flag_modules $_flag_modules winterm
+
+        test -d /Applications/MacPorts/Alacritty.app
+        and set _flag_modules $_flag_modules alacritty
     end
     set -l s_scope ''
     if [ -n $_flag_env ]
@@ -84,13 +94,11 @@ function selenized
                 end
                 mkdir -p (dirname $s_file)
                 jsonnet -y $jsonnet_args $s_dir/alacritty.jsonnet > $s_file
+            case ls_colors
+                echo "vivid not found. LS_COLORS unchanged." >&2
+                set --erase -g LS_COLORS
+                set -Ux LS_COLORS (cat $HOME/.config/fish/ls_colors)
             case vivid
-                if not have vivid
-                    echo "vivid not found; cargo install vivid?" >&2
-                    set --erase -g LS_COLORS
-                    set -Ux LS_COLORS (cat ~/.config/fish/ls_colors)
-                    continue
-                end
                 set -lx VIVID_DATABASE $HOME/.config/selenized/vivid_filetypes.yml
                 set -l vivid_theme (mktemp -t selenized-XXXXXX)
                 command rm $vivid_theme
@@ -120,6 +128,7 @@ function selenized
                     set -a selenized_env "$env=#$$var"
                 end
                 env $selenized_env tmux-pp < $HOME/.config/selenized/tmux.ep >$tmux_theme
+                or continue
                 if tmux info >/dev/null 2>/dev/null
                     tmux source $tmux_theme
                 end
