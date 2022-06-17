@@ -6,7 +6,6 @@ function hame-debian
         build-essential   \
         curl              \
         emacs-nox         \
-        exa               \
         fd-find           \
         git               \
         gron              \
@@ -18,6 +17,7 @@ function hame-debian
         libssl-dev        \
         moreutils         \
         ncdu              \
+        neovim            \
         nmap              \
         nq                \
         pkg-config        \
@@ -25,12 +25,19 @@ function hame-debian
         pv                \
         ripgrep           \
         tmux              \
-        vim-nox           \
+        vim-nox-          \
         whois
 
-    for pkg in $packages
-        echo $pkg
-    end | sort > ~/.cache/hame/packages.txt
+    set release (lsb_release -rs)
+    switch $release
+    case 22.04
+        set -a packages exa
+    case 20.04
+        set packages (string join \n $packages | egrep -v 'emacs-nox|neovim')
+        set -a packages nodejs- emacs-nox- neovim-
+    end
+
+    string join \n $packages | sort > ~/.cache/hame/packages.txt
 
     [ -f ~/.cache/hame/packages.md5 ]
     and md5sum -c ~/.cache/hame/packages.md5 2>/dev/null >/dev/null

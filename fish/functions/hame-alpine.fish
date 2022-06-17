@@ -44,9 +44,7 @@ function hame-alpine
         tmux              \
         wget
 
-    for pkg in $packages
-        echo $pkg
-    end | sort > ~/.cache/hame/packages.txt
+    string join \n $packages | sort > ~/.cache/hame/packages.txt
 
     set sudo "sudo"
     if not have sudo

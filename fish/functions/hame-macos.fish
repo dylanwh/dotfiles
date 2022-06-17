@@ -68,12 +68,10 @@ function hame-macos
         xsv             \
         youtube-dl
 
-    for macport in $macports
-        echo $macport
-    end | sort > ~/.cache/hame/macports.txt
+    string join \n $macports | sort > ~/.cache/hame/macports.txt
 
     [ -f ~/.cache/hame/macports.md5 ]
     and cmp -s ~/.cache/hame/macports.md5 (md5 -r ~/.cache/hame/macports.txt|psub)
     or sudo port -N install $macports
-    md5 -r ~/.cache/hame/macports.txt > ~/.cache/hame/macports.md5 2>/dev/null
+    and md5 -r ~/.cache/hame/macports.txt > ~/.cache/hame/macports.md5 2>/dev/null
 end
