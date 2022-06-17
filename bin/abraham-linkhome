@@ -14,7 +14,7 @@ use IO::File;
 use Cwd qw(realpath);
 use autodie qw(:default);
 
-sub rm_if_link ($);
+sub rm_if_link ($); ## no critic (Subroutines::ProhibitSubroutinePrototypes)
 
 my $REPO = realpath(catdir(dirname(realpath(__FILE__)), '..'));
 
@@ -42,7 +42,6 @@ my @dotfiles = (
 
 provide($_, ".$_") for @dotfiles;
 
-mkpath "$HOME/.local/go";
 rm_if_link "$HOME/.local/bin";
 mkpath "$HOME/.local/bin";
 
@@ -140,7 +139,7 @@ sub write_file {
   close $output;
 }
 
-sub rm_if_link ($) {
+sub rm_if_link ($) { ## no critic (Subroutines::ProhibitSubroutinePrototypes)
   my ($path) = @_;
   unlink $path if -l $path;
 }
