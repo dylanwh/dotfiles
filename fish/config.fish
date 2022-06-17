@@ -29,8 +29,14 @@ if status --is-interactive
             abbr -a -g -- vi $code
             abbr -a -g -- vim $code
         case '*'
-            set -x EDITOR "vim"
-            abbr -a -g vi vim
+            if have nvim
+                set -x EDITOR nvim
+                abbr -a -g -- vi nvim
+                abbr -a -g -- vim nvim
+            else
+                set -x EDITOR "vim"
+                abbr -a -g vi vim
+            end
     end
 end
 

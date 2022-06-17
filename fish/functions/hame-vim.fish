@@ -8,8 +8,8 @@ function hame-vim
     hame-clone -n abolish           -p "$vim/start/abolish"           -u "tpope/vim-abolish"
     hame-clone -n ag                -p "$vim/start/ag"                -u "epmatsw/ag.vim"
     hame-clone -n applescript       -p "$vim/start/applescript"       -u "dearrrfish/vim-applescript"
-    hame-clone -n coc               -p "$vim/start/coc"               -u "neoclide/coc.nvim" -b release
     hame-clone -n commentary        -p "$vim/start/commentary"        -u "tpope/vim-commentary"
+    hame-clone -n copilot           -p "$vim/start/copilot"           -u "github/copilot.vim"
     hame-clone -n cpanfile          -p "$vim/start/cpanfile"          -u "moznion/vim-cpanfile"
     hame-clone -n ctrlp             -p "$vim/start/ctrlp"             -u "ctrlpvim/ctrlp.vim"
     hame-clone -n editorconfig      -p "$vim/start/editorconfig"      -u "editorconfig/editorconfig-vim"
@@ -46,7 +46,8 @@ function hame-vim
                   "$vim/start/fzy-builtins" \
                   "$vim/start/fzy-find" \
                   "$vim/start/airline" \
-                  "$vim/start/airline-themes"
+                  "$vim/start/airline-themes" \
+                  "$vim/start/coc"
     for pack in $rm_packs
         test -d "$pack"
         and hame-echo "hame-vim: rm $pack"
