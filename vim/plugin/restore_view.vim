@@ -54,5 +54,5 @@ endfunction
 augroup RestoreView
     autocmd!
     autocmd BufWritePost,WinLeave,BufWinLeave ?* if RestoreViewAllowed() == 1 | mkview | endif
-    autocmd BufWinEnter ?* if RestoreViewAllowed() == 1 | silent loadview | endif
+    autocmd BufWinEnter ?* if RestoreViewAllowed() == 1 | silent! loadview | endif
 augroup END
