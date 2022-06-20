@@ -26,6 +26,7 @@ function hame-alpine
         ncdu              \
         ncurses           \
         neovim            \
+        neovim-doc        \
         nodejs            \
         nq                \
         openssl           \
