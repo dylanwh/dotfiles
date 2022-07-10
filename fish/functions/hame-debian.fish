@@ -17,7 +17,7 @@ function hame-debian
         libssl-dev        \
         moreutils         \
         ncdu              \
-        neovim            \
+        neovim-           \
         nmap              \
         nq                \
         pkg-config        \
