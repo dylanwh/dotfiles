@@ -78,3 +78,6 @@
 (add-hook 'js2-mode-hook #'(lambda () (modify-syntax-entry ?_ "w")))
 
 (add-hook 'ruby-mode-hook 'evil-ruby-text-objects-mode)
+
+(after! rustic
+  (setq rustic-lsp-server 'rls))
