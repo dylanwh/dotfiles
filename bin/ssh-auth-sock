@@ -1,0 +1,20 @@
+#!/usr/bin/env perl
+use 5.30.0;
+use English qw($OSNAME);
+use File::stat;
+
+if ($OSNAME eq 'darwin') {
+  my @auth_socks = (
+      sort { $_->{stat}->mtime <=> $b->{stat}->mtime }
+      grep { -S $_->{stat} }
+      map  { +{path => $_, stat => stat($_)} }
+      glob('/private/tmp/com.apple.launchd.*/Listeners')
+  );
+  if (@auth_socks) {
+    say $auth_socks[0]->{path};
+  }
+}
+
+
+
+

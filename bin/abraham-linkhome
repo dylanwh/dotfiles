@@ -46,6 +46,7 @@ rm_if_link "$HOME/.local/bin";
 mkpath "$HOME/.local/bin";
 
 foreach my $file (glob "$REPO/bin/*") {
+  next if $file =~ /~$/;
   my $repo_file = abs2rel($file, $REPO);
   my $home_file = ".local/bin/" . basename($repo_file);
 

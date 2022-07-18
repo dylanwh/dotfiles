@@ -15,7 +15,9 @@ if status --is-interactive
         case 'mosh*'
             set -x shell_via mosh
         case 'sshd*' 'login' '/usr/bin/login' 'tmux*'
-            #smart-ssh-agent
+            if [ -z "$SSH_AUTH_SOCK" ]
+                set -x SSH_AUTH_SOCK (ssh-auth-sock)
+            end
     end
 
     switch "$TERM_PROGRAM"
