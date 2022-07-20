@@ -17,6 +17,15 @@ sub find_ssh_auth_sock {
       return $auth_socks[0]->{path};
     }
   }
+  my @auth_socks = (
+      sort { $_->{stat}->mtime <=> $b->{stat}->mtime }
+      grep { -S $_->{stat} }
+      map  { +{path => $_, stat => stat($_)} }
+      glob('/tmp/ssh-*/agent.*')
+  );
+  if (@auth_socks) {
+    return $auth_socks[0]->{path};
+  }
   my $runtime_dir = $XDG_RUNTIME_DIR // '/tmp';
   if (-f "$runtime_dir/ssh-agent.fish") {
     open my $fh, '<', "$runtime_dir/ssh-agent.fish";
