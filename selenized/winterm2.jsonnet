@@ -4,9 +4,11 @@ local settings = import '/mnt/c/Users/dylan/AppData/Local/Packages/Microsoft.Win
 local profile_defaults = {
   antialiasingMode: 'cleartype',
   cursorShape: 'filledBox',
-  fontFace: 'Source Code Pro for Powerline',
-  fontSize: 16,
-  fontWeight: 'medium',
+  font: {
+    face: 'Source Code Pro for Powerline',
+    size: 14,
+    weight: 'medium',
+  },
 };
 
 local rgb(s) = {
@@ -100,7 +102,6 @@ local new_settings(variant) = {
   },
   schemes: schemes,
   actions: actions,
-  old_actions: settings.actions,
   copyFormatting: false,
   copyOnSelect: false,
 };
