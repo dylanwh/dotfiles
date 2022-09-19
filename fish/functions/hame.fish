@@ -106,6 +106,11 @@ function hame
         end
     end
 
+    if [ -d /opt/node ]
+        npm config set prefix /opt/node
+        path add /opt/node/bin
+    end
+
     # plenv, pyenv, etc should be before /opt/local/bin in the path
     path remove /opt/local/bin
     path add /opt/local/bin
