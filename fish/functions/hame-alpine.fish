@@ -35,6 +35,7 @@ function hame-alpine
         procps            \
         psmisc            \
         pv                \
+        tzdata            \
         rclone            \
         ripgrep           \
         rsync             \
