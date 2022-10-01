@@ -40,6 +40,7 @@ function hame-vim
     hame-clone -n unimpaired        -p "$vim/start/unimpaired"        -u "tpope/vim-unimpaired"
     hame-clone -n vim-go            -p "$vim/start/go"                -u "fatih/vim-go.git"
     hame-clone -n vinegar           -p "$vim/start/vinegar"           -u "tpope/vim-vinegar"
+    hame-clone -n terraform         -p "$vim/start/terraform"         -u "hashivim/vim-terraform"
 
     set rm_packs  "$vim/start/fzy" \
                   "$vim/start/fzf" \

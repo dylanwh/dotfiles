@@ -10,9 +10,6 @@
 if exists("g:loaded_xdg_dirs")
     finish
 endif
-if has("nvim")
-    finish
-endif
 
 let g:loaded_xdg_dirs = 1
 
@@ -44,11 +41,19 @@ function s:MakePath(path) "{{{
     endif
 endfunction "}}}
 
-set directory=$XDG_DATA_HOME/vim/swap//
-set backupdir=$XDG_DATA_HOME/vim/backup//
-set undodir=$XDG_DATA_HOME/vim/undo//
-set viewdir=$XDG_DATA_HOME/vim/view
-set viminfo+=n$XDG_DATA_HOME/vim/info
+if has("nvim")
+    set directory=$XDG_DATA_HOME/nvim/swap//
+    set backupdir=$XDG_DATA_HOME/nvim/backup//
+    set undodir=$XDG_DATA_HOME/nvim/undo//
+    set viewdir=$XDG_DATA_HOME/nvim/view
+    set viminfo+=n$XDG_DATA_HOME/nvim/info
+else
+    set directory=$XDG_DATA_HOME/vim/swap//
+    set backupdir=$XDG_DATA_HOME/vim/backup//
+    set undodir=$XDG_DATA_HOME/vim/undo//
+    set viewdir=$XDG_DATA_HOME/vim/view
+    set viminfo+=n$XDG_DATA_HOME/vim/info
+endif
 
 let g:netrw_home = $XDG_DATA_HOME . "/vim/netrw"
 
