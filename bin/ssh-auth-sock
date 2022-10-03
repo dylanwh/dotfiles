@@ -8,9 +8,9 @@ use File::stat;
 sub find_ssh_auth_sock {
   if ($OSNAME eq 'darwin') {
     my @auth_socks = (
-        sort { $_->{stat}->mtime <=> $b->{stat}->mtime }
+        # sort { $_->{stat}->mtime <=> $b->{stat}->mtime }
         grep { -S $_->{stat} }
-        map  { +{path => $_, stat => stat($_)} }
+        map  { +{path => $_, stat => scalar stat($_)} }
         glob('/private/tmp/com.apple.launchd.*/Listeners')
     );
     if (@auth_socks) {

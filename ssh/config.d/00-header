@@ -13,3 +13,5 @@ SendEnv LANG LC_* TERM_PROGRAM
 
 # This cannot be set in a host block...
 PreferredAuthentications publickey,keyboard-interactive,password
+
+ControlPath ~/.ssh/control/%n
