@@ -21,6 +21,8 @@ function hame-git
     git config --global alias.top "!pwd"
     git config --global alias.up "!git fetch --all --tags --prune && git pull --rebase"
 
+    git config --global url."https://github.com/".insteadOf git://github.com/
+
     if have delta
         hame-echo configuring git to use delta
         git config --global core.pager (which delta)
