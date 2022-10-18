@@ -9,6 +9,7 @@ function hame-alpine
         bind-tools           \
         build-base           \
         cmatrix              \
+        command-not-found    \
         coreutils            \
         curl                 \
         doas                 \

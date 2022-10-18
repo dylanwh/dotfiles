@@ -1,5 +1,7 @@
 function hame-git
     hame-echo configuring git
+    set gitconfig ~/.gitconfig
+    cp $gitconfig $gitconfig~
     git config --global color.branch auto
     git config --global color.diff auto
     git config --global color.status auto
@@ -32,5 +34,14 @@ function hame-git
         git config --global delta.decorations.commit-decoration-style 'bold yellow box ul'
         git config --global delta.decorations.file-style 'bold yellow ul'
         git config --global delta.decorations.file-decoration-style none
+    end
+
+    test -n "$HAME_VERBOSE"
+    or return 0
+
+    if have delta
+        delta $gitconfig~ $gitconfig
+    else
+        diff -u $gitconfig~ $gitconfig
     end
 end
