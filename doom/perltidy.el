@@ -60,8 +60,8 @@
 
 ;;; Code:
 
-(eval-when-compile
-  (require 'cl))
+; (eval-when-compile
+;   (require 'cl))
 
 (defgroup perltidy nil
   "Tidy perl code using perltidy"

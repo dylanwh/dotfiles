@@ -80,4 +80,4 @@
 (add-hook 'ruby-mode-hook 'evil-ruby-text-objects-mode)
 
 (after! rustic
-  (setq rustic-lsp-server 'rls))
+  (setq rustic-lsp-server 'rust-analyzer))

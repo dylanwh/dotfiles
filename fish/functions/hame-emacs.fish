@@ -11,7 +11,7 @@ function hame-emacs
     path add ~/.emacs.d/bin
     if not [ -d .emacs.d/.local ]
         hame-echo installing doom-emacs
-        hame-nq bash -c "yes | doom -y install --no-fonts"
+        hame-nq bash -c "doom install --force --env --no-fonts"
     end
     popd
 end

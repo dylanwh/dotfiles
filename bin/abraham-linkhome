@@ -14,7 +14,7 @@ use IO::File;
 use Cwd qw(realpath);
 use autodie qw(:default);
 
-sub rm_if_link ($); ## no critic (Subroutines::ProhibitSubroutinePrototypes)
+sub rm_if_link ($);    ## no critic (Subroutines::ProhibitSubroutinePrototypes)
 
 my $REPO = realpath(catdir(dirname(realpath(__FILE__)), '..'));
 
@@ -140,7 +140,7 @@ sub write_file {
   close $output;
 }
 
-sub rm_if_link ($) { ## no critic (Subroutines::ProhibitSubroutinePrototypes)
+sub rm_if_link ($) {    ## no critic (Subroutines::ProhibitSubroutinePrototypes)
   my ($path) = @_;
   unlink $path if -l $path;
 }

@@ -33,11 +33,16 @@ function hame-macos
         automake         \
         bat              \
         binplist         \
+        cmake            \
         coreutils        \
         curlie           \
+        dust             \
+        emacs +native-comp \
+        exa              \
         fd               \
         findutils        \
         git              \
+        git-delta        \
         go               \
         gron             \
         hey              \
@@ -61,6 +66,7 @@ function hame-macos
         ripgrep          \
         skim             \
         socat            \
+        starship         \
         tmux             \
         tmux-pasteboard  \
         trash            \
@@ -76,4 +82,8 @@ function hame-macos
     and cmp -s ~/.cache/hame/macports.md5 (md5 -r ~/.cache/hame/macports.txt|psub)
     or sudo port -N install $macports
     and md5 -r ~/.cache/hame/macports.txt > ~/.cache/hame/macports.md5 2>/dev/null
+
+    sudo port select --set black black310
+    sudo port select --set python python310
+    sudo port select --set python3 python310
 end
