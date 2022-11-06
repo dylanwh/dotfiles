@@ -46,12 +46,6 @@ function hame-rust
         have broot
         and hame-nq cargo uninstall broot
     end
-    if not have rust-analyzer
-        set rust_analyzer_path (rustup which --toolchain stable rust-analyzer)
-        if [ -n $rust_analyzer_path ]
-            ln -s $rust_analyzer_path ~/.cargo/bin/rust-analyzer
-        end
-    end
     popd
 end
 
