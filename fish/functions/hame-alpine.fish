@@ -1,9 +1,9 @@
 function hame-alpine
     set packages             \
         '!doas-sudo-shim'    \
-        '!vim'               \
         '!emacs'             \
         '!emacs-nox'         \
+        '!vim'               \
         bash                 \
         bat                  \
         bind-tools           \
@@ -21,11 +21,13 @@ function hame-alpine
         go                   \
         htop                 \
         httpie               \
+        imagemagick          \
         iperf3               \
         jq                   \
         jsonnet              \
         make                 \
         moreutils            \
+        mutt                 \
         ncdu                 \
         ncurses              \
         neovim               \
@@ -38,7 +40,6 @@ function hame-alpine
         procps               \
         psmisc               \
         pv                   \
-        tzdata               \
         rclone               \
         ripgrep              \
         rsync                \
@@ -46,7 +47,10 @@ function hame-alpine
         skim-tmux            \
         starship             \
         sudo                 \
+        tidyhtml             \
         tmux                 \
+        trash-cli            \
+        tzdata               \
         wget
 
     string join \n $packages | sort > ~/.cache/hame/packages.txt
