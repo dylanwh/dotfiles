@@ -21,7 +21,7 @@ my $REPO = realpath(catdir(dirname(realpath(__FILE__)), '..'));
 provide('doom',          '.doom.d');
 provide('fish',          '.config/fish');
 provide('imapfilter',    '.imapfilter');
-provide('iterm2',        '.iterm2');
+provide('iterm2',        '.config/iterm2');
 provide('mutt',          '.mutt');
 provide('selenized',     '.config/selenized');
 provide('starship.toml', '.config/starship.toml');

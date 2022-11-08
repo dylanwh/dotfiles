@@ -45,6 +45,7 @@ function hame-vim
     hame-clone $U -n rg                -p "$vim/start/ripgrep"           -u "jremmen/vim-ripgrep"
     hame-clone $U -n rhubarb           -p "$vim/start/rhubarb"           -u "tpope/vim-rhubarb"
     hame-clone $U -n solarized8        -p "$vim/opt/solarized8"          -u "lifepillar/vim-solarized8"
+    hame-clone $U -n lsp               -p "$vim/opt/lsp"                 -u "yegappan/lsp"
     hame-clone $U -n splitjoin         -p "$vim/start/splitjoin"         -u "AndrewRadev/splitjoin.vim"
     hame-clone $U -n supertab          -p "$vim/start/supertab"          -u "ervandew/supertab"
     hame-clone $U -n surround          -p "$vim/start/surround"          -u "tpope/vim-surround"

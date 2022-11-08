@@ -251,6 +251,19 @@ if !exists('autocmds_loaded')
 endif
 " }}}
 
+if v:version >= 900
+    packadd lsp
+    let lspServers = [
+    \     #{
+    \       filetype: ['rust'],
+    \       path: trim(system("rustup which --toolchain stable rust-analyzer")),
+    \       args: [],
+    \       syncInit: v:true
+    \     }
+    \ ]
+   call LspAddServer(lspServers)
+endif
+
 if filereadable(expand("~/.vim/vimrc.local", 1))
   source ~/.vimrc.local
 endif

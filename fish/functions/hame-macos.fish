@@ -17,6 +17,9 @@ function hame-macos
         ApplePressAndHoldEnabled -bool false
     defaults write -g AppleShowAllExtensions -bool true
 
+    defaults write com.googlecode.iterm2 PrefsCustomFolder -string ~/.config/iterm2
+    defaults write com.googlecode.iterm2 LoadPrefsFromCustomFolder -bool true
+
     pushd ~/.config/alfred
     hame-echo updating "~/.config/alfred"
     git pull -q
