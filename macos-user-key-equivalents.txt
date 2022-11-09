@@ -9,5 +9,4 @@ domain 'com.tinyspeck.slackmacgap': {
 }
 domain 'com.microsoft.edgemac': {
     'Close Other Tabs' = '@~w';
-    'Cast Media to Device...' = '@~c';
 }
