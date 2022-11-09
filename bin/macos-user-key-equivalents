@@ -72,13 +72,13 @@ sub do_list {
 sub do_export {
   my $parser = My::Defaults::Parser->new;
   my $data   = $parser->from_string(scalar `defaults find NSUserKeyEquivalents`);
-  open my $fh, '>', "$HOME/.config/macos-user-key-equivalents";
+  open my $fh, '>', "$HOME/.config/macos-user-key-equivalents.txt";
   save($fh, $data);
 }
 
 sub do_import {
   my $parser = My::Defaults::Parser->new;
-  my $data   = $parser->from_file("$HOME/.config/macos-user-key-equivalents");
+  my $data   = $parser->from_file("$HOME/.config/macos-user-key-equivalents.txt");
   save(\*STDOUT, $data);
   for my $domain (@$data) {
     my ($name, $binds) = @$domain;
