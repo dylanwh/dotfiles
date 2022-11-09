@@ -29,6 +29,8 @@ provide('terminfo',      '.terminfo');
 provide('vim',           '.config/nvim');
 provide('vim',           '.vim');
 
+provide('macos-user-key-equivalents.txt', '.config/macos-user-key-equivalents.txt') if $OSNAME eq 'darwin';
+
 my @dotfiles = (
   'ctags',         'cvsignore',
   'fdignore',      'iterm2_shell_integration.fish',

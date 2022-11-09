@@ -1,0 +1,115 @@
+#!/usr/bin/env perl
+use strict;
+use warnings;
+use autodie;
+use experimental 'signatures';
+use Env qw($HOME);
+
+package My::Defaults::Parser {
+  use base qw( Parser::MGC );
+
+  sub parse ($self) {
+    $self->sequence_of(
+      sub {
+        $self->any_of('domain', 'found_keys');
+      }
+    )
+  }
+
+  sub domain ($self) {
+    $self->expect('domain');
+    my $domain = $self->token_string;
+    $self->expect(':');
+    my $pos   = $self->pos;
+    my $binds = $self->committed_scope_of('{', 'assignments', '}');
+    [$domain, $binds];
+  }
+
+  sub found_keys ($self) {
+    $self->expect('Found');
+    $self->token_int; # it's always 1
+    $self->expect('keys');
+    $self->expect('in');
+    $self->expect('domain');
+    my $domain = $self->token_string;
+    $self->expect(':');
+    my $binds = $self->committed_scope_of('{', 'ns_user_key_equivalents', '}');
+
+    [$domain, $binds];
+  }
+
+  sub ns_user_key_equivalents ($self) {
+    $self->expect('NSUserKeyEquivalents');
+    $self->expect('=');
+    my $assignments = $self->committed_scope_of('{', 'assignments', '}');
+    $self->expect(';');
+    $assignments;
+  }
+
+  sub assignments ($self) {
+    $self->list_of(';', 'assignment');
+  }
+
+  sub assignment ($self) {
+    my $key = $self->token_string;
+    $self->expect('=');
+    my $value = $self->token_string;
+    [$key, $value];
+  }
+}
+
+my $cmd = shift @ARGV // 'list';
+
+my $f = __PACKAGE__->can("do_$cmd") // die "Unknown command: $cmd";
+$f->();
+
+sub do_list {
+  my $parser = My::Defaults::Parser->new;
+  my $data   = $parser->from_string(scalar `defaults find NSUserKeyEquivalents`);
+  save(\*STDOUT, $data);
+}
+
+sub do_export {
+  my $parser = My::Defaults::Parser->new;
+  my $data   = $parser->from_string(scalar `defaults find NSUserKeyEquivalents`);
+  open my $fh, '>', "$HOME/.config/macos-user-key-equivalents";
+  save($fh, $data);
+}
+
+sub do_import {
+  my $parser = My::Defaults::Parser->new;
+  my $data   = $parser->from_file("$HOME/.config/macos-user-key-equivalents");
+  save(\*STDOUT, $data);
+  for my $domain (@$data) {
+    my ($name, $binds) = @$domain;
+    for my $bind (@$binds) {
+      my ($key, $value) = @$bind;
+      defaults_write($name, 'NSUserKeyEquivalents', '-dict-add', $key, $value);
+    }
+  }
+}
+
+sub defaults_write (@args) {
+  print "defaults write @args\n";
+  system 'defaults', 'write', @args;
+  die "defaults write failed: $?" if $?;
+}
+
+
+sub save($fh, $data) {
+  foreach my $domain (@$data) {
+    my ($name, $binds) = @$domain;
+    print $fh "domain ", quote($name), ": {\n";
+    foreach my $bind (@$binds) {
+      my ($key, $value) = @$bind;
+      print $fh "    ", quote($key), " = ", quote($value), ";\n";
+    }
+    print $fh "}\n";
+  }
+}
+
+sub quote($str) {
+  q{'} . $str =~ s/(['\\])/\\$1/gr . q{'};
+}
+
+

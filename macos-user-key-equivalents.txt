@@ -1,0 +1,13 @@
+domain 'com.googlecode.iterm2': {
+    'Open Quickly' = '@$p';
+}
+domain 'com.google.Chrome': {
+    'Close Other Tabs' = '@~w';
+}
+domain 'com.tinyspeck.slackmacgap': {
+    'Switch to Channel' = '@p';
+}
+domain 'com.microsoft.edgemac': {
+    'Close Other Tabs' = '@~w';
+    'Cast Media to Device...' = '@~c';
+}
