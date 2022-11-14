@@ -1,7 +1,13 @@
 function ifconfig
+    # if stdout is a terminal, just run ifconfig
+    if not [ -t 1 ]
+        command ifconfig $argv
+        return
+    end
+
     set interface ""
     set ether ""
-    command ifconfig | while read line
+    command ifconfig $argv | while read line
         if set if (string match -r -g "^([A-Za-z0-9]+):" $line)
             set interface $line
             set ether ""

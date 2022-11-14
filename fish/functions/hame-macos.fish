@@ -51,6 +51,7 @@ function hame-macos
         hey              \
         htop             \
         hub              \
+        iperf3           \
         jq               \
         less             \
         man              \

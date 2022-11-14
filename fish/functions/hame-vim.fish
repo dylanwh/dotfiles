@@ -57,6 +57,7 @@ function hame-vim
     hame-clone $U -n unimpaired        -p "$vim/start/unimpaired"        -u "tpope/vim-unimpaired"
     hame-clone $U -n vim-go            -p "$vim/start/go"                -u "fatih/vim-go.git"
     hame-clone $U -n vinegar           -p "$vim/start/vinegar"           -u "tpope/vim-vinegar"
+    hame-clone $U -n rust              -p "$vim/start/rust"              -u "rust-lang/rust.vim"
 
     set rm_packs  "$vim/start/fzy" \
                   "$vim/start/fzf" \
