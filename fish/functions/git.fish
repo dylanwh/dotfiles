@@ -1,10 +1,9 @@
-# Defined in - @ line 1
-if have hub
+if status is-interactive
     function git --wraps=hub --description 'alias git hub'
-        hub  $argv;
+        hub  $argv
     end
 else
-    function git --wraps=git --description 'alias git hub'
+    function git
         command git $argv
     end
 end

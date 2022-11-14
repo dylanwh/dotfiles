@@ -2,7 +2,10 @@
 use 5.20.3;
 use strict;
 use warnings;
+no warnings 'experimental::signatures';
+use experimental 'signatures';
 use Term::ANSIColor;
+use Scalar::Util qw(looks_like_number);
 
 my $current_branch = `git rev-parse --abbrev-ref HEAD`;
 chomp $current_branch;
@@ -13,9 +16,27 @@ my @cmd = (
 );
 $ENV{LC_TIME} = 'C';
 open my $fh, '-|',  @cmd or die $!;
+
+my $max_line_num = -t STDOUT ? get_terminal_height(5) - 4 : -1;
+my $line_num = 1;
+
 while (my $line = <$fh>) {
     chomp $line;
     my ($branch, $date) = $line =~ m{^refs/heads/(.+)\t(.+)$};
 
     print $branch eq $current_branch ? "* " . colored($branch, "green") : "  $branch", "\n";
+}
+continue {
+    last if $max_line_num > 0 && $line_num++ >= $max_line_num;
+}
+
+sub get_terminal_height($min) {
+    my $height = `tput lines`;
+    chomp $height;
+    if (looks_like_number($height) && $height > $min) {
+        return $height;
+    }
+    else {
+        return $min;
+    }
 }
