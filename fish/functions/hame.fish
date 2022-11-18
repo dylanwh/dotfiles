@@ -1,9 +1,13 @@
 function hame
-    argparse "f/force" "v/verbose" "n/foreground" -- $argv
+    argparse "U/update" "v/verbose" "n/foreground" "h/help" -- $argv
 
-    set -lx HAME_FLAGS ""
-    if [ -n "$_flag_force" ]
-        set HAME_FLAGS "--force"
+    if test -n "$_flag_help"
+        echo "Usage: hame [-f] [-v] [-n] [-h]"
+        echo "  -U, --update: update checkouts when possible"
+        echo "  -v, --verbose: print verbose output"
+        echo "  -n, --foreground: run hame in the foreground (skip hame-nq)"
+        echo "  -h, --help: print this help message"
+        return
     end
 
     set -lx HAME_VERBOSE
@@ -16,10 +20,19 @@ function hame
         set HAME_FOREGROUND 1
     end
 
-    pushd $HOME/Git/dylanwh/dotfiles
-    hame-echo updating "~/Git/dylanwh/home"
-    git pull -q
-    popd
+    set -lx HAME_UPDATE
+    if [ -n "$_flag_update" ]
+        set HAME_UPDATE yes
+    end
+
+    if [ -n $HAME_UPDATE ]
+        pushd $HOME/Git/dylanwh/dotfiles
+        hame-echo updating "~/Git/dylanwh/dotfiles"
+        git pull -q
+        perl ~/Git/dylanwh/dotfiles/bin/abraham-linkhome
+        local-bin-clean
+        popd
+    end
 
     pushd $HOME
     hame-echo configuring fish
