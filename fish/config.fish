@@ -21,6 +21,9 @@ if status --is-interactive
     end
 
     switch "$TERM_PROGRAM"
+        case 'iTerm.app'
+            test -f ~/.config/fish/iterm2_colors
+            and cat ~/.config/fish/iterm2_colors
         case vscode
             set code code
             if string match -q "*insider" $TERM_PROGRAM_VERSION

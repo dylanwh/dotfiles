@@ -5,6 +5,13 @@ function selenized
     if [ -z $_flag_variant ]
         set _flag_variant black
     end
+    switch $_flag_variant
+        case black white dark light
+            # ok
+        case '*'
+            echo "Invalid variant: $_flag_variant"
+            return 1
+    end
     if [ -z $_flag_modules ]
         set _flag_modules fish grep vim
 
@@ -20,6 +27,9 @@ function selenized
 
         [ -n "$WSL_DISTRO_NAME" ]
         and set _flag_modules $_flag_modules winterm
+
+        [ -n "$LC_TERMINAL" -a "$LC_TERMINAL" = "iTerm2" ]
+        and set _flag_modules $_flag_modules iterm2
 
         test -d /Applications/MacPorts/Alacritty.app
         and set _flag_modules $_flag_modules alacritty
@@ -83,6 +93,8 @@ function selenized
                 set -l winterm_settings  $winterm_dir/settings.json
                 jsonnet -A variant=$_flag_variant $HOME/.config/selenized/winterm2.jsonnet > $winterm_settings.new
                 command mv -f $winterm_settings.new $winterm_settings
+            case iterm2
+                echo -e "\033]1337;SetColors=preset=selenized-$_flag_variant\a" | tee ~/.config/fish/iterm2_colors
             case alacritty
                 set -l s_dir   $HOME/.config/selenized
                 set -l s_file  $HOME/.config/alacritty/alacritty.yml

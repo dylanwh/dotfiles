@@ -66,6 +66,7 @@ function hame-vim
     hame-clone -n vim-go            -p "$vim/start/go"                -u "fatih/vim-go.git"
     hame-clone -n vinegar           -p "$vim/start/vinegar"           -u "tpope/vim-vinegar"
     hame-clone -n rust              -p "$vim/start/rust"              -u "rust-lang/rust.vim"
+    hame-clone -n exchange          -p "$vim/start/exchange"          -u "tommcdo/vim-exchange"
 
     set rm_packs  "$vim/start/fzy" \
                   "$vim/start/fzf" \
