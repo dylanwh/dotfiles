@@ -56,7 +56,7 @@ function hame-macos
         less             \
         man              \
         moreutils        \
-        ncdu             \
+        ncdu1            \
         neovim           \
         nodejs16         \
         protobuf-c       \
