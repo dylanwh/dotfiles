@@ -14,16 +14,13 @@ if status --is-interactive
     switch "$shell_parent"
         case 'mosh*'
             set -x shell_via mosh
-        case 'sshd*' 'login' '/usr/bin/login' 'tmux*'
+        case 'sshd*' login /usr/bin/login 'tmux*'
             if [ -z "$SSH_AUTH_SOCK" ]
                 set -x SSH_AUTH_SOCK (ssh-auth-sock)
             end
     end
 
     switch "$TERM_PROGRAM"
-        case 'iTerm.app'
-            test -f ~/.config/fish/iterm2_colors
-            and cat ~/.config/fish/iterm2_colors
         case vscode
             set code code
             if string match -q "*insider" $TERM_PROGRAM_VERSION
@@ -34,12 +31,15 @@ if status --is-interactive
             abbr -a -g -- vi $code
             abbr -a -g -- vim $code
         case '*'
+            test "$LC_TERMINAL" = iTerm2
+            and test -f ~/.config/fish/iterm2_colors
+            and cat ~/.config/fish/iterm2_colors
             if have nvim
                 set -x EDITOR nvim
                 abbr -a -g -- vi nvim
                 abbr -a -g -- vim nvim
             else
-                set -x EDITOR "vim"
+                set -x EDITOR vim
                 abbr -a -g vi vim
             end
     end

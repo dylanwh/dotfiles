@@ -1,4 +1,11 @@
 function hame-git
+    argparse "v/verbose" -- $argv
+
+    set -lx HAME_VERBOSE $HAME_VERBOSE
+    if [ -n "$_flag_verbose" ]
+        set HAME_VERBOSE 1
+    end
+
     hame-echo configuring git
     set gitconfig ~/.gitconfig
     cp $gitconfig $gitconfig~
@@ -38,6 +45,11 @@ function hame-git
 
     test -n "$HAME_VERBOSE"
     or return 0
+
+    for func in $hame_git_after
+        hame-echo running $func
+        $func
+    end
 
     if have delta
         delta $gitconfig~ $gitconfig

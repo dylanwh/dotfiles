@@ -130,6 +130,7 @@ function selenized
                 echo $LS_COLORS | tr ':' "\n" | sort -r | tr '\n' ':'  > ~/.config/fish/ls_colors
             case grep
                 set -Ux GREP_COLOR '7;33'
+                set -Ux GREP_COLORS 'mt=7;33'
             case tmux
                 set -l tmux_theme (mktemp -t selenized-XXXXXX)
                 set -l selenized_env s_variant=$_flag_variant

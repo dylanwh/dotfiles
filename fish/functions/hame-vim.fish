@@ -29,6 +29,7 @@ function hame-vim
     set -l vim .vim/pack/dylan
     hame-clone -n abolish           -p "$vim/start/abolish"           -u "tpope/vim-abolish"
     hame-clone -n ag                -p "$vim/start/ag"                -u "epmatsw/ag.vim"
+    hame-clone -n ale               -p "$vim/start/ale"               -u "dense-analysis/ale"
     hame-clone -n applescript       -p "$vim/start/applescript"       -u "dearrrfish/vim-applescript"
     hame-clone -n commentary        -p "$vim/start/commentary"        -u "tpope/vim-commentary"
     hame-clone -n copilot           -p "$vim/start/copilot"           -u "github/copilot.vim"
@@ -37,6 +38,7 @@ function hame-vim
     hame-clone -n editorconfig      -p "$vim/start/editorconfig"      -u "editorconfig/editorconfig-vim"
     hame-clone -n endwise           -p "$vim/start/endwise"           -u "tpope/vim-endwise"
     hame-clone -n eunuch            -p "$vim/start/eunuch"            -u "tpope/vim-eunuch"
+    hame-clone -n exchange          -p "$vim/start/exchange"          -u "tommcdo/vim-exchange"
     hame-clone -n fish              -p "$vim/start/fish"              -u "dag/vim-fish"
     hame-clone -n fugitive          -p "$vim/start/fugitive"          -u "tpope/vim-fugitive"
     hame-clone -n gitgutter         -p "$vim/start/gitgutter"         -u "airblade/vim-gitgutter"
@@ -44,6 +46,7 @@ function hame-vim
     hame-clone -n jq                -p "$vim/start/jq"                -u "bfrg/vim-jq"
     hame-clone -n jsonnet           -p "$vim/start/jsonnet"           -u "google/vim-jsonnet"
     hame-clone -n lightline         -p "$vim/start/lightline"         -u "itchyny/lightline.vim"
+    hame-clone -n lsp               -p "$vim/opt/lsp"                 -u "yegappan/lsp"
     hame-clone -n osc52             -p "$vim/start/osc52"             -u "fcpg/vim-osc52"
     hame-clone -n perl              -p "$vim/start/perl"              -u "vim-perl/vim-perl"
     hame-clone -n python-syntax     -p "$vim/start/python-syntax"     -u "vim-python/python-syntax"
@@ -52,12 +55,11 @@ function hame-vim
     hame-clone -n repeat            -p "$vim/start/repeat"            -u "tpope/vim-repeat"
     hame-clone -n rg                -p "$vim/start/ripgrep"           -u "jremmen/vim-ripgrep"
     hame-clone -n rhubarb           -p "$vim/start/rhubarb"           -u "tpope/vim-rhubarb"
+    hame-clone -n rust              -p "$vim/start/rust"              -u "rust-lang/rust.vim"
     hame-clone -n solarized8        -p "$vim/opt/solarized8"          -u "lifepillar/vim-solarized8"
-    hame-clone -n lsp               -p "$vim/opt/lsp"                 -u "yegappan/lsp"
     hame-clone -n splitjoin         -p "$vim/start/splitjoin"         -u "AndrewRadev/splitjoin.vim"
     hame-clone -n supertab          -p "$vim/start/supertab"          -u "ervandew/supertab"
     hame-clone -n surround          -p "$vim/start/surround"          -u "tpope/vim-surround"
-    hame-clone -n syntastic         -p "$vim/start/syntastic"         -u "vim-syntastic/syntastic"
     hame-clone -n tabular           -p "$vim/start/tabular"           -u "godlygeek/tabular"
     hame-clone -n terraform         -p "$vim/start/terraform"         -u "hashivim/vim-terraform"
     hame-clone -n textobj-rubyblock -p "$vim/start/textobj-rubyblock" -u "nelstrom/vim-textobj-rubyblock"
@@ -65,8 +67,6 @@ function hame-vim
     hame-clone -n unimpaired        -p "$vim/start/unimpaired"        -u "tpope/vim-unimpaired"
     hame-clone -n vim-go            -p "$vim/start/go"                -u "fatih/vim-go.git"
     hame-clone -n vinegar           -p "$vim/start/vinegar"           -u "tpope/vim-vinegar"
-    hame-clone -n rust              -p "$vim/start/rust"              -u "rust-lang/rust.vim"
-    hame-clone -n exchange          -p "$vim/start/exchange"          -u "tommcdo/vim-exchange"
 
     set rm_packs  "$vim/start/fzy" \
                   "$vim/start/fzf" \
@@ -74,7 +74,8 @@ function hame-vim
                   "$vim/start/fzy-find" \
                   "$vim/start/airline" \
                   "$vim/start/airline-themes" \
-                  "$vim/start/coc"
+                  "$vim/start/coc" \
+                  "$vim/start/syntastic"
     for pack in $rm_packs
         test -d "$pack"
         and hame-echo "hame-vim: rm $pack"

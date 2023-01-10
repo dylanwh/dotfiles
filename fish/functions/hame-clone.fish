@@ -32,7 +32,7 @@ function hame-clone
 
     pushd $HOME
     if [ -d "$_flag_path/.git" ]
-        if [ -n $HAME_UPDATE ]
+        if [ "$HAME_UPDATE" = 'yes' ]
             pushd $_flag_path
             hame-echo git pull $_flag_name
             command git pull -q

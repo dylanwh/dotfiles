@@ -68,6 +68,7 @@ function hame-macos
         py310-openpyxl   \
         py310-pandas     \
         ripgrep          \
+        shellcheck       \
         skim             \
         socat            \
         starship         \
@@ -84,7 +85,7 @@ function hame-macos
 
     [ -f ~/.cache/hame/macports.md5 ]
     and cmp -s ~/.cache/hame/macports.md5 (md5 -r ~/.cache/hame/macports.txt|psub)
-    or sudo port -N install $macports
+    or sudo port -N install (string split $macports)
     and md5 -r ~/.cache/hame/macports.txt > ~/.cache/hame/macports.md5 2>/dev/null
 
     sudo port select --set black black310

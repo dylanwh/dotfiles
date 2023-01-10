@@ -8,8 +8,9 @@ function ifconfig
     set interface ""
     set ether ""
     command ifconfig $argv | while read line
-        if set if (string match -r -g "^([A-Za-z0-9]+):" $line)
-            set interface $line
+        if string match -rqg "^([A-Za-z0-9]+):" $line
+            # remove flags=<flags> from the interface line
+            set interface (string replace -r "flags=\\d+<[^>]+> *" " " $line)
             set ether ""
         else
             # first word on the line that begins with spaces

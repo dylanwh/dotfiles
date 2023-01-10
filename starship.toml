@@ -50,6 +50,7 @@ $battery\
 $time\
 $status\
 $env_var\
+$shell\
 $character"""
 
 [git_branch]
@@ -113,3 +114,8 @@ variable = "my_shell"
 format = "[$env_value]($style) "
 style="green"
 
+[shell]
+fish_indicator = ""
+format = "[$indicator]($style)"
+bash_indicator = "bash"
+disabled = false

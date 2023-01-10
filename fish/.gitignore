@@ -8,3 +8,4 @@ chef.fish
 brew.fish
 local.fish
 iterm2_colors
+functions.local
