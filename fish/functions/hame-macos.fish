@@ -71,7 +71,6 @@ function hame-macos
         shellcheck       \
         skim             \
         socat            \
-        starship         \
         tmux             \
         tmux-pasteboard  \
         trash            \
