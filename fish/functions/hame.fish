@@ -72,6 +72,8 @@ function hame
     abbr -U -- runti 'docker run --rm -ti'
     abbr -U -- upstream 'git push --set-upstream origin (git branch --show-current)'
     abbr -U -- hm history merge
+    have hub
+    and abbr -U git hub
 
 
     switch $OS
