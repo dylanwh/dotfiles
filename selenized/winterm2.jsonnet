@@ -87,6 +87,7 @@ local actions = [
 ];
 
 local new_settings(variant) = {
+  defaultProfile: '{d7b20cea-47a9-518c-95a4-c8bd91e2e1c6}',
   profiles: {
     defaults: profile_defaults,
     list: [
