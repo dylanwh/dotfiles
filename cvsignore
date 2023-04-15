@@ -9,4 +9,6 @@ tags
 .tramp_history
 .vscode/perl-lang
 .vscode/
+.idea/
 *.gron
+vendor/

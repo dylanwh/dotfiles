@@ -34,6 +34,7 @@ function hame-macos
     set macports         \
         autoconf         \
         automake         \
+        bash             \
         bat              \
         binplist         \
         cmake            \

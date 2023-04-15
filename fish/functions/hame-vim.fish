@@ -68,6 +68,8 @@ function hame-vim
     hame-clone -n vim-go            -p "$vim/start/go"                -u "fatih/vim-go.git"
     hame-clone -n vinegar           -p "$vim/start/vinegar"           -u "tpope/vim-vinegar"
 
+    rg --no-filename -or 'Plug \'$1\'' 'url = https://github.com/(.+)' ~/.vim/pack/dylan/start/*/.git/config | sort > ~/.ideavimrc
+
     set rm_packs  "$vim/start/fzy" \
                   "$vim/start/fzf" \
                   "$vim/start/fzy-builtins" \
