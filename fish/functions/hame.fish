@@ -53,8 +53,12 @@ function hame
     mkdir -p ~/.cache/hame
 
     # erase all universal abbreviations
-    for abbr in (abbr -U --list 2>/dev/null)
-        abbr -e $abbr
+    set -l ver (string split . $FISH_VERSION)
+    # fish 3.6.0 or later
+    if [ $ver[1] -ge 3 -a $ver[2] -ge 6 ]
+        for abbr in (abbr -U --list 2>/dev/null)
+            abbr -e $abbr
+        end
     end
 
     switch $OS
