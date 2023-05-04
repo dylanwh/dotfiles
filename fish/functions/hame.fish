@@ -102,7 +102,7 @@ function hame
     hame-go
     hame-tmux
 
-    set -l default_perl 5.34.0
+    set -l default_perl 5.36.0
     if not [ -d $PLENV_ROOT/versions/$default_perl ]
         hame-echo installing perl $default_perl
         hame-nq plenv install $default_perl
