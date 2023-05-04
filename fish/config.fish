@@ -43,12 +43,15 @@ if status --is-interactive
                 abbr -a -g vi vim
             end
     end
+
+    source $HOME/.config/fish/abbr.fish
 end
 
 if have fasd
-  function __fasd_run -e fish_preexec
-    command fasd --proc (command fasd --sanitize "$argv" | tr -s ' ' \n) > "/dev/null" 2>&1 &; disown
-  end
+    function __fasd_run -e fish_preexec
+        command fasd --proc (command fasd --sanitize "$argv" | tr -s ' ' \n) >/dev/null 2>&1 &
+        disown
+    end
 end
 
 test -f $HOME/.config/fish/local.fish

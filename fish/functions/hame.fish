@@ -1,5 +1,5 @@
 function hame
-    argparse "U/update" "v/verbose" "n/foreground" "h/help" -- $argv
+    argparse U/update v/verbose n/foreground h/help -- $argv
 
     if test -n "$_flag_help"
         echo "Usage: hame [-f] [-v] [-n] [-h]"
@@ -52,29 +52,10 @@ function hame
 
     mkdir -p ~/.cache/hame
 
-    abbr -Uq ps; and abbr -U --erase ps
-    abbr -U -- ag rg
-    abbr -U -- grep rg
-    abbr -U -- yo yoink
-    abbr -Uq s; and abbr -U --erase s
-    abbr -U -- rm 'rm -i'
-    abbr -U -- mv 'mv -i'
-    abbr -U -- cp 'cp -i'
-    abbr -U -- ci 'git commit'
-    abbr -U -- gap 'git add -p'
-    abbr -U -- gco 'git checkout'
-    abbr -U -- gdc 'git diff --cached'
-    abbr -U -- gr 'git rebase'
-    abbr -U -- gs 'git status --short'
-    abbr -U -- pt 'perltidy --profile=.../.perltidyrc -b  -bext=/'
-    abbr -U -- pull 'git pull'
-    abbr -U -- push 'git push'
-    abbr -U -- runti 'docker run --rm -ti'
-    abbr -U -- upstream 'git push --set-upstream origin (git branch --show-current)'
-    abbr -U -- hm history merge
-    have hub
-    and abbr -U git hub
-
+    # erase all universal abbreviations
+    for abbr in (abbr -U --list 2>/dev/null)
+        abbr -e $abbr
+    end
 
     switch $OS
         case Darwin
@@ -142,7 +123,7 @@ function hame
         hame-nq cpanm --notest Path::Iterator::Rule
         hame-nq cpanm --notest JSON
         hame-nq sed "1 s|^#!.*|#!$PLENV_ROOT/versions/$default_perl/bin/perl|" \
-            $PLENV_ROOT/versions/$default_perl/bin/got > $HOME/.local/bin/got
+            $PLENV_ROOT/versions/$default_perl/bin/got >$HOME/.local/bin/got
     end
 
     popd
@@ -152,4 +133,3 @@ function hame
     set -U fish_user_path $new_fish_user_path
     path prune
 end
-
