@@ -136,4 +136,9 @@ function hame
     set --erase -g fish_user_path
     set -U fish_user_path $new_fish_user_path
     path prune
+
+    for func in $hame_after
+        hame-echo running $func
+        $func
+    end
 end
