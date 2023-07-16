@@ -1,5 +1,5 @@
 # short aliases, to work around new ssh versions re-reading configuration values.
-Host freya freya-wifi freya-vm frigg bragi jord kvasir lofn lofn-* loki njord odin odin-wifi sjofn wednesday
+Host bragi frigg heimdall jord kvasir loki shell sjofn syn yggdrasil
     CanonicalizeHostname always
     CanonicalDomains home.arpa
     ControlPersist yes
@@ -7,12 +7,16 @@ Host freya freya-wifi freya-vm frigg bragi jord kvasir lofn lofn-* loki njord od
     ForwardAgent yes
     AddressFamily inet
 
-Host *.home.arpa
+Host lofn
+    CanonicalizeHostname always
+    CanonicalDomains hardison.net
     ControlPersist yes
     StrictHostKeyChecking yes
     ForwardAgent yes
     AddressFamily inet
 
-Host *.home.arpa
-    AddressFamily inet
+Host *.home.arpa *.hardison.net
+    ControlPersist yes
+    StrictHostKeyChecking yes
     ForwardAgent yes
+    AddressFamily inet
