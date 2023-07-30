@@ -79,5 +79,4 @@
 
 (add-hook 'ruby-mode-hook 'evil-ruby-text-objects-mode)
 
-(after! rustic
-  (setq rustic-lsp-server 'rust-analyzer))
+(setq lsp-rust-server 'rust-analyzer)

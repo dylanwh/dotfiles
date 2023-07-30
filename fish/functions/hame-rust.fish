@@ -16,6 +16,8 @@ function hame-rust
         rm $rustup_init
     end
 
+    rustup component add rust-analyzer rust-src rustfmt clippy
+
     if have cargo
         have sk
         or hame-nq cargo install skim
