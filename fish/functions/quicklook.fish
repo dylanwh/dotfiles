@@ -1,14 +1,12 @@
 # put this file inside $HOME/.config/fish/functions
 
-function sharesheet
+function quicklook
   if not set -q argv[1]
     if isatty
-      echo Usage: sharesheet [FILE]...
+      echo Usage: quicklook [FILE]...
       echo
-      echo Present share sheet for files and directories.
+      echo Show QuickLook preview for files and directories. 
       echo Alternatively you can pipe in text and call it without arguments.
-      echo
-      echo If arguments exist inside the Finder or Files app changes made are written back to the server.
       return 0
     end
   end
@@ -23,7 +21,7 @@ function sharesheet
     printf "\033Ptmux;\033\033]"
   end
  
-  printf "6;sharesheet://?ver=2&respond="
+  printf "6;quicklook://?ver=2&respond="
   echo -n "$FIFO" | base64
   printf "&pwd="
   echo -n "$PWD" | base64
