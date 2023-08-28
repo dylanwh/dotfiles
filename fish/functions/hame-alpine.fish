@@ -51,6 +51,8 @@ function hame-alpine
         bind-tools           \
         build-base           \
         coreutils            \
+        delta                \
+        dust                 \
         emacs-x11-nativecomp \
         go                   \
         htop                 \
@@ -70,11 +72,12 @@ function hame-alpine
         openssl              \
         perl                 \
         perl-mojolicious     \
-        procps
+        procps               \
+        xsv
 
     eval 'set packages $packages_'$package_set
 
-    string join \n $packages |  sort | tee ~/.cache/hame/packages.txt
+    string join \n $packages |  sort > ~/.cache/hame/packages.txt
 
     return
 
