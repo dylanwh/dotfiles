@@ -79,8 +79,6 @@ function hame-alpine
 
     string join \n $packages |  sort > ~/.cache/hame/packages.txt
 
-    return
-
     set sudo "sudo"
     if not have sudo
         set sudo doas
