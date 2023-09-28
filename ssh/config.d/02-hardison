@@ -1,5 +1,6 @@
 # short aliases, to work around new ssh versions re-reading configuration values.
-Host bragi frigg heimdall jord kvasir loki shell sjofn syn yggdrasil
+# vim: set ft=sshconfig:
+Host bragi frigg heimdall jord kvasir loki syn sjofn urd yggdrasil
     CanonicalizeHostname always
     CanonicalDomains home.arpa
     ControlPersist yes
