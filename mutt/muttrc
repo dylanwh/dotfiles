@@ -6,14 +6,14 @@ set imap_headers="X-Bugzilla-Product X-Bugzilla-Component X-Bugzilla-Assigned-To
 
 set record=+"Sent Items"
 set postponed=+Drafts
-set folder="imaps://mail.messagingengine.com/INBOX"
+set folder="imaps://mail.messagingengine.com/"
 set spoolfile="imaps://mail.messagingengine.com/INBOX"
 set imap_headers='LIST-ID'
 set mask="."
 
 save-hook . +Archive
 
-mailboxes + =+SaneLater =+SaneNews =+Bugzilla =+Billing
+mailboxes INBOX +SaneLater +SaneNews +Bugzilla +Billing
 subscribe dev-platform@mozilla\.org \
           reply\.github\.com \
           billing@hardison\.net \

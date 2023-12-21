@@ -6,7 +6,6 @@ function hame-godev
 
     if not have gore
         hame-echo installing gore
-        hame-nq go get github.com/k0kubun/pp@latest
         hame-nq go install github.com/mdempsky/gocode@latest
         hame-nq go install github.com/x-motemen/gore/cmd/gore@latest
     end
@@ -55,4 +54,9 @@ function hame-godev
 
     have gogetdoc
     or hame-nq go install github.com/zmb3/gogetdoc@latest
+
+    have iferr
+    or hame-nq go install github.com/koron/iferr@latest
+
+
 end

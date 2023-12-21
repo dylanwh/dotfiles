@@ -67,6 +67,8 @@ function hame-vim
     hame-clone -n unimpaired        -p "$vim/start/unimpaired"        -u "tpope/vim-unimpaired"
     hame-clone -n vim-go            -p "$vim/start/go"                -u "fatih/vim-go.git"
     hame-clone -n vinegar           -p "$vim/start/vinegar"           -u "tpope/vim-vinegar"
+    hame-clone -n rust-tools        -p "$vim/start/rust-tools"        -u "simrat39/rust-tools.nvim"
+    hame-clone -n lspconfig         -p "$vim/start/lspconfig"         -u "neovim/nvim-lspconfig"
 
     rg --no-filename -or 'Plug \'$1\'' 'url = https://github.com/(.+)' ~/.vim/pack/dylan/start/*/.git/config | sort > ~/.ideavimrc
 
