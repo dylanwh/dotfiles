@@ -17,6 +17,9 @@ function hame-macos
         ApplePressAndHoldEnabled -bool false
     defaults write -g AppleShowAllExtensions -bool true
 
+    # disable writing .DS_Store files to network shares
+    defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true
+
     defaults write com.googlecode.iterm2 PrefsCustomFolder -string ~/.config/iterm2
     defaults write com.googlecode.iterm2 LoadPrefsFromCustomFolder -bool true
 
