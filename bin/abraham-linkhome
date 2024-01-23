@@ -18,19 +18,20 @@ sub rm_if_link ($);    ## no critic (Subroutines::ProhibitSubroutinePrototypes)
 
 my $REPO = realpath(catdir(dirname(realpath(__FILE__)), '..'));
 
-provide('doom',          '.doom.d');
-provide('fish',          '.config/fish');
-provide('imapfilter',    '.imapfilter');
-provide('iterm2',        '.config/iterm2');
-provide('mutt',          '.mutt');
-provide('selenized',     '.config/selenized');
-provide('starship.toml', '.config/starship.toml');
-provide('terminfo',      '.terminfo');
-provide('vim',           '.config/nvim');
-provide('vim',           '.vim');
-provide('karabiner',     '.config/karabiner');
+my %provide  =  (
+'doom'=>          '.doom.d',
+'fish'=>          '.config/fish',
+'imapfilter'=>    '.imapfilter',
+'iterm2'=>        '.config/iterm2',
+'mutt'=>          '.mutt',
+'selenized'=>     '.config/selenized',
+'starship.toml'=> '.config/starship.toml',
+'terminfo'=>      '.terminfo',
+'vim'=>           '.config/nvim',
+'vim'=>           '.vim',
+'karabiner'=>     '.config/karabiner',
+);
 
-if ($OSNAME eq 'darwin') {
   provide('macos-user-key-equivalents.txt', '.config/macos-user-key-equivalents.txt');
   my $icloud_dir = "$HOME/iCloud";
   unless (-l $icloud_dir) {
