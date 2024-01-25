@@ -97,7 +97,7 @@ function hame
     end
 
     if not have node
-        set -l default_node 16.5.0
+        set -l default_node 18.18.2
         if not [ -d $NODENV_ROOT/versions/$default_node ]
             hame-echo installing node $default_node
             hame-nq nodenv install $default_node

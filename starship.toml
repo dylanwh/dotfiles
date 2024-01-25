@@ -119,3 +119,6 @@ fish_indicator = ""
 format = "[$indicator]($style)"
 bash_indicator = "bash"
 disabled = false
+
+[lua]
+disabled = true

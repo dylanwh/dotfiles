@@ -8,6 +8,6 @@ fd \
     'url\s+=\s+(?:(?:git@)?github.com:|(?:https|git)://github.com/)([^.]+(?:\.wiki)?)' \
     '{}/config' \
   ';' \
-  -Htd '^\.git$' \
+  -IHtd '^\.git$' \
   -d${GITHUB_CHECKOUT_DEPTH:-3} \
   $GITHUB_CHECKOUT_DIR | sort -u
