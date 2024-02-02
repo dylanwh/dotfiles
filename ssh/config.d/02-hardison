@@ -8,6 +8,16 @@ Host bragi frigg heimdall jord kvasir loki syn sjofn urd yggdrasil
     ForwardAgent yes
     AddressFamily inet
 
+Host cafe-ap lab-ap den-ap
+    CanonicalizeHostname always
+    CanonicalDomains home.arpa
+    ControlPersist yes
+    StrictHostKeyChecking yes
+    ForwardAgent yes
+    AddressFamily inet
+    User spidermin
+    Port 2222
+
 Host lofn
     CanonicalizeHostname always
     CanonicalDomains hardison.net
