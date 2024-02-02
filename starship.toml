@@ -122,3 +122,6 @@ disabled = false
 
 [lua]
 disabled = true
+
+[swift]
+disabled = true
