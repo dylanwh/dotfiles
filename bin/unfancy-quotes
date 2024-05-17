@@ -1,0 +1,13 @@
+#!/usr/bin/env perl
+use 5.30.0;
+
+while (<>) {
+  utf8::decode($_);
+  s/\N{RIGHT SINGLE QUOTATION MARK}/'/g;
+  s/\N{LEFT SINGLE QUOTATION MARK}/'/g;
+  s/\N{RIGHT DOUBLE QUOTATION MARK}/"/g;
+  s/\N{LEFT DOUBLE QUOTATION MARK}/"/g;
+  utf8::encode($_);
+  print;
+}
+

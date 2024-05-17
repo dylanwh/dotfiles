@@ -1,8 +1,6 @@
 # short aliases, to work around new ssh versions re-reading configuration values.
 # vim: set ft=sshconfig:
 Host bragi frigg heimdall jord kvasir loki syn sjofn urd yggdrasil
-    CanonicalizeHostname always
-    CanonicalDomains home.arpa
     ControlPersist yes
     StrictHostKeyChecking yes
     ForwardAgent yes
@@ -17,14 +15,6 @@ Host cafe-ap lab-ap den-ap
     AddressFamily inet
     User spidermin
     Port 2222
-
-Host lofn
-    CanonicalizeHostname always
-    CanonicalDomains hardison.net
-    ControlPersist yes
-    StrictHostKeyChecking yes
-    ForwardAgent yes
-    AddressFamily inet
 
 Host *.home.arpa *.hardison.net
     ControlPersist yes
