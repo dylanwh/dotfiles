@@ -27,6 +27,8 @@
 
 (setq doom-dark+-blue-modeline nil)
 
+(setq +doom-dashboard-ascii-banner-fn (lambda () ))
+
 (setq doom-modeline-unicode-fallback t)
 (setq xterm-extra-capabilities '(getSelection setSelection))
 
@@ -63,10 +65,10 @@
   (cperl-set-style "Whitesmith"))
 
 (after! cperl-mode
-    (define-key cperl-mode-map "{" nil)
-    (setq cperl-highlight-variables-indiscriminately t)
+  (define-key cperl-mode-map "{" nil)
+  (setq cperl-highlight-variables-indiscriminately t)
 
-(add-hook 'cperl-mode-hook #'my-cperl-mode))
+  (add-hook 'cperl-mode-hook #'my-cperl-mode))
 
 ;; For python
 (add-hook 'python-mode-hook #'(lambda () (modify-syntax-entry ?_ "w")))

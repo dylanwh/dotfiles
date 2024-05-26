@@ -14,9 +14,10 @@ function hame-rust
         curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs > $rustup_init
         sh $rustup_init -y --no-modify-path
         rm $rustup_init
+
+        rustup component add rust-analyzer rust-src rustfmt clippy
     end
 
-    rustup component add rust-analyzer rust-src rustfmt clippy
 
     if have cargo
         have sk
