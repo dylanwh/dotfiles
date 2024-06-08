@@ -23,6 +23,9 @@ function hame-macos
     defaults write com.googlecode.iterm2 PrefsCustomFolder -string ~/.config/iterm2
     defaults write com.googlecode.iterm2 LoadPrefsFromCustomFolder -bool true
 
+    defaults -currentHost write -globalDomain NSStatusItemSpacing -int 4
+    defaults -currentHost write -globalDomain NSStatusItemSelectionPadding -int 4
+
     pushd ~/.config/alfred
     hame-echo updating "~/.config/alfred"
     git pull -q
