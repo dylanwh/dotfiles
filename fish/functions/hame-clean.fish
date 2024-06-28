@@ -1,3 +1,3 @@
 function hame-clean
-fd '^,' ~/.cache/hame/
+rm -v $HOME/.cache/hame/,*
 end
