@@ -6,8 +6,8 @@ set imap_headers="X-Bugzilla-Product X-Bugzilla-Component X-Bugzilla-Assigned-To
 
 set record=+"Sent Items"
 set postponed=+Drafts
-set folder="imaps://mail.messagingengine.com/"
-set spoolfile="imaps://mail.messagingengine.com/INBOX"
+set folder="imaps://imap.fastmail.com/"
+set spoolfile="imaps://imap.fastmail.com/INBOX"
 set imap_headers='LIST-ID'
 set mask="."
 
