@@ -27,7 +27,9 @@ function hame-rust
         have rg
         or hame-nq cargo install ripgrep --features pcre2
         have exa
-        or hame-nq cargo install exa
+        and cargo uninstall exa
+        have eza
+        or hame-nq cargo install eza
         have bat
         or hame-nq cargo install bat
         have vivid

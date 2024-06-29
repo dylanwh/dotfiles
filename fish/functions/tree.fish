@@ -1,5 +1,5 @@
-if have exa
-    alias tree "exa --group-directories-first --tree"
+if have eza
+    alias tree "eza --group-directories-first --tree"
 else
     alias tree tree
 end
