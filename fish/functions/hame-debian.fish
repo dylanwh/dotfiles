@@ -30,8 +30,6 @@ function hame-debian
 
     set release (lsb_release -rs)
     switch $release
-    case 22.04
-        set -a packages exa
     case 20.04
         set packages (string join \n $packages | egrep -v 'emacs-nox|neovim')
         set -a packages nodejs- emacs-nox- neovim-
