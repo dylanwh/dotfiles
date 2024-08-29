@@ -9,5 +9,5 @@ function man
         LESS_TERMCAP_us=(printf "\e[4;36m") \
         _NROFF_U=1 \
         GROFF_NO_SGR=1 \
-    man "$argv"
+    man $argv
 end
