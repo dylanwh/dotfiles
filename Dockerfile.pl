@@ -2,6 +2,7 @@
 # vim: set ft=perl sw=4 ts=4 et:
 use strict;
 use warnings;
+use Env qw($HOME);
 use File::Basename;
 use File::Path qw(mkpath);
 use Cwd qw(realpath);
@@ -9,14 +10,14 @@ use Text::ParseWords qw(shellwords);
 use Getopt::Long qw(:config gnu_getopt);
 use English qw(-no_match_vars $UID $GID);
 
-
 my $dir = dirname(realpath(__FILE__));
 
 my $build     = 0;
 my $run       = 0;
 my $image     = basename($dir);
 my $container = basename($dir) . '-dev';
-my $command   = 'tmux new-session -A -s main';
+my $exec   = undef;
+my $help   = 0;
 my $network;
 GetOptions(
     'build|b'     => \$build,
@@ -24,8 +25,25 @@ GetOptions(
     'container|C' => \$container,
     'image|I=s'   => \$image,
     'network|n=s' => \$network,
-    'command|c=s' => \$command,
+    'exec|e=s'    => \$exec,
+    'help|h'      => \$help,
 );
+
+if ($help) {
+    print <<~"HELP";
+    Usage: $0 [options]
+
+    Options:
+        --build, -b       Build the docker image
+        --run, -r         Run the docker container
+        --container, -C   Name of the container
+        --image, -I       Name of the image
+        --network, -n     Name of the network
+        --exec, -e        Execute a command in the container
+        --help, -h        This help message
+    HELP
+    exit 0;
+}
 
 my $dockerfile = "$dir/Dockerfile";
 my $content = do { local $/; <DATA> };
@@ -57,16 +75,31 @@ if ($run) {
         maybe( "--network" => $network ),
         maybe( '--name', $container ),
         maybe( "--hostname" => 'dev' ),
+        '-P',
         env(),
         -v => "$dir/home:/home/dylan",
-        -v => "/tmp:/host/tmp",
-        '-d', '--init', '--rm', '-it',
-        $image, "tmux start-server; and sleep infinity"
+        -v => '/var/run/docker.sock:/var/run/docker.sock',
+        '-d', '--rm', '-it',
+        $image
     );
+    # discover which port sshd is listening on
+    my $port = `docker port $container 22`;
+    if ($port =~ /:(\d+)$/) {
+        $port = $1;
+        mkpath("$HOME/.ssh/config.d") unless -d "$HOME/.ssh/config.d";
+        open $fh, '>', "$HOME/.ssh/config.d/$container" or die "Could not open '$HOME/.ssh/config.d/$container' $!";
+        print $fh "Host $container\n";
+        print $fh "  ForwardAgent yes\n";
+        print $fh "  StrictHostKeyChecking no\n";
+        print $fh "  HostName localhost\n";
+        print $fh "  Port $port\n";
+        print $fh "  User dylan\n";
+        close $fh;
+    }
+
 }
 
-
-run('docker', 'exec', env(), '-it', $container, shellwords($command));
+run('docker', 'exec', env(), '-it', $container, shellwords($exec)) if defined $exec;
 
 sub maybe {
     my ($key, $value) = @_;
@@ -104,10 +137,9 @@ ARG GID=1000
 ENV TZ=US/Pacific
 ENV DEBIAN_FRONTEND=noninteractive
 
-RUN apt-get update -y \
- && apt-get upgrade -y
-
-RUN apt-get install -y \
+RUN apt-get update -y  \
+ && apt-get upgrade -y \
+ && apt-get install -y \
     autoconf           \
     bind9-dnsutils     \
     black              \
@@ -122,6 +154,8 @@ RUN apt-get install -y \
     htop               \
     httpie             \
     hub                \
+    inetutils-ping     \
+    iperf3             \
     iproute2           \
     jq                 \
     jsonnet            \
@@ -130,16 +164,29 @@ RUN apt-get install -y \
     locales            \
     moreutils          \
     ncdu               \
+    net-tools          \
+    netcat             \
     nmap               \
     nq                 \
+    openssh-server     \
     pkg-config         \
     protobuf-compiler  \
     pv                 \
     ripgrep            \
+    s6                 \
+    software-properties-common \
+    sqlite3            \
+    strace             \
     sudo               \
+    time               \
     tmux               \
     tree               \
-    whois
+    whois              \
+    zstd               \
+ && add-apt-repository ppa:neovim-ppa/stable \
+ && apt-get update -y \
+ && apt-get install -y neovim
+
 ENV UID=$UID
 ENV GID=$GID
 ENV LANG en_US.UTF-8 
@@ -147,20 +194,29 @@ ENV LANGUAGE en_US:en
 ENV LC_ALL en_US.UTF-8
 
 RUN sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && \
-    locale-gen
-
-RUN yes | unminimize \
+    locale-gen \
+ && yes | unminimize \
  && apt-get install -y man-db manpages-posix
 
+ # write ssh s6 init script
+RUN mkdir -p /etc/s6/sshd /run/sshd \
+ && echo '#!/usr/bin/execlineb -P' > /etc/s6/sshd/run \
+ && echo '/usr/sbin/sshd -D' >> /etc/s6/sshd/run \
+ && chmod +x /etc/s6/sshd/run \
+ && ln -s /etc/s6/sshd /etc/s6/sshd
+
+# create dylan user
 RUN groupadd -g $GID dylan \
  && useradd -u $UID -g $GID -m -s /usr/bin/fish dylan \
- && echo "dylan ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/dylan
+ && echo "dylan ALL=(ALL:ALL) NOPASSWD: ALL" > /etc/sudoers.d/dylan
 
-USER dylan
+EXPOSE 22
+
 WORKDIR /home/dylan
 
-CMD [ "tmux", "new-session" ]
-ENTRYPOINT ["/usr/bin/fish", "-l", "-c"]
+CMD []
 
+# s6 init
+ENTRYPOINT [ "/usr/bin/s6-svscan", "/etc/s6" ]
 
 

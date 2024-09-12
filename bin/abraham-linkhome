@@ -42,6 +42,7 @@ if ($OSNAME eq 'darwin') {
 }
 
 my @dotfiles = (
+  'bashrc',
   'ctags',         'cvsignore',
   'fdignore',      'iterm2_shell_integration.fish',
   'mailcap',       'minicpanrc',

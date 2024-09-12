@@ -1273,13 +1273,13 @@
 				<key>Alpha Component</key>
 				<real>0.5</real>
 				<key>Blue Component</key>
-				<real>0.0</real>
+				<real>0.13960540294647217</real>
 				<key>Color Space</key>
-				<string>sRGB</string>
+				<string>P3</string>
 				<key>Green Component</key>
-				<real>0.14910030364990234</real>
+				<real>0.25479039549827576</real>
 				<key>Red Component</key>
-				<real>1</real>
+				<real>0.92929404973983765</real>
 			</dict>
 			<key>Badge Text</key>
 			<string></string>
@@ -1330,13 +1330,13 @@
 				<key>Alpha Component</key>
 				<real>0.25</real>
 				<key>Blue Component</key>
-				<real>1</real>
+				<real>0.99125725030899048</real>
 				<key>Color Space</key>
-				<string>sRGB</string>
+				<string>P3</string>
 				<key>Green Component</key>
-				<real>0.92681378126144409</real>
+				<real>0.92047786712646484</real>
 				<key>Red Component</key>
-				<real>0.70214027166366577</real>
+				<real>0.74862593412399292</real>
 			</dict>
 			<key>Cursor Text Color</key>
 			<dict>
@@ -1701,16 +1701,29 @@
 				<key>Alpha Component</key>
 				<real>1</real>
 				<key>Blue Component</key>
-				<real>0.73422706127166748</real>
+				<real>0.7093239426612854</real>
 				<key>Color Space</key>
-				<string>sRGB</string>
+				<string>P3</string>
 				<key>Green Component</key>
-				<real>0.35915294289588928</real>
+				<real>0.35333043336868286</real>
 				<key>Red Component</key>
-				<real>0.0</real>
+				<real>0.14513972401618958</real>
 			</dict>
 			<key>Log Directory</key>
 			<string></string>
+			<key>Match Background Color</key>
+			<dict>
+				<key>Alpha Component</key>
+				<real>1</real>
+				<key>Blue Component</key>
+				<real>0.0</real>
+				<key>Color Space</key>
+				<string>P3</string>
+				<key>Green Component</key>
+				<real>1</real>
+				<key>Red Component</key>
+				<real>1</real>
+			</dict>
 			<key>Minimum Contrast</key>
 			<real>0.0</real>
 			<key>Mouse Reporting</key>
@@ -1773,6 +1786,8 @@
 				<string></string>
 			</dict>
 			<key>Send Code When Idle</key>
+			<false/>
+			<key>Send New Output Alert</key>
 			<false/>
 			<key>Set Local Environment Vars</key>
 			<true/>
