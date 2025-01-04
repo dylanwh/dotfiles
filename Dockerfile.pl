@@ -13,40 +13,44 @@ use English qw(-no_match_vars $UID $GID);
 my $dir = dirname(realpath(__FILE__));
 
 my $build     = 0;
-my $run       = 0;
-my $image     = basename($dir);
 my $container = basename($dir) . '-dev';
-my $exec   = undef;
-my $help   = 0;
+my $exec      = undef;
+my $image     = basename($dir);
 my $network;
+my $run        = 0;
+my $privileged = 0;
+my $help       = 0;
+
 GetOptions(
-    'build|b'     => \$build,
-    'run|r'       => \$run,
-    'container|C' => \$container,
-    'image|I=s'   => \$image,
-    'network|n=s' => \$network,
-    'exec|e=s'    => \$exec,
-    'help|h'      => \$help,
+  'build|b'      => \$build,
+  'container|C'  => \$container,
+  'exec|e=s'     => \$exec,
+  'image|I=s'    => \$image,
+  'network|n=s'  => \$network,
+  'privileged|p' => \$privileged,
+  'run|r'        => \$run,
+  'help|h'       => \$help,
 );
 
 if ($help) {
-    print <<~"HELP";
+  print <<~"HELP";
     Usage: $0 [options]
 
     Options:
         --build, -b       Build the docker image
-        --run, -r         Run the docker container
         --container, -C   Name of the container
+        --exec, -e        Execute a command in the container
         --image, -I       Name of the image
         --network, -n     Name of the network
-        --exec, -e        Execute a command in the container
+        --privileged, -p  Run the container in privileged mode
+        --run, -r         Run the docker container
         --help, -h        This help message
     HELP
-    exit 0;
+  exit 0;
 }
 
 my $dockerfile = "$dir/Dockerfile";
-my $content = do { local $/; <DATA> };
+my $content    = do { local $/; <DATA> };
 open my $fh, '>', $dockerfile or die "Could not open '$dockerfile' $!";
 print $fh $content;
 close $fh;
@@ -57,82 +61,92 @@ print $fh "home\n";
 close $fh;
 
 if ($build) {
-    my @cmd = ('docker', 'build');
-    if ($network) {
-        push @cmd, '--network', $network;
-    }
-    my ($gid) = split(/\s+/, $GID);
-    push @cmd, "--build-arg", "UID=$UID", "--build-arg", "GID=$gid";
-    push @cmd, '-t', $image, $dir;
-    run(@cmd);
+  my @cmd = ('docker', 'build');
+  if ($network) {
+    push @cmd, '--network', $network;
+  }
+  my ($gid) = split(/\s+/, $GID);
+  push @cmd, "--build-arg", "UID=$UID", "--build-arg", "GID=$gid";
+  # find the gid of the docker group
+  my $docker_gid = getgrnam('docker');
+  if (defined $docker_gid) {
+    push @cmd, "--build-arg", "DOCKER_GID=$docker_gid";
+  }
+
+  push @cmd, '-t', $image, $dir;
+  run(@cmd);
 }
 
 mkpath("$dir/home") unless -d "$dir/home";
 
 if ($run) {
-    run('docker', 'rm', '-fv', $container);
-    run('docker', 'run',
-        maybe( "--network" => $network ),
-        maybe( '--name', $container ),
-        maybe( "--hostname" => 'dev' ),
-        '-P',
-        env(),
-        -v => "$dir/home:/home/dylan",
-        -v => '/var/run/docker.sock:/var/run/docker.sock',
-        '-d', '--rm', '-it',
-        $image
-    );
-    # discover which port sshd is listening on
-    my $port = `docker port $container 22`;
-    if ($port =~ /:(\d+)$/) {
-        $port = $1;
-        mkpath("$HOME/.ssh/config.d") unless -d "$HOME/.ssh/config.d";
-        open $fh, '>', "$HOME/.ssh/config.d/$container" or die "Could not open '$HOME/.ssh/config.d/$container' $!";
-        print $fh "Host $container\n";
-        print $fh "  ForwardAgent yes\n";
-        print $fh "  StrictHostKeyChecking no\n";
-        print $fh "  HostName localhost\n";
-        print $fh "  Port $port\n";
-        print $fh "  User dylan\n";
-        close $fh;
-    }
+  system('docker', 'rm', '-fv', $container);
+  my @run = ('docker', 'run');
+
+  push @run, '--network'  => $network if defined $network;
+  push @run, '--name'     => $container;
+  push @run, '--hostname' => 'dev';
+  push @run, '-P';    # publish all exposed ports to random ports
+  push @run, env();
+  push @run, -v => "$dir/home:/home/dylan";
+  push @run, -v => "$HOME/.ssh:/host/.ssh";
+  push @run, -v => "$HOME/.ssh/config.d:/home/dylan/.ssh/config.d" if $privileged;
+  push @run, -v => '/var/run/docker.sock:/var/run/docker.sock' if $privileged;
+  push @run, '--privileged' if $privileged;
+  push @run, '-d', '--rm', '-it', $image;
+  run(@run);
+
+  # discover which port sshd is listening on
+  my $port = `docker port $container 22`;
+  if ($port =~ /:(\d+)$/) {
+    $port = $1;
+    mkpath("$HOME/.ssh/config.d") unless -d "$HOME/.ssh/config.d";
+    open $fh, '>', "$HOME/.ssh/config.d/$container"
+      or die "Could not open '$HOME/.ssh/config.d/$container' $!";
+    print $fh "Host $container\n";
+    print $fh "  ForwardAgent yes\n";
+    print $fh "  StrictHostKeyChecking no\n";
+    print $fh "  HostName localhost\n";
+    print $fh "  Port $port\n";
+    print $fh "  User dylan\n";
+    close $fh;
+  }
 
 }
 
-run('docker', 'exec', env(), '-it', $container, shellwords($exec)) if defined $exec;
+run('docker', 'exec', env(), '-it', $container, shellwords($exec))
+  if defined $exec;
 
 sub maybe {
-    my ($key, $value) = @_;
-    return defined($value) ? ($key, $value) : ();
+  my ($key, $value) = @_;
+  return defined($value) ? ($key, $value) : ();
 }
 
 sub run {
-    print join(' ', @_) . "\n";
-     system(@_) == 0
-         or die "system @_ failed: $?";
+  print join(' ', @_) . "\n";
+  system(@_) == 0 or die "system @_ failed: $?";
 }
 
+# env returns a list of environment variables to pass to the docker container on
+# run.
 sub env {
-    my @env;
-    foreach my $key (keys %ENV) {
-        if ($key =~ /^LC_/) {
-            push @env, "-e", "$key=$ENV{$key}";
-        }
-        elsif ($key eq "TERM" || $key eq "TZ" || $key eq "TERM") {
-            push @env, "-e", "$key=$ENV{$key}";
-        }
-        elsif ($key eq "SSH_AUTH_SOCK") {
-            push @env, "-e", "$key=/host/$ENV{$key}";
-        }
+  my @env;
+  foreach my $key (keys %ENV) {
+    if ($key =~ /^LC_/ || $key eq 'TERM' || $key eq 'TZ' || $key eq 'TERM') {
+      push @env, '-e', "$key=$ENV{$key}";
+    } elsif ($key eq 'SSH_AUTH_SOCK') {
+      push @env, '-e', "$key=/host/$ENV{$key}";
     }
+  }
 
-    return @env;
+  return @env;
 }
 
 __DATA__
 FROM ubuntu:22.04
 ARG UID=1000
 ARG GID=1000
+ARG DOCKER_GID
 
 ENV TZ=US/Pacific
 ENV DEBIAN_FRONTEND=noninteractive
@@ -159,10 +173,25 @@ RUN apt-get update -y  \
     iproute2           \
     jq                 \
     jsonnet            \
+    libbrotli-dev      \
+    libbsd-dev         \
+    libbz2-dev         \
+    libcap-dev         \
+    libcap2            \
+    libcap2-dev        \
+    libck-dev          \
+    libclang-dev       \
+    libffi-dev         \
+    libjemalloc2       \
     libncurses-dev     \
+    libnuma-dev        \
+    libreadline-dev    \
+    libsqlite3-dev     \
     libssl-dev         \
+    libudns-dev        \
     locales            \
     moreutils          \
+    musl-tools         \
     ncdu               \
     net-tools          \
     netcat             \
@@ -174,12 +203,14 @@ RUN apt-get update -y  \
     pv                 \
     ripgrep            \
     s6                 \
+    shellcheck         \
     software-properties-common \
     sqlite3            \
     strace             \
     sudo               \
     time               \
     tmux               \
+    trash-cli          \
     tree               \
     whois              \
     zstd               \
@@ -189,6 +220,7 @@ RUN apt-get update -y  \
 
 ENV UID=$UID
 ENV GID=$GID
+ENV DOCKER_GID=$DOCKER_GID
 ENV LANG en_US.UTF-8 
 ENV LANGUAGE en_US:en
 ENV LC_ALL en_US.UTF-8
@@ -197,6 +229,17 @@ RUN sed -i '/en_US.UTF-8/s/^# //g' /etc/locale.gen && \
     locale-gen \
  && yes | unminimize \
  && apt-get install -y man-db manpages-posix
+
+RUN install -m 0755 -d /etc/apt/keyrings \
+ && curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc 2>/dev/null \
+ && chmod a+r /etc/apt/keyrings/docker.asc
+
+RUN test -f /etc/apt/keyrings/docker.asc
+
+RUN echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu $(. /etc/os-release && echo "$UBUNTU_CODENAME") stable" > /etc/apt/sources.list.d/docker.list
+RUN test -f /etc/apt/sources.list.d/docker.list
+RUN apt-get update
+RUN apt-get install -y docker-ce-cli
 
  # write ssh s6 init script
 RUN mkdir -p /etc/s6/sshd /run/sshd \
@@ -209,6 +252,13 @@ RUN mkdir -p /etc/s6/sshd /run/sshd \
 RUN groupadd -g $GID dylan \
  && useradd -u $UID -g $GID -m -s /usr/bin/fish dylan \
  && echo "dylan ALL=(ALL:ALL) NOPASSWD: ALL" > /etc/sudoers.d/dylan
+
+# add dylan to docker group
+# Create docker group with same gid as host docker group
+RUN if [ -n "$DOCKER_GID" ]; then \
+    groupadd -g $DOCKER_GID docker; \
+    usermod -aG docker dylan; \
+fi
 
 EXPOSE 22
 

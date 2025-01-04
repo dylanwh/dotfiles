@@ -28,4 +28,3 @@ function hame-env
     nodenv init - fish | grep -v 'set -gx PATH' > ~/.config/fish/functions/nodenv.fish
 
 end
-
