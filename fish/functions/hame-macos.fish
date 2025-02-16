@@ -4,10 +4,23 @@ function hame-macos
         defaults write com.apple.screencapture location ~/Documents/Screenshots
         killall SystemUIServer
     end
+    set -l restart_dock false
 
     if not test (defaults read com.apple.dock autohide-time-modifier) -eq 0.15
         hame-echo adjusting dock autohide
         defaults write com.apple.dock autohide-time-modifier -float 0.15
+        set restart_dock true
+    end
+
+    # defaults write com.apple.dock autohide-delay -float 0.10
+    if not test (defaults read com.apple.dock autohide-delay) -eq 0.10
+        hame-echo adjusting dock autohide delay
+        defaults write com.apple.dock autohide-delay -float 0.10
+        set restart_dock true
+    end
+
+    if [ $restart_dock = true ]
+        hame-echo restarting dock
         killall Dock
     end
 
@@ -23,8 +36,8 @@ function hame-macos
     defaults write com.googlecode.iterm2 PrefsCustomFolder -string ~/.config/iterm2
     defaults write com.googlecode.iterm2 LoadPrefsFromCustomFolder -bool true
 
-    defaults -currentHost write -globalDomain NSStatusItemSpacing -int 4
-    defaults -currentHost write -globalDomain NSStatusItemSelectionPadding -int 4
+    defaults -currentHost write -globalDomain NSStatusItemSpacing -int 6
+    defaults -currentHost write -globalDomain NSStatusItemSelectionPadding -int 6
 
     pushd ~/.config/alfred
     hame-echo updating "~/.config/alfred"
