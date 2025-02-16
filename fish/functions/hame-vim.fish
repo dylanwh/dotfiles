@@ -38,6 +38,7 @@ function hame-vim
     hame-clone -n editorconfig      -p "$vim/start/editorconfig"      -u "editorconfig/editorconfig-vim"
     hame-clone -n endwise           -p "$vim/start/endwise"           -u "tpope/vim-endwise"
     hame-clone -n eunuch            -p "$vim/start/eunuch"            -u "tpope/vim-eunuch"
+    hame-clone -n starlark          -p "$vim/start/starlark"          -u "cappyzawa/starlark.vim"
     hame-clone -n exchange          -p "$vim/start/exchange"          -u "tommcdo/vim-exchange"
     hame-clone -n fish              -p "$vim/start/fish"              -u "dag/vim-fish"
     hame-clone -n fugitive          -p "$vim/start/fugitive"          -u "tpope/vim-fugitive"

@@ -170,6 +170,9 @@
        ;;(rss +org)        ; emacs as an RSS reader
        ;;twitter           ; twitter client https://twitter.com/vnought
 
+       :os
+       (tty +osc)
+
        :config
        ;;literate
        (default +bindings +smartparens))

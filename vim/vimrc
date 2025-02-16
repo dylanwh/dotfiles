@@ -197,6 +197,8 @@ if !exists('autocmds_loaded')
     let autocmds_loaded=1
     " filetypedetect {{{2
     augroup filetypedetect
+        autocmd BufNewFile,BufRead BUCK
+                    \ set ft=starlark
         autocmd BufNewFile,BufRead *.mkd,*.mdwn,*.md
                     \ setl ft=markdown ai formatoptions=tcroqn2 comments=n:>
         autocmd BufNewFile,BufRead *.nqp set ft=perl6
