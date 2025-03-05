@@ -82,3 +82,5 @@
 (add-hook 'ruby-mode-hook 'evil-ruby-text-objects-mode)
 
 (setq lsp-rust-server 'rust-analyzer)
+(setq lsp-inlay-hint-enable t)
+(setq lsp-rust-analyzer-display-parameter-hints t)
