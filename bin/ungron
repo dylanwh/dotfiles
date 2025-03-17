@@ -25,11 +25,11 @@ class gron:
 
     def __setitem__(self, item, val):
         if isinstance(item, int):
-            l = self.__list
-            while len(l) <= item:
-                l.append(None)
+            lst = self.__list
+            while len(lst) <= item:
+                lst.append(None)
 
-            l[item] = val
+            lst[item] = val
         else:
             self.__setattr__(item, val)
 
