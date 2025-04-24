@@ -2,9 +2,9 @@ function hame-rust
     if [ -d /opt/rust ]
         set -Ux CARGO_HOME /opt/rust/cargo
         set -Ux RUSTUP_HOME /opt/rust/rustup
-        path add $CARGO_HOME/bin
+        user-path add $CARGO_HOME/bin
     else
-        path add ~/.cargo/bin
+        user-path add ~/.cargo/bin
     end
 
     pushd $HOME

@@ -8,7 +8,7 @@ function hame-emacs
 
     hame-echo cloning doom-emacs
     hame-clone -n doom-emacs -p .emacs.d -u 'hlissner/doom-emacs'
-    path add ~/.emacs.d/bin
+    user-path add ~/.emacs.d/bin
     if not [ -d .emacs.d/.local ]
         hame-echo installing doom-emacs
         hame-nq bash -c "doom install --force --env --no-fonts"

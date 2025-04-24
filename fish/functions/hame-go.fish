@@ -12,7 +12,7 @@ function hame-go
         set -Ux GOPATH $HOME/.local/go
     end
 
-    path add $GOPATH/bin
+    user-path add $GOPATH/bin
 
     if not have gron
         hame-echo installing gron

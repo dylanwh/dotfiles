@@ -143,7 +143,7 @@ sub env {
 }
 
 __DATA__
-FROM ubuntu:22.04
+FROM ubuntu:24.04
 ARG UID=1000
 ARG GID=1000
 ARG DOCKER_GID
@@ -154,69 +154,79 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update -y  \
  && apt-get upgrade -y \
  && apt-get install -y \
-    autoconf           \
-    bind9-dnsutils     \
-    black              \
-    build-essential    \
-    cmake              \
-    curl               \
-    emacs-nox          \
-    fd-find            \
-    fish               \
-    git                \
-    gron               \
-    htop               \
-    httpie             \
-    hub                \
-    inetutils-ping     \
-    iperf3             \
-    iproute2           \
-    jq                 \
-    jsonnet            \
-    libbrotli-dev      \
-    libbsd-dev         \
-    libbz2-dev         \
-    libcap-dev         \
-    libcap2            \
-    libcap2-dev        \
-    libck-dev          \
-    libclang-dev       \
-    libffi-dev         \
-    libjemalloc2       \
-    libncurses-dev     \
-    libnuma-dev        \
-    libreadline-dev    \
-    libsqlite3-dev     \
-    libssl-dev         \
-    libudns-dev        \
-    locales            \
-    moreutils          \
-    musl-tools         \
-    ncdu               \
-    net-tools          \
-    netcat             \
-    nmap               \
-    nq                 \
-    openssh-server     \
-    pkg-config         \
-    protobuf-compiler  \
-    pv                 \
-    ripgrep            \
-    s6                 \
-    shellcheck         \
-    software-properties-common \
-    sqlite3            \
-    strace             \
-    sudo               \
-    time               \
-    tmux               \
-    trash-cli          \
-    tree               \
-    whois              \
-    zstd               \
- && add-apt-repository ppa:neovim-ppa/stable \
- && apt-get update -y \
- && apt-get install -y neovim
+    2to3              \
+    autoconf          \
+    bc                \
+    bind9-dnsutils    \
+    black             \
+    brotli            \
+    build-essential   \
+    cmake             \
+    curl              \
+    dc                \
+    docker.io         \
+    emacs-nox         \
+    fd-find           \
+    fdisk             \
+    fio               \
+    fish              \
+    git               \
+    gron              \
+    htop              \
+    httpie            \
+    hub               \
+    inetutils-ping    \
+    iperf3            \
+    iproute2          \
+    jq                \
+    jsonnet           \
+    libbrotli-dev     \
+    libbsd-dev        \
+    libbz2-dev        \
+    libffi-dev        \
+    libgeoip-dev      \
+    libsqlite3-dev    \
+    libssl-dev        \
+    libtool           \
+    libtool-bin       \
+    libudns-dev       \
+    libvterm-dev      \
+    lld               \
+    locales           \
+    moreutils         \
+    musl-tools        \
+    ncdu              \
+    neovim            \
+    net-tools         \
+    netcat-openbsd    \
+    nmap              \
+    nq                \
+    openssh-server    \
+    pigz              \
+    pkg-config        \
+    protobuf-compiler \
+    pv                \
+    ripgrep           \
+    rsync             \
+    s6                \
+    sccache           \
+    shellcheck        \
+    skopeo            \
+    sqlite3           \
+    strace            \
+    sudo              \
+    time              \
+    tmux              \
+    trash-cli         \
+    tree              \
+    unminimize        \
+    unzip             \
+    valgrind          \
+    whois             \
+    wireguard         \
+    xattr             \
+    zip               \
+    zstd
 
 ENV UID=$UID
 ENV GID=$GID
@@ -256,8 +266,9 @@ RUN groupadd -g $GID dylan \
 # add dylan to docker group
 # Create docker group with same gid as host docker group
 RUN if [ -n "$DOCKER_GID" ]; then \
+    groupdel docker; \
     groupadd -g $DOCKER_GID docker; \
-    usermod -aG docker dylan; \
+    gpasswd -a dylan docker; \
 fi
 
 EXPOSE 22

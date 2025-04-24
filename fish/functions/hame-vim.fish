@@ -70,6 +70,7 @@ function hame-vim
     hame-clone -n vinegar           -p "$vim/start/vinegar"           -u "tpope/vim-vinegar"
     hame-clone -n rust-tools        -p "$vim/start/rust-tools"        -u "simrat39/rust-tools.nvim"
     hame-clone -n lspconfig         -p "$vim/start/lspconfig"         -u "neovim/nvim-lspconfig"
+    hame-clone -n groovy            -p "$vim/start/groovy"            -u "thecodesmith/vim-groovy"
 
     rg --no-filename -or 'Plug \'$1\'' 'url = https://github.com/(.+)' ~/.vim/pack/dylan/start/*/.git/config | sort > ~/.ideavimrc
 

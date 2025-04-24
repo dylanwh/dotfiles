@@ -45,10 +45,10 @@ function hame
     set -Ux SKIM_TMUX 1
 
     set -g fish_user_path $fish_user_path
-    path clear
-    path add ~/.local/bin
-    path add /opt/local/bin
-    path add /snap/bin
+    user-path clear
+    user-path add ~/.local/bin
+    user-path add /opt/local/bin
+    user-path add /snap/bin
 
     mkdir -p ~/.cache/hame
 
@@ -108,14 +108,14 @@ function hame
 
     if [ -d /opt/node ]
         npm config set prefix /opt/node
-        path add /opt/node/bin
+        user-path add /opt/node/bin
     end
 
     # plenv, pyenv, etc should be before /opt/local/bin in the path
-    path remove /opt/local/bin
-    path add /opt/local/bin
-    path remove /snap/bin
-    path add /snap/bin
+    user-path remove /opt/local/bin
+    user-path add /opt/local/bin
+    user-path remove /snap/bin
+    user-path add /snap/bin
 
     if not perl -MMojolicious -e 1 &>/dev/null
         hame-echo installing Mojolicious
@@ -135,7 +135,7 @@ function hame
     set new_fish_user_path $fish_user_path
     set --erase -g fish_user_path
     set -U fish_user_path $new_fish_user_path
-    path prune
+    user-path prune
 
     for func in $hame_after
         hame-echo running $func

@@ -1,5 +1,5 @@
 #!/usr/bin/env fish
-function path -a cmd dir
+function user-path -a cmd dir
     if [ -z $cmd ]
         set cmd list
     end

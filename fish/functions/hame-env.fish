@@ -13,12 +13,12 @@ function hame-env
     hame-clone -n nodenv     -p $NODENV_ROOT                    -u 'nodenv/nodenv.git'
     hame-clone -n node-build -p $NODENV_ROOT/plugins/node-build -u 'nodenv/node-build.git'
 
-    path add $PLENV_ROOT/bin
-    path add $PLENV_ROOT/shims
+    user-path add $PLENV_ROOT/bin
+    user-path add $PLENV_ROOT/shims
     plenv init - fish | grep -v 'set -gx PATH' > ~/.config/fish/functions/plenv.fish
 
-    path add $NODENV_ROOT/bin
-    path add $NODENV_ROOT/shims
+    user-path add $NODENV_ROOT/bin
+    user-path add $NODENV_ROOT/shims
     nodenv init - fish | grep -v 'set -gx PATH' > ~/.config/fish/functions/nodenv.fish
 
 end

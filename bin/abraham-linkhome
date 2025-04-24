@@ -42,15 +42,10 @@ if ($OSNAME eq 'darwin') {
 }
 
 my @dotfiles = (
-  'bashrc',
-  'ctags',         'cvsignore',
-  'fdignore',      'iterm2_shell_integration.fish',
-  'mailcap',       'minicpanrc',
-  'msmtprc',       'offlineimap.py',
-  'offlineimaprc', 'quotes',
-  'reply.pl',      'screenrc',
-  'tmux.conf',     'todorc',
-  'wyrdrc',        'dataprinter',
+  'bashrc',        'ctags',      'cvsignore', 'fdignore',
+  'mailcap',       'minicpanrc', 'msmtprc',   'offlineimap.py',
+  'offlineimaprc', 'quotes',     'reply.pl',  'screenrc',
+  'tmux.conf',     'todorc',     'wyrdrc',    'dataprinter',
 );
 
 provide($_, ".$_") for @dotfiles;
