@@ -78,7 +78,7 @@ function hame-macos
         moreutils        \
         ncdu1            \
         neovim           \
-        nodejs16         \
+        nodejs20         \
         protobuf-c       \
         pstree           \
         pv               \

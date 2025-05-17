@@ -1,3 +1,3 @@
 function si
- vim (fd -tf|sk);
+    emacs (fd -tf|sk)
 end

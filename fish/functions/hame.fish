@@ -96,16 +96,6 @@ function hame
         hame-nq plenv local $default_perl
     end
 
-    if not have node
-        set -l default_node 18.18.2
-        if not [ -d $NODENV_ROOT/versions/$default_node ]
-            hame-echo installing node $default_node
-            hame-nq nodenv install $default_node
-            hame-nq nodenv global $default_node
-            hame-nq nodenv local $default_node
-        end
-    end
-
     if [ -d /opt/node ]
         npm config set prefix /opt/node
         user-path add /opt/node/bin

@@ -32,13 +32,13 @@ if status --is-interactive
             abbr -a -g -- vi $code
             abbr -a -g -- vim $code
         case '*'
-            test "$LC_TERMINAL" = iTerm2
-            and test -f ~/.config/fish/iterm2_colors
-            and cat ~/.config/fish/iterm2_colors
-            if have nvim
-                set -x EDITOR nvim
-                abbr -a -g -- vi nvim
-                abbr -a -g -- vim nvim
+            # test "$LC_TERMINAL" = iTerm2
+            # and test -f ~/.config/fish/iterm2_colors
+            # and cat ~/.config/fish/iterm2_colors
+            if have emacs
+                set -x EDITOR emacsclient -a "" -t -q
+                abbr -a -g -- vi emacs
+                abbr -a -g -- vim emacs
             else
                 set -x EDITOR vim
                 abbr -a -g vi vim
