@@ -36,7 +36,7 @@ if status --is-interactive
             and test -n "$selenized_variant"
             and echo -e "\033]1337;SetColors=preset=selenized-$selenized_variant\a"
             if have emacs
-                set -x EDITOR emacsclient -a "" -t -q
+                set -x EDITOR emacsedit
                 abbr -a -g -- vi emacs
                 abbr -a -g -- vim emacs
             else
