@@ -85,7 +85,7 @@ function selenized
                 set -U fish_color_valid_path $s_fg_1 white --underline
                 set -U fish_color_vcs $s_violet magenta
             case iterm2
-                echo -e "\033]1337;SetColors=preset=selenized-$_flag_variant\a" | tee ~/.config/fish/iterm2_colors
+                echo -e "\033]1337;SetColors=preset=selenized-$selenized_variant\a"
             case kitty
                 kill -USR1 $KITTY_PID
             case ls_colors
