@@ -910,24 +910,6 @@
 			<key>Text</key>
 			<string></string>
 		</dict>
-		<key>0x2e-0x100000</key>
-		<dict>
-			<key>Action</key>
-			<integer>11</integer>
-			<key>Text</key>
-			<string>0x1b</string>
-		</dict>
-		<key>0x73-0x100000-0x0</key>
-		<dict>
-			<key>Action</key>
-			<integer>38</integer>
-			<key>Label</key>
-			<string></string>
-			<key>Text</key>
-			<string>\&lt;C-o&gt;:w\&lt;C-j&gt;</string>
-			<key>Version</key>
-			<integer>0</integer>
-		</dict>
 		<key>0x9-0x40000</key>
 		<dict>
 			<key>Action</key>
@@ -1103,12 +1085,16 @@
 			<string></string>
 			<key>AWDS Window Option</key>
 			<string>No</string>
+			<key>Allow Change Cursor Blink</key>
+			<false/>
 			<key>Allow Title Reporting</key>
 			<true/>
 			<key>Allow Title Setting</key>
 			<true/>
 			<key>Ambiguous Double Width</key>
 			<false/>
+			<key>Animate Movement</key>
+			<true/>
 			<key>Ansi 0 Color</key>
 			<dict>
 				<key>Blue Component</key>
@@ -1364,7 +1350,7 @@
 			<key>Disable Window Resizing</key>
 			<true/>
 			<key>Draw Powerline Glyphs</key>
-			<true/>
+			<false/>
 			<key>Enable Triggers in Interactive Apps</key>
 			<true/>
 			<key>Flashing Bell</key>
@@ -1706,6 +1692,8 @@
 			<false/>
 			<key>Use Underline Color</key>
 			<false/>
+			<key>Use libtickit protocol</key>
+			<true/>
 			<key>Vertical Spacing</key>
 			<real>1</real>
 			<key>Visual Bell</key>

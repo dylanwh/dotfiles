@@ -1,7 +1,7 @@
-source (gen_selenized_vars|psub)
-
 function selenized
-    argparse 'v/variant=' 'm/modules=+' 'E/env' -- $argv
+
+    source (selenized_vars|psub)
+    argparse 'v/variant=' 'm/modules=+' E/env -- $argv
     if [ -z $_flag_variant ]
         set _flag_variant black
     end
@@ -22,21 +22,15 @@ function selenized
         end
 
         have tmux
-        and echo test | tmux-pp &> /dev/null
+        and echo test | tmux-pp &>/dev/null
         and set _flag_modules $_flag_modules tmux
 
-        [ -n "$WSL_DISTRO_NAME" ]
-        and set _flag_modules $_flag_modules winterm
-
-        [ -n "$LC_TERMINAL" -a "$LC_TERMINAL" = "iTerm2" ]
-        and set _flag_modules $_flag_modules iterm2
-
-        test -d /Applications/MacPorts/Alacritty.app
-        and set _flag_modules $_flag_modules alacritty
+        test -n "$KITTY_PID"
+        and set _flag_modules $_flag_modules kitty
     end
     set -l s_scope ''
     if [ -n $_flag_env ]
-        set s_scope '-gx'
+        set s_scope -gx
     end
     set -l s_colors
 
@@ -48,6 +42,8 @@ function selenized
     if [ $_flag_env ]
         return
     end
+
+    set -Ux selenized_variant $_flag_variant
 
     for module in $_flag_modules
         switch $module
@@ -88,24 +84,10 @@ function selenized
                 set -U fish_color_user $s_br_green brgreen
                 set -U fish_color_valid_path $s_fg_1 white --underline
                 set -U fish_color_vcs $s_violet magenta
-            case winterm
-                set -l winterm_dir /mnt/c/Users/dylan/AppData/Local/Packages/Microsoft.WindowsTerminal_*/LocalState
-                set -l winterm_settings  $winterm_dir/settings.json
-                jsonnet -A variant=$_flag_variant $HOME/.config/selenized/winterm2.jsonnet > $winterm_settings.new
-                command mv -f $winterm_settings.new $winterm_settings
             case iterm2
                 echo -e "\033]1337;SetColors=preset=selenized-$_flag_variant\a" | tee ~/.config/fish/iterm2_colors
-            case alacritty
-                set -l s_dir   $HOME/.config/selenized
-                set -l s_file  $HOME/.config/alacritty/alacritty.yml
-                set -l jsonnet_args -A SHELL=$SHELL -A "s_variant=$_flag_variant"
-                for color in $selenized_colors
-                    set -l var selenized_{$_flag_variant}_{$color}[2]
-                    set -l name s_$color
-                    set -a jsonnet_args -A "$name=$$var"
-                end
-                mkdir -p (dirname $s_file)
-                jsonnet -y $jsonnet_args $s_dir/alacritty.jsonnet > $s_file
+            case kitty
+                kill -USR1 $KITTY_PID
             case ls_colors
                 echo "vivid not found. LS_COLORS unchanged." >&2
                 set --erase -g LS_COLORS
@@ -127,7 +109,7 @@ function selenized
                 set -Ux LS_COLORS (vivid generate $vivid_theme.yml)
                 set -l s
                 command rm $vivid_theme.yml
-                echo $LS_COLORS | tr ':' "\n" | sort -r | tr '\n' ':'  > ~/.config/fish/ls_colors
+                echo $LS_COLORS | tr ':' "\n" | sort -r | tr '\n' ':' >~/.config/fish/ls_colors
             case grep
                 set -Ux GREP_COLOR '7;33'
                 set -Ux GREP_COLORS 'mt=7;33'
@@ -140,7 +122,7 @@ function selenized
                     set $s_scope s_$color $$var
                     set -a selenized_env "$env=#$$var"
                 end
-                env $selenized_env tmux-pp < $HOME/.config/selenized/tmux.ep >$tmux_theme
+                env $selenized_env tmux-pp <$HOME/.config/selenized/tmux.ep >$tmux_theme
                 or continue
                 if tmux info >/dev/null 2>/dev/null
                     tmux source $tmux_theme

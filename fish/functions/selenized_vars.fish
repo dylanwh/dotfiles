@@ -1,11 +1,5 @@
-function gen_selenized_vars
+function selenized_vars
     set -l json_file $HOME/.config/selenized/variants.json
-    set -l fish_file $HOME/.config/selenized/variants.fish
-
-    if not have jq
-        cat $fish_file
-        return
-    end
 
     set -l dump_vars '
         . as $in 
@@ -28,6 +22,6 @@ function gen_selenized_vars
         jq -r '. | keys_unsorted | join(" ")' <$json_file
 
         jq -r $dump_vars <$json_file | sed 's/^/set -g /'
-    end | tee $fish_file
+    end
 
 end

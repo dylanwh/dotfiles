@@ -32,9 +32,9 @@ if status --is-interactive
             abbr -a -g -- vi $code
             abbr -a -g -- vim $code
         case '*'
-            # test "$LC_TERMINAL" = iTerm2
-            # and test -f ~/.config/fish/iterm2_colors
-            # and cat ~/.config/fish/iterm2_colors
+            test "$LC_TERMINAL" = iTerm2
+            and test -n "$selenized_variant"
+            and echo -e "\033]1337;SetColors=preset=selenized-$selenized_variant\a"
             if have emacs
                 set -x EDITOR emacsclient -a "" -t -q
                 abbr -a -g -- vi emacs
