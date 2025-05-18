@@ -85,7 +85,9 @@ function hame
 
     hame-rust
     hame-go
-    hame-tmux
+
+    test -d $HOME/.tmux/plugins
+    and rm -fr $HOME/.tmux/plugins
 
     set -l default_perl 5.36.0
     if not [ -d $PLENV_ROOT/versions/$default_perl ]
