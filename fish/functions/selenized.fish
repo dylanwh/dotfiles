@@ -12,21 +12,24 @@ function selenized
             echo "Invalid variant: $_flag_variant"
             return 1
     end
-    if [ -z $_flag_modules ]
+    if [ -z "$_flag_modules" ]
         set _flag_modules fish grep vim
 
         if have vivid
-            set _flag_modules $_flag_modules vivid
+            set -a _flag_modules vivid
         else
-            set _flag_modules $_flag_modules ls_colors
+            set -a _flag_modules ls_colors
         end
 
         have tmux
         and echo test | tmux-pp &>/dev/null
-        and set _flag_modules $_flag_modules tmux
+        and set -a _flag_modules tmux
 
         test -n "$KITTY_PID"
-        and set _flag_modules $_flag_modules kitty
+        and set -a _flag_modules kitty
+
+        test -n "$WEZTERM_CONFIG_DIR"
+        and set -a _flag_modules wezterm
     end
     set -l s_scope ''
     if [ -n $_flag_env ]
@@ -88,6 +91,8 @@ function selenized
                 echo -e "\033]1337;SetColors=preset=selenized-$selenized_variant\a"
             case kitty
                 kill -USR1 $KITTY_PID
+            case wezterm
+                echo "selenized-$selenized_variant" >$WEZTERM_CONFIG_DIR/color-scheme
             case ls_colors
                 echo "vivid not found. LS_COLORS unchanged." >&2
                 set --erase -g LS_COLORS

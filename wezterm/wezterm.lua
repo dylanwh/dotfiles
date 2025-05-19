@@ -2,16 +2,31 @@ local wezterm = require 'wezterm'
 local act     = wezterm.action
 local config  = wezterm.config_builder()
 
+local color_scheme = "selenized-black"
+local color_scheme_file = wezterm.config_dir .. "/color-scheme"
+local f = io.open(color_scheme_file, "r")
+if f == nil then
+  f = io.open(color_scheme_file, "w")
+  f:write(color_scheme)
+else
+  color_scheme = f:read("l")
+end
+
+wezterm.add_to_config_reload_watch_list(color_scheme_file)
+
+
+
 config.font_size                    = 14
 config.font                         = wezterm.font('SauceCodePro Nerd Font Mono', { weight = "Regular" })
-config.color_scheme                 = 'selenized-black'
-config.adjust_window_size_when_changing_font_size = false
-config.enable_kitty_keyboard                      = true
+config.color_scheme                 = color_scheme
+config.enable_kitty_keyboard        = true
 config.disable_default_key_bindings = true
 
-config.keys                                       = {
-  { key = 'Tab',        mods = 'CTRL',        action = act.ActivateTabRelative(1) },
-  { key = 'Tab',        mods = 'SHIFT|CTRL',  action = act.ActivateTabRelative(-1) },
+config.adjust_window_size_when_changing_font_size = false
+
+config.keys = {
+  { key = ']',          mods = 'SUPER',       action = act.ActivateTabRelative(1) },
+  { key = '[',          mods = 'SUPER',       action = act.ActivateTabRelative(-1) },
   { key = 'Enter',      mods = 'SUPER',       action = act.ToggleFullScreen },
   { key = 'd',          mods = 'SUPER',       action = act.SplitHorizontal { domain = 'CurrentPaneDomain' } },
   { key = 'D',          mods = 'SUPER',       action = act.SplitVertical { domain = 'CurrentPaneDomain' } },
@@ -30,8 +45,6 @@ config.keys                                       = {
   { key = 'p',          mods = 'SUPER',       action = act.ActivateCommandPalette },
   { key = 'u',          mods = 'SUPER',       action = act.CharSelect { copy_on_select = true, copy_to = 'ClipboardAndPrimarySelection' } },
   { key = 'x',          mods = 'SUPER',       action = act.ActivateCopyMode },
-  { key = '[',          mods = 'SHIFT|SUPER', action = act.ActivateTabRelative(-1) },
-  { key = ']',          mods = 'SHIFT|SUPER', action = act.ActivateTabRelative(1) },
   { key = 'c',          mods = 'SUPER',       action = act.CopyTo 'Clipboard' },
   { key = 'f',          mods = 'SUPER',       action = act.Search 'CurrentSelectionOrEmptyString' },
   { key = 'h',          mods = 'SUPER',       action = act.HideApplication },
@@ -67,7 +80,8 @@ config.keys                                       = {
   -- { key = 'Copy',       mods = 'NONE',           action = act.CopyTo 'Clipboard' },
   -- { key = 'Paste',      mods = 'NONE',           action = act.PasteFrom 'Clipboard' },
 }
-config.key_tables   = {
+
+config.key_tables = {
   copy_mode = {
     { key = 'Tab',        mods = 'NONE',  action = act.CopyMode 'MoveForwardWord' },
     { key = 'Tab',        mods = 'SHIFT', action = act.CopyMode 'MoveBackwardWord' },
