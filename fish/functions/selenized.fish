@@ -90,6 +90,7 @@ function selenized
             case iterm2
                 echo -e "\033]1337;SetColors=preset=selenized-$selenized_variant\a"
             case kitty
+                echo $selenized_variant >~/.config/kitty/selenized-variant
                 kill -USR1 $KITTY_PID
             case wezterm
                 echo "selenized-$selenized_variant" >$WEZTERM_CONFIG_DIR/color-scheme

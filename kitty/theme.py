@@ -8,13 +8,12 @@ variants_file = os.path.expanduser("~/.config/selenized/variants.json")
 with open(variants_file, "r") as f:
     variants = json.load(f)
 
+variant_file = os.path.expanduser("~/.config/kitty/selenized-variant")
+
 try:
-    variant = (
-        subprocess.check_output(["fish", "-c", "echo $selenized_variant"])
-        .decode("utf-8")
-        .strip()
-    )
-except subprocess.CalledProcessError:
+    with open(variant_file, "r") as f:
+        variant = f.readline().strip()
+except FileNotFoundError as e:
     variant = "black"
 
 
