@@ -30,6 +30,7 @@ provide('vim',           '.config/nvim');
 provide('vim',           '.vim');
 provide('karabiner',     '.config/karabiner');
 provide('kitty',         '.config/kitty');
+provide('wezterm',       '.config/wezterm');
 
 if ($OSNAME eq 'darwin') {
   provide('macos-user-key-equivalents.txt', '.config/macos-user-key-equivalents.txt');

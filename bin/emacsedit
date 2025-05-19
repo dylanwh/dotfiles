@@ -1,3 +1,33 @@
-#!/bin/sh
+#!/usr/bin/env fish
 
-emacsclient -a "" -q -t "$@"
+set -l filename
+set -l position
+set -l new_argv -q
+
+if test -n "$INSIDE_EMACS"
+    set -a new_argv
+else
+    set -a new_argv -a "" -t
+end
+
+for arg in $argv
+    switch $arg
+        case "-*"
+            set -a new_argv $arg
+        case "+*"
+            set position $arg
+        case "*"
+            set filename $arg
+    end
+    if test -n "$filename"
+        and test -n "$position"
+        set -a new_argv $position $filename
+        set position ""
+        set filename ""
+    end
+end
+
+test -n "$filename"
+and set -a new_argv $filename
+
+exec emacsclient $new_argv
