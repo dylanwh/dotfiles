@@ -21,6 +21,13 @@ if status --is-interactive
             end
     end
 
+    alias fd="fd --hyperlink=auto"
+
+    switch "$TERM"
+        case xterm-kitty
+            alias rg="rg --hyperlink-format=kitty -H"
+    end
+
     switch "$TERM_PROGRAM"
         case vscode
             set code code
