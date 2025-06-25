@@ -83,3 +83,5 @@
 (setq lsp-inlay-hint-enable t)
 (setq lsp-rust-analyzer-display-parameter-hints t)
 (setq confirm-kill-emacs #'yes-or-no-p)
+
+(map! :leader :desc "show link to github" :n "g h l" #'git-link)
