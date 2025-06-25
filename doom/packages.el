@@ -49,4 +49,3 @@
 (package! evil-ruby-text-objects)
 (package! fish-mode)
 (package! git-link)
-(package! jenkinsfile-mode)
