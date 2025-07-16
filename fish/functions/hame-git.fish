@@ -1,5 +1,5 @@
 function hame-git
-    argparse "v/verbose" -- $argv
+    argparse v/verbose -- $argv
 
     set -lx HAME_VERBOSE $HAME_VERBOSE
     if [ -n "$_flag_verbose" ]
@@ -42,9 +42,6 @@ function hame-git
         git config --global delta.decorations.file-style 'bold yellow ul'
         git config --global delta.decorations.file-decoration-style none
     end
-
-    test -n "$HAME_VERBOSE"
-    or return 0
 
     for func in $hame_git_after
         hame-echo running $func

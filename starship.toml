@@ -71,7 +71,7 @@ format = "[$hostname]($style) "
 disabled = true
 
 [git_state]
-disabled = true
+#disabled = true
 style="fg:green"
 
 [git_status]
@@ -125,3 +125,6 @@ disabled = true
 
 [swift]
 disabled = true
+
+[cmake]
+symbol = "cmake "
