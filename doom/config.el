@@ -76,6 +76,9 @@
 (add-hook 'ruby-mode-hook #'(lambda () (modify-syntax-entry ?_ "w")))
 ;; For Javascript
 (add-hook 'js2-mode-hook #'(lambda () (modify-syntax-entry ?_ "w")))
+;; for C and related
+(add-hook 'c-mode-hook #'(lambda () (modify-syntax-entry ?_ "w")))
+
 
 (add-hook 'ruby-mode-hook 'evil-ruby-text-objects-mode)
 
@@ -83,5 +86,6 @@
 (setq lsp-inlay-hint-enable t)
 (setq lsp-rust-analyzer-display-parameter-hints t)
 (setq confirm-kill-emacs #'yes-or-no-p)
+(setq lsp-copilot-enabled nil)
 
 (map! :leader :desc "show link to github" :n "g h l" #'git-link)
