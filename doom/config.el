@@ -87,5 +87,6 @@
 (setq lsp-rust-analyzer-display-parameter-hints t)
 (setq confirm-kill-emacs #'yes-or-no-p)
 (setq lsp-copilot-enabled nil)
+(setq lsp-copilot-applicable-fn (lambda (&rest _) nil))
 
 (map! :leader :desc "show link to github" :n "g h l" #'git-link)
