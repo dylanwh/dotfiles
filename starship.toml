@@ -66,7 +66,6 @@ ssh_only = true
 disabled = false
 format = "[$hostname]($style) "
 
-
 [gcloud]
 disabled = true
 
@@ -74,8 +73,12 @@ disabled = true
 #disabled = true
 style="fg:green"
 
+[git_commit]
+disabled = false
+tag_disabled = false
+
 [git_status]
-disabled = true
+disabled = false
 style="fg:#a67bf5"
 stashed = 'S'
 deleted = 'D'
@@ -87,15 +90,8 @@ truncation_length = 0
 #fish_style_pwd_dir_length = 1
 format = "in [$path]($style)[$read_only]($read_only_style) "
 
-
-[ruby]
-symbol = "ruby "
-
-[golang]
-symbol = "go "
-
 [python]
-disabled = true
+disabled = false
 
 [perl]
 disabled = true
@@ -109,10 +105,10 @@ disabled = true
 [nodejs]
 disabled = true
 
-[env_var]
-variable = "my_shell"
-format = "[$env_value]($style) "
-style="green"
+# [env_var]
+# variable = "my_shell"
+# format = "[$env_value]($style) "
+# style="green"
 
 [shell]
 fish_indicator = ""

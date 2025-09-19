@@ -85,6 +85,8 @@
 (setq lsp-rust-server 'rust-analyzer)
 (setq lsp-inlay-hint-enable t)
 (setq lsp-rust-analyzer-display-parameter-hints t)
+(setq lsp-rust-analyzer-display-closure-return-type-hints t)
+(setq lsp-inlay-hint-enable t)
 (setq confirm-kill-emacs #'yes-or-no-p)
 (setq lsp-copilot-enabled nil)
 (setq lsp-copilot-applicable-fn (lambda (&rest _) nil))
