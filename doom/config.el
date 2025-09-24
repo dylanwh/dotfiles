@@ -92,3 +92,7 @@
 (setq lsp-copilot-applicable-fn (lambda (&rest _) nil))
 
 (map! :leader :desc "show link to github" :n "g h l" #'git-link)
+
+(use-package json-mode
+  :ensure t
+  :mode ("\\.hujson\\'" . jsonc-mode))
