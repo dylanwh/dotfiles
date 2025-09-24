@@ -99,3 +99,6 @@
 
 (setq +format-on-save-enabled-modes
       '(not json-mode jsonc-mode))
+
+(setq projectile-project-search-path
+      '(("~/Git" . 2)))
