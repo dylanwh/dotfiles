@@ -96,3 +96,6 @@
 (use-package json-mode
   :ensure t
   :mode ("\\.hujson\\'" . jsonc-mode))
+
+(setq +format-on-save-enabled-modes
+      '(not json-mode jsonc-mode))
