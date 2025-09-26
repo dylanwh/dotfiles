@@ -102,3 +102,7 @@
 
 (setq projectile-project-search-path
       '(("~/Git" . 2)))
+
+(setq frame-title-format
+      '("[" (:eval system-name) "] "
+        "emacs %b"))
