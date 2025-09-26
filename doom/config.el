@@ -79,6 +79,7 @@
 ;; for C and related
 (add-hook 'c-mode-hook #'(lambda () (modify-syntax-entry ?_ "w")))
 
+(add-hook 'rust-mode #'(lambda () (modify-syntax-entry ?_ "w")))
 
 (add-hook 'ruby-mode-hook 'evil-ruby-text-objects-mode)
 
@@ -93,9 +94,13 @@
 
 (map! :leader :desc "show link to github" :n "g h l" #'git-link)
 
-(use-package json-mode
-  :ensure t
+(use-package! json-mode
   :mode ("\\.hujson\\'" . jsonc-mode))
+
+(use-package! web-mode
+  :mode ("\\.tt" . web-mode))
+
+(add-to-list 'auto-mode-alist '("\\.t\\'" . cperl-mode))
 
 (setq +format-on-save-enabled-modes
       '(not json-mode jsonc-mode))
