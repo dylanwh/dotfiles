@@ -138,28 +138,49 @@
 (defun eshell/vim (file)
   (find-file file))
 
-(setq counsel-projectile-switch-project-action
-      '(16
-        ("o" counsel-projectile-switch-project-action "jump to a project buffer or file")
-        ("f" counsel-projectile-switch-project-action-find-file "jump to a project file")
-        ("d" counsel-projectile-switch-project-action-find-dir "jump to a project directory")
-        ("D" counsel-projectile-switch-project-action-dired "open project in dired")
-        ("b" counsel-projectile-switch-project-action-switch-to-buffer "jump to a project buffer")
-        ("m" counsel-projectile-switch-project-action-find-file-manually "find file manually from project root")
-        ("S" counsel-projectile-switch-project-action-save-all-buffers "save all project buffers")
-        ("k" counsel-projectile-switch-project-action-kill-buffers "kill all project buffers")
-        ("K" counsel-projectile-switch-project-action-remove-known-project "remove project from known projects")
-        ("c" counsel-projectile-switch-project-action-compile "run project compilation command")
-        ("C" counsel-projectile-switch-project-action-configure "run project configure command")
-        ("E" counsel-projectile-switch-project-action-edit-dir-locals "edit project dir-locals")
-        ("v" counsel-projectile-switch-project-action-vc "open project in vc-dir / magit / monky")
-        ("s" counsel-projectile-switch-project-action-rg "search project with rg")
-        ("xs" counsel-projectile-switch-project-action-run-shell "invoke shell from project root")
-        ("xe" counsel-projectile-switch-project-action-run-eshell "invoke eshell from project root")
-        ("xt" counsel-projectile-switch-project-action-run-term "invoke term from project root")
-        ("xv" counsel-projectile-switch-project-action-run-vterm "invoke vterm from project root")
-        ("Oc" counsel-projectile-switch-project-action-org-capture "capture into project")
-        ("Oa" counsel-projectile-switch-project-action-org-agenda "open project agenda")))
+(after! counsel-projectile
+  (setq counsel-projectile-switch-project-action
+        '(16
+          ("o" counsel-projectile-switch-project-action
+           "jump to a project buffer or file")
+          ("f" counsel-projectile-switch-project-action-find-file
+           "jump to a project file")
+          ("d" counsel-projectile-switch-project-action-find-dir
+           "jump to a project directory")
+          ("D" counsel-projectile-switch-project-action-dired
+           "open project in dired")
+          ("b" counsel-projectile-switch-project-action-switch-to-buffer
+           "jump to a project buffer")
+          ("m" counsel-projectile-switch-project-action-find-file-manually
+           "find file manually from project root")
+          ("S" counsel-projectile-switch-project-action-save-all-buffers
+           "save all project buffers")
+          ("k" counsel-projectile-switch-project-action-kill-buffers
+           "kill all project buffers")
+          ("K" counsel-projectile-switch-project-action-remove-known-project
+           "remove project from known projects")
+          ("c" counsel-projectile-switch-project-action-compile
+           "run project compilation command")
+          ("C" counsel-projectile-switch-project-action-configure
+           "run project configure command")
+          ("E" counsel-projectile-switch-project-action-edit-dir-locals
+           "edit project dir-locals")
+          ("v" counsel-projectile-switch-project-action-vc
+           "open project in vc-dir / magit / monky")
+          ("s" counsel-projectile-switch-project-action-rg
+           "search project with rg")
+          ("xs" counsel-projectile-switch-project-action-run-shell
+           "invoke shell from project root")
+          ("xe" counsel-projectile-switch-project-action-run-eshell
+           "invoke eshell from project root")
+          ("xt" counsel-projectile-switch-project-action-run-term
+           "invoke term from project root")
+          ("xv" counsel-projectile-switch-project-action-run-vterm
+           "invoke vterm from project root")
+          ("Oc" counsel-projectile-switch-project-action-org-capture
+           "capture into project")
+          ("Oa" counsel-projectile-switch-project-action-org-agenda
+           "open project agenda"))))
 
 (setq +doom-dashboard-menu-sections
       '(
@@ -190,4 +211,4 @@
         ("Open documentation"
          :icon (nerd-icons-octicon "nf-oct-book"     :face 'doom-dashboard-menu-title)
          :action doom/help)
-        ))
+        )))
