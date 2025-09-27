@@ -111,3 +111,11 @@
 (setq frame-title-format
       '("[" (:eval system-name) "] "
         "emacs %b"))
+
+;; Global Auto-Revert Mode is a global minor mode that reverts any
+;; buffer associated with a file when the file changes on disk.  Use
+;; auto-revert-mode to revert a particular buffer.
+(global-auto-revert-mode 1)
+
+;; also enable this for non-file buffers, like dired
+(setq global-auto-revert-non-file-buffers t)
