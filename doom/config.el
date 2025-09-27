@@ -211,4 +211,4 @@
         ("Open documentation"
          :icon (nerd-icons-octicon "nf-oct-book"     :face 'doom-dashboard-menu-title)
          :action doom/help)
-        )))
+        ))
