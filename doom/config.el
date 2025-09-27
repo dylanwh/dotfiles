@@ -110,7 +110,7 @@
       '(("~/Git" . 2)))
 
 (setq frame-title-format
-      '("[" (:eval system-name) "] "
+      '((:eval (if (getenv "SSH_CONNECTION") (concat "[" system-name "] ")))
         "emacs %b"))
 
 (setq bookmark-default-file "~/.doom.d/bookmarks")
