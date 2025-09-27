@@ -112,6 +112,9 @@
       '("[" (:eval system-name) "] "
         "emacs %b"))
 
+(setq bookmark-default-file "~/.doom.d/bookmarks")
+(setq bookmark-save-flag 1)
+
 ;; Global Auto-Revert Mode is a global minor mode that reverts any
 ;; buffer associated with a file when the file changes on disk.  Use
 ;; auto-revert-mode to revert a particular buffer.
