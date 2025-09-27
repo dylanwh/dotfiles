@@ -93,6 +93,7 @@
 (setq lsp-copilot-applicable-fn (lambda (&rest _) nil))
 
 (map! :leader :desc "show link to github" :n "g h l" #'git-link)
+(map! :leader :n "p e" #'projectile-switch-vterm)
 
 (use-package! json-mode
   :mode ("\\.hujson\\'" . jsonc-mode))
@@ -122,3 +123,71 @@
 
 ;; also enable this for non-file buffers, like dired
 (setq global-auto-revert-non-file-buffers t)
+
+(defun projectile-switch-vterm ()
+  "Switch to a project and open a vterm"
+  (interactive)
+  (counsel-projectile-switch-project #'counsel-projectile-switch-project-action-run-vterm))
+
+(defun eshell/emacs (file)
+  (find-file file))
+
+(defun eshell/vi (file)
+  (find-file file))
+
+(defun eshell/vim (file)
+  (find-file file))
+
+(setq counsel-projectile-switch-project-action
+      '(16
+        ("o" counsel-projectile-switch-project-action "jump to a project buffer or file")
+        ("f" counsel-projectile-switch-project-action-find-file "jump to a project file")
+        ("d" counsel-projectile-switch-project-action-find-dir "jump to a project directory")
+        ("D" counsel-projectile-switch-project-action-dired "open project in dired")
+        ("b" counsel-projectile-switch-project-action-switch-to-buffer "jump to a project buffer")
+        ("m" counsel-projectile-switch-project-action-find-file-manually "find file manually from project root")
+        ("S" counsel-projectile-switch-project-action-save-all-buffers "save all project buffers")
+        ("k" counsel-projectile-switch-project-action-kill-buffers "kill all project buffers")
+        ("K" counsel-projectile-switch-project-action-remove-known-project "remove project from known projects")
+        ("c" counsel-projectile-switch-project-action-compile "run project compilation command")
+        ("C" counsel-projectile-switch-project-action-configure "run project configure command")
+        ("E" counsel-projectile-switch-project-action-edit-dir-locals "edit project dir-locals")
+        ("v" counsel-projectile-switch-project-action-vc "open project in vc-dir / magit / monky")
+        ("s" counsel-projectile-switch-project-action-rg "search project with rg")
+        ("xs" counsel-projectile-switch-project-action-run-shell "invoke shell from project root")
+        ("xe" counsel-projectile-switch-project-action-run-eshell "invoke eshell from project root")
+        ("xt" counsel-projectile-switch-project-action-run-term "invoke term from project root")
+        ("xv" counsel-projectile-switch-project-action-run-vterm "invoke vterm from project root")
+        ("Oc" counsel-projectile-switch-project-action-org-capture "capture into project")
+        ("Oa" counsel-projectile-switch-project-action-org-agenda "open project agenda")))
+
+(setq +doom-dashboard-menu-sections
+      '(
+        ("Recently opened files"
+         :icon (nerd-icons-faicon "nf-fa-file_text" :face 'doom-dashboard-menu-title)
+         :action recentf-open-files)
+        ("Reload last session"
+         :icon (nerd-icons-octicon "nf-oct-history" :face 'doom-dashboard-menu-title)
+         :when (cond ((modulep! :ui workspaces) (file-exists-p (expand-file-name persp-auto-save-fname persp-save-dir))) ((require 'desktop nil t) (file-exists-p (desktop-full-file-name))))
+         :action doom/quickload-session)
+        ("Open org-agenda"
+         :icon (nerd-icons-octicon "nf-oct-calendar" :face 'doom-dashboard-menu-title)
+         :when (fboundp 'org-agenda)
+         :action org-agenda)
+        ("Open project"
+         :icon (nerd-icons-octicon "nf-oct-briefcase" :face 'doom-dashboard-menu-title)
+         :action projectile-switch-project)
+        ("Open terminal"
+         :icon (nerd-icons-octicon "nf-oct-terminal" :face 'doom-dashboard-menu-title)
+         :action projectile-switch-vterm)
+        ;; +vterm/here)
+        ("Jump to bookmark"
+         :icon (nerd-icons-octicon "nf-oct-bookmark" :face 'doom-dashboard-menu-title)
+         :action bookmark-jump)
+        ("Open private configuration" :icon (nerd-icons-octicon "nf-oct-tools" :face 'doom-dashboard-menu-title)
+         :when (file-directory-p doom-user-dir)
+         :action doom/open-private-config)
+        ("Open documentation"
+         :icon (nerd-icons-octicon "nf-oct-book"     :face 'doom-dashboard-menu-title)
+         :action doom/help)
+        ))
