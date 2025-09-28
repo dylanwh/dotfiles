@@ -18,7 +18,10 @@
 ;;
 ;; They all accept either a font-spec, font string ("Input Mono-12"), or xlfd
 ;; font string. You generally only need these two:
-(setq doom-font (font-spec :family "SauceCodePro Nerd Font Mono" :size 14))
+(setq doom-font (font-spec :family "SauceCodePro Nerd Font Mono" :style "Light" :size 14.0))
+(setq doom-big-font (font-spec :family "SauceCodePro Nerd Font Mono" :style "Light" :size 28.0))
+(setq nerd-icons-font-family "SauceCodePro Nerd Font Mono")
+
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
@@ -68,29 +71,26 @@
 
   (add-hook 'cperl-mode-hook #'my-cperl-mode))
 
-;; For python
-(add-hook 'python-mode-hook #'(lambda () (modify-syntax-entry ?_ "w")))
-;; For perl
-(add-hook 'cperl-mode-hook #'(lambda () (modify-syntax-entry ?_ "w")))
-;; For ruby
-(add-hook 'ruby-mode-hook #'(lambda () (modify-syntax-entry ?_ "w")))
-;; For Javascript
-(add-hook 'js2-mode-hook #'(lambda () (modify-syntax-entry ?_ "w")))
-;; for C and related
-(add-hook 'c-mode-hook #'(lambda () (modify-syntax-entry ?_ "w")))
-
-(add-hook 'rust-mode #'(lambda () (modify-syntax-entry ?_ "w")))
+;; emacs doesn't typically consider _ to be a word character, which is annoying
+;; in several languages. Modify those modes syntax entries to consider _ a word
+;; character
+(let ((wordy-modes '(python-mode-hook cperl-mode-hook ruby-mode-hook
+                     js2-mode-hook c-mode-hook rust-mode))
+      (hook #'(lambda () (modify-syntax-entry ?_ "w"))))
+  (dolist (mode wordy-modes)
+    (add-hook mode hook)))
 
 (add-hook 'ruby-mode-hook 'evil-ruby-text-objects-mode)
 
-(setq lsp-rust-server 'rust-analyzer)
-(setq lsp-inlay-hint-enable t)
-(setq lsp-rust-analyzer-display-parameter-hints t)
-(setq lsp-rust-analyzer-display-closure-return-type-hints t)
-(setq lsp-inlay-hint-enable t)
-(setq confirm-kill-emacs #'yes-or-no-p)
-(setq lsp-copilot-enabled nil)
 (setq lsp-copilot-applicable-fn (lambda (&rest _) nil))
+(setq lsp-copilot-enabled nil)
+
+(setq lsp-inlay-hint-enable t)
+(setq lsp-rust-analyzer-display-closure-return-type-hints t)
+(setq lsp-rust-analyzer-display-parameter-hints t)
+(setq lsp-rust-server 'rust-analyzer)
+
+(setq confirm-kill-emacs #'yes-or-no-p)
 
 (map! :leader :desc "show link to github" :n "g h l" #'git-link)
 (map! :leader :n "p e" #'projectile-switch-vterm)
@@ -123,6 +123,8 @@
 
 ;; also enable this for non-file buffers, like dired
 (setq global-auto-revert-non-file-buffers t)
+
+(menu-bar-mode -1)
 
 (defun projectile-switch-vterm ()
   "Switch to a project and open a vterm"
@@ -183,8 +185,7 @@
            "open project agenda"))))
 
 (setq +doom-dashboard-menu-sections
-      '(
-        ("Recently opened files"
+      '(("Recently opened files"
          :icon (nerd-icons-faicon "nf-fa-file_text" :face 'doom-dashboard-menu-title)
          :action recentf-open-files)
         ("Reload last session"
@@ -210,5 +211,11 @@
          :action doom/open-private-config)
         ("Open documentation"
          :icon (nerd-icons-octicon "nf-oct-book"     :face 'doom-dashboard-menu-title)
-         :action doom/help)
-        ))
+         :action doom/help)))
+
+;; for some reason, emacsformacosx has scratch buffer not being in lisp-interactive-mode?
+(if (not (equal (buffer-local-value 'major-mode (get-buffer "*scratch*")) #'lisp-interaction-mode))
+    (defun fix-scratch-buffer nil
+      (lisp-interaction-mode))
+
+  (advice-add 'scratch-buffer :after-while 'fix-scratch-buffer))
