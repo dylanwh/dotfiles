@@ -1,0 +1,58 @@
+#!/bin/bash
+
+set -euo pipefail
+
+EMACS_VERSION=30.2
+EMACS_FILE="emacs-${EMACS_VERSION}.tar.xz"
+EMACS_DIR="emacs-${EMACS_VERSION}"
+EMACS_URL="https://mirror.us-midwest-1.nexcess.net/gnu/emacs/${EMACS_FILE}"
+EMACS_SHA2="b3f36f18a6dd2715713370166257de2fae01f9d38cfe878ced9b1e6ded5befd9"
+PREFIX="$HOME/.local/emacs"
+
+link_emacs() {
+    for file in $HOME/.local/emacs/bin/*; do
+        ln -vfs $file "$HOME/.local/bin/$(basename $file)"
+    done
+}
+
+if [[ -x "$PREFIX/bin/emacs"  ]]; then
+    link_emacs
+    exit
+fi
+
+build_dir="$(mktemp -d emacs-build.XXXX)"
+start_dir="$(pwd)"
+
+pushd "$build_dir" >/dev/null
+
+cleanup() {
+    cd $start_dir
+    if [[ -n "$build_dir" ]]; then
+        rm -fr "$build_dir"
+    fi
+}
+
+trap cleanup EXIT
+
+echo "fetching emacs..."
+curl -sL -o $EMACS_FILE $EMACS_URL
+echo "checking integrity of emacs archive"
+echo "$EMACS_SHA2  $EMACS_FILE" | sha256sum -c - >/dev/null
+
+echo "unpacking emacs archive"
+tar -axf $EMACS_FILE
+
+pushd $EMACS_DIR >/dev/null
+./configure \
+    --with-all \
+    --without-x \
+    --with-native-compilation=yes \
+    --with-tree-sitter \
+    --with-sqlite3 \
+    --with-modules \
+    --prefix="$PREFIX"
+
+make -j"$(nproc)"
+make install
+
+link_emacs
