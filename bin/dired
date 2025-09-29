@@ -1,0 +1,9 @@
+#!/bin/bash
+
+if [[ -n "$1" ]]; then
+    dir="$1"
+else
+    dir="$(pwd)"
+fi
+
+exec emacsclient -a "" -nw -c -e "(dired \"$dir\")"

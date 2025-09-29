@@ -51,7 +51,7 @@ function hame-rust
         have broot
         and hame-nq cargo uninstall broot
         have shpool
-        and hame-nq cargo install shpool
+        and hame-nq cargo uninstall shpool
     end
     popd
 end
