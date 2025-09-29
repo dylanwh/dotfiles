@@ -15,10 +15,30 @@ link_emacs() {
     done
 }
 
-# if [[ -x "$PREFIX/bin/emacs"  ]]; then
-#     link_emacs
-#     exit
-# fi
+gcc_major_version() {
+   gcc --version | sed -n -e '/^gcc / { s/.*\<\([0-9]\+\)\.[0-9]\+\.[0-9]\+$/\1/; p }'
+}
+
+if [[ -x "$PREFIX/bin/emacs"  ]]; then
+    link_emacs
+    exit
+fi
+
+
+if [[ -f /etc/debian_version ]]; then
+    if ! which gcc &>/dev/null; then
+        echo "gcc not found"
+        exit 1
+    fi
+    gcc_major_version="$(gcc_major_version)"
+    sudo apt-get install -y \
+        "libgccjit-${gcc_major_version}-dev" \
+        libncurses-dev \
+        libxml2-dev  \
+        libtree-sitter-dev \
+        libgnutls28-dev \
+        libz-dev
+fi
 
 build_dir="$(mktemp -d emacs-build.XXXX)"
 start_dir="$(pwd)"
