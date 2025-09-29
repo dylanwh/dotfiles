@@ -18,7 +18,6 @@ function hame-rust
         rustup component add rust-analyzer rust-src rustfmt clippy
     end
 
-
     if have cargo
         have sk
         or hame-nq cargo install skim
@@ -46,12 +45,10 @@ function hame-rust
         or hame-nq cargo install uq
         have xsv
         or hame-nq cargo install xsv
-        have procs
-        and hame-nq cargo uninstall procs
-        have broot
-        and hame-nq cargo uninstall broot
         have shpool
         and hame-nq cargo uninstall shpool
+        have mdopen
+        or hame-nq cargo install mdopen
     end
     popd
 end

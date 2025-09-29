@@ -133,7 +133,7 @@
        ;;factor
        ;;ledger                ; an accounting system in Emacs
        (lua +lsp +tree-sitter) ; one-based indices? one-based indices
-       markdown                ; writing docs for people to ignore
+       (markdown +grip)        ; writing docs for people to ignore
        ;;nim                   ; python + lisp at the speed of c
        ;;nix                   ; I hereby declare "nix geht mehr!"
        ;;ocaml                 ; an objective camel
@@ -151,7 +151,7 @@
        (rust +lsp)             ; Fe2O3.unwrap().unwrap().unwrap().unwrap()
        ;;scala                 ; java, but good
        ;;scheme                ; a fully conniving family of lisps
-       (sh +fish +lsp)         ; she sells {ba,z,fi}sh shells on the C xor
+       (sh +fish)              ; she sells {ba,z,fi}sh shells on the C xor
        ;;sml
        ;;solidity              ; do you need a blockchain? No.
        ;;swift                 ; who asked for emoji variables?
@@ -169,6 +169,7 @@
        ;;irc                   ; how neckbeards socialize
        ;;(rss +org)            ; emacs as an RSS reader
        ;;twitter               ; twitter client https://twitter.com/vnought
+       ;;everywhere
 
        :os
        (tty +osc)
