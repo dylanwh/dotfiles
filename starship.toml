@@ -43,17 +43,19 @@ $openstack\
 $crystal\
 $custom\
 $cmd_duration\
+$fill\
+$env_var\
 $line_break\
 $lua\
 $jobs\
 $battery\
 $time\
 $status\
-$env_var\
 $shell\
 $character"""
 
 [git_branch]
+symbol = " "
 style="fg:#a67bf5"
 
 [username]
@@ -91,9 +93,11 @@ truncation_length = 0
 format = "in [$path]($style)[$read_only]($read_only_style) "
 
 [python]
-disabled = false
+symbol = " "
+disabled = true
 
 [perl]
+symbol = " "
 disabled = true
 
 [java]
@@ -104,11 +108,6 @@ disabled = true
 
 [nodejs]
 disabled = true
-
-# [env_var]
-# variable = "my_shell"
-# format = "[$env_value]($style) "
-# style="green"
 
 [shell]
 fish_indicator = ""
@@ -123,4 +122,16 @@ disabled = true
 disabled = true
 
 [cmake]
-symbol = "cmake "
+symbol = " "
+
+[env_var.shpool]
+variable = "SHPOOL_SESSION_NAME"
+style = "bg:15 fg:0 bold"
+format = "[$symbol](fg:15)[$env_value]($style)[](fg:15)"
+symbol = ""
+
+[fill]
+symbol = " "
+
+[golang]
+symbol = " "

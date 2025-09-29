@@ -11,7 +11,7 @@ function hame-rust
     if not have rustup
         hame-echo installing rust
         set rustup_init (mktemp)
-        curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs > $rustup_init
+        curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs >$rustup_init
         sh $rustup_init -y --no-modify-path
         rm $rustup_init
 
@@ -50,7 +50,8 @@ function hame-rust
         and hame-nq cargo uninstall procs
         have broot
         and hame-nq cargo uninstall broot
+        have shpool
+        and hame-nq cargo install shpool
     end
     popd
 end
-
