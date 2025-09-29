@@ -220,7 +220,6 @@
 
   (advice-add 'scratch-buffer :after-while 'fix-scratch-buffer))
 
-;; already use control master in ssh. Note this changed in 30.1
 (if (version< emacs-version "30.1")
-    (setq tramp-use-ssh-controlmaster-options nil)
-  (setq tramp-use-connection-share nil))
+    (setq tramp-use-ssh-controlmaster-options t)
+  (setq tramp-use-connection-share t))
