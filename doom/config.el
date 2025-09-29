@@ -1,4 +1,5 @@
 ;;; $DOOMDIR/config.el -*- lexical-binding: t; -*-
+;;;
 
 ;; Place your private configuration here! Remember, you do not need to run 'doom
 ;; sync' after modifying this file!
@@ -223,3 +224,7 @@
 (if (version< emacs-version "30.1")
     (setq tramp-use-ssh-controlmaster-options t)
   (setq tramp-use-connection-share t))
+
+(after! evil
+  (evil-ex-define-cmd "q" 'bury-buffer)
+  (evil-ex-define-cmd "wq" 'doom/save-and-kill-buffer))

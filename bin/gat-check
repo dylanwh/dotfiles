@@ -1,6 +1,0 @@
-#!/bin/zsh
-
-file=$1
-
-cd $(dirname $file)
-md5sum -c "$@" $(basename $file)

@@ -73,7 +73,7 @@ function hame
 
     if not have nq
         hame-echo installing nq
-        install_nq
+        install-nq
     end
 
     hame-fq
