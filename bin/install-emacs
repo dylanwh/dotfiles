@@ -15,10 +15,10 @@ link_emacs() {
     done
 }
 
-if [[ -x "$PREFIX/bin/emacs"  ]]; then
-    link_emacs
-    exit
-fi
+# if [[ -x "$PREFIX/bin/emacs"  ]]; then
+#     link_emacs
+#     exit
+# fi
 
 build_dir="$(mktemp -d emacs-build.XXXX)"
 start_dir="$(pwd)"
@@ -45,6 +45,7 @@ tar -axf $EMACS_FILE
 pushd $EMACS_DIR >/dev/null
 ./configure \
     --with-all \
+    --with-xml2 \
     --without-x \
     --with-native-compilation=yes \
     --with-tree-sitter \
