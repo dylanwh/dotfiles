@@ -132,14 +132,27 @@
   (interactive)
   (counsel-projectile-switch-project #'counsel-projectile-switch-project-action-run-vterm))
 
-(defun eshell/emacs (file)
-  (find-file file))
+(after! eshell
+  (defun eshell/emacs (file)
+    (find-file file))
 
-(defun eshell/vi (file)
-  (find-file file))
+  (defun eshell/vi (file)
+    (find-file file))
 
-(defun eshell/vim (file)
-  (find-file file))
+  (defun eshell/vim (file)
+    (find-file file))
+
+  (defun eshell/gd ()
+    (counsel-projectile-switch-project #'counsel-projectile-switch-project-action-run-eshell))
+
+  (set-eshell-alias!
+   "home" "cd ~/Git/dylanwh"
+   "pull" "git pull"
+   "push" "git push")
+
+
+  (add-hook! 'eshell-directory-change-hook
+    (company-mode (if (file-remote-p default-directory) -1 +1))))
 
 (after! counsel-projectile
   (setq counsel-projectile-switch-project-action
