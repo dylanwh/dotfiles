@@ -146,7 +146,7 @@
     (counsel-projectile-switch-project #'counsel-projectile-switch-project-action-run-eshell))
 
   (set-eshell-alias!
-   "home" "cd ~/Git/dylanwh"
+   "home" "cd ~/Git/dylanwh/dotfiles"
    "pull" "git pull"
    "push" "git push")
 
