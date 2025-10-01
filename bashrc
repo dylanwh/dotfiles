@@ -132,4 +132,4 @@ export _NROFF_U=1
 export GROFF_NO_SGR=1
 
 alias sudo='env -u TERINFO TERM=xterm-256color sudo'
-alias ls='ls -Fh --color=auto --group-directories-first --hyperlink'
+alias ls='ls -Fh --color=auto --group-directories-first'
