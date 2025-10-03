@@ -50,3 +50,4 @@
 (package! fish-mode)
 (package! git-link)
 (package! jenkinsfile-mode)
+(package! age)

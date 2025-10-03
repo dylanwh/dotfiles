@@ -133,6 +133,10 @@
   (counsel-projectile-switch-project #'counsel-projectile-switch-project-action-run-vterm))
 
 (after! eshell
+  (defun my-eshell-mode-company ()
+    (setq-local company-idle-delay nil))
+  (add-hook 'eshell-mode-hook 'my-eshell-mode-company)
+
   (defun eshell/emacs (file)
     (find-file file))
 
@@ -241,3 +245,14 @@
 (after! evil
   (evil-ex-define-cmd "q" 'bury-buffer)
   (evil-ex-define-cmd "wq" 'doom/save-and-kill-buffer))
+
+
+(use-package! age
+  :custom
+  (age-program "rage")
+  (age-default-identity "~/.ssh/id_ed25519")
+  (age-default-recipient
+   '("~/.ssh/authorized_keys"))
+  :config
+  (setenv "PINENTRY_PROGRAM" "")
+  (age-file-enable))
