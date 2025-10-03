@@ -250,7 +250,9 @@
 (use-package! age
   :custom
   (age-program "rage")
-  (age-default-identity "~/.ssh/id_ed25519")
+  (age-default-identity
+   (cl-find-if #'file-readable-p
+               '( "~/.ssh/id_ed25519" "~/.ssh/id_rsa")))
   (age-default-recipient
    '("~/.ssh/authorized_keys"))
   :config
