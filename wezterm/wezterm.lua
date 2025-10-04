@@ -7,6 +7,7 @@ local color_scheme_file = wezterm.config_dir .. "/color-scheme"
 local f = io.open(color_scheme_file, "r")
 if f == nil then
   f = io.open(color_scheme_file, "w")
+  assert(f ~= nil, "could not write scheme file")
   f:write(color_scheme)
 else
   color_scheme = f:read("l")

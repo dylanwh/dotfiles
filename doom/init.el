@@ -64,7 +64,9 @@
        :emacs
        dired                   ; making dired pretty [functional]
        electric                ; smarter, keyword-based electric-indent
+       eww                     ; the internet is gross
        ;;ibuffer               ; interactive buffer management
+       tramp                   ; remote files at your arthritic fingertips
        undo                    ; persistent, smarter undo for your inevitable mistakes
        vc                      ; version-control and Emacs, sitting in a tree
 
@@ -81,9 +83,11 @@
 
        :tools
        ;;ansible
+       ;;biblio                ; Writes a PhD for you (citation needed)
+       ;;collab                l buffers with friends
        ;;debugger              ; FIXME stepping through code, to help you add bugs
+       ;;docker
        ;;direnv
-       (docker +lsp)
        editorconfig            ; let someone else argue about tabs vs spaces
        ;;ein                   ; tame Jupyter notebooks with emacs
        (eval +overlay)         ; run code, run (also, repls)
@@ -99,6 +103,7 @@
        ;;rgb                   ; creating color strings
        terraform               ; infrastructure as code
        ;;tmux                  ; an API for interacting with tmux
+       tree-sitter             ; syntax and parsing, sitting in a tree
        upload                  ; map local to remote projects via ssh/ftp
 
        :lang
@@ -123,7 +128,7 @@
        ;;(haskell +dante)      ; a language that's lazier than I am
        ;;hy                    ; readability of scheme w/ speed of python
        ;;idris                 ;
-       json                    ; At least it ain't XML
+       (json +lsp)             ; At least it ain't XML
        ;;(java +meghanada)     ; the poster child for carpal tunnel syndrome
        javascript              ; all(hope(abandon(ye(who(enter(here))))))
        ;;julia                 ; a better, faster MATLAB

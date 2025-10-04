@@ -51,3 +51,6 @@
 (package! git-link)
 (package! jenkinsfile-mode)
 (package! age)
+;;(package! gitignore-snippets)
+(package! license-snippets)
+(package! py-snippets)

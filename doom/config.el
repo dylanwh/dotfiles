@@ -258,3 +258,11 @@
   :config
   (setenv "PINENTRY_PROGRAM" "")
   (age-file-enable))
+
+
+(setq shell-file-name (executable-find "bash"))
+
+(let ((fish (executable-find "fish")))
+  (setq-default vterm-shell fish)
+  (setq-default explicit-shell-file-name fish))
+
