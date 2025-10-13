@@ -94,7 +94,7 @@
 (setq confirm-kill-emacs #'yes-or-no-p)
 
 (map! :leader :desc "show link to github" :n "g h l" #'git-link)
-(map! :leader :n "p e" #'projectile-switch-vterm)
+(map! :leader :n "p v" #'projectile-switch-vterm)
 
 (use-package! json-mode
   :mode ("\\.hujson\\'" . jsonc-mode))
