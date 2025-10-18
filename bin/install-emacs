@@ -7,23 +7,11 @@ EMACS_FILE="emacs-${EMACS_VERSION}.tar.xz"
 EMACS_DIR="emacs-${EMACS_VERSION}"
 EMACS_URL="https://mirror.us-midwest-1.nexcess.net/gnu/emacs/${EMACS_FILE}"
 EMACS_SHA2="b3f36f18a6dd2715713370166257de2fae01f9d38cfe878ced9b1e6ded5befd9"
-PREFIX="$HOME/.local/emacs"
-
-link_emacs() {
-    for file in $HOME/.local/emacs/bin/*; do
-        ln -vfs $file "$HOME/.local/bin/$(basename $file)"
-    done
-}
+PREFIX="/usr/local/stow/emacs"
 
 gcc_major_version() {
    gcc --version | sed -n -e '/^gcc / { s/.*\<\([0-9]\+\)\.[0-9]\+\.[0-9]\+$/\1/; p }'
 }
-
-if [[ -x "$PREFIX/bin/emacs"  ]]; then
-    link_emacs
-    exit
-fi
-
 
 if [[ -f /etc/debian_version ]]; then
     if ! which gcc &>/dev/null; then
@@ -75,5 +63,3 @@ pushd $EMACS_DIR >/dev/null
 
 make -j"$(nproc)"
 make install
-
-link_emacs

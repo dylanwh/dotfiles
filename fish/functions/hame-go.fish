@@ -5,12 +5,8 @@ function hame-go
     hame-echo configuring go stuff
 
     set --erase GOPATH
-    if [ -d /opt/go ]
-        set -Ux GOPATH /opt/go
-    else
-        mkdir -p $HOME/.local/go
-        set -Ux GOPATH $HOME/.local/go
-    end
+    mkdir -p $HOME/.go
+    set -Ux GOPATH $HOME/.go
 
     user-path add $GOPATH/bin
 

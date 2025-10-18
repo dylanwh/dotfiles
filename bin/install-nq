@@ -11,6 +11,6 @@ or git clone https://github.com/leahneukirchen/nq
 
 cd nq
 make -j 4
-and sudo make install
+and make install PREFIX=/usr/local/stow/nq
 and cd $HOME
 and rm -vfr ~/.cache/build/nq
