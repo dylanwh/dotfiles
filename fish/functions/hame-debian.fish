@@ -2,10 +2,9 @@ function hame-debian
     set packages          \
         autoconf          \
         bind9-dnsutils    \
-        black             \
         build-essential   \
         curl              \
-        emacs-nox         \
+        editorconfig      \
         fd-find           \
         git               \
         gron              \
@@ -17,23 +16,16 @@ function hame-debian
         libssl-dev        \
         moreutils         \
         ncdu              \
-        neovim-           \
         nmap              \
         nq                \
         pkg-config        \
         protobuf-compiler \
         pv                \
         ripgrep           \
+        shfmt             \
+        tidy              \
         tmux              \
-        vim-nox-          \
         whois
-
-    set release (lsb_release -rs)
-    switch $release
-    case 20.04
-        set packages (string join \n $packages | egrep -v 'emacs-nox|neovim')
-        set -a packages nodejs- emacs-nox- neovim-
-    end
 
     string join \n $packages | sort > ~/.cache/hame/packages.txt
 

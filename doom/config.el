@@ -105,7 +105,7 @@
 (add-to-list 'auto-mode-alist '("\\.t\\'" . cperl-mode))
 
 (setq +format-on-save-enabled-modes
-      '(not json-mode jsonc-mode))
+      '(not json-mode jsonc-mode fish-mode))
 
 (setq projectile-project-search-path
       '(("~/Git" . 2)))
