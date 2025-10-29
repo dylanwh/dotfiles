@@ -4,22 +4,22 @@ set -euo pipefail
 
 # what's good for the goos is good for the goarch
 case "$(uname -s)" in
-  Linux*)   goos="linux" ;;
-  Darwin*)  goos="darwin" ;;
-  FreeBSD*) goos="freebsd" ;;
-  NetBSD*)  goos="netbsd" ;;
-  OpenBSD*) goos="openbsd" ;;
-  *)        goos="unknown" ;;
+Linux*) goos="linux" ;;
+Darwin*) goos="darwin" ;;
+FreeBSD*) goos="freebsd" ;;
+NetBSD*) goos="netbsd" ;;
+OpenBSD*) goos="openbsd" ;;
+*) goos="unknown" ;;
 esac
 
 case "$(uname -m)" in
-  x86_64)   goarch="amd64" ;;
-  i386)     goarch="386" ;;
-  i686)     goarch="386" ;;
-  arm64)    goarch="arm64" ;;
-  aarch64)  goarch="arm64" ;;
-  arm*)     goarch="arm" ;;
-  *)        goarch="unknown" ;;
+x86_64) goarch="amd64" ;;
+i386) goarch="386" ;;
+i686) goarch="386" ;;
+arm64) goarch="arm64" ;;
+aarch64) goarch="arm64" ;;
+arm*) goarch="arm" ;;
+*) goarch="unknown" ;;
 esac
 
 if [ "$goos" = "unknown" ] || [ "$goarch" = "unknown" ]; then
@@ -31,18 +31,18 @@ GO_VERSION=1.25.3
 GO_FILE="go${GO_VERSION}.$goos-$goarch.tar.gz"
 GO_URL="https://go.dev/dl/${GO_FILE}"
 GO_SHA2="0335f314b6e7bfe08c3d0cfaa7c19db961b7b99fb20be62b0a826c992ad14e0f"
-PREFIX="/usr/local/stow/go"
+PREFIX="$HOME/.local/stow/go"
 
 start_dir="$(pwd)"
 download_dir="$(mktemp -d go.XXXX)"
 
- cd "$download_dir"
+cd "$download_dir"
 
 cleanup() {
-    cd "$start_dir"
-    if [[ -n "$download_dir" ]]; then
-        rm -fr "$download_dir"
-    fi
+  cd "$start_dir"
+  if [[ -n "$download_dir" ]]; then
+    rm -fr "$download_dir"
+  fi
 }
 
 trap cleanup EXIT
@@ -51,9 +51,9 @@ echo "fetching go..."
 curl -sL -o $GO_FILE $GO_URL
 echo "checking integrity of go archive"
 if ! echo "$GO_SHA2  $GO_FILE" | sha256sum -c - >/dev/null; then
-    echo -n "sha256 mismatch: expected $GO_SHA2, actual "
-    sha256sum "$GO_FILE" | awk '{print $1}'
-    exit 1
+  echo -n "sha256 mismatch: expected $GO_SHA2, actual "
+  sha256sum "$GO_FILE" | awk '{print $1}'
+  exit 1
 fi
 
 echo "unpacking go archive"
