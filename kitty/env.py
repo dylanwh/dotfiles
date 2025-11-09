@@ -13,13 +13,16 @@ match os.uname().sysname:
         fish_path.append("/usr/local/bin/fish")
     case _:
         fish_path.append("/usr/bin/fish")
+        fish_path.append("/run/current-system/sw/bin/fish")
 
 
+fish = None
 for path in fish_path:
     if os.path.exists(path):
         fish = path
         break
 
+assert(fish is not None)
 
 # now we use fish to find all envs
 envs = subprocess.check_output([fish, "-l", "-c", "env"]).decode("utf-8")

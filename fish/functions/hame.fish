@@ -91,40 +91,40 @@ function hame
     test -d $HOME/.tmux/thumbs-init.conf
     and rm -f $HOME/.tmux/thumbs-init.conf
 
-    set -l default_perl 5.36.0
-    if not [ -d $PLENV_ROOT/versions/$default_perl ]
-        hame-echo installing perl $default_perl
-        hame-nq plenv install $default_perl
-        hame-nq env PLENV_VERSION=$default_perl plenv install-cpanm
-        hame-nq plenv global $default_perl
-        hame-nq plenv local $default_perl
-    end
+    if not test -d /nix
+        set -l default_perl 5.36.0
+        if not [ -d $PLENV_ROOT/versions/$default_perl ]
+            hame-echo installing perl $default_perl
+            hame-nq plenv install $default_perl
+            hame-nq env PLENV_VERSION=$default_perl plenv install-cpanm
+            hame-nq plenv global $default_perl
+            hame-nq plenv local $default_perl
+        end
 
-    if [ -d /opt/node ]
-        npm config set prefix /opt/node
-        user-path add /opt/node/bin
-    end
+        if [ -d /opt/node ]
+            npm config set prefix /opt/node
+            user-path add /opt/node/bin
+        end
 
-    # plenv, pyenv, etc should be before /opt/local/bin in the path
-    user-path remove /opt/local/bin
-    user-path add /opt/local/bin
-    user-path remove /snap/bin
-    user-path add /snap/bin
+        # plenv, pyenv, etc should be before /opt/local/bin in the path
+        user-path remove /opt/local/bin
+        user-path add /opt/local/bin
+        user-path remove /snap/bin
+        user-path add /snap/bin
 
-    if not perl -MMojolicious -e 1 &>/dev/null
-        hame-echo installing Mojolicious
-        hame-nq cpanm --notest Mojolicious
+        if not perl -MMojolicious -e 1 &>/dev/null
+            hame-echo installing Mojolicious
+            hame-nq cpanm --notest Mojolicious
+        end
+        if not [ -f $HOME/.local/bin/got ]
+            hame-echo installing gitgot
+            hame-nq cpanm --notest App::GitGot
+            hame-nq cpanm --notest Path::Iterator::Rule
+            hame-nq cpanm --notest JSON
+            hame-nq sed "1 s|^#!.*|#!$PLENV_ROOT/versions/$default_perl/bin/perl|" \
+                $PLENV_ROOT/versions/$default_perl/bin/got >$HOME/.local/bin/got
+        end
     end
-    if not [ -f $HOME/.local/bin/got ]
-        hame-echo installing gitgot
-        hame-nq cpanm --notest App::GitGot
-        hame-nq cpanm --notest Path::Iterator::Rule
-        hame-nq cpanm --notest JSON
-        hame-nq sed "1 s|^#!.*|#!$PLENV_ROOT/versions/$default_perl/bin/perl|" \
-            $PLENV_ROOT/versions/$default_perl/bin/got >$HOME/.local/bin/got
-    end
-
-    popd
     hame-echo setting fish_user_path
     set new_fish_user_path $fish_user_path
     set --erase -g fish_user_path

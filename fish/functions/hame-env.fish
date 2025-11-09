@@ -1,4 +1,7 @@
 function hame-env
+    test -d /nix
+    and return 0
+
     set -U PLENV_ROOT $HOME/.plenv
 
     if [ -d /opt/env ]

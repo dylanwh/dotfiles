@@ -1,4 +1,7 @@
 function hame-go
+    test -d /nix
+    and return 0
+
     have go
     or return 1
 
