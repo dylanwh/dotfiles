@@ -15,8 +15,8 @@ fi
 
 sudo mkdir -vp $nix_dir/overlays
 for file in "$src_dir/overlays"/*.nix; do
-    sudo ln -svf "$file" "$nix_dir/overlays/$(basename $file)"
+    sudo ln -vf "$file" "$nix_dir/overlays/$(basename $file)"
 done
 
-sudo ln -svf "$src_dir/common.nix" "$nix_dir/common.nix"
-sudo ln -svf "$src_dir/configuration-$suffix.nix" "$nix_dir/configuration.nix"
+sudo ln -vf "$src_dir/common.nix" "$nix_dir/common.nix"
+sudo ln -vf "$src_dir/configuration-$suffix.nix" "$nix_dir/configuration.nix"
