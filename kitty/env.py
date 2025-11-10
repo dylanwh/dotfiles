@@ -4,6 +4,7 @@ import os
 import subprocess
 
 fish_path = []
+fish_path.append("/run/current-system/sw/bin/fish")
 match os.uname().sysname:
     case "Darwin":
         fish_path.append("/opt/local/bin/fish")
@@ -13,7 +14,6 @@ match os.uname().sysname:
         fish_path.append("/usr/local/bin/fish")
     case _:
         fish_path.append("/usr/bin/fish")
-        fish_path.append("/run/current-system/sw/bin/fish")
 
 
 fish = None

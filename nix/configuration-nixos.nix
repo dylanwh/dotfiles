@@ -2,12 +2,13 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 
 {
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
+      ./common.nix # Import all our shared settings
     ];
 
   hardware.graphics.enable = true;
@@ -105,8 +106,8 @@
   # Install firefox.
   programs.firefox.enable = true;
   programs.nano.enable = false;
-  programs.fish.enable = true;
-  programs.tmux.enable = true;
+  # programs.fish.enable = true; # <-- Removed, now in common.nix
+  # programs.tmux.enable = true; # <-- Removed, now in common.nix
   programs.steam = {
     enable = true;
     remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
@@ -117,67 +118,9 @@
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
-  # List packages installed in system profile. To search, run:
-  # $ nix search wget
-  environment.systemPackages = with pkgs; [
-    bat
-    black
-    cargo
-    clang-tools
-    cmake
-    curl
-    delta
-    ((emacsPackagesFor emacs).emacsWithPackages (epkgs: [ epkgs.vterm ]))
-    eza
-    fd
-    file
-    fish
-    gcc
-    gh
-    git
-    gnumake
-    gomodifytags
-    gopls
-    gore
-    gotests
-    grip
-    gron
-    html-tidy
-    httpie
-    hub
-    isort
-    jq
-    jsonnet
-    kitty
-    libvterm
-    moreutils
-    ncdu
-    nerd-fonts.sauce-code-pro
-    nmap
-    nodePackages.js-beautify
-    nq
-    pipenv
-    pv
-    python313
-    python313Packages.pyflakes
-    python313Packages.pytest
-    ripgrep
-    ruby
-    rustup
-    shellcheck
-    shfmt
-    shpool
-    skim
-    starship
-    stylelint
-    tmux
-    vim
-    vivid
-    wayland-utils
-    xan
-    kdePackages.discover
-    imapfilter
-  ];
+  # List packages installed in system profile.
+  # This entire list is REMOVED because it's now in common.nix
+  # environment.systemPackages = with pkgs; [ ... ];
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
@@ -201,7 +144,7 @@
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
   # on your system were taken. It‘s perfectly fine and recommended to leave
-  # this value at the release version of the first install of this system.
+  this value at the release version of the first install of this system.
   # Before changing this value read the documentation for this option
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
   system.stateVersion = "25.05"; # Did you read the comment?
