@@ -17,6 +17,7 @@ let
     gcc
     gh
     git
+    go
     gnumake
     gomodifytags
     gopls
@@ -43,6 +44,7 @@ let
     pipenv
     pv
     python313
+    python313Packages.grip
     python313Packages.pyflakes
     python313Packages.pytest
     ripgrep
@@ -63,12 +65,11 @@ let
   darwinPkgs = with pkgs; [
     gawk
     gnused
-    coreutils
+    coreutils-prefixed
   ];
 
   # Packages specific to NixOS (linux)
   linuxPkgs = with pkgs; [
-    grip
     shpool
     wayland-utils
     kdePackages.discover
