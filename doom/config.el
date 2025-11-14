@@ -95,6 +95,8 @@
 
 (map! :leader :desc "show link to github" :n "g h l" #'git-link)
 (map! :leader :n "p v" #'projectile-switch-vterm)
+(map! :leader :n "g %" #'magit-worktree)
+(map! :leader :n "g P" #'magit-push-current-to-upstream)
 
 (use-package! json-mode
   :mode ("\\.hujson\\'" . jsonc-mode))
