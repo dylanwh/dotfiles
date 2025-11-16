@@ -12,7 +12,7 @@
   programs.zsh.enable = false;
 
   security.sudo.extraConfig = ''
-    dylan ALL = (root) NOPASSWD: ${config.system.build.darwin-rebuild}/bin/darwin-rebuild
+    dylan ALL = (root) NOPASSWD: /run/current-system/sw/bin/nix-channel, /run/current-system/sw/bin/darwin-rebuild
   '';
 
 
