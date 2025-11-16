@@ -11,6 +11,11 @@
 
   programs.zsh.enable = false;
 
+  security.sudo.extraConfig = ''
+    dylan ALL = (root) NOPASSWD: ${config.system.build.darwin-rebuild}/bin/darwin-rebuild
+  '';
+
+
   # Used for backwards compatibility, please read the changelog before changing.
   # $ darwin-rebuild changelog
   system.stateVersion = 6;

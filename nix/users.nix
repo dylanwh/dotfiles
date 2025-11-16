@@ -10,4 +10,8 @@
     #  thunderbird
     ];
   };
+
+  security.sudo.extraConfig = ''
+    dylan ALL = (root) NOPASSWD: ${config.system.build.nixos-rebuild}/bin/nixos-rebuild
+  '';
 }
