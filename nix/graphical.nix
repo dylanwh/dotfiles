@@ -1,15 +1,6 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, isLinux ? false, ... }:
 
-with lib;
-
-let
-  cfg = config.custom.graphical;
-in {
-  options.custom.graphical = {
-    enable = mkEnableOption "enable gui on linux";
-  };
-
-  config = mkIf cfg.enable {
+{
     environment.systemPackages = with pkgs; [
       wayland-utils
       kdePackages.discover
@@ -66,5 +57,4 @@ in {
       remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
       dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
     };
-  };
 }
