@@ -9,8 +9,10 @@
       # Include the results of the hardware scan.
       /etc/nixos/hardware-configuration.nix
       ./graphical.nix
-      ./users.nix
       ./locale.nix
+      ./packages.nix
+      ./programs.nix
+      ./users.nix
   ];
 
   # Bootloader.
