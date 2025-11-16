@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 
 {
   imports = [
@@ -7,7 +12,10 @@
   ];
 
   # This is a macOS-specific setting, so it stays here.
-  nixpkgs.overlays = [(import ./overlays/libvterm.nix)];
+  nixpkgs.overlays = [
+    (import ./overlays/libvterm.nix)
+    (import ./overlays/fish.nix)
+  ];
 
   programs.zsh.enable = false;
 
@@ -15,6 +23,11 @@
     dylan ALL = (root) NOPASSWD: /run/current-system/sw/bin/nix-channel, /run/current-system/sw/bin/darwin-rebuild
   '';
 
+  environment.shells = [
+    pkgs.fish
+  ];
+
+  environment.systemPackages = with pkgs; [ kitty ];
 
   # Used for backwards compatibility, please read the changelog before changing.
   # $ darwin-rebuild changelog

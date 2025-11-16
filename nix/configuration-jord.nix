@@ -2,17 +2,22 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 
 {
   imports = [
-      # Include the results of the hardware scan.
-      /etc/nixos/hardware-configuration.nix
-      ./graphical.nix
-      ./locale.nix
-      ./packages.nix
-      ./programs.nix
-      ./users.nix
+    # Include the results of the hardware scan.
+    /etc/nixos/hardware-configuration.nix
+    ./graphical.nix
+    ./locale.nix
+    ./packages.nix
+    ./programs.nix
+    ./users.nix
   ];
 
   # Bootloader.

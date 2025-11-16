@@ -1,7 +1,13 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 {
-  environment.systemPackages = with pkgs;
+  environment.systemPackages =
+    with pkgs;
     [
       bat
       black
@@ -36,6 +42,7 @@
       moreutils
       ncdu
       nerd-fonts.sauce-code-pro
+      nixfmt
       nmap
       nodePackages.js-beautify
       nq
@@ -59,6 +66,11 @@
       vim
       vivid
       xan
-    ] ++ (lib.optionals pkgs.stdenv.isLinux [ shpool ])
-    ++ (lib.optionals pkgs.stdenv.isDarwin [ gawk gnused coreutils-prefixed ]);
+    ]
+    ++ (lib.optionals pkgs.stdenv.isLinux [ shpool ])
+    ++ (lib.optionals pkgs.stdenv.isDarwin [
+      gawk
+      gnused
+      coreutils-prefixed
+    ]);
 }
