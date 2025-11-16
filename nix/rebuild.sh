@@ -20,6 +20,7 @@ case "$(uname -s)" in
     if [ -d /etc/nixos ]; then
         nix_dir="/etc/nixos"
         nix_config="$src_dir/configuration-$hostname.nix"
+        nix_rebuild="nixos-rebuild"
         if ! [ -f "$nix_config" ]; then
             echo "$nix_config does not exist" 1>&2
             exit 1
