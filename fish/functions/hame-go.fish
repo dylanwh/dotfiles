@@ -1,7 +1,4 @@
 function hame-go
-    test -d /nix
-    and return 0
-
     have go
     or return 1
 
@@ -12,6 +9,9 @@ function hame-go
     set -Ux GOPATH $HOME/.go
 
     user-path add $GOPATH/bin
+
+    test -d /nix
+    and return 0
 
     if not have gron
         hame-echo installing gron

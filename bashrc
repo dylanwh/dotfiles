@@ -87,6 +87,7 @@ fi
 # colored GCC warnings and errors
 #export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
 
+
 # some more ls aliases
 alias ll='ls -alF'
 alias la='ls -A'
@@ -132,4 +133,10 @@ export _NROFF_U=1
 export GROFF_NO_SGR=1
 
 alias sudo='env -u TERINFO TERM=xterm-256color sudo'
-alias ls='ls -Fh --color=auto --group-directories-first'
+
+local ls=ls
+if which gls &>/dev/null; then
+   ls=gls
+fi
+
+alias ls="$ls -Fh --color=auto --group-directories-first"

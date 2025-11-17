@@ -47,8 +47,6 @@ function hame
     set -g fish_user_path $fish_user_path
     user-path clear
     user-path add ~/.local/bin
-    user-path add /opt/local/bin
-    user-path add /snap/bin
 
     mkdir -p ~/.cache/hame
 
@@ -64,11 +62,6 @@ function hame
     switch $OS
         case Darwin
             hame-macos
-        case Linux
-            [ -f /etc/debian_version ]
-            and hame-debian
-            [ -f /etc/alpine-release ]
-            and hame-alpine
     end
 
     if not have nq

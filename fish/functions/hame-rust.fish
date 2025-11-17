@@ -1,18 +1,20 @@
 function hame-rust
     user-path add ~/.cargo/bin
 
-    test -d /nix
-    and return 0
+    if test -d /nix
+        have rustup
+        and rustup default stable
+        and rustup component add rust-analyzer rust-src rustfmt clippy
+        return 0
+    else
+        if not have rustup
+            hame-echo installing rust
+            set rustup_init (mktemp)
+            curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs >$rustup_init
+            sh $rustup_init -y --no-modify-path
+            rm $rustup_init
 
-    pushd $HOME
-    if not have rustup
-        hame-echo installing rust
-        set rustup_init (mktemp)
-        curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs >$rustup_init
-        sh $rustup_init -y --no-modify-path
-        rm $rustup_init
-
-        rustup component add rust-analyzer rust-src rustfmt clippy
+        end
     end
 
     if have cargo
@@ -47,5 +49,4 @@ function hame-rust
         have mdopen
         or hame-nq cargo install mdopen
     end
-    popd
 end
