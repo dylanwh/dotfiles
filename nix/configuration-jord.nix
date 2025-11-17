@@ -18,6 +18,7 @@
     ./packages.nix
     ./programs.nix
     ./users.nix
+    ./nosleep.nix
   ];
 
   # Bootloader.
@@ -61,6 +62,12 @@
 
   # Enable the OpenSSH daemon.
   services.openssh.enable = true;
+
+  powerManagement = {
+    enable = true;
+    powertop.enable = true;
+    cpuFreqGovernor = "schedutil"; # power, performance, ondemand
+  };
 
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];

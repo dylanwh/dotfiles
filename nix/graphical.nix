@@ -11,6 +11,7 @@
     wayland-utils
     kdePackages.discover
     kitty
+    via
   ];
 
   hardware.graphics.enable = true;
@@ -65,4 +66,15 @@
     remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
     dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
   };
+
+  services.udev = {
+
+    packages = with pkgs; [
+      #qmk
+      qmk-udev-rules # the only relevant
+      #qmk_hid
+      via
+      #vial
+    ]; # packages
+  }; # udev
 }
