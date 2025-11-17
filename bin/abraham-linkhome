@@ -50,7 +50,7 @@ my @dotfiles = (
     'mailcap',       'minicpanrc', 'msmtprc',   'offlineimap.py',
     'offlineimaprc', 'quotes',     'reply.pl',  'screenrc',
     'tmux.conf',     'todorc',     'wyrdrc',    'dataprinter',
-    'ripgreprc',     'perltidyrc', 'kxkbrc'
+    'ripgreprc',     'perltidyrc', 'kxkbrc',    'zshrc',
 );
 
 provide($_, ".$_") for @dotfiles;

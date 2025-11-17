@@ -5,6 +5,15 @@
   ...
 }:
 
+let
+  perlModules = (
+    ps: [
+      ps.Mojolicious
+      ps.CpanelJSONXS
+    ]
+  );
+in
+
 {
   environment.systemPackages =
     with pkgs;
@@ -14,6 +23,7 @@
       cargo
       clang-tools
       cmake
+      cmatrix
       curl
       delta
       ((emacsPackagesFor emacs).emacsWithPackages (epkgs: [ epkgs.vterm ]))
@@ -24,8 +34,8 @@
       gcc
       gh
       git
-      go
       gnumake
+      go
       gomodifytags
       gopls
       gore
@@ -35,6 +45,7 @@
       httpie
       hub
       imapfilter
+      iperf
       isort
       jq
       jsonnet
@@ -45,32 +56,44 @@
       nixfmt-rfc-style
       nmap
       nodePackages.js-beautify
+      notcurses
       nq
       oha
-      (perl.withPackages (ps: [ ps.Mojolicious ]))
+      (perl.withPackages perlModules)
       pipenv
       pv
       python313
       python313Packages.grip
       python313Packages.pyflakes
       python313Packages.pytest
+      rclone
       ripgrep
+      rsync
       ruby
+      ruff
       rustup
       shellcheck
       shfmt
       skim
+      socat
       starship
       stylelint
       tmux
+      uv
       vim
       vivid
       xan
+      zstd
     ]
-    ++ (lib.optionals pkgs.stdenv.isLinux [ shpool ])
+    ++ (lib.optionals pkgs.stdenv.isLinux [
+      psmisc
+      shpool
+      trash-cli
+    ])
     ++ (lib.optionals pkgs.stdenv.isDarwin [
       gawk
       gnused
       coreutils-prefixed
+      darwin.trash
     ]);
 }
