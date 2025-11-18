@@ -134,7 +134,9 @@ export GROFF_NO_SGR=1
 
 alias sudo='env -u TERINFO TERM=xterm-256color sudo'
 
-local ls=ls
+
+
+ls=ls
 if which gls &>/dev/null; then
    ls=gls
 fi

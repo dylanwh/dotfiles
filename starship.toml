@@ -135,3 +135,6 @@ symbol = " "
 
 [golang]
 symbol = " "
+
+[nix_shell]
+symbol = " "

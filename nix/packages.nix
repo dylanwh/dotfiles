@@ -42,8 +42,11 @@ in
       gotests
       gron
       html-tidy
+      htop
       httpie
       hub
+      hyperfine
+      iconv
       imapfilter
       iperf
       isort
@@ -61,6 +64,7 @@ in
       oha
       (perl.withPackages perlModules)
       pipenv
+      pstree
       pv
       python313
       python313Packages.grip
@@ -79,6 +83,7 @@ in
       starship
       stylelint
       tmux
+      tree
       uv
       vim
       vivid
@@ -95,5 +100,6 @@ in
       gnused
       coreutils-prefixed
       darwin.trash
+      kitty
     ]);
 }
