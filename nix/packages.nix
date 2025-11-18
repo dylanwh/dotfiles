@@ -12,6 +12,12 @@ let
       ps.CpanelJSONXS
     ]
   );
+  emacsPackages = (
+    epkgs: [
+      epkgs.vterm
+      epkgs.treesit-grammars.with-all-grammars
+    ]
+  );
 in
 
 {
@@ -26,7 +32,7 @@ in
       cmatrix
       curl
       delta
-      ((emacsPackagesFor emacs).emacsWithPackages (epkgs: [ epkgs.vterm ]))
+      ((emacsPackagesFor emacs).emacsWithPackages emacsPackages)
       eza
       fd
       file
