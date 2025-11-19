@@ -7,7 +7,7 @@ EMACS_FILE="emacs-${EMACS_VERSION}.tar.xz"
 EMACS_DIR="emacs-${EMACS_VERSION}"
 EMACS_URL="https://mirror.us-midwest-1.nexcess.net/gnu/emacs/${EMACS_FILE}"
 EMACS_SHA2="b3f36f18a6dd2715713370166257de2fae01f9d38cfe878ced9b1e6ded5befd9"
-PREFIX="$HOME/.local/stow/emacs"
+PREFIX="${PREFIX:-$HOME/.local/stow/emacs}"
 
 gcc_major_version() {
     gcc --version | sed -n -e '/^gcc / { s/.*\<\([0-9]\+\)\.[0-9]\+\.[0-9]\+$/\1/; p }'
