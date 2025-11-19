@@ -40,6 +40,7 @@ in
       gcc
       gh
       git
+      glslang
       gnumake
       go
       gomodifytags
@@ -65,9 +66,11 @@ in
       nixfmt-rfc-style
       nmap
       nodePackages.js-beautify
+      nodejs_24
       notcurses
       nq
       oha
+      pandoc
       (perl.withPackages perlModules)
       pipenv
       pstree
@@ -76,6 +79,7 @@ in
       python313Packages.grip
       python313Packages.pyflakes
       python313Packages.pytest
+      rage
       rclone
       ripgrep
       rsync
