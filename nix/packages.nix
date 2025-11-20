@@ -106,10 +106,11 @@ in
       trash-cli
     ])
     ++ (lib.optionals pkgs.stdenv.isDarwin [
-      gawk
-      gnused
       coreutils-prefixed
       darwin.trash
+      gawk
+      gnused
+      graphviz-nox
       kitty
     ]);
 }
