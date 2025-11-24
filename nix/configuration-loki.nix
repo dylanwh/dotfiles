@@ -2,7 +2,12 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 
 {
   imports = [
@@ -13,11 +18,14 @@
     ./packages.nix
     ./programs.nix
     ./users.nix
-    ./nosleep.nix
   ];
 
   hardware.nvidia.prime = {
-    offload.enable = true;
+    offload = {
+      enable = true;
+      enableOffloadCmd = true;
+    };
+
     intelBusId = "PCI:0:2:0";
     nvidiaBusId = "PCI:1:0:0";
   };
