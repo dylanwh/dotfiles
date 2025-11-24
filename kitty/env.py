@@ -3,6 +3,8 @@
 import os
 import subprocess
 
+HOME = os.getenv("HOME")
+
 fish_path = []
 fish_path.append("/run/current-system/sw/bin/fish")
 match os.uname().sysname:
@@ -22,7 +24,7 @@ for path in fish_path:
         fish = path
         break
 
-assert(fish is not None)
+assert fish is not None
 
 # now we use fish to find all envs
 envs = subprocess.check_output([fish, "-l", "-c", "env"]).decode("utf-8")
@@ -31,4 +33,10 @@ envs = subprocess.check_output([fish, "-l", "-c", "env"]).decode("utf-8")
 for line in envs.splitlines():
     if line.startswith("PATH="):
         os.environ["PATH"] = line.split("=", 1)[1]
+    if line.startswith("EDITOR=") or line.startswith("VISUAL="):
+        continue
     print(f"env {line}")
+
+print(f"env VISUAL={HOME}/.local/bin/emacsedit")
+print(f"env EDITOR={HOME}/.local/bin/emacsedit")
+print(f"editor {HOME}/.local/bin/emacsedit")

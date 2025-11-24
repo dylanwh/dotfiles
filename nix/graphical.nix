@@ -20,12 +20,15 @@
     "nvidia"
   ];
   services.flatpak.enable = true;
+
+  systemd.services.flatpak-repo = {
+    wantedBy = [ "multi-user.target" ];
+    path = [ pkgs.flatpak ];
+    script = ''
+      flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+    '';
+  }; 
   hardware.nvidia.open = false;
-  # hardware.nvidia.prime = {
-  #   offload.enable = true;
-  #   intelBusId = "PCI:0:2:0";
-  #   nvidiaBusId = "PCI:1:0:0";
-  # };
 
   # Enable the X11 windowing system.
   # You can disable this if you're only using the Wayland session.

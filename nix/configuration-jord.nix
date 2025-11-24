@@ -19,6 +19,8 @@
     ./programs.nix
     ./users.nix
     ./nosleep.nix
+    ./tailscale.nix
+    ./nfs.nix
   ];
 
   # Bootloader.
