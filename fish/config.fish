@@ -8,6 +8,10 @@ set -x TZ America/Los_Angeles
 set -g OS (uname)
 set --erase CDPATH
 
+# I have a redefined alias command that ignores aliases set prior to
+# ~/.config/fish/config.fish
+set -g dylan_allows_alias 1
+
 if status --is-interactive
     set -g shell_parent (ps -o ppid= $fish_pid | xargs ps -o comm=)
     set --erase shell_via
