@@ -18,6 +18,7 @@
     ./packages.nix
     ./programs.nix
     ./users.nix
+    ./tailscale.nix
   ];
 
   hardware.nvidia.prime = {
