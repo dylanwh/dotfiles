@@ -62,7 +62,6 @@ in
       libvterm
       moreutils
       ncdu
-      nerd-fonts.sauce-code-pro
       nixfmt-rfc-style
       nmap
       nodePackages.js-beautify

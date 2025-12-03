@@ -11,6 +11,7 @@
     wayland-utils
     kdePackages.discover
     kitty
+    nerd-fonts.sauce-code-pro
     via
   ];
 
@@ -29,6 +30,13 @@
     '';
   }; 
   hardware.nvidia.open = false;
+
+  programs._1password-gui = {
+    enable = true;
+    # Certain features, including CLI integration and system authentication support,
+    # require enabling PolKit integration on some desktop environments (e.g. Plasma).
+    polkitPolicyOwners = [ "dylan" ];
+  };
 
   # Enable the X11 windowing system.
   # You can disable this if you're only using the Wayland session.
