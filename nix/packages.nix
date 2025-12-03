@@ -75,6 +75,7 @@ in
       pstree
       pv
       python313
+      python313Packages.editorconfig
       python313Packages.grip
       python313Packages.pyflakes
       python313Packages.pytest
