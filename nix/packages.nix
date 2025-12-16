@@ -79,6 +79,7 @@ in
       python313Packages.grip
       python313Packages.pyflakes
       python313Packages.pytest
+      radare2
       rage
       rclone
       ripgrep
