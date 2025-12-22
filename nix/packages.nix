@@ -26,7 +26,6 @@ in
     [
       bat
       black
-      cargo
       clang-tools
       cmake
       cmatrix
@@ -99,6 +98,7 @@ in
       vim
       vivid
       xan
+      zellij
       zstd
     ]
     ++ (lib.optionals pkgs.stdenv.isLinux [
