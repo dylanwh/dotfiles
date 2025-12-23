@@ -78,7 +78,7 @@ in
       python313Packages.grip
       python313Packages.pyflakes
       python313Packages.pytest
-      radare2
+      (rizin.withPlugins (ps: with ps; [ rz-ghidra ]))
       rage
       rclone
       ripgrep
