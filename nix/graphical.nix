@@ -8,11 +8,13 @@
 
 {
   environment.systemPackages = with pkgs; [
-    wayland-utils
     kdePackages.discover
     kitty
     nerd-fonts.sauce-code-pro
+    tail-tray
     via
+    wayland-utils
+    wlx-overlay-s
   ];
 
   hardware.graphics.enable = true;
@@ -28,7 +30,7 @@
     script = ''
       flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
     '';
-  }; 
+  };
   hardware.nvidia.open = false;
 
   programs._1password-gui = {
@@ -72,11 +74,36 @@
   };
 
   programs.firefox.enable = true;
-  programs.steam = {
-    enable = true;
-    remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
-    dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
-  };
+  programs.steam =
+    let
+      patchedBwrap = pkgs.bubblewrap.overrideAttrs (o: {
+        patches = (o.patches or [ ]) ++ [
+          ./bwrap2.patch
+        ];
+      });
+    in
+    {
+      enable = true;
+      remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
+      dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
+
+      package = pkgs.steam.override {
+        buildFHSEnv = (
+          args:
+          (
+            (pkgs.buildFHSEnv.override {
+              bubblewrap = patchedBwrap;
+            })
+            (
+              args
+              // {
+                extraBwrapArgs = (args.extraBwrapArgs or [ ]) ++ [ "--cap-add ALL" ];
+              }
+            )
+          )
+        );
+      };
+    };
 
   services.udev = {
 
