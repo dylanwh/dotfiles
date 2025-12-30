@@ -98,6 +98,16 @@
 (map! :leader :n "g %" #'magit-worktree)
 (map! :leader :n "g P" #'magit-push-current-to-upstream)
 
+;; (defun gib (n)
+;;   (* n 1024 1024 1024))
+
+;; (defun mib (n)
+;;   (* n 1024 1024))
+
+;; (after! gcmh
+;;   (setq gcmh-high-cons-threshold (gib 1))
+;;   (setq gcmh-low-cons-threshold  (mib 100)))
+
 (use-package! json-mode
   :mode ("\\.hujson\\'" . jsonc-mode))
 

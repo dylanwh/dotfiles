@@ -27,7 +27,10 @@
     pkgs.fish
   ];
 
-  environment.systemPackages = with pkgs; [ iconv ];
+  environment.systemPackages = with pkgs; [
+    iconv
+    qutebrowser
+  ];
 
   # Used for backwards compatibility, please read the changelog before changing.
   # $ darwin-rebuild changelog
