@@ -62,6 +62,7 @@ in
       libvterm
       moreutils
       ncdu
+      nh
       nixfmt-rfc-style
       nmap
       nodePackages.js-beautify
