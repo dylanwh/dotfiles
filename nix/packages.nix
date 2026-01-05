@@ -13,9 +13,9 @@ let
     ]
   );
   emacsPackages = (
-    epkgs: [
-      epkgs.vterm
-      epkgs.treesit-grammars.with-all-grammars
+    ps: [
+      ps.vterm
+      ps.treesit-grammars.with-all-grammars
     ]
   );
 in
@@ -32,6 +32,7 @@ in
       curl
       delta
       ((emacsPackagesFor emacs).emacsWithPackages emacsPackages)
+      ethtool
       eza
       fd
       file
@@ -78,10 +79,10 @@ in
       python313Packages.grip
       python313Packages.pyflakes
       python313Packages.pytest
-      (rizin.withPlugins (ps: with ps; [ rz-ghidra ]))
       rage
       rclone
       ripgrep
+      (rizin.withPlugins (ps: with ps; [ rz-ghidra ]))
       rsync
       ruby
       ruff
