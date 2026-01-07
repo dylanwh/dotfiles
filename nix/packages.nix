@@ -34,6 +34,7 @@ in
       ((emacsPackagesFor emacs).emacsWithPackages emacsPackages)
       eza
       fd
+      ffmpeg
       file
       fish
       gcc
