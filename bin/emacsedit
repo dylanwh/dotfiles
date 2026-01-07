@@ -7,7 +7,7 @@ set -l new_argv -q
 if test -n "$INSIDE_EMACS"
     set -a new_argv
 else
-    set -a new_argv -a "" -t
+    set -a new_argv -a "" -t -c
 end
 
 for arg in $argv

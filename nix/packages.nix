@@ -31,7 +31,6 @@ in
       cmatrix
       curl
       delta
-      ((emacsPackagesFor emacs).emacsWithPackages emacsPackages)
       eza
       fd
       ffmpeg
@@ -105,6 +104,7 @@ in
       zstd
     ]
     ++ (lib.optionals pkgs.stdenv.isLinux [
+      ((emacsPackagesFor emacs-nox).emacsWithPackages emacsPackages)
       psmisc
       shpool
       trash-cli
@@ -112,6 +112,7 @@ in
     ++ (lib.optionals pkgs.stdenv.isDarwin [
       coreutils-prefixed
       darwin.trash
+      ((emacsPackagesFor emacs-macport).emacsWithPackages emacsPackages)
       gawk
       gnused
       graphviz-nox
