@@ -32,7 +32,6 @@ in
       curl
       delta
       ((emacsPackagesFor emacs).emacsWithPackages emacsPackages)
-      ethtool
       eza
       fd
       file
@@ -96,6 +95,7 @@ in
       stylelint
       tmux
       tree
+      ty
       uv
       vim
       vivid

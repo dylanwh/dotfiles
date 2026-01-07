@@ -90,7 +90,6 @@
 (setq lsp-rust-analyzer-display-closure-return-type-hints t)
 (setq lsp-rust-analyzer-display-parameter-hints t)
 (setq lsp-rust-server 'rust-analyzer)
-
 (setq confirm-kill-emacs #'yes-or-no-p)
 
 (map! :leader :desc "show link to github" :n "g h l" #'git-link)
@@ -98,15 +97,15 @@
 (map! :leader :n "g %" #'magit-worktree)
 (map! :leader :n "g P" #'magit-push-current-to-upstream)
 
-;; (defun gib (n)
-;;   (* n 1024 1024 1024))
+(defun gib (n)
+  (* n 1024 1024 1024))
 
-;; (defun mib (n)
-;;   (* n 1024 1024))
+(defun mib (n)
+  (* n 1024 1024))
 
-;; (after! gcmh
-;;   (setq gcmh-high-cons-threshold (gib 1))
-;;   (setq gcmh-low-cons-threshold  (mib 100)))
+(after! gcmh
+  (setq gcmh-high-cons-threshold (gib 1))
+  (setq gcmh-low-cons-threshold  (mib 300)))
 
 (use-package! json-mode
   :mode ("\\.hujson\\'" . jsonc-mode))
