@@ -130,7 +130,8 @@
        ;;idris                 ;
        (json +lsp)             ; At least it ain't XML
        ;;(java +meghanada)     ; the poster child for carpal tunnel syndrome
-       (javascript +lsp +tree-sitter)              ; all(hope(abandon(ye(who(enter(here))))))
+       (javascript +lsp        ; all(hope(abandon(ye(who(enter(here))))))
+                   +tree-sitter)              
        ;;julia                 ; a better, faster MATLAB
        ;;kotlin                ; a better, slicker Java(Script)
        ;;latex                 ; writing papers in Emacs has never been so fun
@@ -140,14 +141,15 @@
        (lua +lsp +tree-sitter) ; one-based indices? one-based indices
        (markdown +grip)        ; writing docs for people to ignore
        ;;nim                   ; python + lisp at the speed of c
-       nix                     ; I hereby declare "nix geht mehr!"
+       (nix +lsp +tree-sitter) ; I hereby declare "nix geht mehr!"
        ;;ocaml                 ; an objective camel
        org                     ; organize your plain life in plain text
        ;;raku                  ; write code no one else can comprehend
        ;;php                   ; perl's insecure younger brother
        ;;plantuml              ; diagrams for confusing people more
        ;;purescript            ; javascript, but functional
-       (python +lsp +uv)       ; beautiful is better than ugly
+       (python +lsp +uv
+               +tree-sitter)       
        ;;qt                    ; the 'cutest' gui framework ever
        ;;racket                ; a DSL for DSLs
        ;;rest                  ; Emacs as a REST client

@@ -277,3 +277,10 @@
   (setq-default vterm-shell fish)
   (setq-default explicit-shell-file-name fish))
 
+(defun treesit-show-parser-used-at-point ()
+  "Shows treesit parser used at point."
+  (interactive)
+  (if (and (fboundp 'treesit-available-p)
+           (treesit-available-p))
+      (message (format "%s" (treesit-language-at (point))))
+    (message "treesit is not available")))
