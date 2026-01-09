@@ -30,14 +30,16 @@ function hame-macos
         ApplePressAndHoldEnabled -bool false
     defaults write -g AppleShowAllExtensions -bool true
 
+    defaults write -g AppleActionOnDoubleClick -string Fill
+
     # disable writing .DS_Store files to network shares
     defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true
 
     defaults write com.googlecode.iterm2 PrefsCustomFolder -string ~/.config/iterm2
     defaults write com.googlecode.iterm2 LoadPrefsFromCustomFolder -bool true
 
-    defaults -currentHost write -globalDomain NSStatusItemSpacing -int 6
-    defaults -currentHost write -globalDomain NSStatusItemSelectionPadding -int 6
+    defaults -currentHost write -g NSStatusItemSpacing -int 6
+    defaults -currentHost write -g NSStatusItemSelectionPadding -int 6
 
     pushd ~/.config/alfred
     hame-echo updating "~/.config/alfred"
@@ -49,4 +51,6 @@ function hame-macos
         hame-echo 'allowing passwordless "sudo port"'
         echo 'dylan ALL = (root) NOPASSWD: /opt/local/bin/port' | sudo tee /etc/sudoers.d/99-port
     end
+
+    hame-duti
 end

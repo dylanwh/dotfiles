@@ -25,12 +25,13 @@ if status --is-interactive
             end
     end
 
-    alias fd="fd --hyperlink=auto"
+    # alias fd="fd --hyperlink=auto"
 
-    switch "$TERM"
-        case xterm-kitty
-            alias rg="rg --hyperlink-format=kitty -H"
-    end
+    # switch "$TERM"
+    #     case xterm-kitty
+    #         alias rg="rg --hyperlink-format=kitty -H"
+    #         alias ssh="kitten ssh"
+    # end
 
     switch "$TERM_PROGRAM"
         case vscode

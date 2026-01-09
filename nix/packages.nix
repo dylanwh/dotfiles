@@ -62,6 +62,7 @@ in
       moreutils
       ncdu
       nh
+      nil
       nixfmt-rfc-style
       nmap
       nodePackages.js-beautify
@@ -111,11 +112,15 @@ in
     ])
     ++ (lib.optionals pkgs.stdenv.isDarwin [
       coreutils-prefixed
+      qutebrowser
       darwin.trash
+      duti
       ((emacsPackagesFor emacs-macport).emacsWithPackages emacsPackages)
       gawk
       gnused
       graphviz-nox
+      iconv
       kitty
+      openssl
     ]);
 }

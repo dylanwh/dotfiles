@@ -28,9 +28,6 @@
   ];
 
   environment.systemPackages = with pkgs; [
-    iconv
-    qutebrowser
-    findutils
   ];
 
   # Used for backwards compatibility, please read the changelog before changing.
