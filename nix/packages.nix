@@ -100,6 +100,7 @@ in
       uv
       vim
       vivid
+      wget
       xan
       zellij
       zstd
