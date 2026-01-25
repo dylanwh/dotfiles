@@ -110,6 +110,9 @@
 (use-package! json-mode
   :mode ("\\.hujson\\'" . jsonc-mode))
 
+(use-package! kd-mode
+  :mode ("\\.kdl\\'" . kdl-mode))
+
 (use-package! web-mode
   :mode ("\\.tt" . web-mode))
 

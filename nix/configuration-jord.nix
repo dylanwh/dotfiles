@@ -11,9 +11,7 @@
 
 {
   imports = [
-    # Include the results of the hardware scan.
     /etc/nixos/hardware-configuration.nix
-    ./graphical.nix
     ./locale.nix
     ./nfs.nix
     ./nosleep.nix
@@ -21,17 +19,21 @@
     ./programs.nix
     ./tailscale.nix
     ./users.nix
+    ./steam.nix
+    ./kde.nix
   ];
 
-  # Bootloader.
+  hardware.graphics.enable = true;
+  hardware.nvidia.open = false;
+
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  # Use latest kernel.
   boot.kernelPackages = pkgs.linuxPackages_latest;
-
-  boot.kernelParams = [ "split_lock_detect=off" ];
-
+  boot.kernelParams = [
+    "split_lock_detect=off"
+    "nvidia-drm.modeset=1"
+  ];
   boot.kernelPatches = [
     {
       name = "bbr";
@@ -50,7 +52,6 @@
       patch = ./0002-Prefer-the-previous-cpu-for-wakeup-v6.patch;
     }
   ];
-
   boot.kernelModules = [
     "i2c-dev"
     "i2c-piix4"
@@ -58,39 +59,9 @@
   boot.kernel.sysctl."kernel.unprivileged_userns_clone" = 1;
 
   networking.hostName = "jord";
-
-  # Configure network proxy if necessary
-  # networking.proxy.default = "http://user:password@proxy:port/";
-  # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
-
-  # Enable networking
-  # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
   networking.networkmanager.enable = true;
 
-  # Enable touchpad support (enabled default in most desktopManager).
-  # services.xserver.libinput.enable = true;
-
-  # Define a user account. Don't forget to set a password with ‘passwd’.
-
-  # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
-
-  # List packages installed in system profile.
-  # This entire list is REMOVED because it's now in common.nix
-  # environment.systemPackages = with pkgs; [ ... ];
-
-  # Some programs need SUID wrappers, can be configured further or are
-  # started in user sessions.
-  # programs.mtr.enable = true;
-  # programs.gnupg.agent = {
-  #   enable = true;
-  #   enableSSHSupport = true;
-  # };
-
-  # List services that you want to enable:
-
-  # Enable the OpenSSH daemon.
-  services.openssh.enable = true;
 
   powerManagement = {
     enable = true;
@@ -98,80 +69,130 @@
     cpuFreqGovernor = "schedutil"; # power, performance, ondemand
   };
 
+  services.avahi.enable = true;
+
+  services.sunshine = {
+    enable = true;
+    autoStart = true;
+    capSysAdmin = true;
+    openFirewall = true;
+  };
+
+  services.openssh.enable = true;
+
+  services.udev = {
+    packages = with pkgs; [
+      #qmk
+      qmk-udev-rules # the only relevant
+      #qmk_hid
+      via
+      #vial
+    ]; # packages
+  }; # udev
+
+  console = {
+    font = "ter-powerline-v24b";
+    packages = [
+      pkgs.terminus_font
+      pkgs.powerline-fonts
+      pkgs.nerd-fonts.sauce-code-pro
+    ];
+    colors = [
+      "252525"
+      "ed4a46"
+      "70b433"
+      "dbb32d"
+      "368aeb"
+      "eb6eb7"
+      "3fc5b7"
+      "777777"
+      "3b3b3b"
+      "ff5e56"
+      "83c746"
+      "efc541"
+      "4f9cfe"
+      "ff81ca"
+      "56d8c9"
+      "dedede"
+    ];
+  };
+
   environment.systemPackages = with pkgs; [
-    openrgb-with-all-plugins
     (bubblewrap.overrideAttrs (o: {
-      patches = (o.patches or [ ]) ++ [
-        ./bwrap2.patch
-      ];
+      patches = (o.patches or [ ]) ++ [ ./bwrap2.patch ];
     }))
-    grim # screenshot functionality
-    slurp # screenshot functionality
-    wl-clipboard # wl-copy and wl-paste for copy/paste from stdin / stdout
-    mako # notification system developed by swaywm maintainer
+    fbterm
+    fuzzel
+    kitty
+    nerd-fonts.sauce-code-pro
+    openrgb-with-all-plugins
+    qutebrowser
+    tail-tray
+    via
+    waybox
+    wayland-utils
+    wayvnc
+    wlr-randr
+    xwayland-satellite
   ];
 
-  services.hardware.openrgb = {
-    enable = true;
-    package = pkgs.openrgb-with-all-plugins;
-    motherboard = "amd";
+  services.xserver.videoDrivers = [
+    "modesetting"
+    "nvidia"
+  ];
+  services.flatpak.enable = true;
+
+  systemd.services.flatpak-repo = {
+    wantedBy = [ "multi-user.target" ];
+    path = [ pkgs.flatpak ];
+    script = ''
+      flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+    '';
   };
 
-  services.wivrn = {
+  # Enable the X11 windowing system.
+  # You can disable this if you're only using the Wayland session.
+  # services.xserver.enable = true;
+
+  services.displayManager.autoLogin = {
     enable = true;
-    openFirewall = true;
-
-    # Write information to /etc/xdg/openxr/1/active_runtime.json, VR applications
-    # will automatically read this and work with WiVRn (Note: This does not currently
-    # apply for games run in Valve's Proton)
-    defaultRuntime = true;
-
-    # Run WiVRn as a systemd service on startup
-    autoStart = true;
-
-    # If you're running this with an nVidia GPU and want to use GPU Encoding (and don't otherwise have CUDA enabled system wide), you need to override the cudaSupport variable.
-    package = (pkgs.wivrn.override { cudaSupport = true; });
-
-    # You should use the default configuration (which is no configuration), as that works the best out of the box.
-    # However, if you need to configure something see https://github.com/WiVRn/WiVRn/blob/master/docs/configuration.md for configuration options and https://mynixos.com/nixpkgs/option/services.wivrn.config.json for an example configuration.
-    config = {
-      enable = true;
-      json = {
-        # 1.0x foveation scaling
-        scale = 1.0;
-        # 100 Mb/s
-        bitrate = 400000000;
-        encoders = [
-          {
-            encoder = "nvenc";
-            codec = "h265";
-            # 1.0 x 1.0 scaling
-            width = 1.0;
-            height = 1.0;
-            offset_x = 0.0;
-            offset_y = 0.0;
-          }
-        ];
-      };
-    };
+    user = "dylan";
   };
 
-  # services.monado = {
-  #   enable = true;
-  #   defaultRuntime = true; # Register as default OpenXR runtime
-  # };
+  # Configure keymap in X11
+  services.xserver.xkb = {
+    layout = "us";
+    variant = "";
+  };
 
-  # systemd.user.services.monado.environment = {
-  #   STEAMVR_LH_ENABLE = "1";
-  #   XRT_COMPOSITOR_COMPUTE = "1";
-  #   WMR_HANDTRACKING = "0";
-  # };
+  # Enable CUPS to print documents.
+  services.printing.enable = true;
 
-  # Open ports in the firewall.
-  # networking.firewall.allowedTCPPorts = [ ... ];
-  # networking.firewall.allowedUDPPorts = [ ... ];
-  # Or disable the firewall altogether.
-  # networking.firewall.enable = false;
+  # Enable sound with pipewire.
+  services.pulseaudio.enable = false;
+  security.rtkit.enable = true;
+  services.pipewire = {
+    enable = true;
+    alsa.enable = true;
+    alsa.support32Bit = true;
+    pulse.enable = true;
+    # If you want to use JACK applications, uncomment this
+    #jack.enable = true;
+
+    # use the example session manager (no others are packaged yet so this is enabled by default,
+    # no need to redefine it in your config for now)
+    #media-session.enable = true;
+  };
+
+  programs._1password-gui = {
+    enable = true;
+    # Certain features, including CLI integration and system authentication support,
+    # require enabling PolKit integration on some desktop environments (e.g. Plasma).
+    polkitPolicyOwners = [ "dylan" ];
+  };
+  programs.firefox.enable = true;
+  programs.niri.enable = true;
+  programs.xwayland.enable = true;
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions

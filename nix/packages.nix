@@ -113,15 +113,16 @@ in
     ])
     ++ (lib.optionals pkgs.stdenv.isDarwin [
       coreutils-prefixed
-      qutebrowser
       darwin.trash
       duti
       ((emacsPackagesFor emacs-macport).emacsWithPackages emacsPackages)
+      findutils
       gawk
       gnused
       graphviz-nox
       iconv
       kitty
       openssl
+      qutebrowser
     ]);
 }

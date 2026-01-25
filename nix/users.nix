@@ -12,6 +12,7 @@
     extraGroups = [
       "networkmanager"
       "wheel"
+      "video"
     ];
     shell = pkgs.fish;
     packages = with pkgs; [
@@ -25,6 +26,7 @@
     extraGroups = [
       "networkmanager"
       "wheel"
+      "video"
     ];
     shell = pkgs.fish;
     packages = with pkgs; [

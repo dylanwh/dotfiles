@@ -54,3 +54,4 @@
 ;;(package! gitignore-snippets)
 (package! license-snippets)
 (package! py-snippets)
+(package! kdl-mode)
