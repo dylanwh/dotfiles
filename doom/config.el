@@ -9,6 +9,10 @@
 (setq user-full-name "Dylan Hardison"
       user-mail-address "dylan@hardison.net")
 
+
+;; for some reason emacs doesn't understand the TZ env I set.
+(set-time-zone-rule "PST8PDT")
+
 ;; Doom exposes five (optional) variables for controlling fonts in Doom. Here
 ;; are the three important ones:
 ;;

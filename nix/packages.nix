@@ -58,6 +58,7 @@ in
       isort
       jq
       jsonnet
+      jujutsu
       libvterm
       moreutils
       ncdu
