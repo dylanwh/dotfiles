@@ -55,3 +55,5 @@
 (package! license-snippets)
 (package! py-snippets)
 (package! kdl-mode)
+(package! jjdescription)
+(package! vc-jj)
