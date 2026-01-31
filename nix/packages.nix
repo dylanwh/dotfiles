@@ -117,7 +117,6 @@ in
       darwin.trash
       duti
       ((emacsPackagesFor emacs-macport).emacsWithPackages emacsPackages)
-      findutils
       gawk
       gnused
       graphviz-nox

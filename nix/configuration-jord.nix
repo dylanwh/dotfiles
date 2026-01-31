@@ -45,11 +45,11 @@
     }
     {
       name = "bore-6.5.9";
-      patch = ./0001-linux6.17.4-bore-6.5.9.patch;
+      patch = patches/0001-linux6.17.4-bore-6.5.9.patch;
     }
     {
       name = "previous-cpu-for-wakeup-v6";
-      patch = ./0002-Prefer-the-previous-cpu-for-wakeup-v6.patch;
+      patch = patches/0002-Prefer-the-previous-cpu-for-wakeup-v6.patch;
     }
   ];
   boot.kernelModules = [
@@ -118,9 +118,6 @@
   };
 
   environment.systemPackages = with pkgs; [
-    (bubblewrap.overrideAttrs (o: {
-      patches = (o.patches or [ ]) ++ [ ./bwrap2.patch ];
-    }))
     fbterm
     fuzzel
     kitty

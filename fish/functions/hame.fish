@@ -73,11 +73,18 @@ function hame
 
     hame-env
     hame-git
+    hame-jj
     hame-vim
     hame-emacs
 
     hame-rust
     hame-go
+
+    if not test -d ~/org
+        and have jj
+        hame-echo checking out ~/org
+        jj git clone --no-colocate git@github.com:dylanwh/org ~/org
+    end
 
     test -d $HOME/.tmux/plugins
     and rm -fr $HOME/.tmux/plugins
