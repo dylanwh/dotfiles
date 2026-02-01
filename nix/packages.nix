@@ -61,6 +61,7 @@ in
       jujutsu
       libvterm
       moreutils
+      mutt
       ncdu
       nh
       nil
