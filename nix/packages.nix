@@ -27,6 +27,7 @@ in
       bat
       black
       clang-tools
+      claude-code-acp
       cmake
       cmatrix
       curl

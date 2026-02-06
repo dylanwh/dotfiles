@@ -291,3 +291,10 @@
            (treesit-available-p))
       (message (format "%s" (treesit-language-at (point))))
     (message "treesit is not available")))
+
+
+
+(use-package! agent-shell
+  :config
+  (setq agent-shell-anthropic-claude-environment
+        (agent-shell-make-environment-variables :inherit-env t)))

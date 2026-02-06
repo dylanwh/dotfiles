@@ -57,3 +57,6 @@
 (package! kdl-mode)
 (package! jjdescription)
 (package! vc-jj)
+(package! shell-maker)
+(package! acp)
+(package! agent-shell)
