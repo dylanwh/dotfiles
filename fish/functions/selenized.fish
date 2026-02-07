@@ -87,6 +87,10 @@ function selenized
                 set -U fish_color_user $s_br_green brgreen
                 set -U fish_color_valid_path $s_fg_1 white --underline
                 set -U fish_color_vcs $s_violet magenta
+                set -U fish_pager_color_description yellow --italics
+                set -U fish_pager_color_prefix $s_fg_0 --bold --underline
+                set -U fish_pager_color_progress $s_fg_0 "--background=$s_cyan" --bold
+                set -U fish_pager_color_selected_background -r
             case iterm2
                 echo -e "\033]1337;SetColors=preset=selenized-$selenized_variant\a"
             case kitty

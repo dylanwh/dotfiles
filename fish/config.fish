@@ -12,6 +12,8 @@ set --erase CDPATH
 # ~/.config/fish/config.fish
 set -g dylan_allows_alias 1
 
+set --universal fish_key_bindings fish_default_key_bindings
+
 if status --is-interactive
     set -g shell_parent (ps -o ppid= $fish_pid | xargs ps -o comm=)
     set --erase shell_via
