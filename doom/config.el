@@ -9,7 +9,6 @@
 (setq user-full-name "Dylan Hardison"
       user-mail-address "dylan@hardison.net")
 
-
 ;; for some reason emacs doesn't understand the TZ env I set.
 (set-time-zone-rule "PST8PDT")
 
@@ -42,6 +41,11 @@
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
 (setq org-directory "~/org/")
+
+;; Org-mode configuration
+(after! org
+  ;; Log timestamp when a task is marked DONE
+  (setq org-log-done 'time))
 
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
@@ -264,7 +268,6 @@
   (evil-ex-define-cmd "q" 'bury-buffer)
   (evil-ex-define-cmd "wq" 'doom/save-and-kill-buffer))
 
-
 (use-package! age
   :custom
   (age-program "rage")
@@ -276,7 +279,6 @@
   :config
   (setenv "PINENTRY_PROGRAM" "")
   (age-file-enable))
-
 
 (setq shell-file-name (executable-find "bash"))
 
@@ -292,9 +294,19 @@
       (message (format "%s" (treesit-language-at (point))))
     (message "treesit is not available")))
 
-
-
 (use-package! agent-shell
   :config
+  (setq agent-shell-show-welcome-message nil)
+  (setq agent-shell-header-style nil)
+
   (setq agent-shell-anthropic-claude-environment
-        (agent-shell-make-environment-variables :inherit-env t)))
+        (agent-shell-make-environment-variables :inherit-env t))
+
+  (add-hook! 'diff-mode-hook
+    (when (string-match-p "\\*agent-shell-diff\\*" (buffer-name))
+      (evil-emacs-state))))
+
+(map! :after agent-shell
+      :map agent-shell-mode-map
+      :i "RET" #'newline
+      :n "RET" #'comint-send-input)
