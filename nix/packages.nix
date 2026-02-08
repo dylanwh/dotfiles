@@ -28,6 +28,7 @@ in
       black
       clang-tools
       claude-code-acp
+      claude-code
       cmake
       cmatrix
       curl

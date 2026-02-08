@@ -16,6 +16,7 @@
     (import ./overlays/libvterm.nix)
     (import ./overlays/fish.nix)
   ];
+  nixpkgs.config.allowUnfree = true;
 
   programs.zsh.enable = false;
 
