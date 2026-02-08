@@ -55,7 +55,7 @@ $shell\
 $character"""
 
 [git_branch]
-symbol = " "
+symbol = " "
 style="fg:#a67bf5"
 
 [username]
@@ -90,7 +90,8 @@ style="fg:12 bold"
 truncate_to_repo = true
 truncation_length = 0
 #fish_style_pwd_dir_length = 1
-format = "in [$path]($style)[$read_only]($read_only_style) "
+format = "in [$path]($style)[ $read_only]($read_only_style) "
+read_only = "󰉐"
 
 [python]
 symbol = " "

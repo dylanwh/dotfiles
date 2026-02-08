@@ -9,6 +9,11 @@
   ...
 }:
 
+let
+  tuigreet = "${pkgs.tuigreet}/bin/tuigreet";
+  niri-session = "${pkgs.niri}/share/wayland-sessions";
+
+in
 {
   imports = [
     /etc/nixos/hardware-configuration.nix
@@ -20,18 +25,24 @@
     ./tailscale.nix
     ./users.nix
     ./steam.nix
-    ./kde.nix
+    #./kde.nix
   ];
 
   hardware.graphics.enable = true;
   hardware.nvidia.open = false;
+  hardware.i2c.enable = true;
 
+  boot.blacklistedKernelModules = [
+    "amdgpu"
+    "kvm_amd"
+  ];
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
   boot.kernelPackages = pkgs.linuxPackages_latest;
   boot.kernelParams = [
     "split_lock_detect=off"
+    "acpi_enforce_resources=lax"
     "nvidia-drm.modeset=1"
   ];
   boot.kernelPatches = [
@@ -71,24 +82,50 @@
 
   services.avahi.enable = true;
 
-  services.sunshine = {
-    enable = true;
-    autoStart = true;
-    capSysAdmin = true;
-    openFirewall = true;
-  };
+  # services.sunshine = {
+  #   enable = true;
+  #   autoStart = true;
+  #   capSysAdmin = true;
+  #   openFirewall = true;
+  # };
 
   services.openssh.enable = true;
 
   services.udev = {
     packages = with pkgs; [
       #qmk
-      qmk-udev-rules # the only relevant
       #qmk_hid
-      via
       #vial
+      qmk-udev-rules # the only relevant
+      via
+      openrgb-with-all-plugins
     ]; # packages
   }; # udev
+
+  services.greetd = {
+    enable = true;
+    settings = {
+      default_session = {
+        command = "${tuigreet} --time --remember --remember-session --sessions ${niri-session}";
+        user = "greeter";
+      };
+    };
+  };
+
+  # this is a life saver.
+  # literally no documentation about this anywhere.
+  # might be good to write about this...
+  # https://www.reddit.com/r/NixOS/comments/u0cdpi/tuigreet_with_xmonad_how/
+  systemd.services.greetd.serviceConfig = {
+    Type = "idle";
+    StandardInput = "tty";
+    StandardOutput = "tty";
+    StandardError = "journal"; # Without this errors will spam on screen
+    # Without these bootlogs will spam on screen
+    TTYReset = true;
+    TTYVHangup = true;
+    TTYVTDisallocate = true;
+  };
 
   console = {
     font = "ter-powerline-v24b";
@@ -121,16 +158,19 @@
     fbterm
     fuzzel
     kitty
-    nerd-fonts.sauce-code-pro
-    openrgb-with-all-plugins
     qutebrowser
     tail-tray
     via
     waybox
-    wayland-utils
     wayvnc
-    wlr-randr
+    i2c-tools
+    nerd-fonts.sauce-code-pro
     xwayland-satellite
+    wayland-utils
+    liquidctl
+    wlr-randr
+    quickshell
+    noctalia-shell
   ];
 
   services.xserver.videoDrivers = [
@@ -151,10 +191,10 @@
   # You can disable this if you're only using the Wayland session.
   # services.xserver.enable = true;
 
-  services.displayManager.autoLogin = {
-    enable = true;
-    user = "dylan";
-  };
+  # services.displayManager.autoLogin = {
+  #   enable = true;
+  #   user = "dylan";
+  # };
 
   # Configure keymap in X11
   services.xserver.xkb = {
@@ -190,6 +230,11 @@
   programs.firefox.enable = true;
   programs.niri.enable = true;
   programs.xwayland.enable = true;
+  services.hardware.openrgb.enable = true;
+  services.hardware.openrgb.motherboard = "amd";
+  services.hardware.openrgb.package = pkgs.openrgb-with-all-plugins;
+
+  services.displayManager.lemurs.enable = false;
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions

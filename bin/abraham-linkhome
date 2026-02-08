@@ -32,6 +32,8 @@ provide('shpool',        '.config/shpool');
 provide('karabiner',     '.config/karabiner');
 provide('kitty',         '.config/kitty');
 provide('wezterm',       '.config/wezterm');
+provide('niri',          '.config/niri');
+provide('noctalia',      '.config/noctalia');
 
 if ($OSNAME eq 'darwin') {
     provide('macos-user-key-equivalents.txt',
