@@ -36,6 +36,7 @@ in
     "amdgpu"
     "kvm_amd"
   ];
+  # boot.extraModulePackages = with config.boot.kernelPackages; [ ddcci-driver ];
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
@@ -68,6 +69,18 @@ in
     "i2c-piix4"
   ];
   boot.kernel.sysctl."kernel.unprivileged_userns_clone" = 1;
+  # services.udev.extraRules =
+  #   let
+  #     bash = "${pkgs.bash}/bin/bash";
+  #     ddcciDev = "NVIDIA i2c adapter 6 at 1:00.0";
+  #     ddcciNode = "/sys/bus/i2c/devices/i2c-5/new_device";
+  #   in
+  #   ''
+  #     SUBSYSTEM=="i2c", ACTION=="add", ATTR{name}=="${ddcciDev}", RUN+="${bash} -c 'sleep 30; printf ddcci\ 0x37 > ${ddcciNode}'"
+  #   '';
+  #
+  services.ddccontrol.enable = true;
+  users.users.dylan.extraGroups = [ "i2c" ];
 
   networking.hostName = "jord";
   networking.networkmanager.enable = true;
@@ -155,22 +168,24 @@ in
   };
 
   environment.systemPackages = with pkgs; [
+    brightnessctl
     fbterm
     fuzzel
+    i2c-tools
     kitty
+    liquidctl
+    nerd-fonts.sauce-code-pro
+    noctalia-shell
+    openrgb-with-all-plugins
+    pywalfox-native
+    quickshell
     qutebrowser
-    tail-tray
     via
     waybox
-    wayvnc
-    i2c-tools
-    nerd-fonts.sauce-code-pro
-    xwayland-satellite
     wayland-utils
-    liquidctl
+    wayvnc
     wlr-randr
-    quickshell
-    noctalia-shell
+    xwayland-satellite
   ];
 
   services.xserver.videoDrivers = [
@@ -204,6 +219,7 @@ in
 
   # Enable CUPS to print documents.
   services.printing.enable = true;
+  xdg.portal.enable = true;
 
   # Enable sound with pipewire.
   services.pulseaudio.enable = false;

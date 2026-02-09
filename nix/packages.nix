@@ -27,8 +27,8 @@ in
       bat
       black
       clang-tools
-      claude-code-acp
       claude-code
+      claude-code-acp
       cmake
       cmatrix
       curl
@@ -61,6 +61,7 @@ in
       jq
       jsonnet
       jujutsu
+      kdlfmt
       libvterm
       moreutils
       mutt
