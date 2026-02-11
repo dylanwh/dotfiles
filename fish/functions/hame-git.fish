@@ -18,6 +18,7 @@ function hame-git
     git config --global init.defaultBranch main
     git config --global pull.ff only
     git config --global push.default simple
+    git config --global --add --bool push.autoSetupRemote true
     git config --global user.email "$EMAIL"
     git config --global user.name "$REALNAME"
 
