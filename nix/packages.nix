@@ -39,6 +39,7 @@ in
       file
       fish
       gcc
+      gemini-cli
       gh
       git
       glslang
@@ -68,7 +69,7 @@ in
       ncdu
       nh
       nil
-      nixfmt-rfc-style
+      (if lib.versionOlder "25.11" pkgs.lib.version then nixfmt else nixfmt-rfc-style)
       nmap
       nodePackages.js-beautify
       nodejs_24
