@@ -2,12 +2,14 @@
   config,
   pkgs,
   lib,
+  nixpkgs,
   ...
 }:
 
 let
   packagesModule = import ./packages.nix { inherit config pkgs lib; };
   systemPackages = packagesModule.environment.systemPackages or [ ];
+  config.allowUnfree = true;
 
   conflicts = {
     rustup = [
@@ -35,5 +37,12 @@ in
 
   home.sessionVariables = {
     LD_LIBRARY_PATH = "${pkgs.stdenv.cc.cc.lib}/lib/"; # fix the problem of dynamic link in python package
+  };
+
+  nixpkgs = {
+    config = {
+      allowUnfree = true;
+      allowUnfreePredicate = (_: true);
+    };
   };
 }
