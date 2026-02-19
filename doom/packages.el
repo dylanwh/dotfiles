@@ -60,3 +60,8 @@
 (package! shell-maker)
 (package! acp)
 (package! agent-shell)
+
+;; Load local packages if file exists
+(let ((local-packages (expand-file-name "local-packages.el" doom-user-dir)))
+  (when (file-exists-p local-packages)
+    (load local-packages)))

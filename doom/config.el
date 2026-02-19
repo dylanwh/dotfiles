@@ -312,3 +312,15 @@
       :map agent-shell-mode-map
       :i "RET" #'newline
       :n "RET" #'comint-send-input)
+
+;; Load local configuration if it exists
+(let ((local-config (expand-file-name "local-config.el" doom-user-dir)))
+  (when (file-exists-p local-config)
+    (load local-config)))
+
+
+(setq code-review-auth-login-marker 'forge)
+
+
+(setq browse-url-browser-function 'browse-url-generic
+      browse-url-generic-program "kitty-browser")

@@ -21,6 +21,7 @@ function hame-git
     git config --global --add --bool push.autoSetupRemote true
     git config --global user.email "$EMAIL"
     git config --global user.name "$REALNAME"
+    git config --global github.user dylanwh
 
     git config --global alias.br branches
     git config --global alias.ci commit
