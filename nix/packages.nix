@@ -104,7 +104,6 @@ in
       rustup
       shellcheck
       shfmt
-      skim
       socat
       starship
       stylelint

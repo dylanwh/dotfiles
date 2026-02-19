@@ -18,8 +18,6 @@ function hame-rust
     end
 
     if have cargo
-        have sk
-        or hame-nq cargo install skim
         have fd
         or hame-nq cargo install fd-find
         have rg
