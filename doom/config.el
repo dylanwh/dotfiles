@@ -43,7 +43,7 @@
 (setq org-directory "~/org/")
 
 ;; Org-mode configuration
-(after! org
+(with-eval-after-load 'org
   ;; Log timestamp when a task is marked DONE
   (setq org-log-done 'time))
 
@@ -74,7 +74,7 @@
 (defun my-cperl-mode ()
   (cperl-set-style "Whitesmith"))
 
-(after! cperl-mode
+(with-eval-after-load 'cperl-mode
   (define-key cperl-mode-map "{" nil)
   (setq cperl-highlight-variables-indiscriminately t)
 
@@ -111,17 +111,17 @@
 (defun mib (n)
   (* n 1024 1024))
 
-(after! gcmh
+(with-eval-after-load 'gcmh
   (setq gcmh-high-cons-threshold (gib 1))
   (setq gcmh-low-cons-threshold  (mib 300)))
 
-(use-package! json-mode
+(use-package json-mode
   :mode ("\\.hujson\\'" . jsonc-mode))
 
-(use-package! kd-mode
+(use-package kdl-mode
   :mode ("\\.kdl\\'" . kdl-mode))
 
-(use-package! web-mode
+(use-package web-mode
   :mode ("\\.tt" . web-mode))
 
 (add-to-list 'auto-mode-alist '("\\.t\\'" . cperl-mode))
@@ -156,7 +156,7 @@
   (interactive)
   (counsel-projectile-switch-project #'counsel-projectile-switch-project-action-run-vterm))
 
-(after! eshell
+(with-eval-after-load 'eshell
   (defun my-eshell-mode-company ()
     (setq-local company-idle-delay nil))
   (add-hook 'eshell-mode-hook 'my-eshell-mode-company)
@@ -182,7 +182,7 @@
   (add-hook! 'eshell-directory-change-hook
     (company-mode (if (file-remote-p default-directory) -1 +1))))
 
-(after! counsel-projectile
+(with-eval-after-load 'counsel-projectile
   (setq counsel-projectile-switch-project-action
         '(1
           ("o" counsel-projectile-switch-project-action
@@ -266,11 +266,11 @@
     (setq tramp-use-ssh-controlmaster-options t)
   (setq tramp-use-connection-share t))
 
-(after! evil
+(with-eval-after-load 'evil
   (evil-ex-define-cmd "q" 'bury-buffer)
   (evil-ex-define-cmd "wq" 'doom/save-and-kill-buffer))
 
-(use-package! age
+(use-package age
   :custom
   (age-program "rage")
   (age-default-identity
@@ -296,7 +296,7 @@
       (message (format "%s" (treesit-language-at (point))))
     (message "treesit is not available")))
 
-(use-package! agent-shell
+(use-package agent-shell
   :config
   (setq agent-shell-show-welcome-message nil)
   (setq agent-shell-header-style nil)
@@ -308,10 +308,10 @@
     (when (string-match-p "\\*agent-shell-diff\\*" (buffer-name))
       (evil-emacs-state))))
 
-(map! :after agent-shell
-      :map agent-shell-mode-map
-      :i "RET" #'newline
-      :n "RET" #'comint-send-input)
+(with-eval-after-load 'agent-shell
+  (map! :map agent-shell-mode-map
+        :i "RET" #'newline
+        :n "RET" #'comint-send-input))
 
 ;; Load local configuration if it exists
 (let ((local-config (expand-file-name "local-config.el" doom-user-dir)))
