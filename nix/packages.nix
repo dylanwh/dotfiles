@@ -15,9 +15,16 @@ let
   emacsPackages = (
     ps: [
       ps.vterm
-      ps.treesit-grammars.with-all-grammars
+      (ps.treesit-grammars.with-grammars (g:
+        builtins.attrValues (builtins.removeAttrs g [
+          "tree-sitter-quint"
+          # Add any other failing grammars to this list in the future
+          # "tree-sitter-something-else"
+        ])
+      ))
     ]
   );
+  nix-fmt = (if lib.versionOlder "25.11" pkgs.lib.version then pkgs.nixfmt else pkgs.nixfmt-rfc-style);
 in
 
 {
@@ -69,13 +76,14 @@ in
       ncdu
       nh
       nil
-      (if lib.versionOlder "25.11" pkgs.lib.version then nixfmt else nixfmt-rfc-style)
+      nix-fmt
       nmap
       nodePackages.js-beautify
       nodejs_24
       notcurses
       nq
       oha
+      opener
       pandoc
       (perl.withPackages perlModules)
       pipenv
