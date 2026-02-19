@@ -16,6 +16,7 @@ abbr push 'git push'
 abbr runti 'docker run --rm -ti'
 abbr upstream 'git push --set-upstream origin (git branch --show-current)'
 abbr hm history merge
+abbr gd pp
 
 set -l ver (string split . $FISH_VERSION)
 # fish 3.6.0 or later

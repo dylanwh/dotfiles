@@ -170,7 +170,7 @@
   (defun eshell/vim (file)
     (find-file file))
 
-  (defun eshell/gd ()
+  (defun eshell/pp ()
     (counsel-projectile-switch-project #'counsel-projectile-switch-project-action-run-eshell))
 
   (set-eshell-alias!
