@@ -321,6 +321,20 @@
 
 (setq code-review-auth-login-marker 'forge)
 
+(defun my/browse-url-remote-opener (url &optional _new-window)
+  (let ((socket-path (expand-file-name "~/.opener.sock")))
+    (condition-case nil
+        (let ((proc (make-network-process
+                     :name "opener-client"
+                     :family 'local
+                     :service socket-path
+                     :buffer nil
+                     :noquery t)))
+          (process-send-string proc (concat url "\n"))
+          (delete-process proc)
+          (message "opener: %s" url))
+      
+      (error (message "opener not available, url: %s" url)))))
 
-(setq browse-url-browser-function 'browse-url-generic
-      browse-url-generic-program "kitty-browser")
+;; Set it as the default browser for Emacs
+(setq browse-url-browser-function 'my/browse-url-remote-opener)
