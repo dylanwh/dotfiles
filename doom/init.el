@@ -28,7 +28,7 @@
        ;;deft                  ; notational velocity for Emacs
        doom                    ; what makes DOOM look the way it does
        doom-dashboard          ; a nifty splash screen for Emacs
-       ;;doom-quit               ; DOOM quit-message prompts when you quit Emacs
+       doom-quit               ; DOOM quit-message prompts when you quit Emacs
        hl-todo                 ; highlight TODO/FIXME/NOTE/DEPRECATED/HACK/REVIEW
        ;;hydra
        indent-guides           ; highlighted indent columns
@@ -64,7 +64,7 @@
        :emacs
        dired                   ; making dired pretty [functional]
        electric                ; smarter, keyword-based electric-indent
-       eww                     ; the internet is gross
+                                        ; ;eww                  ; the internet is gross
        ibuffer                 ; interactive buffer management
        tramp                   ; remote files at your arthritic fingertips
        undo                    ; persistent, smarter undo for your inevitable mistakes
@@ -99,8 +99,6 @@
        make                    ; run make tasks from Emacs
        ;;pass                  ; password manager for nerds
        ;;pdf                   ; pdf enhancements
-       ;;prodigy               ; FIXME managing external services & code builders
-       ;;rgb                   ; creating color strings
        ;;terraform             ; infrastructure as code
        ;;tmux                  ; an API for interacting with tmux
        tree-sitter             ; syntax and parsing, sitting in a tree

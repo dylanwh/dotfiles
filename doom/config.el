@@ -52,21 +52,35 @@
 (setq display-line-numbers-type t)
 
 (load! "perltidy.el")
-;; Here are some additional functions/macros that could help you configure Doom:
+(load! "ssh-utils.el")
+
+;; Whenever you reconfigure a package, make sure to wrap your config in an
+;; `with-eval-after-load' block, otherwise Doom's defaults may override your
+;; settings. E.g.
+;;
+;;   (with-eval-after-load 'PACKAGE
+;;     (setq x y))
+;;
+;; The exceptions to this rule:
+;;
+;;   - Setting file/directory variables (like `org-directory')
+;;   - Setting variables which explicitly tell you to set them before their
+;;     package is loaded (see 'C-h v VARIABLE' to look them up).
+;;   - Setting doom variables (which start with 'doom-' or '+').
+;;
+;; Here are some additional functions/macros that will help you configure Doom.
 ;;
 ;; - `load!' for loading external *.el files relative to this one
-;; - `use-package' for configuring packages
-;; - `after!' for running code after a package has loaded
 ;; - `add-load-path!' for adding directories to the `load-path', relative to
 ;;   this file. Emacs searches the `load-path' when you load packages with
 ;;   `require' or `use-package'.
 ;; - `map!' for binding new keys
 ;;
 ;; To get information about any of these functions/macros, move the cursor over
-;; the highlighted symbol at press 'K' (non-evil users must press 'C-c g k').
+;; the highlighted symbol at press 'K' (non-evil users must press 'C-c c k').
 ;; This will open documentation for it, including demos of how they are used.
 ;;
-;; You can also try 'gd' (or 'C-c g d') to jump to their definition and see how
+;; You can also try 'gd' (or 'C-c c d') to jump to their definition and see how
 ;; they are implemented.
 
 (defalias 'perl-mode 'cperl-mode)
@@ -173,6 +187,7 @@
   (defun eshell/pp ()
     (counsel-projectile-switch-project #'counsel-projectile-switch-project-action-run-eshell))
 
+
   (set-eshell-alias!
    "home" "cd ~/Git/dylanwh/dotfiles"
    "pull" "git pull"
@@ -256,15 +271,18 @@
          :action doom/help)))
 
 ;; for some reason, emacsformacosx has scratch buffer not being in lisp-interactive-mode?
-(if (not (equal (buffer-local-value 'major-mode (get-buffer "*scratch*")) #'lisp-interaction-mode))
-    (defun fix-scratch-buffer nil
-      (lisp-interaction-mode))
+(defun fix-scratch-buffer (&rest _)
+  (when (get-buffer "*scratch*")
+    (with-current-buffer "*scratch*"
+      (unless (eq major-mode 'lisp-interaction-mode)
+        (lisp-interaction-mode)))))
 
-  (advice-add 'scratch-buffer :after-while 'fix-scratch-buffer))
+(advice-add 'scratch-buffer :after #'fix-scratch-buffer)
 
 (if (version< emacs-version "30.1")
     (setq tramp-use-ssh-controlmaster-options t)
   (setq tramp-use-connection-share t))
+
 
 (with-eval-after-load 'evil
   (evil-ex-define-cmd "q" 'bury-buffer)
@@ -338,3 +356,40 @@
 
 ;; Set it as the default browser for Emacs
 (setq browse-url-browser-function 'my/browse-url-remote-opener)
+
+(map!
+ :ni "s-1" #'+workspace/switch-to-0
+ :ni "s-2" #'+workspace/switch-to-1
+ :ni "s-3" #'+workspace/switch-to-2
+ :ni "s-4" #'+workspace/switch-to-3
+ :ni "s-5" #'+workspace/switch-to-4
+ :ni "s-6" #'+workspace/switch-to-5
+ :ni "s-7" #'+workspace/switch-to-6
+ :ni "s-8" #'+workspace/switch-to-7
+ :ni "s-9" #'+workspace/switch-to-8
+ :ni "s-0" #'+workspace/switch-to-final)
+
+
+(use-package terminal-here
+  :custom
+  (terminal-here-command-flag "--")
+  (terminal-here-terminal-command 
+   (lambda (dir)
+     "Return a kitty launcher function appropriate for the current OS."
+     (let ((cwd (or dir default-directory))
+           (listen (concat "unix:" (car (file-expand-wildcards (expand-file-name "~/.kitty.sock-*"))))))
+       (list "kitty" "@"
+             "--to" listen 
+             "launch" "--type=os-window"
+             "--cwd" cwd))))
+  :config
+  (advice-add 'terminal-here--maybe-add-mac-os-open :override
+              (lambda (terminal-command)
+                (if (string-suffix-p ".app" (car terminal-command))
+                    (append (list "open" "-a" (car terminal-command) "." "--args")
+                            (cdr terminal-command))
+                  terminal-command))))
+
+(require 'server)
+(unless (server-running-p)
+  (server-start))

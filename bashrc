@@ -13,6 +13,11 @@ case $- in
 *) return ;;
 esac
 
+if command -v eshell &>/dev/null && (( $SHLVL < 2 )); then
+   eshell
+   exit $?
+fi
+
 if command -v fish &>/dev/null && (( $SHLVL < 2 )); then
 	fish -i
 	exit $?

@@ -15,16 +15,21 @@ let
   emacsPackages = (
     ps: [
       ps.vterm
-      (ps.treesit-grammars.with-grammars (g:
-        builtins.attrValues (builtins.removeAttrs g [
-          "tree-sitter-quint"
-          # Add any other failing grammars to this list in the future
-          # "tree-sitter-something-else"
-        ])
+      (ps.treesit-grammars.with-grammars (
+        g:
+        builtins.attrValues (
+          builtins.removeAttrs g [
+            "tree-sitter-quint"
+            # Add any other failing grammars to this list in the future
+            # "tree-sitter-something-else"
+          ]
+        )
       ))
     ]
   );
-  nix-fmt = (if lib.versionOlder "25.11" pkgs.lib.version then pkgs.nixfmt else pkgs.nixfmt-rfc-style);
+  nix-fmt = (
+    if lib.versionOlder "25.11" pkgs.lib.version then pkgs.nixfmt else pkgs.nixfmt-rfc-style
+  );
 in
 
 {

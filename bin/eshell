@@ -1,3 +1,16 @@
 #!/bin/sh
 
-exec emacsclient -q -u -a "" -nw -e "(+eshell/frame)"
+foreground=0
+
+while getopts "f" opt; do
+    case "$opt" in
+    f) foreground=1 ;;
+    *) ;;
+    esac
+done
+
+if [ "$foreground" -eq 1 ]; then
+    exec emacs -nw --eval '(+eshell/frame)'
+else
+    exec emacsclient -q -u -a '' -nw -e '(+eshell/frame)'
+fi
