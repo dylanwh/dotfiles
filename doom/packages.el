@@ -59,7 +59,7 @@
 (package! vc-jj)
 (package! shell-maker)
 (package! acp)
-(package! agent-shell)
+(package! agent-shell :pin "6309fa86c7a20b19f9487b58317d80cb24eebf6e")
 
 ;; Load local packages if file exists
 (let ((local-packages (expand-file-name "local-packages.el" doom-user-dir)))
