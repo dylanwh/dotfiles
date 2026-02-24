@@ -369,7 +369,6 @@
  :ni "s-9" #'+workspace/switch-to-8
  :ni "s-0" #'+workspace/switch-to-final)
 
-
 (use-package terminal-here
   :custom
   (terminal-here-command-flag "--")
