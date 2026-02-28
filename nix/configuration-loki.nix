@@ -12,11 +12,11 @@
 {
   imports = [
     /etc/nixos/hardware-configuration.nix
-    ./locale.nix
+    ./system/locale.nix
     ./packages.nix
-    ./programs.nix
-    ./users.nix
-    ./tailscale.nix
+    ./system/programs.nix
+    ./system/users.nix
+    ./system/tailscale.nix
   ];
 
   hardware.nvidia.prime = {

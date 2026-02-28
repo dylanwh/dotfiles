@@ -75,7 +75,7 @@ in
       jsonnet
       jujutsu
       kdlfmt
-      libvterm
+      kitty.terminfo
       moreutils
       mutt
       ncdu
@@ -128,18 +128,5 @@ in
       psmisc
       shpool
       trash-cli
-    ])
-    ++ (lib.optionals pkgs.stdenv.isDarwin [
-      coreutils-prefixed
-      darwin.trash
-      duti
-      ((emacsPackagesFor emacs-macport).emacsWithPackages emacsPackages)
-      gawk
-      gnused
-      graphviz-nox
-      iconv
-      kitty
-      openssl
-      qutebrowser
     ]);
 }

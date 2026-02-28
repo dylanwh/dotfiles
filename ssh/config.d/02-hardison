@@ -21,3 +21,4 @@ Host *.home.arpa *.hardison.net
     StrictHostKeyChecking yes
     ForwardAgent yes
     AddressFamily inet
+    RemoteForward ~/.opener.sock ~/.opener.sock

@@ -17,15 +17,15 @@ in
 {
   imports = [
     /etc/nixos/hardware-configuration.nix
-    ./locale.nix
-    ./nfs.nix
-    ./nosleep.nix
+    ./system/locale.nix
+    ./system/nfs.nix
+    ./system/nosleep.nix
     ./packages.nix
-    ./programs.nix
-    ./tailscale.nix
-    ./users.nix
-    ./steam.nix
-    #./kde.nix
+    ./system/programs.nix
+    ./system/tailscale.nix
+    ./system/users.nix
+    ./system/steam.nix
+    #./system/kde.nix
   ];
 
   hardware.graphics.enable = true;

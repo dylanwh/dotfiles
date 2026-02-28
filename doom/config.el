@@ -44,6 +44,14 @@
 
 ;; Org-mode configuration
 (with-eval-after-load 'org
+(add-to-list 'org-capture-templates
+             '("l" "Link" entry
+               (file+headline "~/org/links.org" "Unsorted")
+               "* [[%^{URL}][%^{Title}]]
+   :PROPERTIES:
+   :CREATED: %U
+   :END:
+") t)
   ;; Log timestamp when a task is marked DONE
   (setq org-log-done 'time))
 

@@ -8,7 +8,7 @@ hostname="$(hostname -s)"
 
 case "$(uname -s)" in
 "Darwin")
-    nix_config="$src_dir/configuration-macos.nix"
+    nix_config="$src_dir/configuration-$hostname.nix"
     nix_dir="/etc/nix-darwin"
     nix_rebuild="darwin-rebuild"
     if ! [ -f "$nix_config" ]; then

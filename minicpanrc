@@ -1,4 +1,0 @@
-local: /home/dylan/var/cpan
-remote: http://cpan.pair.com/pub/CPAN/
-also_mirror: indices/ls-lR.gz
-skip_perl: 1

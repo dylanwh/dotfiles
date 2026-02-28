@@ -59,21 +59,7 @@ function hame
         end
     end
 
-    switch $OS
-        case Darwin
-            hame-macos
-    end
-
-    if not have nq
-        hame-echo installing nq
-        install-nq
-    end
-
-    hame-fq
-
     hame-env
-    hame-git
-    hame-jj
     hame-vim
     hame-emacs
 
@@ -85,11 +71,6 @@ function hame
         hame-echo checking out ~/org
         jj git clone --no-colocate git@github.com:dylanwh/org ~/org
     end
-
-    test -d $HOME/.tmux/plugins
-    and rm -fr $HOME/.tmux/plugins
-    test -d $HOME/.tmux/thumbs-init.conf
-    and rm -f $HOME/.tmux/thumbs-init.conf
 
     if not test -d /nix
         set -l default_perl 5.36.0

@@ -1,6 +1,0 @@
-hash_max = 100
-hash_preserve = begin
-hash_separator = " => "
-
-array_max = 4
-array_preserve = begin
