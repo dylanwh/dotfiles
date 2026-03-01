@@ -16,16 +16,17 @@ let
 in
 {
   imports = [
+    <home-manager/nixos>
     /etc/nixos/hardware-configuration.nix
+    ./packages.nix
+    #./system/kde.nix
     ./system/locale.nix
     ./system/nfs.nix
     ./system/nosleep.nix
-    ./packages.nix
     ./system/programs.nix
+    ./system/steam.nix
     ./system/tailscale.nix
     ./system/users.nix
-    ./system/steam.nix
-    #./system/kde.nix
   ];
 
   hardware.graphics.enable = true;
@@ -46,39 +47,11 @@ in
     "acpi_enforce_resources=lax"
     "nvidia-drm.modeset=1"
   ];
-  boot.kernelPatches = [
-    {
-      name = "bbr";
-      patch = null;
-      structuredExtraConfig = with pkgs.lib.kernel; {
-        TCP_CONG_BBR = yes; # enable BBR
-        DEFAULT_BBR = yes; # use it by default
-      };
-    }
-    {
-      name = "bore-6.5.9";
-      patch = patches/0001-linux6.17.4-bore-6.5.9.patch;
-    }
-    {
-      name = "previous-cpu-for-wakeup-v6";
-      patch = patches/0002-Prefer-the-previous-cpu-for-wakeup-v6.patch;
-    }
-  ];
   boot.kernelModules = [
     "i2c-dev"
     "i2c-piix4"
   ];
   boot.kernel.sysctl."kernel.unprivileged_userns_clone" = 1;
-  # services.udev.extraRules =
-  #   let
-  #     bash = "${pkgs.bash}/bin/bash";
-  #     ddcciDev = "NVIDIA i2c adapter 6 at 1:00.0";
-  #     ddcciNode = "/sys/bus/i2c/devices/i2c-5/new_device";
-  #   in
-  #   ''
-  #     SUBSYSTEM=="i2c", ACTION=="add", ATTR{name}=="${ddcciDev}", RUN+="${bash} -c 'sleep 30; printf ddcci\ 0x37 > ${ddcciNode}'"
-  #   '';
-  #
   services.ddccontrol.enable = true;
   users.users.dylan.extraGroups = [ "i2c" ];
 
@@ -95,12 +68,12 @@ in
 
   services.avahi.enable = true;
 
-  # services.sunshine = {
-  #   enable = true;
-  #   autoStart = true;
-  #   capSysAdmin = true;
-  #   openFirewall = true;
-  # };
+  services.sunshine = {
+    enable = true;
+    autoStart = true;
+    capSysAdmin = true;
+    openFirewall = true;
+  };
 
   services.openssh.enable = true;
 
@@ -251,6 +224,30 @@ in
   services.hardware.openrgb.package = pkgs.openrgb-with-all-plugins;
 
   services.displayManager.lemurs.enable = false;
+
+  home-manager.users.dylan =
+    { pkgs, ... }:
+    {
+      imports = [
+        ./home/bash.nix
+        ./home/emacs.nix
+        ./home/fish.nix
+        ./home/git.nix
+        ./home/kitty.nix
+        ./home/local-bin.nix
+        ./home/misc.nix
+        ./home/niri.nix
+        ./home/noctalia.nix
+        ./home/selenized.nix
+        ./home/ssh.nix
+        ./home/starship.nix
+        ./home/tmux.nix
+        ./home/vim.nix
+        ./home/wezterm.nix
+      ];
+
+      home.stateVersion = "25.05";
+    };
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
