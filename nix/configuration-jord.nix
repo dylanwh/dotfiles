@@ -12,7 +12,6 @@
 let
   tuigreet = "${pkgs.tuigreet}/bin/tuigreet";
   niri-session = "${pkgs.niri}/share/wayland-sessions";
-
 in
 {
   imports = [
@@ -30,8 +29,11 @@ in
   ];
 
   hardware.graphics.enable = true;
-  hardware.nvidia.open = false;
+  hardware.nvidia.open = true;
+  hardware.nvidia.modesetting.enable = true;
   hardware.i2c.enable = true;
+
+  services.seatd.enable = true;
 
   boot.blacklistedKernelModules = [
     "amdgpu"
@@ -46,6 +48,7 @@ in
     "split_lock_detect=off"
     "acpi_enforce_resources=lax"
     "nvidia-drm.modeset=1"
+    "nvidia-drm.fbdev=1"
   ];
   boot.kernelModules = [
     "i2c-dev"
@@ -67,13 +70,28 @@ in
   };
 
   services.avahi.enable = true;
+  services.avahi.publish.enable = true;
+  services.avahi.publish.userServices = true;
 
   services.sunshine = {
     enable = true;
     autoStart = true;
     capSysAdmin = true;
     openFirewall = true;
+    package = pkgs.sunshine.override {
+      cudaSupport = true;
+      cudaPackages = pkgs.cudaPackages;
+    };
   };
+
+  systemd.user.services.sunshine = {
+    environment = {
+      LD_LIBRARY_PATH = "/run/opengl-driver/lib:/run/opengl-driver-32/lib";
+      WAYLAND_DISPLAY = "wayland-1";
+      SUNSHINE_TYPE = "wayland";
+    };
+  };
+  hardware.uinput.enable = true;
 
   services.openssh.enable = true;
 
@@ -192,7 +210,14 @@ in
 
   # Enable CUPS to print documents.
   services.printing.enable = true;
-  xdg.portal.enable = true;
+  xdg.portal = {
+    enable = true;
+    extraPortals = [ pkgs.xdg-desktop-portal-gnome ];
+    config.niri.default = [
+      "gnome"
+      "gtk"
+    ];
+  };
 
   # Enable sound with pipewire.
   services.pulseaudio.enable = false;

@@ -13,6 +13,10 @@
       "networkmanager"
       "wheel"
       "video"
+      "render"
+      "seat"
+      "input"
+      "uinput"
     ];
     shell = pkgs.fish;
     packages = with pkgs; [

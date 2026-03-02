@@ -99,8 +99,19 @@ input {
     position x=1280 y=0
 }
 
-output "DP-2" {
-    mode "3440x1440@174.963"
+// output "DP-2" {
+//     mode "3440x1440@174.963"
+// }
+
+
+output "HDMI-A-1" {
+    mode "2560x1600"
+    scale 1.7
+}
+
+debug {
+    // This forces niri to use your 3080 Ti (mapped to D128 on your system)
+    render-drm-device "/dev/dri/renderD128"
 }
 
 // Settings that influence how windows are positioned and sized.
