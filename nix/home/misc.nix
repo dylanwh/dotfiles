@@ -6,6 +6,10 @@
 }:
 
 {
+  programs.ripgrep = {
+    enable = true;
+    arguments = [ "--smart-case" ];
+  };
   home.file = {
     # Config directories (nix store)
     ".config/iterm2/com.googlecode.iterm2.plist".source = ../../iterm2/com.googlecode.iterm2.plist;
@@ -20,10 +24,8 @@
     ".fdignore".source = ../../fdignore;
     ".msmtprc".source = ../../msmtprc;
     ".reply.pl".source = ../../reply.pl;
-    ".ripgreprc".source = ../../ripgreprc;
     ".perltidyrc".source = ../../perltidyrc;
     ".kxkbrc".source = ../../kxkbrc;
-    ".screenrc".source = ../../screenrc;
     ".todorc".source = ../../todorc;
     ".wyrdrc".source = ../../wyrdrc;
   }
