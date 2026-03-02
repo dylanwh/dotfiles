@@ -1,45 +1,7 @@
-#!/usr/bin/env perl
-use 5.30.0;
-use English qw($OSNAME);
-use Env qw($XDG_RUNTIME_DIR);
-use autodie;
-use File::stat;
-
-sub find_ssh_auth_sock {
-  if ($OSNAME eq 'darwin') {
-    my @auth_socks = (
-        # sort { $_->{stat}->mtime <=> $b->{stat}->mtime }
-        grep { -S $_->{stat} }
-        map  { +{path => $_, stat => scalar stat($_)} }
-        glob('/private/tmp/com.apple.launchd.*/Listeners')
-    );
-    if (@auth_socks) {
-      return $auth_socks[0]->{path};
-    }
-  }
-  my @auth_socks = (
-      sort { $_->{stat}->mtime <=> $b->{stat}->mtime }
-      grep { -S $_->{stat} }
-      map  { +{path => $_, stat => stat($_)} }
-      glob('/tmp/ssh-*/agent.*')
-  );
-  if (@auth_socks) {
-    return $auth_socks[0]->{path};
-  }
-  my $runtime_dir = $XDG_RUNTIME_DIR // '/tmp';
-  if (-f "$runtime_dir/ssh-agent.fish") {
-    open my $fh, '<', "$runtime_dir/ssh-agent.fish";
-    while (<$fh>) {
-      if (/^setenv\s+SSH_AUTH_SOCK\s+([^\s;]+);?$/) {
-        return $1;
-      }
-    }
-  }
-}
-
-if (my $sock = find_ssh_auth_sock()) {
-  say $sock;
-}
-else {
-  die "Unable to determine SSH_AUTH_SOCK\n";
-}
+#!/bin/sh
+sock=$(emacsclient --eval '(ssh-auth-sock)' | tr -d '"')
+if [ "$sock" = "nil" ] || [ -z "$sock" ]; then
+    echo "Unable to determine SSH_AUTH_SOCK" >&2
+    exit 1
+fi
+echo "$sock"

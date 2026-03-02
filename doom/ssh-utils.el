@@ -32,7 +32,7 @@ Returns a list of host alias strings."
                                   (expand-file-name pattern (file-name-directory file))))
                        (files (file-expand-wildcards expanded t)))
                   (dolist (f files)
-                    (setq hosts (nconc (ssh-hosts--parse-file f visited) hosts)))))
+                    (setq hosts (append (ssh-hosts--parse-file f visited) hosts)))))
                ((string-match "^Host[[:space:]]+\\(.*\\)$" line)
                 (let ((aliases (split-string (match-string 1 line))))
                   (dolist (alias aliases)
@@ -64,7 +64,7 @@ Wildcards and GitHub/Heroku hosts are excluded. Duplicates are removed."
   "Return the paths of owned sockets, newest first."
   (let* ((uid (user-uid))
          (pairs (mapcar (lambda (path) (cons path (file-attributes path)))
-                        (file-expand-wildcards-many ssh-auth-sock--patterns)))
+                        (mapcan #'file-expand-wildcards ssh-auth-sock--patterns)))
          (socks (cl-remove-if-not
                  (lambda (pair)
                    (and (cdr pair)
@@ -100,10 +100,6 @@ Wildcards and GitHub/Heroku hosts are excluded. Duplicates are removed."
       (when proc
         (delete-process proc)
         t))))
-
-(defun file-expand-wildcards-many (patterns)
-  "Expand a list of PATTERNS into a single list of files."
-  (mapcan #'file-expand-wildcards patterns))
 
 (defun ssh-auth-sock ()
   "Return the SSH_AUTH_SOCK path, or 1password auth socket, or nil."
