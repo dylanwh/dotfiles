@@ -102,7 +102,7 @@ in
         style = "fg:12 bold";
         truncate_to_repo = true;
         truncation_length = 0;
-        format = "in [$path]($style)[ $read_only]($read_only_style) ";
+        format = "in [$path]($style)[ $read_only]($read_only_style)";
         read_only = "󰉐";
       };
 
