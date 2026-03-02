@@ -1,15 +1,29 @@
-{ config, pkgs, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 
 let
   c = config.selenized.colors;
+  cfg = config.kitty;
 in
 {
-  programs.kitty = {
+  options.kitty = {
+    fontSize = lib.mkOption {
+      type = lib.types.float;
+      default = 14.0;
+      description = "Kitty terminal font size.";
+    };
+  };
+
+  config.programs.kitty = {
     enable = true;
 
     font = {
       name = "SauceCodePro Nerd Font Mono";
-      size = 14.0;
+      size = cfg.fontSize;
     };
 
     actionAliases = {
@@ -124,6 +138,6 @@ in
     };
   };
 
-  home.file.".config/kitty/open-actions.conf".source = ../../kitty/open-actions.conf;
-  home.file.".config/kitty/launch-actions.conf".source = ../../kitty/launch-actions.conf;
+  config.home.file.".config/kitty/open-actions.conf".source = ../../kitty/open-actions.conf;
+  config.home.file.".config/kitty/launch-actions.conf".source = ../../kitty/launch-actions.conf;
 }

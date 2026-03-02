@@ -271,6 +271,8 @@ in
         ./home/wezterm.nix
       ];
 
+      kitty.fontSize = 12.0;
+
       home.stateVersion = "25.05";
     };
 
