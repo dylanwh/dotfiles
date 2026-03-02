@@ -44,8 +44,8 @@
 
 ;; Org-mode configuration
 (with-eval-after-load 'org
-(add-to-list 'org-capture-templates
-             '("l" "Link" entry
+  (add-to-list 'org-capture-templates
+               '("l" "Link" entry
                (file+headline "~/org/links.org" "Unsorted")
                "* [[%^{URL}][%^{Title}]]
    :PROPERTIES:
@@ -364,18 +364,6 @@
 
 ;; Set it as the default browser for Emacs
 (setq browse-url-browser-function 'my/browse-url-remote-opener)
-
-(map!
- :ni "s-1" #'+workspace/switch-to-0
- :ni "s-2" #'+workspace/switch-to-1
- :ni "s-3" #'+workspace/switch-to-2
- :ni "s-4" #'+workspace/switch-to-3
- :ni "s-5" #'+workspace/switch-to-4
- :ni "s-6" #'+workspace/switch-to-5
- :ni "s-7" #'+workspace/switch-to-6
- :ni "s-8" #'+workspace/switch-to-7
- :ni "s-9" #'+workspace/switch-to-8
- :ni "s-0" #'+workspace/switch-to-final)
 
 (use-package terminal-here
   :custom

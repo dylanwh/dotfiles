@@ -89,16 +89,7 @@
                     "id": "Launcher"
                 },
                 {
-                    "clockColor": "none",
-                    "customFont": "",
-                    "formatHorizontal": "HH:mm ddd, MMM dd",
-                    "formatVertical": "HH mm - dd MM",
-                    "id": "Clock",
-                    "tooltipFormat": "HH:mm ddd, MMM dd",
-                    "useCustomFont": false
-                },
-                {
-                    "compactMode": false,
+                    "compactMode": true,
                     "diskPath": "/",
                     "iconColor": "none",
                     "id": "SystemMonitor",
@@ -166,9 +157,9 @@
                     "blacklist": [
                     ],
                     "chevronColor": "none",
-                    "colorizeIcons": false,
-                    "drawerEnabled": true,
-                    "hidePassive": false,
+                    "colorizeIcons": true,
+                    "drawerEnabled": false,
+                    "hidePassive": true,
                     "id": "Tray",
                     "pinned": [
                     ]
@@ -212,6 +203,15 @@
                     "icon": "noctalia",
                     "id": "ControlCenter",
                     "useDistroLogo": true
+                },
+                {
+                    "clockColor": "none",
+                    "customFont": "",
+                    "formatHorizontal": "ddd MMM dd HH:mm",
+                    "formatVertical": "HH mm - dd MM",
+                    "id": "Clock",
+                    "tooltipFormat": "HH:mm ddd, MMM dd",
+                    "useCustomFont": false
                 }
             ]
         }
@@ -314,16 +314,17 @@
         ]
     },
     "dock": {
-        "animationSpeed": 1,
+        "animationSpeed": 1.9600000000000002,
         "backgroundOpacity": 1,
         "colorizeIcons": false,
         "deadOpacity": 0.6,
         "displayMode": "auto_hide",
-        "dockType": "floating",
+        "dockType": "static",
         "enabled": true,
         "floatingRatio": 1,
         "inactiveIndicators": true,
         "monitors": [
+            "HDMI-A-1"
         ],
         "onlySameOutput": false,
         "pinnedApps": [
