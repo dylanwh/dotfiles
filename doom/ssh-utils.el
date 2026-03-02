@@ -52,15 +52,24 @@ Wildcards and GitHub/Heroku hosts are excluded. Duplicates are removed."
       (user-error "Cannot read %s" config))))
 
 
-(defun ssh-auth-sock--newest (pattern)
-  "Return the path of the newest owned socket matching PATTERN."
+
+(defvar ssh-auth-sock--patterns
+  (cond
+   ((eq system-type 'darwin)
+    (list "/private/tmp/com.apple.launchd.*/Listeners"))
+   (t
+    (list "/tmp/ssh-*/agent.*" (expand-file-name "~/.ssh/agent/s.*.sshd.*")))))
+
+(defun ssh-auth-sock--discover ()
+  "Return the paths of owned sockets, newest first."
   (let* ((uid (user-uid))
          (pairs (mapcar (lambda (path) (cons path (file-attributes path)))
-                        (file-expand-wildcards pattern t)))
+                        (file-expand-wildcards-many ssh-auth-sock--patterns)))
          (socks (cl-remove-if-not
                  (lambda (pair)
                    (and (cdr pair)
-                        (null (file-attribute-type (cdr pair)))
+                        (ssh-auth-sock--socket-p (cdr pair))
+                        (ssh-auth-sock--reachable-p (car pair))
                         (= (file-attribute-user-id (cdr pair)) uid)))
                  pairs))
          (sorted (cl-sort socks #'>
@@ -68,16 +77,43 @@ Wildcards and GitHub/Heroku hosts are excluded. Duplicates are removed."
                                  (float-time
                                   (file-attribute-modification-time
                                    (cdr pair)))))))
-    (caar sorted)))
+    (mapcar #'car sorted)))
+
+
+
+(defvar ssh-auth-sock--op-agent (expand-file-name "~/.1password/agent.sock"))
+
+(defun ssh-auth-sock--socket-p (attributes)
+  "Return t if mode of ATTRIBUTES indicates socket."
+  (and (null (file-attribute-type attributes))
+       (eq (aref (file-attribute-modes attributes) 0) ?s)))
+
+(defun ssh-auth-sock--reachable-p (socket-path)
+  "Return t if a Unix connection can be established to SOCKET-PATH."
+  (when (file-exists-p socket-path)
+    (let ((proc (ignore-errors
+                  (make-network-process
+                   :name "socket-test"
+                   :service socket-path
+                   :family 'local
+                   :nowait nil))))
+      (when proc
+        (delete-process proc)
+        t))))
+
+(defun file-expand-wildcards-many (patterns)
+  "Expand a list of PATTERNS into a single list of files."
+  (mapcan #'file-expand-wildcards patterns))
 
 (defun ssh-auth-sock ()
-  "Return the SSH_AUTH_SOCK path, or nil if not found."
-  (cond
-   ((eq system-type 'darwin)
-    (ssh-auth-sock--newest "/private/tmp/com.apple.launchd.*/Listeners"))
-   (t
-    (ssh-auth-sock--newest "/tmp/ssh-*/agent.*"))))
-
+  "Return the SSH_AUTH_SOCK path, or 1password auth socket, or nil."
+  (let ((sockets (ssh-auth-sock--discover)))
+    (if (and
+         (null sockets)
+         (ssh-auth-sock--socket-p (file-attributes ssh-auth-sock--op-agent))
+         (ssh-auth-sock--reachable-p ssh-auth-sock--op-agent))
+        ssh-auth-sock--op-agent
+      (car sockets))))
 
 (defun eshell/ssh (host)
   "Open an external terminal with SSH connection to HOST."
@@ -88,9 +124,9 @@ Wildcards and GitHub/Heroku hosts are excluded. Duplicates are removed."
 (defun ssh-update-auth ()
   "Update the SSH_AUTH_SOCK environment variable.
 
-Sets SSH_AUTH_SOCK to the value returned by `ssh-auth-sock', synchronizing
-Emacs's environment with the current SSH agent socket.  Useful when the SSH
-agent socket path has changed, such as after reattaching to a tmux session."
+  Sets SSH_AUTH_SOCK to the value returned by `ssh-auth-sock', synchronizing
+  Emacs's environment with the current SSH agent socket.  Useful when the SSH
+  agent socket path has changed, such as after reattaching to a tmux session."
   (interactive)
   (let ((sock (ssh-auth-sock)))
     (message "Set SSH_AUTH_SOCK to %s" sock)
