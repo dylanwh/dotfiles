@@ -31,7 +31,6 @@
       grep = "grep --color=auto";
       fgrep = "fgrep --color=auto";
       egrep = "egrep --color=auto";
-      sudo = "env -u TERMINFO TERM=xterm-256color sudo";
     };
 
     initExtra = ''

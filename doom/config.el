@@ -46,8 +46,8 @@
 (with-eval-after-load 'org
   (add-to-list 'org-capture-templates
                '("l" "Link" entry
-               (file+headline "~/org/links.org" "Unsorted")
-               "* [[%^{URL}][%^{Title}]]
+                 (file+headline "~/org/links.org" "Unsorted")
+                 "* [[%^{URL}][%^{Title}]]
    :PROPERTIES:
    :CREATED: %U
    :END:
@@ -126,6 +126,30 @@
 (map! :leader :n "p v" #'projectile-switch-vterm)
 (map! :leader :n "g %" #'magit-worktree)
 (map! :leader :n "g P" #'magit-push-current-to-upstream)
+
+(defun project-shelldon-async-command ()
+  "Run `shelldon-async-command' in the current project's root directory."
+  (declare (interactive-only shelldon-async-command))
+  (interactive)
+  (let ((default-directory (project-root (project-current t))))
+    (call-interactively #'shelldon-async-command)))
+
+(defun project-shelldon ()
+  "Run `shell-command' in the current project's root directory."
+  (declare (interactive-only shelldon))
+  (interactive)
+  (let ((default-directory (project-root (project-current t))))
+    (call-interactively #'shelldon)))
+
+(add-to-list 'display-buffer-alist
+             '("*shelldon:"
+               (display-buffer-reuse-window display-buffer-in-previous-window display-buffer-in-side-window display-buffer-pop-up-window)
+               (side . right)
+               (slot . 0)
+               (window-width . 80)))
+
+(map! :ni "M-&" #'project-shelldon-async-command)
+(map! :ni "M-!" #'project-shelldon)
 
 (defun gib (n)
   (* n 1024 1024 1024))
