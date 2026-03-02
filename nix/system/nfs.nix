@@ -1,7 +1,4 @@
 {
-  config,
-  lib,
-  pkgs,
   ...
 }:
 
@@ -14,12 +11,6 @@ let
 in
 
 {
-  fileSystems."/mnt/download" = {
-    device = "10.0.0.8:/volume1/Download";
-    fsType = "nfs";
-    options = nfsOptions;
-  };
-
   fileSystems."/mnt/media" = {
     device = "10.0.0.8:/volume1/Media";
     fsType = "nfs";

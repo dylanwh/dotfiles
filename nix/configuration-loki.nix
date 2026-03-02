@@ -3,9 +3,7 @@
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
 {
-  config,
   pkgs,
-  lib,
   ...
 }:
 
@@ -14,7 +12,6 @@
     /etc/nixos/hardware-configuration.nix
     ./system/locale.nix
     ./packages.nix
-    ./system/programs.nix
     ./system/users.nix
     ./system/tailscale.nix
   ];

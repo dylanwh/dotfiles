@@ -8,7 +8,6 @@
 {
   imports = [
     ./packages.nix
-    ./system/programs.nix
     <home-manager/nix-darwin>
   ];
 

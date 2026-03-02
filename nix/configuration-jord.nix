@@ -22,7 +22,6 @@ in
     ./system/locale.nix
     ./system/nfs.nix
     ./system/nosleep.nix
-    ./system/programs.nix
     ./system/steam.nix
     ./system/tailscale.nix
     ./system/users.nix

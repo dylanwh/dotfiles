@@ -1,40 +1,39 @@
 {
   config,
-  lib,
   pkgs,
   ...
 }:
 
+let
+  desktopGroups = [
+    "networkmanager"
+    "wheel"
+    "video"
+    "render"
+    "seat"
+    "input"
+    "uinput"
+  ];
+
+in
 {
+  programs.fish.enable = true;
+
   users.users.dylan = {
     isNormalUser = true;
     description = "Dylan Hardison";
-    extraGroups = [
-      "networkmanager"
-      "wheel"
-      "video"
-      "render"
-      "seat"
-      "input"
-      "uinput"
-    ];
+    extraGroups = desktopGroups;
     shell = pkgs.fish;
-    packages = with pkgs; [
-      #  thunderbird
+    packages = [
     ];
   };
 
   users.users.spoony = {
     isNormalUser = true;
     description = "Tina Hardison";
-    extraGroups = [
-      "networkmanager"
-      "wheel"
-      "video"
-    ];
+    extraGroups = desktopGroups;
     shell = pkgs.fish;
-    packages = with pkgs; [
-      #  thunderbird
+    packages = [
     ];
   };
   security.sudo.extraConfig = ''
