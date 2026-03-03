@@ -49,7 +49,6 @@ in
       fd
       ffmpeg
       file
-      fish
       gcc
       gemini-cli
       gh
@@ -77,7 +76,6 @@ in
       kdlfmt
       kitty.terminfo
       moreutils
-      mutt
       ncdu
       nh
       nil
@@ -112,6 +110,7 @@ in
       socat
       starship
       stylelint
+      tdf
       tmux
       tree
       ty

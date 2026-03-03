@@ -84,7 +84,7 @@
        :tools
        ;;ansible
        ;;biblio                ; Writes a PhD for you (citation needed)
-       ;;collab                l buffers with friends
+       ;;collab                ; buffers with friends
        ;;debugger              ; FIXME stepping through code, to help you add bugs
        docker
        ;;direnv
@@ -165,7 +165,7 @@
        yaml                    ; JSON, but readable
 
        :email
-       ;;(mu4e +gmail)
+       (mu4e +mbsync +org)
        ;;notmuch
        ;;(wanderlust +gmail)
 

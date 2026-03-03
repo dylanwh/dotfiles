@@ -34,22 +34,21 @@
     };
 
     initExtra = ''
-      if command -v fish &>/dev/null && (( SHLVL < 2 )); then
-        fish -i
-        exit $?
-      fi
+        if command -v fish &>/dev/null && ((SHLVL < 2)); then
+            exec fish -i
+        fi
 
-      [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
+        [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
 
-      export LESS_TERMCAP_mb=$'\e[1;34m'
-      export LESS_TERMCAP_md=$'\e[1;34m'
-      export LESS_TERMCAP_me=$'\e[0m'
-      export LESS_TERMCAP_se=$'\e[0m'
-      export LESS_TERMCAP_so=$'\e[7;33m'
-      export LESS_TERMCAP_ue=$'\e[0m'
-      export LESS_TERMCAP_us=$'\e[4;36m'
-      export _NROFF_U=1
-      export GROFF_NO_SGR=1
+        export LESS_TERMCAP_mb=$'\e[1;34m'
+        export LESS_TERMCAP_md=$'\e[1;34m'
+        export LESS_TERMCAP_me=$'\e[0m'
+        export LESS_TERMCAP_se=$'\e[0m'
+        export LESS_TERMCAP_so=$'\e[7;33m'
+        export LESS_TERMCAP_ue=$'\e[0m'
+        export LESS_TERMCAP_us=$'\e[4;36m'
+        export _NROFF_U=1
+        export GROFF_NO_SGR=1
     '';
   };
 }

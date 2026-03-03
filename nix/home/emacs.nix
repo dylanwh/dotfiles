@@ -9,6 +9,7 @@ let
   emacsPackages = (
     ps: [
       ps.vterm
+      ps.mu4e
       (ps.treesit-grammars.with-grammars (
         g:
         builtins.attrValues (
@@ -27,7 +28,6 @@ in
   home.sessionVariables.EDITOR = "$HOME/.local/bin/emacsedit";
   home.sessionVariables.VISUAL = "$HOME/.local/bin/emacsedit";
   home.sessionPath = [
-    "$HOME/.local/bin"
     "$HOME/.emacs.d/bin"
   ];
   home.packages = [ emacs ];

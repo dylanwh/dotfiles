@@ -21,6 +21,10 @@ in
   config.programs.kitty = {
     enable = true;
 
+    environment = {
+      PATH = "/run/current-system/sw/bin:/nix/var/nix/profiles/default/bin:/usr/local/bin:/usr/bin:/usr/sbin:/bin:/sbin";
+    };
+
     font = {
       name = "SauceCodePro Nerd Font Mono";
       size = cfg.fontSize;
@@ -56,6 +60,7 @@ in
       "cmd+opt+r" = "clear_terminal reset active";
       "cmd+shift+r" = "clear_terminal reset active";
       "cmd+opt+s" = "toggle_macos_secure_keyboard_entry";
+      "cmd+c" = "copy_to_clipboard";
       "cmd+v" = "paste_from_clipboard";
       "cmd+plus" = "change_font_size all +2.0";
       "cmd+equal" = "change_font_size all +2.0";
@@ -93,7 +98,7 @@ in
       clear_all_shortcuts = true;
 
       # Shell
-      shell = "${pkgs.fish}/bin/fish";
+      shell = "${pkgs.fish}/bin/fish -l";
       editor = "emacsedit";
 
       # Remote control

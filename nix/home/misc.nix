@@ -10,6 +10,7 @@
     enable = true;
     arguments = [ "--smart-case" ];
   };
+
   home.file = {
     # Config directories (nix store)
     ".config/iterm2/com.googlecode.iterm2.plist".source = ../../iterm2/com.googlecode.iterm2.plist;

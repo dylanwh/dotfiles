@@ -114,4 +114,5 @@
       NSStatusItemSpacing = 6;
     };
   };
+
 }

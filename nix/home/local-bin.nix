@@ -23,6 +23,9 @@ let
 in
 {
   # mapAttrs' transforms the list, and filterAttrs removes anything that wasn't a file
+  home.sessionPath = [
+    "$HOME/.local/bin"
+  ];
   home.file = lib.pipe files [
     (lib.mapAttrsToList mkFileConfig)
     (builtins.filter (x: x != null))
