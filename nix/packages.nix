@@ -123,7 +123,6 @@ in
       zstd
     ]
     ++ (lib.optionals pkgs.stdenv.isLinux [
-      ((emacsPackagesFor emacs-nox).emacsWithPackages emacsPackages)
       psmisc
       shpool
       trash-cli
