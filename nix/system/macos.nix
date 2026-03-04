@@ -20,6 +20,13 @@
     pkgs.fish
   ];
 
+  environment.systemPackages = [
+    pkgs.cacert
+  ];
+
+  environment.etc."ssl/certs/ca-bundle.crt".source =
+    "/nix/var/nix/profiles/default/etc/ssl/certs/ca-bundle.crt";
+
   users.users.dylan = {
     name = "dylan";
     home = "/Users/dylan";

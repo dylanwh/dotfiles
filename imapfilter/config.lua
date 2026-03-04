@@ -4,21 +4,23 @@
 
 package.path = package.path .. ";" .. os.getenv("HOME") .. "/.imapfilter/?.lua"
 
-function main(server)
-    local INBOX     = server.INBOX
-    local Trash     = server.Trash
-    local Archive   = server.Archive
-    local SaneNews  = server['+SaneNews']
-    local SaneLater = server['+SaneLater']
-    local SaneCC    = server['+SaneCC']
-    local GitHub    = server['GitHub']
-    local Nest      = server['Nest']
-    local Billing   = server['Billing']
-    local Junk      = server['Junk Mail']
 
-    SaneNews:contain_from("notifications@github.com"):move_messages(GitHub)
-    SaneCC:contain_from("notifications@github.com"):move_messages(GitHub)
-    Archive:contain_from("notifications@github.com"):move_messages(GitHub)
+function main(account)
+    local INBOX     = account.INBOX
+    local Trash     = account.Trash
+    local Archive   = account.Archive
+    local SaneNews  = account['+SaneNews']
+    local SaneLater = account['+SaneLater']
+    -- local SaneCC    = account['+SaneCC']
+    local GitHub    = account['GitHub']
+    -- local Nest      = account['Nest']
+    -- local Billing   = account['Billing']
+    local Junk      = account['Junk Mail']
+    local GMail     = account['GMail']
+
+    function move_vs_category(box, category)
+        box:contain_field("X-ME-VSCategory", category):move_messages(Junk)
+    end
 
     local sanebox       = INBOX:contain_from("message-digest@sanebox.com") + INBOX:contain_from("reports@sanebox.com")
     local toggl         = INBOX:contain_subject("Toggl weekly report")
@@ -34,25 +36,9 @@ function main(server)
     see_unseen_if_old(SaneLater)
     see_unseen_if_old(SaneNews)
     see_unseen_if_old(Archive)
+    see_unseen_if_old(GMail)
 
     GitHub:is_older(60):move_messages(Trash)
-
-    INBOX:contain_from("notify@twitter.com"):move_messages(Trash)
-    SaneNews:contain_from("builds@travis-ci.com"):move_messages(Trash)
-
-    local old_netflix_recs = SaneLater:contain_from("info@mailer.netflix.com") * SaneLater:is_older(14)
-    old_netflix_recs:move_messages(Trash)
-    SaneLater:contain_from("ebay@reply.ebay.de"):move_messages(Junk)
-
-    local old_fedex = INBOX:contain_from("fedex.com") * INBOX:contain_subject("Your package ") * stale
-    old_fedex:move_messages(Trash)
-
-    local capone = INBOX:contain_from("capitalone@notification.capitalone.com") * INBOX:is_seen()
-    capone:move_messages(Archive)
-
-    SaneNews:contain_from("dev-apps-bugzilla-bounces@lists.mozilla.org"):move_messages(Trash)
-
-    move_cpan(server, INBOX)
 
     local later_ignore = {
       "HeyGary@SFBags.com",
@@ -80,22 +66,18 @@ function see_unseen_if_old(box)
     unseen_old:mark_seen()
 end
 
-function any_from(box, from_list) 
-  local from = nil
-  for _, f in ipairs(from_list) do
-    if from == nil then
-      from = box:contain_from(f)
-    else
-      from = from + box:contain_from(f)
+function any_from(box, from_list)
+    local from = nil
+    for _, f in ipairs(from_list) do
+        if from == nil then
+            from = box:contain_from(f)
+        else
+            from = from + box:contain_from(f)
+        end
     end
-  end
-  return from
+    return from
 end
 
-function move_cpan(server, box)
-  local cpan = box:contain_field("X-Original-Delivered-to", "dhardison@cpan.org")
-  cpan:move_messages(server['CPAN'])
-end
 
 local file = io.open(os.getenv("HOME") .. "/.fastmail_password", "r")
 local password

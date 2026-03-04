@@ -1,4 +1,5 @@
 {
+  config,
   lib,
   pkgs,
   ...
@@ -10,6 +11,36 @@
     mu
     mutt
   ];
+
+  # keeping notmuch around, but so far I don't really like the UI very much.
+  # I think mu4e is much better looking, though notmuch is more powerful.
+  #
+  # programs.notmuch = {
+  #   enable = true;
+  #   new.tags = [ "new" ];
+  #   hooks.postNew = "afew --tag --new";
+  #   extraConfig = {
+  #     database.path = "${config.home.homeDirectory}/Mail";
+  #     user = {
+  #       name = "Dylan Hardison";
+  #       primary_email = "dylan@hardison.net";
+  #     };
+  #     search.exclude_tags = "deleted;spam;";
+  #   };
+  # };
+
+  # programs.afew = {
+  #   enable = true;
+  #   extraConfig = ''
+  #     [HeaderMatchingFilter.1]
+  #     header = X-ME-VSCategory
+  #     pattern = (?P<category>.+)
+  #     tags = +{category}
+
+  #     [Filter.9]
+  #     message = Fallthrough
+  #   '';
+  # };
 
   home.sessionVariables = {
     MAILDIR = "$HOME/Mail";
