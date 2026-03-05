@@ -428,7 +428,46 @@
 
  mu4e-headers-hide-predicate
  (lambda (msg)
-   (member 'trashed (mu4e-message-field msg :flags))))
+   (member 'trashed (mu4e-message-field msg :flags)))
+ 
+ mu4e-bookmarks
+ (let ((exclude (concat "AND NOT \"maildir:/Junk Mail\""
+                        " AND NOT maildir:/Trash"
+                        " AND NOT maildir:/Bugzilla"
+                        " AND NOT maildir:/+SaneBlackhole"
+                        " AND NOT maildir:/GMail")))
+   `((:name "Unread messages"
+      :query ,(concat "flag:unread " exclude)
+      :key ?u)
+     (:name "Today's messages"
+      :query ,(concat "date:today..now " exclude)
+      :key ?t)
+     (:name "Last 7 days"
+      :query ,(concat "date:7d..now "
+                      "AND NOT \"maildir:/Junk Mail\" "
+                      "AND NOT maildir:/Trash "
+                      "AND NOT maildir:/+SaneBlackhole")
+      :hide-unread t
+      :key ?w)
+     (:name "Messages with images"
+      :query "mime:image/* AND NOT maildir:/+SaneBlackhole"
+      :key ?p)
+     (:name "Flagged messages"
+      :query ,(concat "flag:flagged "
+                      "AND NOT \"maildir:/Junk Mail\" "
+                      "AND NOT maildir:/Trash "
+                      "AND NOT maildir:/+SaneBlackhole")
+      :key ?f)))
+
+ mu4e-maildir-shortcuts
+ '((:maildir "/INBOX"     :key ?i)
+   (:maildir "/SaneLater" :key ?l :hide-if-no-unread t)
+   (:maildir "/SaneNews"  :key ?n :hide-if-no-unread t)
+   (:maildir "/Archive"   :key ?a :hide-if-no-unread t)
+   (:maildir "/Billing"   :key ?b :hide-if-no-unread t)
+   (:maildir "/Bugzilla"  :key ?z :hide-if-no-unread t)
+   (:maildir "/Junk Mail" :key ?j)
+   (:maildir "/Trash"     :key ?t)))
 
 (require 'server)
 (unless (server-running-p)
