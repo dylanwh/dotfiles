@@ -414,7 +414,7 @@
  mu4e-view-show-images t
  mu4e-view-show-addresses t
  mu4e-compose-format-flowed nil
- ; mu4e-date-format "%y/%m/%d"
+ ;; mu4e-date-format "%y/%m/%d"
  mu4e-headers-date-format "%Y/%m/%d"
  mu4e-change-filenames-when-moving t
  mu4e-attachments-dir "~/Downloads"
@@ -424,7 +424,11 @@
  mu4e-refile-folder "/Archive"
  mu4e-sent-folder   "/Sent Items"
  mu4e-drafts-folder "/Drafts"
- mu4e-trash-folder  "/Trash")
+ mu4e-trash-folder  "/Trash"
+
+ mu4e-headers-hide-predicate
+ (lambda (msg)
+   (member 'trashed (mu4e-message-field msg :flags))))
 
 (require 'server)
 (unless (server-running-p)
