@@ -1,0 +1,25 @@
+#!/bin/sh
+set -eu
+
+os="$(uname -s)"
+
+case "$os" in
+    Darwin)
+        sudo darwin-rebuild switch
+        ;;
+    Linux)
+        if [ -d /etc/nixos ]; then
+            sudo nixos-rebuild switch
+        else
+            home-manager switch
+        fi
+        ;;
+    *)
+        echo "unsupported os: $os" >&2
+        exit 1
+        ;;
+esac
+
+if command -v doom >/dev/null 2>&1; then
+    doom sync --aot -j 4 --gc
+fi
