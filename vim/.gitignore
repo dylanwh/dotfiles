@@ -1,5 +1,4 @@
 *.spl
 doc/tags
-pack/
 theme.vim
 vimrc.local
