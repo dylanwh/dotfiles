@@ -80,6 +80,8 @@
     };
   };
 
+  fonts.fontconfig.enable = true;
+
   home.packages = with pkgs; [
     coreutils-prefixed
     darwin.trash
@@ -88,6 +90,7 @@
     gnused
     graphviz-nox
     iconv
+    nerd-fonts.sauce-code-pro
     openssl
     qutebrowser
   ];
