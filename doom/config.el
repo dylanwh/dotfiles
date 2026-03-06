@@ -151,6 +151,45 @@
 (map! :ni "M-&" #'project-shelldon-async-command)
 (map! :ni "M-!" #'project-shelldon)
 
+(defun my/configure-opener ()
+  "Configure SSH for opener."
+  (interactive)
+  (shelldon-async-command "echo \"StreamLocalBindUnlink yes\" | sudo tee /etc/ssh/sshd_config.d/opener.conf"))
+
+(defun my/smart-rebuild ()
+  "Run smart-rebuild."
+  (interactive)
+  (shelldon-async-command "smart-rebuild"))
+
+(defun my/doom-sync ()
+  "Run doom sync with AOT compilation and GC."
+  (interactive)
+  (shelldon-async-command "doom sync --aot -j 4 --gc"))
+
+(defun my/ssh-add ()
+  "Add SSH keys to agent."
+  (interactive)
+  (let ((key-files '("~/.ssh/id_ed25519" "~/.ssh/id_rsa")))
+    (cond
+     ((eq system-type 'darwin)
+      (call-process "ssh-add" nil nil nil "-q" "--apple-load-keychain")
+      (dolist (file key-files)
+        (when (file-exists-p (expand-file-name file))
+          (call-process "ssh-add" nil nil nil "--apple-use-keychain" (expand-file-name file)))))
+     (t
+      (unless (zerop (call-process "ssh-add" nil nil nil "-q"))
+        (dolist (file key-files)
+          (when (file-exists-p (expand-file-name file))
+            (call-process "ssh-add" nil nil nil (expand-file-name file)))))))
+    (message "SSH keys added")))
+
+(map! :leader
+      :prefix ("a" . "actions")
+      :desc "Configure opener" "o" #'my/configure-opener
+      :desc "Smart rebuild" "r" #'my/smart-rebuild
+      :desc "Doom sync" "d" #'my/doom-sync
+      :desc "SSH add keys" "s" #'my/ssh-add)
+
 (defun gib (n)
   (* n 1024 1024 1024))
 
@@ -385,6 +424,8 @@
           (message "opener: %s" url))
       
       (error (message "opener not available, url: %s" url)))))
+
+
 
 ;; Set it as the default browser for Emacs
 (setq browse-url-browser-function 'my/browse-url-remote-opener)
