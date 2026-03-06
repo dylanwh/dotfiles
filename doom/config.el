@@ -512,9 +512,54 @@
    (:maildir "/Trash"     :key ?t)))
 
 (map! :leader :desc "Elfeed" :n "o n" #'elfeed)
-(map! :after elfeed
-      :map elfeed-search-mode-map
-      :leader :desc "Elfeed update" :n "o u" #'elfeed-update)
+(with-eval-after-load 'elfeed
+  (map! :after elfeed
+        :map elfeed-search-mode-map
+        :leader :desc "Elfeed update" :n "o u" #'elfeed-update)
+
+  (defvar my/elfeed-ignored-tags '(elfeed unread starred)
+    "Tags to exclude from the elfeed tag filter list.")
+
+  (defun my/elfeed-db-tags ()
+    "Return all unique tags from the elfeed database, excluding `my/elfeed-ignored-tags'."
+    (let ((tags (make-hash-table :test 'eq)))
+      (with-elfeed-db-visit (entry _feed)
+                            (dolist (tag (elfeed-entry-tags entry))
+                              (unless (memq tag my/elfeed-ignored-tags)
+                                (puthash tag t tags))))
+      (hash-table-keys tags)))
+
+  (defun my/elfeed-unread-count (tag)
+    "Return the number of unread elfeed entries with TAG."
+    (let ((count 0))
+      (with-elfeed-db-visit (entry _feed)
+                            (when (and (memq 'unread (elfeed-entry-tags entry))
+                                       (memq tag (elfeed-entry-tags entry)))
+                              (cl-incf count)))
+      count))
+
+  (defun my/elfeed-tag-filter ()
+    "Select an elfeed tag filter via completing-read."
+    (interactive)
+    (let* ((tags (my/elfeed-db-tags))
+           (candidates
+            (cl-loop for tag in (sort tags (lambda (a b) (string< (symbol-name a) (symbol-name b))))
+                     for count = (my/elfeed-unread-count tag)
+                     when (> count 0)
+                     collect (cons (format "%s (%d)" (symbol-name tag) count)
+                                   tag)))
+           (candidates (cons '("All unread" . nil) candidates)))
+      (if (= (length candidates) 1)
+          (message "No unread entries.")
+        (let* ((choice (completing-read "Elfeed filter: " (mapcar #'car candidates) nil t))
+               (tag (cdr (assoc choice candidates))))
+          (elfeed-search-set-filter
+           (if tag
+               (format "+unread +%s" (symbol-name tag))
+             "+unread"))))))
+
+  (map! :map elfeed-search-mode-map
+        :n "T" #'my/elfeed-tag-filter))
 
 (require 'server)
 (unless (server-running-p)
