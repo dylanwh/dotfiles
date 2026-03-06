@@ -189,7 +189,9 @@
       :desc "Configure opener" "o" #'my/configure-opener
       :desc "Smart rebuild" "r" #'my/smart-rebuild
       :desc "Doom sync" "d" #'my/doom-sync
-      :desc "SSH add keys" "s" #'my/ssh-add)
+      :desc "SSH add keys" "S" #'my/ssh-add
+      :desc "SSH terminal" "s" #'ssh-terminal
+      :desc "Terminal here" "t" #'terminal-here)
 
 (defun gib (n)
   (* n 1024 1024 1024))

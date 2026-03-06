@@ -4,7 +4,6 @@
 syntax enable
 filetype plugin indent on
 
-runtime macros/matchit.vim
 
 " OPTIONS {{{1
 set tabstop=4              " number of spaces that a literal <Tab> in the file counts for.
@@ -112,7 +111,6 @@ let perl_sub_signatures          = 1 " subroutine signatures
 "-- context-based supertabbing
 let SuperTabDefaultCompletionType = "context"
 
-let redcode_highlight_numbers=1
 
 "let snippets_dir="$HOME/.vim/snippets"
 
@@ -164,7 +162,7 @@ nmap <Leader>: :Tab/:\zs<CR>
 vmap <Leader>: :Tab/:\zs<CR>
 nmap <Leader>t :Tab/
 vmap <Leader>t :Tab/
-nmap <Leader>w :Ag <cword><CR>
+nmap <Leader>w :grep <cword><CR>
 
 " make <c-l> clear the highlight as well as redraw
 nnoremap <C-L> :nohls<CR><C-L>
