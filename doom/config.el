@@ -43,15 +43,15 @@
 (setq org-directory "~/org/")
 
 ;; Org-mode configuration
+(load! "org-links.el")
+
 (with-eval-after-load 'org
+  (setq org-capture-templates
+        (cl-remove "l" org-capture-templates :key #'car :test #'string=))
   (add-to-list 'org-capture-templates
                '("l" "Link" entry
-                 (file+headline "~/org/links.org" "Unsorted")
-                 "* [[%^{URL}][%^{Title}]]
-   :PROPERTIES:
-   :CREATED: %U
-   :END:
-") t)
+                 (file+headline "~/org/links.org" "Inbox")
+                 (function org-links-capture-template)) t)
   ;; Log timestamp when a task is marked DONE
   (setq org-log-done 'time))
 
@@ -185,6 +185,7 @@
 
 (map! :leader
       :prefix ("a" . "actions")
+      :desc "Agent shell" "a" #'agent-shell
       :desc "Configure opener" "o" #'my/configure-opener
       :desc "Smart rebuild" "r" #'my/smart-rebuild
       :desc "Doom sync" "d" #'my/doom-sync
@@ -509,6 +510,11 @@
    (:maildir "/Bugzilla"  :key ?z :hide-if-no-unread t)
    (:maildir "/Junk Mail" :key ?j)
    (:maildir "/Trash"     :key ?t)))
+
+(map! :leader :desc "Elfeed" :n "o n" #'elfeed)
+(map! :after elfeed
+      :map elfeed-search-mode-map
+      :leader :desc "Elfeed update" :n "o u" #'elfeed-update)
 
 (require 'server)
 (unless (server-running-p)
