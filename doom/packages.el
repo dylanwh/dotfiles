@@ -61,7 +61,6 @@
 (package! acp :pin "784b00017262260c2c718c98af98f16a2cc7bfdd")
 (package! agent-shell :pin "6309fa86c7a20b19f9487b58317d80cb24eebf6e")
 (package! orglink)
-(package! terminal-here)
 (package! shelldon)
 
 ;; Load local packages if file exists

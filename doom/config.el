@@ -127,6 +127,10 @@
 (map! :leader :n "g %" #'magit-worktree)
 (map! :leader :n "g P" #'magit-push-current-to-upstream)
 
+(autoload 'shelldon "shelldon" nil t)
+(autoload 'shelldon-async-command "shelldon" nil t)
+(autoload 'shelldon-output-history "shelldon" nil t)
+
 (defun project-shelldon-async-command ()
   "Run `shelldon-async-command' in the current project's root directory."
   (declare (interactive-only shelldon-async-command))
@@ -161,6 +165,11 @@
   (interactive)
   (shelldon-async-command "smart-rebuild"))
 
+(defun my/imapfilter ()
+  "Run imapfilter"
+  (interactive)
+  (shelldon-async-command "imapfilter"))
+
 (defun my/doom-sync ()
   "Run doom sync with AOT compilation and GC."
   (interactive)
@@ -185,13 +194,18 @@
 
 (map! :leader
       :prefix ("a" . "actions")
-      :desc "Agent shell" "a" #'agent-shell
-      :desc "Configure opener" "o" #'my/configure-opener
-      :desc "Smart rebuild" "r" #'my/smart-rebuild
-      :desc "Doom sync" "d" #'my/doom-sync
-      :desc "SSH add keys" "S" #'my/ssh-add
-      :desc "SSH terminal" "s" #'ssh-terminal
-      :desc "Terminal here" "t" #'terminal-here)
+      :desc "Configure opener" "O" #'my/configure-opener
+      :desc "Run imapfilter" "i" #'my/imapfilter
+      :desc "Open dired" "d" #'dired
+      :desc "Open agent shell" "a" #'agent-shell
+      :desc "Open SSH terminal" "s" #'ssh-terminal
+      :desc "Open terminal here" "t" #'my/terminal-here
+      (:prefix ("u" . "updates")
+       :desc "Rebuild with Nix" "n" #'my/smart-rebuild
+       :desc "Sync Doom" "d" #'my/doom-sync
+       :desc "Add SSH keys" "k" #'my/ssh-add
+       :desc "Update SSH auth" "a" #'ssh-update-auth)
+      :desc "Shelldon output history" "h" #'shelldon-output-history)
 
 (defun gib (n)
   (* n 1024 1024 1024))
@@ -428,30 +442,14 @@
       
       (error (message "opener not available, url: %s" url)))))
 
-
-
 ;; Set it as the default browser for Emacs
 (setq browse-url-browser-function 'my/browse-url-remote-opener)
 
-(use-package terminal-here
-  :custom
-  (terminal-here-command-flag "--")
-  (terminal-here-terminal-command 
-   (lambda (dir)
-     "Return a kitty launcher function appropriate for the current OS."
-     (let ((cwd (or dir default-directory))
-           (listen (concat "unix:" (car (file-expand-wildcards (expand-file-name "~/.kitty.sock-*"))))))
-       (list "kitty" "@"
-             "--to" listen 
-             "launch" "--type=os-window"
-             "--cwd" cwd))))
-  :config
-  (advice-add 'terminal-here--maybe-add-mac-os-open :override
-              (lambda (terminal-command)
-                (if (string-suffix-p ".app" (car terminal-command))
-                    (append (list "open" "-a" (car terminal-command) "." "--args")
-                            (cdr terminal-command))
-                  terminal-command))))
+(defun my/terminal-here ()
+  "Open a wezterm window in the current directory."
+  (interactive)
+  (let ((dir (or default-directory "~")))
+    (start-process "wezterm" nil "wezterm" "cli" "spawn" "--new-window" "--cwd" dir)) )
 
 (setq
  mue4e-headers-skip-duplicates  t

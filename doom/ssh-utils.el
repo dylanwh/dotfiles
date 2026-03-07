@@ -5,7 +5,7 @@
 ;;; Code:
 
 (require 'cl-lib)
-(require 'terminal-here)
+
 (require 'ivy)
 (require 'bookmark)
 
@@ -113,7 +113,7 @@ Wildcards and GitHub/Heroku hosts are excluded. Duplicates are removed."
 
 (defun eshell/ssh (host)
   "Open an external terminal with SSH connection to HOST."
-  (terminal-here-launch (list "kitten" "ssh" host)))
+  (start-process "wezterm" nil "wezterm" "cli" "spawn" "--new-window" "--" "ssh" host))
 
 (put 'eshell/ssh 'eshell-arguments-complete '(ssh-hosts))
 
@@ -131,7 +131,7 @@ Wildcards and GitHub/Heroku hosts are excluded. Duplicates are removed."
 (defun ssh-terminal (host)
   "Connect to HOST via SSH in an external terminal."
   (interactive (list (ivy-completing-read "Host: " (ssh-hosts))))
-  (terminal-here-launch (list "kitten" "ssh" host)))
+  (start-process "wezterm" nil "wezterm" "cli" "spawn" "--new-window" "--" "ssh" host))
 
 
 (defun ssh-register-bookmarks ()

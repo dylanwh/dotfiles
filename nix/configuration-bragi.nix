@@ -16,6 +16,7 @@
     { pkgs, ... }:
     {
       imports = [
+        ./home/alacritty.nix
         ./home/bash.nix
         ./home/emacs.nix
         ./home/fish.nix
@@ -31,6 +32,7 @@
         ./home/starship.nix
         ./home/tmux.nix
         ./home/vim.nix
+        ./home/wezterm.nix
       ];
 
       # The state version is required and should stay at the version you
