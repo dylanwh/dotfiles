@@ -60,6 +60,11 @@ let
         default = null;
         description = "Path to wezterm binary on the remote host.";
       };
+      local_echo_threshold_ms = lib.mkOption {
+        type = lib.types.types.int;
+        default = 3000;
+        description = "Round-trip latency threshold for enabling predictive local echo using";
+      };
     };
   };
 
