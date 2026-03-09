@@ -16,7 +16,6 @@ in
     ".vim/colors".source = ../../vim/colors;
     ".vim/compiler".source = ../../vim/compiler;
     ".vim/doc".source = ../../vim/doc;
-    ".vim/ftdetect".source = ../../vim/ftdetect;
     ".vim/ftplugin".source = ../../vim/ftplugin;
     ".vim/indent".source = ../../vim/indent;
     ".vim/plugin".source = ../../vim/plugin;
