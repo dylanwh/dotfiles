@@ -44,6 +44,7 @@
 
 ;; Org-mode configuration
 (load! "org-links.el")
+(load! "ssh-utils.el")
 
 (with-eval-after-load 'org
   (setq org-capture-templates
@@ -60,7 +61,6 @@
 (setq display-line-numbers-type t)
 
 (load! "perltidy.el")
-(load! "ssh-utils.el")
 
 ;; Whenever you reconfigure a package, make sure to wrap your config in an
 ;; `with-eval-after-load' block, otherwise Doom's defaults may override your
@@ -192,20 +192,25 @@
             (call-process "ssh-add" nil nil nil (expand-file-name file)))))))
     (message "SSH keys added")))
 
+(defun my/wezterm-here ()
+  "Open a new WezTerm window in the current directory."
+  (interactive)
+  (let ((dir (or default-directory (expand-file-name "~"))))
+    (start-process "wezterm" nil "wezterm" "cli" "spawn" "--new-window" "--cwd" dir)))
+
 (map! :leader
       :prefix ("a" . "actions")
-      :desc "Configure opener" "O" #'my/configure-opener
-      :desc "Run imapfilter" "i" #'my/imapfilter
-      :desc "Open dired" "d" #'dired
-      :desc "Open agent shell" "a" #'agent-shell
-      :desc "Open SSH terminal" "s" #'ssh-terminal
-      :desc "Open terminal here" "t" #'my/terminal-here
+      :desc "ensure ssh auto-closes opener socket" "O" #'my/configure-opener
+      :desc "imapfilter" "i" #'my/imapfilter
+      :desc "dired" "d" #'dired
+      :desc "agent shell" "a" #'agent-shell
+      :desc "wezterm here" "t" #'my/wezterm-here
       (:prefix ("u" . "updates")
-       :desc "Rebuild with Nix" "n" #'my/smart-rebuild
-       :desc "Sync Doom" "d" #'my/doom-sync
-       :desc "Add SSH keys" "k" #'my/ssh-add
-       :desc "Update SSH auth" "a" #'ssh-update-auth)
-      :desc "Shelldon output history" "h" #'shelldon-output-history)
+       :desc "nix rebuild" "n" #'my/smart-rebuild
+       :desc "doom sync" "d" #'my/doom-sync
+       :desc "add ssh keys" "k" #'my/ssh-add
+       :desc "refresh ssh auth socket" "a" #'ssh-update-auth)
+      :desc "shelldon output history" "h" #'shelldon-output-history)
 
 (defun gib (n)
   (* n 1024 1024 1024))
@@ -279,7 +284,8 @@
   (set-eshell-alias!
    "home" "cd ~/Git/dylanwh/dotfiles"
    "pull" "git pull"
-   "push" "git push")
+   "push" "git push"
+   "full-disk-access-p" "plutil -lint /Library/Preferences/com.apple.TimeMachine.plist")
 
 
   (add-hook! 'eshell-directory-change-hook
@@ -445,12 +451,6 @@
 ;; Set it as the default browser for Emacs
 (setq browse-url-browser-function 'my/browse-url-remote-opener)
 
-(defun my/terminal-here ()
-  "Open a wezterm window in the current directory."
-  (interactive)
-  (let ((dir (or default-directory "~")))
-    (start-process "wezterm" nil "wezterm" "cli" "spawn" "--new-window" "--cwd" dir)) )
-
 (setq
  mue4e-headers-skip-duplicates  t
  mu4e-view-show-images t
@@ -510,6 +510,8 @@
    (:maildir "/Bugzilla"  :key ?z :hide-if-no-unread t)
    (:maildir "/Junk Mail" :key ?j)
    (:maildir "/Trash"     :key ?t)))
+
+(map! :desc "Open config.el" :ni "s-," (cmd! (find-file (expand-file-name "config.el" doom-user-dir))))
 
 (map! :leader :desc "Elfeed" :n "o n" #'elfeed)
 (with-eval-after-load 'elfeed

@@ -23,7 +23,7 @@ let
   filetypesDb = ../../selenized/vivid_filetypes.yml;
 
   lsColors = pkgs.runCommand "selenized-ls-colors" { nativeBuildInputs = [ pkgs.vivid ]; } ''
-    VIVID_DATABASE=${filetypesDb} vivid generate ${themeYaml} > $out
+    vivid -d ${filetypesDb} generate ${themeYaml} > $out
   '';
 in
 {
@@ -73,6 +73,7 @@ in
       LS_COLORS = builtins.readFile lsColors;
       GREP_COLOR = "7;33";
       GREP_COLORS = "mt=7;33";
+      COLORFGBG = if cfg.variant == "light" || cfg.variant == "white" then "0;15" else "15;0";
     };
   };
 }

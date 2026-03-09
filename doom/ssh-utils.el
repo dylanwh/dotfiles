@@ -51,8 +51,6 @@ Wildcards and GitHub/Heroku hosts are excluded. Duplicates are removed."
                     (delete-dups (ssh-hosts--parse-file config '())))
       (user-error "Cannot read %s" config))))
 
-
-
 (defvar ssh-auth-sock--patterns
   (cond
    ((eq system-type 'darwin)
@@ -78,8 +76,6 @@ Wildcards and GitHub/Heroku hosts are excluded. Duplicates are removed."
                                   (file-attribute-modification-time
                                    (cdr pair)))))))
     (mapcar #'car sorted)))
-
-
 
 (defvar ssh-auth-sock--op-agent (expand-file-name "~/.1password/agent.sock"))
 
@@ -111,12 +107,6 @@ Wildcards and GitHub/Heroku hosts are excluded. Duplicates are removed."
         ssh-auth-sock--op-agent
       (car sockets))))
 
-(defun eshell/ssh (host)
-  "Open an external terminal with SSH connection to HOST."
-  (start-process "wezterm" nil "wezterm" "cli" "spawn" "--new-window" "--" "ssh" host))
-
-(put 'eshell/ssh 'eshell-arguments-complete '(ssh-hosts))
-
 (defun ssh-update-auth ()
   "Update the SSH_AUTH_SOCK environment variable.
 
@@ -128,12 +118,6 @@ Wildcards and GitHub/Heroku hosts are excluded. Duplicates are removed."
     (message "Set SSH_AUTH_SOCK to %s" sock)
     (setenv "SSH_AUTH_SOCK" sock)))
 
-(defun ssh-terminal (host)
-  "Connect to HOST via SSH in an external terminal."
-  (interactive (list (ivy-completing-read "Host: " (ssh-hosts))))
-  (start-process "wezterm" nil "wezterm" "cli" "spawn" "--new-window" "--" "ssh" host))
-
-
 (defun ssh-register-bookmarks ()
   "Register a TRAMP bookmark for each SSH host."
   (interactive)
@@ -142,6 +126,10 @@ Wildcards and GitHub/Heroku hosts are excluded. Duplicates are removed."
      (concat "ssh:" host)
      `((filename . ,(concat "/ssh:" host ":~/")))
      nil)))
+
+(defun eshell/ssh (host)
+  "Connect to HOST via wezterm SSH domain in a new window."
+  (call-process "wezterm" nil nil nil "cli" "spawn" "--domain-name" host "--new-window"))
 
 (provide 'ssh-utils)
 ;;; ssh-utils.el ends here

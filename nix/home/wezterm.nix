@@ -127,8 +127,11 @@ in
       config.enable_kitty_keyboard        = true
       config.disable_default_key_bindings = true
       config.window_decorations           = 'RESIZE'
-      config.enable_tab_bar               = false
+      config.enable_tab_bar               = true
+      config.hide_tab_bar_if_only_one_tab = true
+      config.prefer_to_spawn_tabs         = false
 
+      config.default_prog  = { '${config.home.homeDirectory}/.local/bin/with-nix-env', 'eshell' }
       config.window_padding = { left = 0, right = 0, top = 0, bottom = 0 }
       config.adjust_window_size_when_changing_font_size = false
 
@@ -146,8 +149,92 @@ in
         { key = 'f',          mods = 'SUPER',       action = act.Search 'CurrentSelectionOrEmptyString' },
         { key = 'h',          mods = 'SUPER',       action = act.HideApplication },
         { key = 'k',          mods = 'SUPER',       action = act.ClearScrollback 'ScrollbackOnly' },
+        { key = 'l',          mods = 'SUPER',       action = wezterm.action_callback(function(window, pane)
+          local choices = {}
+          local actions = {}
+          local hostname = wezterm.hostname()
+          for _, domain in ipairs(config.ssh_domains) do
+            if domain.name == hostname then goto continue end
+            local is_mux = domain.multiplexing ~= 'None'
+            local color = is_mux and '${c.violet}' or '${c.orange}'
+            if is_mux then
+              local mux_domain = wezterm.mux.get_domain(domain.name)
+              local attached = mux_domain and mux_domain:state() == 'Attached'
+              local spawn_id = domain.name .. ':spawn'
+              local attach_id = domain.name .. ':attach'
+              local detach_id = domain.name .. ':detach'
+              if attached then
+                table.insert(choices, {
+                  label = wezterm.format {
+                    { Foreground = { Color = color } },
+                    { Text = wezterm.nerdfonts.cod_server .. '  ' },
+                    'ResetAttributes',
+                    { Text = 'spawn ' .. domain.name },
+                  },
+                  id = spawn_id,
+                })
+                table.insert(choices, {
+                  label = wezterm.format {
+                    { Foreground = { Color = color } },
+                    { Text = wezterm.nerdfonts.cod_debug_disconnect .. '  ' },
+                    'ResetAttributes',
+                    { Text = 'detach ' .. domain.name },
+                  },
+                  id = detach_id,
+                })
+              else
+                table.insert(choices, {
+                  label = wezterm.format {
+                    { Foreground = { Color = color } },
+                    { Text = wezterm.nerdfonts.cod_plug .. '  ' },
+                    'ResetAttributes',
+                    { Text = 'attach ' .. domain.name },
+                  },
+                  id = attach_id,
+                })
+              end
+              actions[spawn_id] = function(win, p)
+                win:perform_action(act.SpawnCommandInNewWindow { domain = { DomainName = domain.name } }, p)
+              end
+              actions[attach_id] = function(_, _)
+                local d = wezterm.mux.get_domain(domain.name)
+                d:attach()
+              end
+              actions[detach_id] = function(win, p)
+                win:perform_action(act.DetachDomain { DomainName = domain.name }, p)
+              end
+            else
+              local id = domain.name .. ':spawn'
+              table.insert(choices, {
+                label = wezterm.format {
+                  { Foreground = { Color = color } },
+                  { Text = wezterm.nerdfonts.md_console .. '  ' },
+                  'ResetAttributes',
+                  { Text = 'spawn ' .. domain.name },
+                },
+                id = id,
+              })
+              actions[id] = function(win, p)
+                win:perform_action(act.SpawnCommandInNewWindow { domain = { DomainName = domain.name } }, p)
+              end
+            end
+          ::continue::
+          end
+          table.sort(choices, function(a, b) return a.label < b.label end)
+          window:perform_action(act.InputSelector {
+            title = 'SSH Domains',
+            fuzzy = true,
+            choices = choices,
+            action = wezterm.action_callback(function(win, p, id, label)
+              if id and actions[id] then
+                actions[id](win, p)
+              end
+            end),
+          }, pane)
+        end) },
         { key = 'm',          mods = 'SUPER',       action = act.Hide },
-        { key = 'n',          mods = 'SHIFT|SUPER',  action = act.SpawnWindow },
+        { key = 'n',          mods = 'SUPER',       action = act.SpawnWindow },
+        { key = 'n',          mods = 'SHIFT|SUPER', action = act.SpawnCommandInNewWindow { args = {'${config.home.homeDirectory}/.local/bin/with-nix-env', 'fish' } } },
         { key = 'q',          mods = 'SUPER',       action = act.QuitApplication },
         { key = 'r',          mods = 'SUPER',       action = act.ReloadConfiguration },
         { key = 'v',          mods = 'SUPER',       action = act.PasteFrom 'Clipboard' },
@@ -234,6 +321,11 @@ in
           { key = 'DownArrow', mods = 'NONE', action = act.CopyMode 'NextMatch' },
         },
       }
+
+      local ok, local_config = pcall(require, 'local')
+      if ok and type(local_config) == 'function' then
+        local_config(config)
+      end
 
       return config
     '';

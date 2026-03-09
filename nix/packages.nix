@@ -41,6 +41,7 @@ in
       clang-tools
       claude-code
       claude-code-acp
+      codex-acp
       cmake
       cmatrix
       curl

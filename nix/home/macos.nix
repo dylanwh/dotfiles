@@ -85,7 +85,6 @@
   home.packages = with pkgs; [
     coreutils-prefixed
     darwin.trash
-    duti
     gawk
     gnused
     graphviz-nox
@@ -94,13 +93,6 @@
     openssl
     qutebrowser
   ];
-
-  home.activation.duti = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-    extensions=(pl py lua c h cpp rs js rb conf toml yaml yml xml css txt md rst patch "text/*")
-    for ext in "''${extensions[@]}"; do
-      ${pkgs.duti}/bin/duti -s net.kovidgoyal.kitty "$ext" editor
-    done
-  '';
 
   launchd.agents.opener = {
     enable = true;

@@ -69,7 +69,7 @@ text:
     foreground: dim_0
 
   configuration:
-    foreground: fg_0
+    foreground: yellow
 
   other:
     foreground: fg_0

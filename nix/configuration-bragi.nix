@@ -22,7 +22,6 @@
         ./home/fish.nix
         ./home/git.nix
         ./home/karabiner.nix
-        ./home/kitty.nix
         ./home/local-bin.nix
         ./home/macos.nix
         ./home/mail.nix

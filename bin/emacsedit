@@ -1,33 +1,44 @@
-#!/usr/bin/env fish
+#!/usr/bin/perl
+use strict;
+use warnings;
+use Env qw($INSIDE_EMACS $TERM);
 
-set -l filename
-set -l position
-set -l new_argv -q
+my ($filename, $position);
+my @new_argv;
 
-if test -n "$INSIDE_EMACS"
-    set -a new_argv
-else
-    set -a new_argv -a "" -nw -c
-end
+if ($INSIDE_EMACS || !$TERM || !-t STDOUT) {
+    @new_argv = ();
+} else {
+    @new_argv = ('-q', '-a', "", "-nw", "-c");
+}
 
-for arg in $argv
-    switch $arg
-        case "-*"
-            set -a new_argv $arg
-        case "+*"
-            set position $arg
-        case "*"
-            set filename $arg
-    end
-    if test -n "$filename"
-        and test -n "$position"
-        set -a new_argv $position $filename
-        set position ""
-        set filename ""
-    end
-end
+my $files = 0;
 
-test -n "$filename"
-and set -a new_argv $filename
+for (@ARGV) {
+    if (/^-/) {
+        push @new_argv, $_;
+    }
+    elsif (/^\+/) {
+        $position = $_;
+    }
+    else {
+        $filename = $_;
+    }
+    if (defined $filename && defined $position) {
+        push @new_argv, $position, $filename;
+        $files++;
+        $filename = undef;
+        $position = undef;
+    }
+}
 
-exec emacsclient $new_argv
+if (defined $filename) {
+    push @new_argv, $filename;
+    $files++;
+}
+
+if ($files == 0) {
+    push @new_argv, '-e', '(switch-to-buffer (generate-new-buffer "untitled"))';
+}
+
+exec "emacsclient", @new_argv

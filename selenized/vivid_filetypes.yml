@@ -55,6 +55,8 @@ text:
       - .toml
       - .yaml
       - .yml
+      - .env
+      - .jsonc
       - go.mod
 
     metadata:
@@ -96,9 +98,7 @@ markup:
 
   other:
     - .csv
-    - .markdown
     - .md
-    - .mdown
     - .rst
     - .xml
 
@@ -157,6 +157,13 @@ programming:
     tcl: [.tcl]
     typescript: [.ts, .tsx]
     viml: [.vim]
+    zig: [.zig]
+    svelte: [.svelte]
+    vue: [.vue]
+    protobuf: [.proto]
+    graphql: [.graphql, .gql]
+    terraform: [.tf]
+    jsonnet: [.jsonnet]
 
   tooling:
     vcs:
@@ -196,6 +203,9 @@ programming:
       scons:
         - SConscript
         - SConstruct
+
+      cargo:
+        - Cargo.toml
 
       pip:
         - requirements.txt
@@ -242,6 +252,12 @@ media:
     - .ppm
     - .svg
     - .tif
+    - .tiff
+    - .webp
+    - .avif
+    - .heic
+    - .heif
+    - .jxl
     - .xcf
 
   audio:
@@ -252,6 +268,9 @@ media:
     - .ogg
     - .wav
     - .wma
+    - .aac
+    - .opus
+    - .m4a
 
   video:
     - .avi
@@ -266,6 +285,7 @@ media:
     - .rm
     - .swf
     - .vob
+    - .webm
     - .wmv
 
   fonts:
@@ -273,6 +293,8 @@ media:
     - .fon
     - .otf
     - .ttf
+    - .woff
+    - .woff2
 
 office:
   document:
@@ -284,6 +306,7 @@ office:
     - .ps
     - .rtf
     - .sxw
+    - .pages
 
   spreadsheet:
     - .xls
@@ -335,6 +358,13 @@ archives:
     - .xz
     - .z
     - .zip
+    - .zst
+    - .lz
+    - .lz4
+    - .lzma
+    - .cab
+    - .cpio
+    - .whl
 
 executable:
   windows:

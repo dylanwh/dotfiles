@@ -1,0 +1,5 @@
+#!/bin/sh
+
+. /etc/profile
+. ~/.nix-profile/etc/profile.d/hm-session-vars.sh
+exec "$@"

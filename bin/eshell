@@ -1,4 +1,5 @@
 #!/bin/sh
+set -euo pipefail
 
 foreground=0
 
@@ -9,8 +10,8 @@ while getopts "f" opt; do
     esac
 done
 
-if [ "$foreground" -eq 1 ]; then
+if [[ "$foreground" -eq 1 ]]; then
     exec emacs -nw --eval '(+eshell/frame)'
 else
-    exec emacsclient -q -u -a '' -nw -e '(+eshell/frame)'
+    exec emacsclient -q -a '' -nw -e '(+eshell/frame)'
 fi
