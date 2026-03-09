@@ -43,6 +43,7 @@ in
     ./home/starship.nix
     ./home/tmux.nix
     ./home/vim.nix
+    ./home/wezterm-headless.nix
   ];
 
   home.packages = deduplicatedPackages;
