@@ -63,6 +63,11 @@
 (package! orglink)
 (package! shelldon)
 
+
+;; If you only use Emacs in the terminal, your best bet is to disable the
+;; solaire-mode package:
+(package! solaire-mode :disable t)
+
 ;; Load local packages if file exists
 (let ((local-packages (expand-file-name "local-packages.el" doom-user-dir)))
   (when (file-exists-p local-packages)
