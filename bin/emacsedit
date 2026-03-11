@@ -38,7 +38,7 @@ if (defined $filename) {
 }
 
 if ($files == 0) {
-    push @new_argv, '-e', '(switch-to-buffer (generate-new-buffer "untitled"))';
+    push @new_argv, '-e', '(doom/switch-to-project-scratch-buffer)';
 }
 
 exec "emacsclient", @new_argv

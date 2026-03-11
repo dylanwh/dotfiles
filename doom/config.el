@@ -41,6 +41,8 @@
 ;; I like to have plenty of time to read a message
 (setq minibuffer-message-timeout 60)
 
+(setq initial-buffer-choice (lambda () (doom/switch-to-project-scratch-buffer)))
+
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
 (setq org-directory "~/org/")
