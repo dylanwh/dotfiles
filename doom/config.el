@@ -38,6 +38,9 @@
 (setq doom-modeline-unicode-fallback nil)
 (setq xterm-extra-capabilities '(reportBackground))
 
+;; I like to have plenty of time to read a message
+(setq minibuffer-message-timeout 60)
+
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
 (setq org-directory "~/org/")
