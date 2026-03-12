@@ -31,6 +31,15 @@
 ;; `load-theme' function. This is the default:
 (setq doom-theme 'doom-dark+)
 
+(with-eval-after-load 'vterm
+  (remove-hook 'vterm-mode-hook #'hide-mode-line-mode))
+
+(with-eval-after-load 'eshell
+  (remove-hook 'eshell-mode-hook #'hide-mode-line-mode))
+
+(with-eval-after-load 'shell
+  (remove-hook 'shell-mode-hook #'hide-mode-line-mode))
+
 ;; (setq doom-dark+-blue-modeline nil)
 
 (setq +doom-dashboard-ascii-banner-fn (lambda () ))
