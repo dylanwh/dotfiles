@@ -1,22 +1,7 @@
-#!/bin/sh
-set -euo pipefail
+#!/usr/bin/env perl
 
-foreground=0
+unless ($ENV{COLORFGBG}) {
+    warn "COLORFGBG not set\n";
+}
 
-while getopts "f" opt; do
-    case "$opt" in
-    f) foreground=1 ;;
-    *) ;;
-    esac
-done
-
-if [[ -z "$COLORFGBG" ]]; then
-    echo "COLORFGBG not set"
-    read _foo
-fi
-
-if [[ "$foreground" -eq 1 ]]; then
-    exec emacs -nw --eval '(+eshell/frame)'
-else
-    exec emacsclient -q -a '' -nw -e '(+eshell/frame)'
-fi
+exec qw(emacsclient -q -nw -a), '', '-e',  '(+eshell/frame)';

@@ -299,7 +299,9 @@
    "home" "cd ~/Git/dylanwh/dotfiles"
    "pull" "git pull"
    "push" "git push"
-   "full-disk-access-p" "plutil -lint /Library/Preferences/com.apple.TimeMachine.plist")
+   "full-disk-access-p" "plutil -lint /Library/Preferences/com.apple.TimeMachine.plist"
+   "ls" "eza -F -h --group-directories-first -b --smart-group -soldest -r $*"
+   "ll" "ls -l $*")
 
 
   (add-hook! 'eshell-directory-change-hook
