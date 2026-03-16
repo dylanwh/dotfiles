@@ -10,6 +10,11 @@ while getopts "f" opt; do
     esac
 done
 
+if [[ -z "$COLORFGBG" ]]; then
+    echo "COLORFGBG not set"
+    read _foo
+fi
+
 if [[ "$foreground" -eq 1 ]]; then
     exec emacs -nw --eval '(+eshell/frame)'
 else

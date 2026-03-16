@@ -13,12 +13,11 @@ in
 
     settings = {
       terminal.shell = {
-        program = "${pkgs.fish}/bin/fish";
-        args = [ "-l" ];
+        program = "${config.home.homeDirectory}/.local/bin/eshell";
       };
 
       window = {
-        decorations = "Buttonless";
+        decorations = "None";
         option_as_alt = "Both";
         opacity = 1.0;
       };

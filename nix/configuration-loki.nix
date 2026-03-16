@@ -9,11 +9,14 @@
 
 {
   imports = [
+    <home-manager/nixos>
     /etc/nixos/hardware-configuration.nix
-    ./system/locale.nix
     ./packages.nix
-    ./system/users.nix
+    ./system/desktop.nix
+    ./system/kde.nix
+    ./system/locale.nix
     ./system/tailscale.nix
+    ./system/users.nix
   ];
 
   hardware.nvidia.prime = {
@@ -37,6 +40,51 @@
   nixpkgs.config.allowUnfree = true;
   services.openssh.enable = true;
 
+  home-manager.users.dylan =
+    { pkgs, ... }:
+    {
+      imports = [
+        ./home/alacritty.nix
+        ./home/bash.nix
+        ./home/emacs.nix
+        ./home/fish.nix
+        ./home/git.nix
+        ./home/kitty.nix
+        ./home/local-bin.nix
+        ./home/misc.nix
+        ./home/selenized.nix
+        ./home/ssh.nix
+        ./home/starship.nix
+        ./home/tmux.nix
+        ./home/vim.nix
+        ./home/wezterm.nix
+      ];
+
+      desktop.host = "loki";
+
+      home.stateVersion = "25.05";
+    };
+
+  services.keyd = {
+    enable = true;
+    keyboards = {
+      # Give it a custom name
+      default = {
+        # Replace with your actual device ID from 'keyd devices'
+        ids = [ "0001:0001:093d12dc" ];
+        settings = {
+          main = {
+            # Example: remap caps lock to escape
+            capslock = "leftcontrol";
+            leftalt = "leftmeta";
+            leftmeta = "leftalt";
+            rightalt = "rightmeta";
+            rightmeta = "rightalt";
+          };
+        };
+      };
+    };
+  };
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
   # on your system were taken. It‘s perfectly fine and recommended to leave

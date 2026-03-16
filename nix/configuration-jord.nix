@@ -9,16 +9,11 @@
   ...
 }:
 
-let
-  tuigreet = "${pkgs.tuigreet}/bin/tuigreet";
-  niri-session = "${pkgs.niri}/share/wayland-sessions";
-in
 {
   imports = [
     <home-manager/nixos>
     /etc/nixos/hardware-configuration.nix
     ./packages.nix
-    #./system/kde.nix
     ./system/locale.nix
     ./system/nfs.nix
     ./system/nosleep.nix
@@ -91,44 +86,7 @@ in
     };
   };
   hardware.uinput.enable = true;
-
   services.openssh.enable = true;
-
-  services.udev = {
-    packages = with pkgs; [
-      #qmk
-      #qmk_hid
-      #vial
-      qmk-udev-rules # the only relevant
-      via
-      openrgb-with-all-plugins
-    ]; # packages
-  }; # udev
-
-  services.greetd = {
-    enable = true;
-    settings = {
-      default_session = {
-        command = "${tuigreet} --time --remember --remember-session --sessions ${niri-session}";
-        user = "greeter";
-      };
-    };
-  };
-
-  # this is a life saver.
-  # literally no documentation about this anywhere.
-  # might be good to write about this...
-  # https://www.reddit.com/r/NixOS/comments/u0cdpi/tuigreet_with_xmonad_how/
-  systemd.services.greetd.serviceConfig = {
-    Type = "idle";
-    StandardInput = "tty";
-    StandardOutput = "tty";
-    StandardError = "journal"; # Without this errors will spam on screen
-    # Without these bootlogs will spam on screen
-    TTYReset = true;
-    TTYVHangup = true;
-    TTYVTDisallocate = true;
-  };
 
   console = {
     font = "ter-powerline-v24b";
@@ -157,40 +115,10 @@ in
     ];
   };
 
-  environment.systemPackages = with pkgs; [
-    brightnessctl
-    fbterm
-    fuzzel
-    i2c-tools
-    kitty
-    liquidctl
-    nerd-fonts.sauce-code-pro
-    noctalia-shell
-    openrgb-with-all-plugins
-    pywalfox-native
-    quickshell
-    qutebrowser
-    via
-    waybox
-    wayland-utils
-    wayvnc
-    wlr-randr
-    xwayland-satellite
-  ];
-
   services.xserver.videoDrivers = [
     "modesetting"
     "nvidia"
   ];
-  services.flatpak.enable = true;
-
-  systemd.services.flatpak-repo = {
-    wantedBy = [ "multi-user.target" ];
-    path = [ pkgs.flatpak ];
-    script = ''
-      flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
-    '';
-  };
 
   # Enable the X11 windowing system.
   # You can disable this if you're only using the Wayland session.
@@ -201,48 +129,6 @@ in
   #   user = "dylan";
   # };
 
-  # Configure keymap in X11
-  services.xserver.xkb = {
-    layout = "us";
-    variant = "";
-  };
-
-  # Enable CUPS to print documents.
-  services.printing.enable = true;
-  xdg.portal = {
-    enable = true;
-    extraPortals = [ pkgs.xdg-desktop-portal-gnome ];
-    config.niri.default = [
-      "gnome"
-      "gtk"
-    ];
-  };
-
-  # Enable sound with pipewire.
-  services.pulseaudio.enable = false;
-  security.rtkit.enable = true;
-  services.pipewire = {
-    enable = true;
-    alsa.enable = true;
-    alsa.support32Bit = true;
-    pulse.enable = true;
-    # If you want to use JACK applications, uncomment this
-    #jack.enable = true;
-
-    # use the example session manager (no others are packaged yet so this is enabled by default,
-    # no need to redefine it in your config for now)
-    #media-session.enable = true;
-  };
-
-  programs._1password-gui = {
-    enable = true;
-    # Certain features, including CLI integration and system authentication support,
-    # require enabling PolKit integration on some desktop environments (e.g. Plasma).
-    polkitPolicyOwners = [ "dylan" ];
-  };
-  programs.firefox.enable = true;
-  programs.niri.enable = true;
-  programs.xwayland.enable = true;
   services.hardware.openrgb.enable = true;
   services.hardware.openrgb.motherboard = "amd";
   services.hardware.openrgb.package = pkgs.openrgb-with-all-plugins;
@@ -260,8 +146,7 @@ in
         ./home/kitty.nix
         ./home/local-bin.nix
         ./home/misc.nix
-        ./home/niri.nix
-        ./home/noctalia.nix
+        ./home/desktop.nix
         ./home/selenized.nix
         ./home/ssh.nix
         ./home/starship.nix
@@ -270,6 +155,7 @@ in
         ./home/wezterm.nix
       ];
 
+      desktop.host = "jord";
       kitty.fontSize = 12.0;
 
       home.stateVersion = "25.05";

@@ -131,7 +131,7 @@ in
       config.color_scheme                 = 'selenized'
       config.enable_kitty_keyboard        = true
       config.disable_default_key_bindings = true
-      config.window_decorations           = 'RESIZE'
+      config.window_decorations           = 'TITLE|RESIZE'
       config.enable_tab_bar               = true
       config.hide_tab_bar_if_only_one_tab = true
       config.prefer_to_spawn_tabs         = false

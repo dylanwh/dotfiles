@@ -37,6 +37,6 @@ in
     ];
   };
   security.sudo.extraConfig = ''
-    dylan ALL = (root) NOPASSWD: ${config.system.build.nixos-rebuild}/bin/nixos-rebuild
+    dylan ALL = (root) NOPASSWD: /run/current-system/sw/bin/nixos-rebuild
   '';
 }
