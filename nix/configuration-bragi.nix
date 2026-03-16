@@ -16,6 +16,7 @@
     { pkgs, ... }:
     {
       imports = [
+        ./home/custom.nix
         ./home/alacritty.nix
         ./home/bash.nix
         ./home/emacs.nix

@@ -24,7 +24,7 @@ in
 
       font = {
         normal.family = "SauceCodePro Nerd Font Mono";
-        size = 14.0;
+        size = config.terminal.fontSize;
       };
 
       cursor = {

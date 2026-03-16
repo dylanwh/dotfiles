@@ -16,6 +16,7 @@
     { pkgs, ... }:
     {
       imports = [
+        ./home/custom.nix
         ./home/bash.nix
         ./home/emacs.nix
         ./home/fish.nix

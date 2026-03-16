@@ -126,7 +126,7 @@ in
       local act     = wezterm.action
       local config  = wezterm.config_builder()
 
-      config.font_size                    = 14
+      config.font_size                    = ${toString config.terminal.fontSize}
       config.font                         = wezterm.font('SauceCodePro Nerd Font Mono')
       config.color_scheme                 = 'selenized'
       config.enable_kitty_keyboard        = true

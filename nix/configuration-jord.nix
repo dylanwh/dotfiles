@@ -139,6 +139,7 @@
     { pkgs, ... }:
     {
       imports = [
+        ./home/custom.nix
         ./home/bash.nix
         ./home/emacs.nix
         ./home/fish.nix
@@ -156,7 +157,7 @@
       ];
 
       desktop.host = "jord";
-      kitty.fontSize = 12.0;
+      terminal.fontSize = 12.0;
 
       home.stateVersion = "25.05";
     };
