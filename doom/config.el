@@ -519,8 +519,8 @@
 
  mu4e-maildir-shortcuts
  '((:maildir "/INBOX"     :key ?i)
-   (:maildir "/SaneLater" :key ?l :hide-if-no-unread t)
-   (:maildir "/SaneNews"  :key ?n :hide-if-no-unread t)
+   (:maildir "/+SaneLater" :key ?l :hide-if-no-unread t)
+   (:maildir "/+SaneNews"  :key ?n :hide-if-no-unread t)
    (:maildir "/Archive"   :key ?a :hide-if-no-unread t)
    (:maildir "/Billing"   :key ?b :hide-if-no-unread t)
    (:maildir "/Bugzilla"  :key ?z :hide-if-no-unread t)
