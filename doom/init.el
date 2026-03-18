@@ -39,7 +39,7 @@
        (popup +defaults)       ; tame sudden yet inevitable temporary windows
        ;;pretty-code           ; ligatures or substitute text with pretty symbols
        ;;tabs                  ; an tab bar for Emacs
-       treemacs                ; a project drawer, like neotree but cooler
+       (treemacs +lsp)         ; a project drawer, like neotree but cooler
        ;;unicode               ; extended unicode support for various languages
        vc-gutter               ; vcs diff in the fringe
        vi-tilde-fringe         ; fringe tildes to mark beyond EOB
@@ -65,14 +65,14 @@
        (dired +icons)          ; making dired pretty [functional]
        electric                ; smarter, keyword-based electric-indent
        ;;eww                   ; the internet is gross
-       ibuffer                 ; interactive buffer management
+       (ibuffer +icons)        ; interactive buffer management
        tramp                   ; remote files at your arthritic fingertips
        undo                    ; persistent, smarter undo for your inevitable mistakes
        vc                      ; version-control and Emacs, sitting in a tree
 
        :term
        eshell                  ; the elisp shell that works everywhere
-       shell                 ; simple shell REPL for Emacs
+       shell                   ; simple shell REPL for Emacs
        ;;term                  ; basic terminal emulator for Emacs
        vterm                   ; the best terminal emulation in Emacs
 
@@ -92,6 +92,7 @@
        ;;ein                   ; tame Jupyter notebooks with emacs
        (eval +overlay)         ; run code, run (also, repls)
        ;;gist                  ; interacting with github gists
+       llm                     ; When I said you needed friends, I didn't mean...
        lookup                  ; navigate your code and its documentation
        lsp                     ; M-x vscode
        ;;macos                 ; MacOS-specific commands

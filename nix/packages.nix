@@ -41,9 +41,9 @@ in
       clang-tools
       claude-code
       claude-code-acp
-      codex-acp
       cmake
       cmatrix
+      codex-acp
       curl
       delta
       eza
@@ -106,6 +106,7 @@ in
       ruby
       ruff
       rustup
+      semgrep
       shellcheck
       shfmt
       socat
