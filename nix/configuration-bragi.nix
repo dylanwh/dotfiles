@@ -16,9 +16,9 @@
     { pkgs, ... }:
     {
       imports = [
-        ./home/custom.nix
         ./home/alacritty.nix
         ./home/bash.nix
+        ./home/custom.nix
         ./home/emacs.nix
         ./home/fish.nix
         ./home/git.nix
@@ -27,6 +27,7 @@
         ./home/macos.nix
         ./home/mail.nix
         ./home/misc.nix
+        ./home/qutebrowser.nix
         ./home/selenized.nix
         ./home/ssh.nix
         ./home/starship.nix
