@@ -300,8 +300,7 @@
    "pull" "git pull"
    "push" "git push"
    "full-disk-access-p" "plutil -lint /Library/Preferences/com.apple.TimeMachine.plist"
-   "ls" "eza -F -h --group-directories-first -b --smart-group -soldest -r $*"
-   "ll" "ls -l $*")
+   "eza" "eza -F -h --group-directories-first -b --smart-group -soldest -r $*")
 
 
   (add-hook! 'eshell-directory-change-hook
@@ -542,18 +541,18 @@
     "Return all unique tags from the elfeed database, excluding `my/elfeed-ignored-tags'."
     (let ((tags (make-hash-table :test 'eq)))
       (with-elfeed-db-visit (entry _feed)
-                            (dolist (tag (elfeed-entry-tags entry))
-                              (unless (memq tag my/elfeed-ignored-tags)
-                                (puthash tag t tags))))
+        (dolist (tag (elfeed-entry-tags entry))
+          (unless (memq tag my/elfeed-ignored-tags)
+            (puthash tag t tags))))
       (hash-table-keys tags)))
 
   (defun my/elfeed-unread-count (tag)
     "Return the number of unread elfeed entries with TAG."
     (let ((count 0))
       (with-elfeed-db-visit (entry _feed)
-                            (when (and (memq 'unread (elfeed-entry-tags entry))
-                                       (memq tag (elfeed-entry-tags entry)))
-                              (cl-incf count)))
+        (when (and (memq 'unread (elfeed-entry-tags entry))
+                   (memq tag (elfeed-entry-tags entry)))
+          (cl-incf count)))
       count))
 
   (defun my/elfeed-tag-filter ()

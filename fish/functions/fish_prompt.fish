@@ -1,4 +1,4 @@
-if have starship
+if have starship; and test "$TERM" != dumb
     source (starship init fish --print-full-init|psub)
 else
     function fish_prompt --description 'Write out the prompt'
