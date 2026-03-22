@@ -16,6 +16,8 @@
     in
     {
 
+      home.file.".kxkbrc".source = ../../kxkbrc;
+
       home.file.".config/noctalia".source =
         config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/Git/dylanwh/dotfiles/per-host/${host}/noctalia";
 

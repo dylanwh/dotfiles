@@ -13,7 +13,8 @@ in
 
     settings = {
       terminal.shell = {
-        program = "${config.home.homeDirectory}/.local/bin/eshell";
+        program = "${config.home.homeDirectory}/.local/bin/with-nix-env";
+        args = [ "eshell" ];
       };
 
       window = {
@@ -32,7 +33,7 @@ in
         unfocused_hollow = true;
       };
 
-      mouse.hide_when_typing = true;
+      mouse.hide_when_typing = false;
 
       bell.duration = 0;
 

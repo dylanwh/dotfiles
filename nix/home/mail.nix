@@ -52,6 +52,13 @@
     '';
   };
 
+  home.file.".mutt".source = ../../mutt;
+
+  home.file.".imapfilter".source =
+    config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/Git/dylanwh/dotfiles/imapfilter";
+
+  home.file.".msmtprc".source = ../../msmtprc;
+
   home.file.".mbsyncrc".text = ''
     # First section: remote IMAP account
     IMAPAccount fastmail

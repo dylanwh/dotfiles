@@ -44,20 +44,9 @@
     { pkgs, ... }:
     {
       imports = [
-        ./home/custom.nix
+        ./home/common.nix
         ./home/alacritty.nix
-        ./home/bash.nix
-        ./home/emacs.nix
-        ./home/fish.nix
-        ./home/git.nix
         ./home/kitty.nix
-        ./home/local-bin.nix
-        ./home/misc.nix
-        ./home/selenized.nix
-        ./home/ssh.nix
-        ./home/starship.nix
-        ./home/tmux.nix
-        ./home/vim.nix
         ./home/wezterm.nix
       ];
 

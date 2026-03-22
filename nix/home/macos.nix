@@ -94,6 +94,8 @@
     qutebrowser
   ];
 
+  home.file.".config/macos-user-key-equivalents.txt".source = ../../macos-user-key-equivalents.txt;
+
   launchd.agents.opener = {
     enable = true;
     config = {

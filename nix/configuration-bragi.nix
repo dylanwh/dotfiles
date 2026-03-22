@@ -16,23 +16,12 @@
     { pkgs, ... }:
     {
       imports = [
+        ./home/common.nix
         ./home/alacritty.nix
-        ./home/bash.nix
-        ./home/custom.nix
-        ./home/emacs.nix
-        ./home/fish.nix
-        ./home/git.nix
         ./home/karabiner.nix
-        ./home/local-bin.nix
         ./home/macos.nix
         ./home/mail.nix
-        ./home/misc.nix
         ./home/qutebrowser.nix
-        ./home/selenized.nix
-        ./home/ssh.nix
-        ./home/starship.nix
-        ./home/tmux.nix
-        ./home/vim.nix
         ./home/wezterm.nix
       ];
 

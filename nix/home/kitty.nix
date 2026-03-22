@@ -69,7 +69,7 @@ in
       cursor_trail_start_threshold = 3;
       mouse_hide_wait = "3.0";
       inactive_text_alpha = "0.8";
-      hide_window_decorations = "titlebar-only";
+      # hide_window_decorations = "titlebar-only";
 
       # Bell
       enable_audio_bell = false;
@@ -99,7 +99,7 @@ in
       macos_titlebar_color = "background";
       macos_option_as_alt = true;
       macos_show_window_title_in = "window";
-      macos_colorspace = "default";
+      macos_colorspace = "displayp3";
 
       # Theme colors
       foreground = c.fg_0;
