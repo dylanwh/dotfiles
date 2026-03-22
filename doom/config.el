@@ -254,7 +254,7 @@
       '(("~/Git" . 2)))
 
 (setq frame-title-format
-      '((:eval (if (getenv "SSH_CONNECTION") (concat "[" system-name "] ")))
+      '((:eval (if (getenv "SSH_CONNECTION") (concat "[" (system-name) "] ")))
         "emacs %b"))
 
 (setq bookmark-default-file "~/.doom.d/bookmarks")
@@ -472,6 +472,7 @@
  mu4e-view-show-addresses t
  mu4e-compose-format-flowed nil
  ;; mu4e-date-format "%y/%m/%d"
+                                        ;; mu4e-date-format "%y/%m/%d"
  mu4e-headers-date-format "%Y/%m/%d"
  mu4e-change-filenames-when-moving t
  mu4e-attachments-dir "~/Downloads"
