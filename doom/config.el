@@ -26,10 +26,9 @@
 (setq doom-big-font (font-spec :family "SauceCodePro Nerd Font Mono" :style "Light" :size 28.0))
 (setq nerd-icons-font-family "SauceCodePro Nerd Font Mono")
 
-;; There are two ways to load a theme. Both assume the theme is installed and
-;; available. You can either set `doom-theme' or manually load a theme with the
-;; `load-theme' function. This is the default:
-(setq doom-theme 'doom-dark+)
+(defvar my/host-theme-alist
+  '()
+  "Alist mapping hostnames to theme names.") 
 
 (with-eval-after-load 'vterm
   (remove-hook 'vterm-mode-hook #'hide-mode-line-mode))
@@ -448,7 +447,6 @@
   (when (file-exists-p local-config)
     (load local-config)))
 
-
 (setq code-review-auth-login-marker 'forge)
 
 (defun my/browse-url-remote-opener (url &optional _new-window)
@@ -594,3 +592,11 @@
   (server-start))
 
 (add-hook 'server-visit-hook #'my/notify-new-buffer)
+
+;; There are two ways to load a theme. Both assume the theme is installed and
+;; available. You can either set `doom-theme' or manually load a theme with the
+;; `load-theme' function. This is the default:
+(let ((theme (or (alist-get (my/short-system-name)
+                            my/host-theme-alist
+                            nil nil #'string=) 'doom-dark+)))
+  (load-theme theme t))
