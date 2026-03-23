@@ -88,6 +88,7 @@ in
 
   config.programs.wezterm = {
     enable = true;
+    package = if pkgs.stdenv.isDarwin then pkgs.emptyDirectory else pkgs.wezterm;
 
     colorSchemes = {
       selenized = {
@@ -125,6 +126,10 @@ in
       local wezterm = require 'wezterm'
       local act     = wezterm.action
       local config  = wezterm.config_builder()
+
+      wezterm.on('window-config-reloaded', function(window)
+        window:toast_notification('wezterm', 'Configuration reloaded', nil, 4000)
+      end)
 
       config.font_size                    = ${toString config.terminal.fontSize}
       config.font                         = wezterm.font('SauceCodePro Nerd Font Mono')

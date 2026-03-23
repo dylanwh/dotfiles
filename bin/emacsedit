@@ -7,7 +7,7 @@ my ($filename, $position);
 my @new_argv;
 
 if ($INSIDE_EMACS || !$TERM || !-t STDOUT) {
-    @new_argv = ();
+    @new_argv = $INSIDE_EMACS ? () : ('--no-wait');
 } else {
     @new_argv = ('-q', '-a', "", "-nw", "-c");
 }

@@ -16,9 +16,10 @@
     { pkgs, ... }:
     {
       imports = [
-        ./home/common.nix
         ./home/alacritty.nix
+        ./home/common.nix
         ./home/karabiner.nix
+        ./home/kitty.nix
         ./home/macos.nix
         ./home/mail.nix
         ./home/qutebrowser.nix

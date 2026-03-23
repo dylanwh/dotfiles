@@ -578,6 +578,16 @@
   (map! :map elfeed-search-mode-map
         :n "T" #'my/elfeed-tag-filter))
 
+(defun my/notify-new-buffer ()
+  "Send an OSC 777 notification for new emacsclient buffers."
+  (when-let* ((tty (terminal-name (frame-terminal)))
+              (buf (buffer-name)))
+    (send-string-to-terminal
+     (format "\e]777;notify;emacs;%s\e\\" buf)
+     (frame-terminal))))
+
 (require 'server)
 (unless (server-running-p)
   (server-start))
+
+(add-hook 'server-visit-hook #'my/notify-new-buffer)

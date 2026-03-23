@@ -10,6 +10,7 @@ in
 {
   programs.kitty = {
     enable = true;
+    package = if pkgs.stdenv.isDarwin then pkgs.emptyDirectory else pkgs.kitty;
 
     environment = {
       PATH = "/run/current-system/sw/bin:/nix/var/nix/profiles/default/bin:/usr/local/bin:/usr/bin:/usr/sbin:/bin:/sbin";
@@ -37,6 +38,7 @@ in
       "cmd+opt+h" = "hide_macos_other_apps";
       "cmd+l" = "next_layout";
       "cmd+m" = "minimize_macos_window";
+      "cmd+n" = "launch --type=os-window";
       "cmd+shift+n" = "launch --type=os-window fish";
       "cmd+o" = "open_url_with_hints";
       "cmd+p>f" = "hints --type path --program -";
@@ -88,8 +90,8 @@ in
       clear_all_shortcuts = true;
 
       # Shell
-      shell = "${pkgs.fish}/bin/fish -l";
-      editor = "emacsedit";
+      shell = "${config.home.homeDirectory}/.local/bin/with-nix-env eshell";
+      editor = ".";
 
       # Remote control
       allow_remote_control = "socket-only";
