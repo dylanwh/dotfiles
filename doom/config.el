@@ -253,8 +253,11 @@
 (setq projectile-project-search-path
       '(("~/Git" . 2)))
 
+(defun my/short-system-name ()
+  (seq-take-while (lambda (elt) (not (eq elt ?.))) (system-name)))
+
 (setq frame-title-format
-      '((:eval (if (getenv "SSH_CONNECTION") (concat "[" (system-name) "] ")))
+      '((:eval (if (getenv "SSH_CONNECTION") (concat "[" (my/short-system-name) "] ")))
         "emacs %b"))
 
 (setq bookmark-default-file "~/.doom.d/bookmarks")
