@@ -60,12 +60,20 @@
 (load! "ssh-utils.el")
 
 (with-eval-after-load 'org
+  (require 'org-protocol)
   (setq org-capture-templates
         (cl-remove "l" org-capture-templates :key #'car :test #'string=))
+  (setq org-capture-templates
+        (cl-remove "L" org-capture-templates :key #'car :test #'string=))
   (add-to-list 'org-capture-templates
                '("l" "Link" entry
                  (file+headline "~/org/links.org" "Inbox")
                  (function org-links-capture-template)) t)
+  (add-to-list 'org-capture-templates
+               '("L" "Link (protocol)" entry
+                 (file+headline "~/org/links.org" "Inbox")
+                 (function org-links-protocol-capture-template)
+                 :immediate-finish t) t)
   ;; Log timestamp when a task is marked DONE
   (setq org-log-done 'time))
 
@@ -542,18 +550,18 @@
     "Return all unique tags from the elfeed database, excluding `my/elfeed-ignored-tags'."
     (let ((tags (make-hash-table :test 'eq)))
       (with-elfeed-db-visit (entry _feed)
-                            (dolist (tag (elfeed-entry-tags entry))
-                              (unless (memq tag my/elfeed-ignored-tags)
-                                (puthash tag t tags))))
+        (dolist (tag (elfeed-entry-tags entry))
+          (unless (memq tag my/elfeed-ignored-tags)
+            (puthash tag t tags))))
       (hash-table-keys tags)))
 
   (defun my/elfeed-unread-count (tag)
     "Return the number of unread elfeed entries with TAG."
     (let ((count 0))
       (with-elfeed-db-visit (entry _feed)
-                            (when (and (memq 'unread (elfeed-entry-tags entry))
-                                       (memq tag (elfeed-entry-tags entry)))
-                              (cl-incf count)))
+        (when (and (memq 'unread (elfeed-entry-tags entry))
+                   (memq tag (elfeed-entry-tags entry)))
+          (cl-incf count)))
       count))
 
   (defun my/elfeed-tag-filter ()
