@@ -591,7 +591,8 @@
 (defun my/notify-new-buffer ()
   "Send an OSC 777 notification for new emacsclient buffers."
   (when-let* ((tty (terminal-name (frame-terminal)))
-              (buf (buffer-name)))
+              (buf (buffer-name))
+              (_ (not (string-match-p "\\`COMMIT_EDITMSG\\'" buf))))
     (send-string-to-terminal
      (format "\e]777;notify;emacs;%s\e\\" buf)
      (frame-terminal))))
