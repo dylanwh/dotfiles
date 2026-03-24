@@ -58,6 +58,7 @@
 ;; Org-mode configuration
 (load! "org-links.el")
 (load! "ssh-utils.el")
+(load! "shellfish.el")
 
 (with-eval-after-load 'org
   (require 'org-protocol)
