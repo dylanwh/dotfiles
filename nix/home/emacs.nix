@@ -30,7 +30,10 @@ in
   home.sessionPath = [
     "$HOME/.emacs.d/bin"
   ];
-  home.packages = [ emacs ];
+  home.packages = [
+    emacs
+    pkgs.emacs-lsp-booster
+  ];
   home.file.".doom.d".source =
     config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/Git/dylanwh/dotfiles/doom";
   home.file.".emacs.d".source = pkgs.fetchFromGitHub {
