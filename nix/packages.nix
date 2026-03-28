@@ -40,7 +40,7 @@ in
       black
       clang-tools
       claude-code
-      claude-code-acp
+      claude-agent-acp
       cmake
       cmatrix
       codex-acp
