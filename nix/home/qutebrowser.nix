@@ -40,6 +40,7 @@ in
     searchEngines = {
       DEFAULT = "https://www.google.com/search?q={}";
       nix = "https://search.nixos.org/packages?channel=25.11&query={}";
+      hm = "https://home-manager-options.extranix.com/?query={}&release=release-25.11";
     };
     keyBindings = {
       normal = {
