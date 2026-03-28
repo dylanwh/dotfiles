@@ -94,7 +94,7 @@
        ;;gist                  ; interacting with github gists
        llm                     ; When I said you needed friends, I didn't mean...
        lookup                  ; navigate your code and its documentation
-       lsp                     ; M-x vscode
+       (lsp +eglot)            ; M-x vscode
        ;;macos                 ; MacOS-specific commands
        (magit +forge)          ; a git porcelain for Emacs
        make                    ; run make tasks from Emacs
