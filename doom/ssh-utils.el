@@ -6,7 +6,6 @@
 
 (require 'cl-lib)
 
-(require 'ivy)
 (require 'bookmark)
 
 (defun ssh-hosts--parse-file (file visited)

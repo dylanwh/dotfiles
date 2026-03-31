@@ -39,8 +39,6 @@
 (with-eval-after-load 'shell
   (remove-hook 'shell-mode-hook #'hide-mode-line-mode))
 
-;; (setq doom-dark+-blue-modeline nil)
-
 (setq +doom-dashboard-ascii-banner-fn (lambda () ))
 
 (setq doom-modeline-unicode-fallback nil)
@@ -62,6 +60,7 @@
 
 (with-eval-after-load 'org
   (require 'org-protocol)
+  ;; Remove before adding to avoid duplicates on re-eval.
   (setq org-capture-templates
         (cl-remove "l" org-capture-templates :key #'car :test #'string=))
   (setq org-capture-templates
@@ -135,19 +134,16 @@
 
 (add-hook 'ruby-mode-hook 'evil-ruby-text-objects-mode)
 
-(setq lsp-copilot-applicable-fn (lambda (&rest _) nil))
-(setq lsp-copilot-enabled nil)
+(add-hook 'eglot-managed-mode-hook #'eglot-inlay-hints-mode)
+(setq-default eglot-workspace-configuration
+              '(:rust-analyzer (:inlayHints (:closureReturnTypeHints (:enable "always")
+                                             :parameterHints (:enable t)))))
 
-(setq lsp-inlay-hint-enable t)
-(setq lsp-rust-analyzer-display-closure-return-type-hints t)
-(setq lsp-rust-analyzer-display-parameter-hints t)
-(setq lsp-rust-server 'rust-analyzer)
 (setq confirm-kill-emacs #'yes-or-no-p)
 
-(map! :leader :desc "show link to github" :n "g h l" #'git-link)
-(map! :leader :n "p v" #'projectile-switch-vterm)
-(map! :leader :n "g %" #'magit-worktree)
-(map! :leader :n "g P" #'magit-push-current-to-upstream)
+(map! :leader :desc "GitHub link" :n "g h l" #'git-link)
+(map! :leader :desc "Magit worktree" :n "g %" #'magit-worktree)
+(map! :leader :desc "Magit push" :n "g P" #'magit-push-current-to-upstream)
 
 (autoload 'shelldon "shelldon" nil t)
 (autoload 'shelldon-async-command "shelldon" nil t)
@@ -220,6 +216,11 @@
   (let ((dir (or default-directory (expand-file-name "~"))))
     (start-process "wezterm" nil "wezterm" "cli" "spawn" "--new-window" "--cwd" dir)))
 
+(map! :leader "a" nil)
+
+(map! :leader
+      :desc "embark act" "e" #'embark-act)
+
 (map! :leader
       :prefix ("a" . "actions")
       :desc "ensure ssh auto-closes opener socket" "O" #'my/configure-opener
@@ -239,6 +240,7 @@
 
 (defun mib (n)
   (* n 1024 1024))
+
 
 (with-eval-after-load 'gcmh
   (setq gcmh-high-cons-threshold (gib 1))
@@ -283,15 +285,10 @@
 
 (menu-bar-mode -1)
 
-(defun projectile-switch-vterm ()
-  "Switch to a project and open a vterm"
-  (interactive)
-  (counsel-projectile-switch-project #'counsel-projectile-switch-project-action-run-vterm))
-
 (with-eval-after-load 'eshell
-  (defun my-eshell-mode-company ()
-    (setq-local company-idle-delay nil))
-  (add-hook 'eshell-mode-hook 'my-eshell-mode-company)
+  (add-hook 'eshell-mode-hook (lambda ()
+                                (setq-local corfu-auto nil)
+                                (corfu-mode)))
 
   (defun eshell/emacs (file)
     (find-file file))
@@ -302,10 +299,6 @@
   (defun eshell/vim (file)
     (find-file file))
 
-  (defun eshell/pp ()
-    (counsel-projectile-switch-project #'counsel-projectile-switch-project-action-run-eshell))
-
-
   (set-eshell-alias!
    "home" "cd ~/Git/dylanwh/dotfiles"
    "pull" "git pull"
@@ -313,82 +306,9 @@
    "full-disk-access-p" "plutil -lint /Library/Preferences/com.apple.TimeMachine.plist"
    "eza" "eza -F -h --group-directories-first -b --smart-group -soldest -r $*")
 
+  )
 
-  (add-hook! 'eshell-directory-change-hook
-    (company-mode (if (file-remote-p default-directory) -1 +1))))
 
-(with-eval-after-load 'counsel-projectile
-  (setq counsel-projectile-switch-project-action
-        '(1
-          ("o" counsel-projectile-switch-project-action
-           "jump to a project buffer or file")
-          ("f" counsel-projectile-switch-project-action-find-file
-           "jump to a project file")
-          ("d" counsel-projectile-switch-project-action-find-dir
-           "jump to a project directory")
-          ("D" counsel-projectile-switch-project-action-dired
-           "open project in dired")
-          ("b" counsel-projectile-switch-project-action-switch-to-buffer
-           "jump to a project buffer")
-          ("m" counsel-projectile-switch-project-action-find-file-manually
-           "find file manually from project root")
-          ("S" counsel-projectile-switch-project-action-save-all-buffers
-           "save all project buffers")
-          ("k" counsel-projectile-switch-project-action-kill-buffers
-           "kill all project buffers")
-          ("K" counsel-projectile-switch-project-action-remove-known-project
-           "remove project from known projects")
-          ("c" counsel-projectile-switch-project-action-compile
-           "run project compilation command")
-          ("C" counsel-projectile-switch-project-action-configure
-           "run project configure command")
-          ("E" counsel-projectile-switch-project-action-edit-dir-locals
-           "edit project dir-locals")
-          ("v" counsel-projectile-switch-project-action-vc
-           "open project in vc-dir / magit / monky")
-          ("s" counsel-projectile-switch-project-action-rg
-           "search project with rg")
-          ("xs" counsel-projectile-switch-project-action-run-shell
-           "invoke shell from project root")
-          ("xe" counsel-projectile-switch-project-action-run-eshell
-           "invoke eshell from project root")
-          ("xt" counsel-projectile-switch-project-action-run-term
-           "invoke term from project root")
-          ("xv" counsel-projectile-switch-project-action-run-vterm
-           "invoke vterm from project root")
-          ("Oc" counsel-projectile-switch-project-action-org-capture
-           "capture into project")
-          ("Oa" counsel-projectile-switch-project-action-org-agenda
-           "open project agenda"))))
-
-(setq +doom-dashboard-menu-sections
-      '(("Recently opened files"
-         :icon (nerd-icons-faicon "nf-fa-file_text" :face 'doom-dashboard-menu-title)
-         :action recentf-open-files)
-        ("Reload last session"
-         :icon (nerd-icons-octicon "nf-oct-history" :face 'doom-dashboard-menu-title)
-         :when (cond ((modulep! :ui workspaces) (file-exists-p (expand-file-name persp-auto-save-fname persp-save-dir))) ((require 'desktop nil t) (file-exists-p (desktop-full-file-name))))
-         :action doom/quickload-session)
-        ("Open org-agenda"
-         :icon (nerd-icons-octicon "nf-oct-calendar" :face 'doom-dashboard-menu-title)
-         :when (fboundp 'org-agenda)
-         :action org-agenda)
-        ("Open project"
-         :icon (nerd-icons-octicon "nf-oct-briefcase" :face 'doom-dashboard-menu-title)
-         :action projectile-switch-project)
-        ("Open terminal"
-         :icon (nerd-icons-octicon "nf-oct-terminal" :face 'doom-dashboard-menu-title)
-         :action projectile-switch-vterm)
-        ;; +vterm/here)
-        ("Jump to bookmark"
-         :icon (nerd-icons-octicon "nf-oct-bookmark" :face 'doom-dashboard-menu-title)
-         :action bookmark-jump)
-        ("Open private configuration" :icon (nerd-icons-octicon "nf-oct-tools" :face 'doom-dashboard-menu-title)
-         :when (file-directory-p doom-user-dir)
-         :action doom/open-private-config)
-        ("Open documentation"
-         :icon (nerd-icons-octicon "nf-oct-book"     :face 'doom-dashboard-menu-title)
-         :action doom/help)))
 
 ;; for some reason, emacsformacosx has scratch buffer not being in lisp-interactive-mode?
 (defun fix-scratch-buffer (&rest _)
@@ -613,35 +533,3 @@
                             my/host-theme-alist
                             nil nil #'string=) 'doom-dark+)))
   (load-theme theme t))
-
-(with-eval-after-load 'lsp
-  (defun lsp-booster--advice-json-parse (old-fn &rest args)
-    "Try to parse bytecode instead of json."
-    (or
-     (when (equal (following-char) ?#)
-       (let ((bytecode (read (current-buffer))))
-         (when (byte-code-function-p bytecode)
-           (funcall bytecode))))
-     (apply old-fn args)))
-  (advice-add (if (progn (require 'json)
-                         (fboundp 'json-parse-buffer))
-                  'json-parse-buffer
-                'json-read)
-              :around
-              #'lsp-booster--advice-json-parse)
-
-  (defun lsp-booster--advice-final-command (old-fn cmd &optional test?)
-    "Prepend emacs-lsp-booster command to lsp CMD."
-    (let ((orig-result (funcall old-fn cmd test?)))
-      (if (and (not test?)                             ;; for check lsp-server-present?
-               (not (file-remote-p default-directory)) ;; see lsp-resolve-final-command, it would add extra shell wrapper
-               lsp-use-plists
-               (not (functionp 'json-rpc-connection))  ;; native json-rpc
-               (executable-find "emacs-lsp-booster"))
-          (progn
-            (when-let ((command-from-exec-path (executable-find (car orig-result))))  ;; resolve command from exec-path (in case not found in $PATH)
-              (setcar orig-result command-from-exec-path))
-            (message "Using emacs-lsp-booster for %s!" orig-result)
-            (cons "emacs-lsp-booster" orig-result))
-        orig-result)))
-  (advice-add 'lsp-resolve-final-command :around #'lsp-booster--advice-final-command))
