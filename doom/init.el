@@ -41,7 +41,7 @@
        (popup +defaults)       ; tame sudden yet inevitable temporary windows
        ;;pretty-code           ; ligatures or substitute text with pretty symbols
        ;;tabs                  ; an tab bar for Emacs
-       (treemacs +lsp)         ; a project drawer, like neotree but cooler
+       treemacs                ; a project drawer, like neotree but cooler
        ;;unicode               ; extended unicode support for various languages
        vc-gutter               ; vcs diff in the fringe
        vi-tilde-fringe         ; fringe tildes to mark beyond EOB
@@ -96,7 +96,7 @@
        ;;gist                  ; interacting with github gists
        llm                     ; When I said you needed friends, I didn't mean...
        lookup                  ; navigate your code and its documentation
-       (lsp +eglot)            ; M-x vscode
+       (lsp +eglot +booster)   ; M-x vscode
        ;;macos                 ; MacOS-specific commands
        (magit +forge)          ; a git porcelain for Emacs
        make                    ; run make tasks from Emacs

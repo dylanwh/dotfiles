@@ -139,6 +139,40 @@
               '(:rust-analyzer (:inlayHints (:closureReturnTypeHints (:enable "always")
                                              :parameterHints (:enable t)))))
 
+(use-package eglot-x
+  :after eglot
+  :config
+  (eglot-x-setup))
+
+(after! eglot-x
+  ;; Enhanced reference finding (supports ccls, rust-analyzer extended methods)
+  (map! :leader
+        :desc "Find references (extended)" "c ." #'eglot-x-find-refs)
+
+  ;; Rust-analyzer keybindings
+  (map! :map rustic-mode-map
+        :localleader
+        (:prefix ("r" . "rust")
+         :desc "Expand macro"             "e" #'eglot-x-expand-macro
+         :desc "View memory layout"       "m" #'eglot-x-view-recursive-memory-layout
+         :desc "Related tests"            "t" #'eglot-x-ask-related-tests
+         :desc "Reload workspace"         "r" #'eglot-x-reload-workspace
+         :desc "View crate graph"         "g" #'eglot-x-view-crate-graph
+         :desc "Find crate"               "f" #'eglot-x-find-crate
+         :desc "Analyzer status"          "s" #'eglot-x-analyzer-status
+         :desc "View syntax tree"         "S" #'eglot-x-view-syntax-tree))
+
+  ;; Additional rust-analyzer commands available:
+  ;; - eglot-x-rebuild-proc-macros
+  ;; - eglot-x-view-hir / eglot-x-view-mir
+  ;; - eglot-x-interpret-function
+
+  ;; Available Taplo (TOML) commands:
+  ;; - eglot-x-taplo-show-associated-schema
+  ;; - eglot-x-taplo-find-associated-schema
+  ;; - eglot-x-taplo-list-schemas
+  )
+
 (setq confirm-kill-emacs #'yes-or-no-p)
 
 (map! :leader :desc "GitHub link" :n "g h l" #'git-link)

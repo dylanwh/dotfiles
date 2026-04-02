@@ -59,9 +59,11 @@
 (package! vc-jj)
 (package! shell-maker :pin "808bede99dc2c2d27c3dc69d5f363aade40e6f87") ; :pin "a7ff78f8cd29fba9a694b8d7bbee448c7a51472d")
 (package! acp :pin "c32fbf8df34ed0095853a8cf55dc783e68b67d90") ; :pin "784b00017262260c2c718c98af98f16a2cc7bfdd")
-(package! agent-shell :pin "429d191801c5e2e7f4a2ab78017f84d1c983eb78") ; :pin "6309fa86c7a20b19f9487b58317d80cb24eebf6e")
+(package! agent-shell :pin "1e5d17598d191386ee02998199b77d0f70866820")
 (package! orglink)
 (package! shelldon)
+(package! eglot-x
+  :recipe (:host github :repo "nemethf/eglot-x"))
 
 
 ;; If you only use Emacs in the terminal, your best bet is to disable the
