@@ -139,12 +139,13 @@
               '(:rust-analyzer (:inlayHints (:closureReturnTypeHints (:enable "always")
                                              :parameterHints (:enable t)))))
 
+(setq eglot-code-action-indicator "")
+(setq eglot-x-graph-type 'boxart)
+
 (use-package eglot-x
   :after eglot
   :config
-  (eglot-x-setup))
 
-(after! eglot-x
   ;; Enhanced reference finding (supports ccls, rust-analyzer extended methods)
   (map! :leader
         :desc "Find references (extended)" "c ." #'eglot-x-find-refs)
@@ -162,16 +163,7 @@
          :desc "Analyzer status"          "s" #'eglot-x-analyzer-status
          :desc "View syntax tree"         "S" #'eglot-x-view-syntax-tree))
 
-  ;; Additional rust-analyzer commands available:
-  ;; - eglot-x-rebuild-proc-macros
-  ;; - eglot-x-view-hir / eglot-x-view-mir
-  ;; - eglot-x-interpret-function
-
-  ;; Available Taplo (TOML) commands:
-  ;; - eglot-x-taplo-show-associated-schema
-  ;; - eglot-x-taplo-find-associated-schema
-  ;; - eglot-x-taplo-list-schemas
-  )
+  (eglot-x-setup))
 
 (setq confirm-kill-emacs #'yes-or-no-p)
 
