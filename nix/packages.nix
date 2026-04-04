@@ -39,7 +39,7 @@ in
       bat
       black
       clang-tools
-      claude-code
+      #claude-code
       claude-agent-acp
       cmake
       cmatrix
@@ -82,7 +82,7 @@ in
       nil
       nix-fmt
       nmap
-      nodePackages.js-beautify
+      js-beautify
       nodejs_24
       notcurses
       nq

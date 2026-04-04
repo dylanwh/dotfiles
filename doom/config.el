@@ -27,7 +27,7 @@
 (setq nerd-icons-font-family "SauceCodePro Nerd Font Mono")
 
 (defvar my/host-theme-alist
-  '()
+  '(("bragi" . doom-moonlight))
   "Alist mapping hostnames to theme names.") 
 
 (with-eval-after-load 'vterm
@@ -139,8 +139,14 @@
               '(:rust-analyzer (:inlayHints (:closureReturnTypeHints (:enable "always")
                                              :parameterHints (:enable t)))))
 
-(setq eglot-code-action-indicator "")
-(setq eglot-x-graph-type 'boxart)
+(setq eglot-code-action-indicator ""
+      eglot-auto-display-help-buffer t
+      eglot-x-graph-type 'boxart)
+
+(with-eval-after-load 'eldoc
+  (setq eldoc-echo-area-prefer-doc-buffer nil
+        eldoc-echo-area-use-multiline-p nil
+        eldoc-documentation-strategy 'eldoc-documentation-enthusiast))
 
 (use-package eglot-x
   :after eglot
