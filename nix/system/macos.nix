@@ -22,6 +22,7 @@
 
   environment.systemPackages = [
     pkgs.cacert
+    (pkgs.callPackage ../packages/emacsedit-app.nix { })
   ];
 
   environment.etc."ssl/certs/ca-bundle.crt".source =
