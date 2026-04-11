@@ -42,4 +42,8 @@
     TERMINFO_DIRS = "${config.home.homeDirectory}/.nix-profile/share/terminfo";
     COLORTERM = "truecolor";
   };
+
+  home.sessionPath = [
+    "$HOME/.cargo/bin"
+  ];
 }
