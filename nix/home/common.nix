@@ -26,9 +26,6 @@
   };
 
   home.file = {
-    # Config directories (nix store)
-    ".config/iterm2/com.googlecode.iterm2.plist".source = ../../iterm2/com.googlecode.iterm2.plist;
-
     # Dotfiles
     ".cvsignore".source = ../../cvsignore;
     ".fdignore".source = ../../fdignore;

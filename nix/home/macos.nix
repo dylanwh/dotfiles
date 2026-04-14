@@ -75,7 +75,7 @@
     };
 
     "com.googlecode.iterm2" = {
-      PrefsCustomFolder = "~/.config/iterm2";
+      PrefsCustomFolder = "~/Git/dylanwh/dotfiles/iterm2";
       LoadPrefsFromCustomFolder = true;
     };
   };
