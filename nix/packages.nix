@@ -23,7 +23,7 @@ in
       bat
       black
       clang-tools
-      #claude-code
+      claude-code
       claude-agent-acp
       cmake
       cmatrix
