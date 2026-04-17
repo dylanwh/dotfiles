@@ -1,0 +1,4 @@
+#!/bin/sh
+
+sudo nh clean all --keep=3 --no-gc
+sudo "$(which nix-collect-garbage)"
