@@ -27,7 +27,7 @@ in
       claude-agent-acp
       cmake
       cmatrix
-      codex-acp
+      #codex-acp
       curl
       delta
       eza

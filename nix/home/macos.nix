@@ -91,7 +91,7 @@
     iconv
     nerd-fonts.sauce-code-pro
     openssl
-    qutebrowser
+    #qutebrowser
   ];
 
   home.file.".config/macos-user-key-equivalents.txt".source = ../../macos-user-key-equivalents.txt;

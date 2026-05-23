@@ -39,7 +39,7 @@ in
   home.file.".emacs.d".source = pkgs.fetchFromGitHub {
     owner = "hlissner";
     repo = "doom-emacs";
-    rev = "38d94da67dc84897a4318714dcc48494c016d8c4";
-    sha256 = "Uc6qONH3jjUVDgW+pPBCGC7mh88ZY05u1y37fQrsxq0=";
+    rev = "589630b1ed2d2e09de946ea4aab284804f27185b";
+    sha256 = "15qqgjmpc7nw27k0d6n9vi4zbvavxq3g88qp5qv70581zsrihg9s";
   };
 }

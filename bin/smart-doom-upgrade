@@ -1,0 +1,22 @@
+#!/bin/sh
+set -eu
+
+DOTFILES_DIR="$HOME/Git/dylanwh/dotfiles"
+EMACS_NIX="$DOTFILES_DIR/nix/home/emacs.nix"
+
+# Get latest commit from doom-emacs
+rev=$(git ls-remote https://github.com/hlissner/doom-emacs HEAD | cut -f1)
+printf 'rev: %s\n' "$rev"
+
+# Get sha256 hash for the new tarball
+sha256=$(nix-prefetch-url --unpack \
+    "https://github.com/hlissner/doom-emacs/archive/${rev}.tar.gz" 2>/dev/null)
+printf 'sha256: %s\n' "$sha256"
+
+# Update nix/home/emacs.nix
+perl -pi -e \
+    "s|rev = \"[a-f0-9]+\";|rev = \"${rev}\";|;
+     s|sha256 = \"[^\"]+\";|sha256 = \"${sha256}\";|" \
+    "$EMACS_NIX"
+
+printf 'Updated %s\n' "$EMACS_NIX"

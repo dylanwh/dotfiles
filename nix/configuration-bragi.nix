@@ -22,7 +22,7 @@
         ./home/kitty.nix
         ./home/macos.nix
         ./home/mail.nix
-        ./home/qutebrowser.nix
+        #./home/qutebrowser.nix
         ./home/wezterm.nix
       ];
 
