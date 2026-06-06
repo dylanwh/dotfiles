@@ -295,6 +295,12 @@
 (setq projectile-project-search-path
       '(("~/Git" . 2)))
 
+(setq projectile-project-root-functions '(projectile-root-local
+                                          projectile-root-marked
+                                          projectile-root-top-down
+                                          projectile-root-bottom-up
+                                          projectile-root-top-down-recurring))
+
 (defun my/short-system-name ()
   (seq-take-while (lambda (elt) (not (eq elt ?.))) (system-name)))
 
