@@ -84,6 +84,8 @@
           <string>public.toml</string>
           <string>org.gnu.emacs-lisp</string>
           <string>public.lua-script</string> 
+          <string>public.nix-script</string>
+          <string>org.godotengine.gdscript</string>
           <string>org.khronos.glsl.shader-source</string>
           <string>com.apple.dt.document.script-suite-property-list</string>
           <string>public.ndjson</string>
@@ -227,6 +229,36 @@
           <key>public.filename-extension</key>
           <array>
             <string>lua</string>
+          </array>
+        </dict>
+      </dict>
+      <dict>
+        <key>UTTypeIdentifier</key>
+        <string>public.nix-script</string>
+        <key>UTTypeConformsTo</key>
+        <array>
+          <string>public.source-code</string>
+        </array>
+        <key>UTTypeTagSpecification</key>
+        <dict>
+          <key>public.filename-extension</key>
+          <array>
+            <string>nix</string>
+          </array>
+        </dict>
+      </dict>
+      <dict>
+        <key>UTTypeIdentifier</key>
+        <string>org.godotengine.gdscript</string>
+        <key>UTTypeConformsTo</key>
+        <array>
+          <string>public.source-code</string>
+        </array>
+        <key>UTTypeTagSpecification</key>
+        <dict>
+          <key>public.filename-extension</key>
+          <array>
+            <string>gd</string>
           </array>
         </dict>
       </dict>

@@ -571,3 +571,11 @@
                             my/host-theme-alist
                             nil nil #'string=) 'doom-dark+)))
   (load-theme theme t))
+
+
+(setq agent-shell-mcp-servers
+      '(((type . "stdio")
+         (name . "godot")
+         (command . "godot-mcp")
+         (args . ())
+         (env . ()))))

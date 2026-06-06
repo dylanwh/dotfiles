@@ -9,6 +9,9 @@ stdenv.mkDerivation {
   buildInputs = [ ];
 
   buildPhase = ''
+    # Remove any pre-existing .app bundles copied from source
+    rm -rf EmacsEdit-unsigned.app EmacsEdit.app
+
     # Build the unsigned app
     /usr/bin/osacompile -o EmacsEdit-unsigned.app main.applescript
 

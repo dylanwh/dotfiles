@@ -91,6 +91,7 @@
     iconv
     nerd-fonts.sauce-code-pro
     openssl
+    godot-mcp
     #qutebrowser
   ];
 
