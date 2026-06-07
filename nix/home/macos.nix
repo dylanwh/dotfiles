@@ -94,6 +94,11 @@
     #qutebrowser
   ];
 
+  home.file.".cargo/config.toml".text = ''
+    [target.aarch64-apple-darwin]
+    rustflags = ["-L${pkgs.libiconv}/lib"]
+  '';
+
   home.file.".config/macos-user-key-equivalents.txt".source = ../../macos-user-key-equivalents.txt;
 
   launchd.agents.opener = {
