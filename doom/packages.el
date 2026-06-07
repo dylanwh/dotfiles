@@ -63,7 +63,7 @@
 (package! orglink)
 (package! shelldon)
 (package! eglot-x
-  :recipe (:host github :repo "nemethf/eglot-x"))
+  :recipe (:host github :repo "dylanwh/eglot-x"))
 
 ;; If you only use Emacs in the terminal, your best bet is to disable the
 ;; solaire-mode package:
