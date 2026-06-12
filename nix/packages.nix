@@ -14,6 +14,7 @@ let
   nix-fmt = (
     if lib.versionOlder "25.11" pkgs.lib.version then pkgs.nixfmt else pkgs.nixfmt-rfc-style
   );
+  pinned = import ./nixpkgs-pinned.nix;
 in
 
 {
@@ -23,8 +24,8 @@ in
       bat
       black
       clang-tools
-      claude-code
-      claude-agent-acp
+      pinned.claude-code
+      pinned.claude-agent-acp
       cmake
       cmatrix
       #codex-acp
