@@ -4,11 +4,39 @@ set -eu
 DOTFILES_DIR="$HOME/Git/dylanwh/dotfiles"
 EMACS_NIX="$DOTFILES_DIR/nix/home/emacs.nix"
 
+# Get current rev from emacs.nix
+old_rev=$(grep 'rev = ' "$EMACS_NIX" | grep -o '"[a-f0-9]*"' | tr -d '"')
+printf 'current rev: %s\n' "$old_rev"
+
 # Get latest commit from doom-emacs
 rev=$(git ls-remote https://github.com/hlissner/doom-emacs HEAD | cut -f1)
-printf 'rev: %s\n' "$rev"
+printf 'new rev:     %s\n' "$rev"
+
+if [ "$old_rev" = "$rev" ]; then
+    printf 'Already up to date.\n'
+    exit 0
+fi
+
+# Show changelog
+printf '\nChangelog: https://github.com/hlissner/doom-emacs/compare/%s...%s\n\n' "$old_rev" "$rev"
+
+if command -v curl > /dev/null 2>&1 && command -v jq > /dev/null 2>&1; then
+    printf 'Recent commits:\n'
+    curl -s "https://api.github.com/repos/hlissner/doom-emacs/compare/${old_rev}...${rev}" \
+        | jq -r '.commits[] | "  \(.sha[0:7]) \(.commit.message | split("\n")[0])"' \
+        | tail -20
+    printf '\n'
+fi
+
+printf 'Proceed with upgrade? [y/N] '
+read -r answer
+case "$answer" in
+    [yY]*) ;;
+    *) printf 'Aborted.\n'; exit 0 ;;
+esac
 
 # Get sha256 hash for the new tarball
+printf 'Fetching sha256...\n'
 sha256=$(nix-prefetch-url --unpack \
     "https://github.com/hlissner/doom-emacs/archive/${rev}.tar.gz" 2>/dev/null)
 printf 'sha256: %s\n' "$sha256"
