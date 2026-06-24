@@ -30,10 +30,14 @@
   '(("bragi" . doom-moonlight))
   "Alist mapping hostnames to theme names.") 
 
-(remove-hook 'vterm-mode-hook #'mode-line-invisible-mode)
-(remove-hook 'eshell-mode-hook #'mode-line-invisible-mode)
-(remove-hook 'shell-mode-hook #'mode-line-invisible-mode)
-(remove-hook 'term-mode-hook #'mode-line-invisible-mode)
+(with-eval-after-load 'vterm
+  (remove-hook 'vterm-mode-hook #'mode-line-invisible-mode))
+(with-eval-after-load 'eshell
+  (remove-hook 'eshell-mode-hook #'mode-line-invisible-mode))
+(with-eval-after-load 'shell
+  (remove-hook 'shell-mode-hook #'mode-line-invisible-mode))
+(with-eval-after-load 'term
+  (remove-hook 'term-mode-hook #'mode-line-invisible-mode))
 
 (with-eval-after-load 'popup
   (set-popup-rule! "^\\*doom:\\(?:v?term\\|e?shell\\)-popup"
