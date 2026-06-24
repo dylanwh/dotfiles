@@ -94,6 +94,7 @@ in
       semgrep
       shellcheck
       shfmt
+      skim
       socat
       starship
       stylelint

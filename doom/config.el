@@ -209,14 +209,13 @@
                                  (string-match-p "shelldon" (car entry))))
                           display-buffer-alist)))
 
-(defun my/dismiss-shelldon ()
+(defun my/shelldon-dismiss ()
   "Quit all shelldon windows, restoring previous window state."
   (interactive)
   (dolist (win (window-list))
     (when (string-match-p "\\*shelldon:" (buffer-name (window-buffer win)))
       (quit-window nil win))))
 
-(map! :ni "M-<f4>" #'my/dismiss-shelldon)
 (map! :ni "M-&" #'project-shelldon-async-command)
 (map! :ni "M-!" #'project-shelldon)
 
@@ -257,12 +256,6 @@
             (call-process "ssh-add" nil nil nil (expand-file-name file)))))))
     (message "SSH keys added")))
 
-(defun my/wezterm-here ()
-  "Open a new WezTerm window in the current directory."
-  (interactive)
-  (let ((dir (or default-directory (expand-file-name "~"))))
-    (start-process "wezterm" nil "wezterm" "cli" "spawn" "--new-window" "--cwd" dir)))
-
 (map! :leader "a" nil)
 
 (map! :leader
@@ -272,22 +265,20 @@
       :prefix ("a" . "actions")
       :desc "ensure ssh auto-closes opener socket" "O" #'my/configure-opener
       :desc "imapfilter" "i" #'my/imapfilter
-      :desc "dired" "d" #'dired
       :desc "agent shell" "a" #'agent-shell
-      :desc "wezterm here" "t" #'my/wezterm-here
       (:prefix ("u" . "updates")
        :desc "nix rebuild" "n" #'my/smart-rebuild
        :desc "doom sync" "d" #'my/doom-sync
        :desc "add ssh keys" "k" #'my/ssh-add
        :desc "refresh ssh auth socket" "a" #'ssh-update-auth)
-      :desc "shelldon output history" "h" #'shelldon-output-history)
+      :desc "shelldon output history" "h" #'shelldon-output-history
+      :desc "dismiss shelldon" "d" #'my/shelldon-dismiss)
 
 (defun gib (n)
   (* n 1024 1024 1024))
 
 (defun mib (n)
   (* n 1024 1024))
-
 
 (with-eval-after-load 'gcmh
   (setq gcmh-high-cons-threshold (gib 1))

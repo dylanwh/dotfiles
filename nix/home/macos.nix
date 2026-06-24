@@ -6,6 +6,9 @@
 }:
 
 {
+  imports = [
+    ./alfred.nix
+  ];
   targets.darwin.defaults = {
     "com.apple.screencapture" = {
       location = "~/Documents/Screenshots";
