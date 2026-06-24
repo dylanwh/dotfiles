@@ -30,14 +30,14 @@
   '(("bragi" . doom-moonlight))
   "Alist mapping hostnames to theme names.") 
 
-(with-eval-after-load 'vterm
-  (remove-hook 'vterm-mode-hook #'hide-mode-line-mode))
+(remove-hook 'vterm-mode-hook #'mode-line-invisible-mode)
+(remove-hook 'eshell-mode-hook #'mode-line-invisible-mode)
+(remove-hook 'shell-mode-hook #'mode-line-invisible-mode)
+(remove-hook 'term-mode-hook #'mode-line-invisible-mode)
 
-(with-eval-after-load 'eshell
-  (remove-hook 'eshell-mode-hook #'hide-mode-line-mode))
-
-(with-eval-after-load 'shell
-  (remove-hook 'shell-mode-hook #'hide-mode-line-mode))
+(with-eval-after-load 'popup
+  (set-popup-rule! "^\\*doom:\\(?:v?term\\|e?shell\\)-popup"
+    :vslot -5 :size 0.20 :select t :modeline t :quit nil :ttl nil))
 
 (setq +doom-dashboard-ascii-banner-fn (lambda () ))
 
@@ -195,13 +195,28 @@
   (let ((default-directory (project-root (project-current t))))
     (call-interactively #'shelldon)))
 
-(add-to-list 'display-buffer-alist
-             '("*shelldon:"
-               (display-buffer-reuse-window display-buffer-in-previous-window display-buffer-in-side-window display-buffer-pop-up-window)
-               (side . right)
-               (slot . 0)
-               (window-width . 80)))
+(setq display-buffer-alist
+      (cons '("*shelldon:"
+              (display-buffer-in-side-window display-buffer-reuse-window display-buffer-in-previous-window)
+              (side . right)
+              (slot . 3)
+              (reusable-frames . visible)
+              (window-width . 0.34)
+              (inhibit-switch-frame . t)
+              (window-parameters (modeline . t)))
+            (cl-remove-if (lambda (entry)
+                            (and (stringp (car entry))
+                                 (string-match-p "shelldon" (car entry))))
+                          display-buffer-alist)))
 
+(defun my/dismiss-shelldon ()
+  "Quit all shelldon windows, restoring previous window state."
+  (interactive)
+  (dolist (win (window-list))
+    (when (string-match-p "\\*shelldon:" (buffer-name (window-buffer win)))
+      (quit-window nil win))))
+
+(map! :ni "M-<f4>" #'my/dismiss-shelldon)
 (map! :ni "M-&" #'project-shelldon-async-command)
 (map! :ni "M-!" #'project-shelldon)
 
@@ -302,7 +317,7 @@
         projectile-root-bottom-up
         projectile-root-top-down-recurring))
 
-; (def-projectile-commander-method ?e "eshell" (+eshell/frame))
+                                        ; (def-projectile-commander-method ?e "eshell" (+eshell/frame))
 
 (defun my/short-system-name ()
   (seq-take-while (lambda (elt) (not (eq elt ?.))) (system-name)))

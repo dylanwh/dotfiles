@@ -95,8 +95,12 @@
   ];
 
   home.file.".cargo/config.toml".text = ''
+    [env]
+    CC_aarch64-apple-darwin = "/usr/bin/clang"
+    CXX_aarch64-apple-darwin = "/usr/bin/clang++"
+    SDKROOT = "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk"
     [target.aarch64-apple-darwin]
-    rustflags = ["-L${pkgs.libiconv}/lib"]
+    linker = "/usr/bin/clang"
   '';
 
   home.file.".config/macos-user-key-equivalents.txt".source = ../../macos-user-key-equivalents.txt;

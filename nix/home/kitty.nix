@@ -6,6 +6,7 @@
 
 let
   c = config.selenized.colors;
+  withNixEnv = "${config.home.homeDirectory}/.local/bin/with-nix-env";
 in
 {
   programs.kitty = {
@@ -39,7 +40,7 @@ in
       "cmd+l" = "next_layout";
       "cmd+m" = "minimize_macos_window";
       "cmd+n" = "launch --type=os-window";
-      "cmd+shift+n" = "launch --type=os-window fish";
+      "cmd+shift+n" = "launch --type=os-window ${withNixEnv} fish";
       "cmd+o" = "open_url_with_hints";
       "cmd+p>f" = "hints --type path --program -";
       "cmd+p>h" = "hints --type hash --program @";
@@ -50,14 +51,13 @@ in
       "cmd+p>y" = "hints --type hyperlink --program launch";
       "cmd+r" = "start_resizing_window";
       "cmd+opt+r" = "clear_terminal reset active";
-      "cmd+shift+r" = "clear_terminal reset active";
       "cmd+opt+s" = "toggle_macos_secure_keyboard_entry";
       "cmd+c" = "copy_to_clipboard";
       "cmd+v" = "paste_from_clipboard";
       "cmd+plus" = "change_font_size all +2.0";
       "cmd+equal" = "change_font_size all +2.0";
       "cmd+minus" = "change_font_size all -2.0";
-      "cmd+escape" = "kitty_shell overlay";
+      "cmd+shift+escape" = "kitty_shell overlay";
       "cmd+return" = "toggle_fullscreen";
     };
 
@@ -81,7 +81,7 @@ in
       # Layout
       enabled_layouts = "grid,all";
       tab_bar_edge = "top";
-      tab_bar_style = "hidden";
+      tab_bar_style = "powerline";
       tab_title_template = "{fmt.fg.red}{bell_symbol}{activity_symbol}{fmt.fg.tab}{tab.last_focused_progress_percent}{index}:{title}";
 
       # Input
@@ -90,8 +90,8 @@ in
       clear_all_shortcuts = true;
 
       # Shell
-      shell = "${config.home.homeDirectory}/.local/bin/with-nix-env eshell";
-      editor = ".";
+      shell = "${withNixEnv} eshell";
+      editor = "${withNixEnv} emacsedit";
 
       # Remote control
       allow_remote_control = "socket-only";
