@@ -41,23 +41,24 @@ in
       "cmd+8" = "goto_tab 8";
       "cmd+9" = "goto_tab 9";
       "cmd+ctrl+," = "load_config_file";
-      "cmd+e" = "open_url_with_hints";
       "cmd+g" = "focus_visible_window";
       "cmd+shift+g" = "swap_with_window";
       "cmd+h" = "hide_macos_app";
       "cmd+opt+h" = "hide_macos_other_apps";
-      "cmd+l" = "next_layout";
       "cmd+m" = "minimize_macos_window";
       "cmd+t" = "launch --type=tab";
       "cmd+shift+t" = "select_tab";
+      "cmd+d" = "launch";
+      "cmd+j" = "next_window";
+      "cmd+k" = "previous_window";
       "cmd+n" = "launch --type=os-window";
       "cmd+shift+n" = "launch --type=os-window ${withNixEnv} fish";
       "cmd+o" = "open_url_with_hints";
-      "cmd+p>f" = "hints --type path --program -";
+      "cmd+p>f" = "hints --type path --program @";
       "cmd+p>h" = "hints --type hash --program @";
       "cmd+p>l" = "hints --type line --program @";
       "cmd+p>n" = "hints --type linenum --program launch";
-      "cmd+p>shift+f" = "hints --type path";
+      "cmd+p>shifrepos/treepy.elt+f" = "hints --type path";
       "cmd+p>w" = "hints --type word --program @";
       "cmd+p>y" = "hints --type hyperlink --program launch";
       "cmd+r" = "start_resizing_window";
@@ -90,10 +91,10 @@ in
       bell_on_tab = "🔔 ";
 
       # Layout
-      enabled_layouts = "grid,all";
+      enabled_layouts = "stack";
       tab_bar_edge = "top";
       tab_bar_style = "powerline";
-      tab_title_template = "{fmt.fg.red}{bell_symbol}{activity_symbol}{fmt.fg.tab}{tab.last_focused_progress_percent}{index}:{title}";
+      #tab_title_template = "{fmt.fg.red}{bell_symbol}{activity_symbol}{fmt.fg.tab}{tab.last_focused_progress_percent}{index}:{title}";
 
       # Input
       paste_actions = "quote-urls-at-prompt,replace-dangerous-control-codes,replace-newline,confirm";

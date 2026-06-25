@@ -68,6 +68,7 @@
 ;; If you only use Emacs in the terminal, your best bet is to disable the
 ;; solaire-mode package:
 (package! solaire-mode :disable t)
+(package! jq-ts-mode)
 
 ;; Load local packages if file exists
 (let ((local-packages (expand-file-name "local-packages.el" doom-user-dir)))

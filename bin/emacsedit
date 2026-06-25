@@ -17,6 +17,7 @@ my $files = 0;
 for (@ARGV) {
     if (/^-/) {
         push @new_argv, $_;
+        next;
     }
     elsif (/^\+/) {
         $position = $_;
