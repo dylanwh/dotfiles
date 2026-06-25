@@ -26,8 +26,12 @@
 (setq doom-big-font (font-spec :family "SauceCodePro Nerd Font Mono" :style "Light" :size 28.0))
 (setq nerd-icons-font-family "SauceCodePro Nerd Font Mono")
 
+(setq doom-old-hope-brighter-comments t)
+(setq doom-old-hope-brighter-modeline t)
+
 (defvar my/host-theme-alist
-  '(("bragi" . doom-moonlight))
+  '(("bragi" . doom-moonlight)
+    ("frigg" . doom-old-hope))
   "Alist mapping hostnames to theme names.") 
 
 (with-eval-after-load 'vterm
