@@ -25,6 +25,8 @@
     arguments = [ "--smart-case" ];
   };
 
+  programs.man.enable = true;
+
   home.file = {
     # Dotfiles
     ".cvsignore".source = ../../cvsignore;

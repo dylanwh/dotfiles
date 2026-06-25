@@ -1,3 +1,0 @@
-#!/bin/sh
-
-exec emacsclient -q -u -a "" -nw -e "(counsel-projectile-switch-project)"
