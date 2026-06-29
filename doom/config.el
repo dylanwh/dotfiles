@@ -378,8 +378,12 @@
     (setq tramp-use-ssh-controlmaster-options t)
   (setq tramp-use-connection-share t))
 
-
 (with-eval-after-load 'evil
+  (setq evil-move-beyond-eol nil)
+  (setq evil-track-eol t)
+  (setq evil-v$-excludes-newline t)
+  (setq evil-split-window-below t)
+  (setq evil-split-window-right t)
   (evil-ex-define-cmd "q" 'bury-buffer)
   (evil-ex-define-cmd "wq" 'doom/save-and-kill-buffer))
 
