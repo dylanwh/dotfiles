@@ -379,11 +379,13 @@
   (setq tramp-use-connection-share t))
 
 (with-eval-after-load 'evil
-  (setq evil-move-beyond-eol nil)
-  (setq evil-track-eol t)
-  (setq evil-v$-excludes-newline t)
-  (setq evil-split-window-below t)
-  (setq evil-split-window-right t)
+  (setq evil-move-beyond-eol nil
+        evil-track-eol t
+        evil-v$-excludes-newline t
+        evil-split-window-below t
+        evil-vsplit-window-right t
+        hscroll-margin 2
+        hscroll-step 1)
   (evil-ex-define-cmd "q" 'bury-buffer)
   (evil-ex-define-cmd "wq" 'doom/save-and-kill-buffer))
 
