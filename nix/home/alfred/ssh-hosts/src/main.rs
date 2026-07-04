@@ -1,12 +1,12 @@
 #![deny(clippy::pedantic, clippy::expect_used, clippy::unwrap_used)]
 
-use std::fs;
-use std::path::PathBuf;
+use std::{fs, path::PathBuf};
 
 use color_eyre::eyre::{Result, WrapErr};
-use fuzzy_matcher::{skim::SkimMatcherV2, FuzzyMatcher};
+use fuzzy_matcher::{FuzzyMatcher, skim::SkimMatcherV2};
 use hashbrown::HashSet;
 use nom::{
+    IResult, Parser,
     branch::alt,
     bytes::complete::{tag_no_case, take_till1, take_until, take_until1},
     character::complete::{char, digit1, space0, space1},
@@ -14,7 +14,6 @@ use nom::{
     error::Error,
     multi::many0,
     sequence::{delimited, preceded, terminated},
-    IResult, Parser,
 };
 use rayon::prelude::*;
 use serde::{Serialize, Serializer};
@@ -174,7 +173,12 @@ fn collect_hosts<'a>(
     known_contents: &'a [Vec<u8>],
 ) -> Vec<&'a [u8]> {
     let (configs, known): (Vec<ConfigHosts>, Vec<Vec<&[u8]>>) = rayon::join(
-        || config_contents.par_iter().map(|c| parse_config(c)).collect(),
+        || {
+            config_contents
+                .par_iter()
+                .map(|c| parse_config(c))
+                .collect()
+        },
         || {
             known_contents
                 .par_iter()
@@ -264,10 +268,8 @@ fn main() -> Result<()> {
         .build_global()
         .ok();
 
-    let (config_contents, known_contents) = rayon::join(
-        || read_files(&config_files),
-        || read_files(&known_files),
-    );
+    let (config_contents, known_contents) =
+        rayon::join(|| read_files(&config_files), || read_files(&known_files));
 
     // Hosts must be UTF-8 from here on (fuzzy matching, JSON); skip any that aren't.
     let mut hosts: Vec<&str> = collect_hosts(&config_contents, &known_contents)
