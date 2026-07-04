@@ -1,3 +1,3 @@
 function vi
-    emacsedit --no-wait $argv
+    emacs $argv
 end

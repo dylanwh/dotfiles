@@ -1,4 +1,7 @@
-# Defined in - @ line 1
-function emacs --description 'alias emacs=emacsclient -a "" -t'
-    emacsedit --no-wait $argv
+function emacs
+    if test -n "$INSIDE_EMACS"
+        emacsedit --no-wait $argv
+    else
+        emacsedit $argv
+    end
 end

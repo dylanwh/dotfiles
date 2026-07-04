@@ -147,6 +147,10 @@ in
     };
   };
 
+  programs.fish.shellAliases = pkgs.lib.mkIf pkgs.stdenv.isDarwin {
+    kitten = "/Applications/kitty.app/Contents/MacOS/kitten";
+  };
+
   home.file.".config/kitty/open-actions.conf".source = ../../kitty/open-actions.conf;
   home.file.".config/kitty/launch-actions.conf".source = ../../kitty/launch-actions.conf;
 }

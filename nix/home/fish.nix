@@ -84,9 +84,6 @@ in
     set -g fish_pager_color_progress ${s.fg_0} --background=${s.cyan} --bold
     set -g fish_pager_color_selected_background -r
   '';
-  programs.fish.shellAliases = {
-    emacs = "emacsedit";
-  };
 
   # Generate the home.file set dynamically
   home.file =

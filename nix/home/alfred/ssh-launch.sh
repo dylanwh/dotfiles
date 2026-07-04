@@ -20,11 +20,7 @@ if [[ -z "$socket" ]]; then
     done
 fi
 
-if [[ -n "$ssh_args" ]]; then
-    ssh_args=".local/bin/with-nix-env $ssh_args"
-    t="-t"
-else
-    t=""
-fi
+kitten=/Applications/kitty.app/Contents/MacOS/kitten
+kitty=/Applications/kitty.app/Contents/MacOS/kitty
 
-/Applications/kitty.app/Contents/MacOS/kitty @ --to="unix:$socket" launch --type=tab ssh $t "$host" $ssh_args
+$kitty @ --to="unix:$socket" launch --type=tab $kitten ssh "$host"
