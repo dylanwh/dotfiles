@@ -149,5 +149,57 @@ Fills in URL/title from `org-store-link-plist'."
                 (concat body "\n%?")
               "%?"))))
 
+(defun org-links-heading-url ()
+  "Return the first bracketed link URL found in the current heading's title, or nil."
+  (save-excursion
+    (org-back-to-heading t)
+    (looking-at org-complex-heading-regexp)
+    (let ((title (match-string-no-properties 4)))
+      (with-temp-buffer
+        (insert title)
+        (goto-char (point-min))
+        (when (re-search-forward org-link-bracket-re nil t)
+          (match-string-no-properties 1))))))
+
+
+(defun org-links--wayback-url (url)
+  "Return the closest Wayback Machine snapshot URL for URL, or nil if unavailable."
+  (let* ((api-url (concat "https://archive.org/wayback/available?url="
+                          (url-hexify-string url)))
+         (buf (ignore-errors
+                (url-retrieve-synchronously api-url t nil org-links-request-timeout))))
+    (when buf
+      (unwind-protect
+          (with-current-buffer buf
+            (goto-char (point-min))
+            (when (re-search-forward "\r?\n\r?\n" nil t)
+              (let* ((json-object-type 'plist)
+                     (json-array-type 'list)
+                     (data (ignore-errors (json-read)))
+                     (snapshots (plist-get data :archived_snapshots))
+                     (closest (plist-get snapshots :closest)))
+                (when (eq (plist-get closest :available) t)
+                  (plist-get closest :url)))))
+        (kill-buffer buf)))))
+
+(defun org-links-wayback-replace-link ()
+  "Replace the link URL in the current heading title with its Wayback Machine URL.
+Stores the original URL in the ORIGINAL_URL heading property."
+  (interactive)
+  (let ((url (org-links-heading-url)))
+    (unless url
+      (user-error "No link found in heading title"))
+    (message "Looking up Wayback URL for %s..." url)
+    (let ((wayback (org-links--wayback-url url)))
+      (unless wayback
+        (user-error "No Wayback Machine snapshot found for %s" url))
+      (org-set-property "ORIGINAL_URL" url)
+      (save-excursion
+        (org-back-to-heading t)
+        (let ((bound (line-end-position)))
+          (when (re-search-forward (regexp-quote url) bound t)
+            (replace-match wayback t t))))
+      (message "Replaced with Wayback URL: %s" wayback))))
+
 (provide 'org-links)
 ;;; org-links.el ends here
