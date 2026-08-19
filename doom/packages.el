@@ -57,9 +57,9 @@
 (package! kdl-mode)
 (package! jjdescription)
 (package! vc-jj)
-(package! shell-maker :pin "808bede99dc2c2d27c3dc69d5f363aade40e6f87") ; :pin "a7ff78f8cd29fba9a694b8d7bbee448c7a51472d")
-(package! acp :pin "c32fbf8df34ed0095853a8cf55dc783e68b67d90") ; :pin "784b00017262260c2c718c98af98f16a2cc7bfdd")
-(package! agent-shell :pin "1e5d17598d191386ee02998199b77d0f70866820")
+(package! shell-maker :pin "a92260d92ef61274e3a7bc3b00b28588784ba6b9")
+(package! acp :pin "7d5c16ebcf2af86aa0f14ad9ae0ce45df4e8c8a5")
+(package! agent-shell :pin "4ae365cc7693cf9c1bbfb505baeee96778b7743d") 
 (package! orglink)
 (package! shelldon)
 (package! eglot-x

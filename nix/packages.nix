@@ -36,7 +36,6 @@ in
       ffmpeg
       file
       gcc
-      gemini-cli
       gh
       git
       glslang
