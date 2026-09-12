@@ -109,7 +109,7 @@ in
       zellij
       zstd
     ]
-    ++ (lib.optionals pkgs.stdenv.isLinux [
+    ++ (lib.optionals pkgs.stdenv.hostPlatform.isLinux [
       psmisc
       shpool
       trash-cli

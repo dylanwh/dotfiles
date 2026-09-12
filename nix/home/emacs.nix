@@ -20,7 +20,7 @@ let
       ))
     ]
   );
-  emacsBase = if pkgs.stdenv.isDarwin then pkgs.emacs-macport else pkgs.emacs-nox;
+  emacsBase = if pkgs.stdenv.hostPlatform.isDarwin then pkgs.emacs-macport else pkgs.emacs-nox;
   emacs = (pkgs.emacsPackagesFor emacsBase).emacsWithPackages emacsPackages;
 in
 {

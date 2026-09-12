@@ -11,7 +11,7 @@ in
 {
   programs.kitty = {
     enable = true;
-    package = if pkgs.stdenv.isDarwin then pkgs.emptyDirectory else pkgs.kitty;
+    package = if pkgs.stdenv.hostPlatform.isDarwin then pkgs.emptyDirectory else pkgs.kitty;
 
     environment = {
       PATH = "/run/current-system/sw/bin:/nix/var/nix/profiles/default/bin:/usr/local/bin:/usr/bin:/usr/sbin:/bin:/sbin";
@@ -147,7 +147,7 @@ in
     };
   };
 
-  programs.fish.shellAliases = pkgs.lib.mkIf pkgs.stdenv.isDarwin {
+  programs.fish.shellAliases = pkgs.lib.mkIf pkgs.stdenv.hostPlatform.isDarwin {
     kitten = "/Applications/kitty.app/Contents/MacOS/kitten";
   };
 
