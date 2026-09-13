@@ -123,11 +123,11 @@ in
       dim_opacity = "0.625";
       selection_foreground = "none";
       selection_background = c.bg_2;
-      active_tab_foreground = c.fg_1;
-      active_tab_background = c.bg_2;
-      inactive_tab_foreground = c.dim_0;
-      inactive_tab_background = c.bg_0;
-      tab_bar_background = c.bg_0;
+      active_tab_foreground = "#fec43f";
+      active_tab_background = "#000000";
+      inactive_tab_foreground = "#c0c0c0";
+      inactive_tab_background = "#3a3a3a";
+      tab_bar_background = "#3a3a3a";
       color0 = c.bg_1;
       color8 = c.bg_2;
       color1 = c.red;
