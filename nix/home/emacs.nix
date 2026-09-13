@@ -20,7 +20,8 @@ let
       ))
     ]
   );
-  emacsBase = if pkgs.stdenv.hostPlatform.isDarwin then pkgs.emacs-macport else pkgs.emacs-nox;
+  # emacsBase = if pkgs.stdenv.hostPlatform.isDarwin then pkgs.emacs-macport else pkgs.emacs-nox;
+  emacsBase = pkgs.emacs-nox;
   emacs = (pkgs.emacsPackagesFor emacsBase).emacsWithPackages emacsPackages;
 in
 {
@@ -37,9 +38,10 @@ in
   home.file.".doom.d".source =
     config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/Git/dylanwh/dotfiles/doom";
   home.file.".emacs.d".source = pkgs.fetchFromGitHub {
-    owner = "hlissner";
-    repo = "doom-emacs";
-    rev = "cc6e8400a43350be06301954320061331d0e051a";
-    sha256 = "17p414n5b8nam85dyr6wyrjmshssyfbvdf49s0hh7rjaqccq1ggm";
+      owner = "doomemacs";
+      repo = "core";
+      rev = "01d68aaf6bd7db073365385cd82e1ad7e815295c";
+      fetchSubmodules = true;
+      hash = "sha256-+b0yNSXBTNroSuwH89Mp5wtJojaGfRgDn9G2ooorurM=";
   };
 }

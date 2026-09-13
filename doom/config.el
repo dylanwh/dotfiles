@@ -66,7 +66,7 @@
 (load! "ssh-utils.el")
 (load! "shellfish.el")
 
-(with-eval-after-load 'org
+(with-eval-after-load 'org-capture
   (require 'org-protocol)
   ;; Remove before adding to avoid duplicates on re-eval.
   (setq org-capture-templates
@@ -81,7 +81,9 @@
                '("L" "Link (protocol)" entry
                  (file+headline "~/org/links.org" "Inbox")
                  (function org-links-protocol-capture-template)
-                 :immediate-finish t) t)
+                 :immediate-finish t) t))
+
+(with-eval-after-load 'org
   ;; Log timestamp when a task is marked DONE
   (setq org-log-done 'time))
 
