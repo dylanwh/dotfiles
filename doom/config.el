@@ -28,10 +28,13 @@
 
 (setq doom-old-hope-brighter-comments t)
 (setq doom-old-hope-brighter-modeline t)
+(setq doom-outrun-electric-brighter-comments t)
+(setq doom-outrun-electric-brighter-modeline t)
 
 (defvar my/host-theme-alist
   '(("bragi" . doom-moonlight)
-    ("frigg" . doom-old-hope))
+    ("frigg" . doom-old-hope)
+    ("odin" . doom-outrun-electric))
   "Alist mapping hostnames to theme names.") 
 
 (with-eval-after-load 'vterm
@@ -537,18 +540,18 @@
     "Return all unique tags from the elfeed database, excluding `my/elfeed-ignored-tags'."
     (let ((tags (make-hash-table :test 'eq)))
       (with-elfeed-db-visit (entry _feed)
-        (dolist (tag (elfeed-entry-tags entry))
-          (unless (memq tag my/elfeed-ignored-tags)
-            (puthash tag t tags))))
+                            (dolist (tag (elfeed-entry-tags entry))
+                              (unless (memq tag my/elfeed-ignored-tags)
+                                (puthash tag t tags))))
       (hash-table-keys tags)))
 
   (defun my/elfeed-unread-count (tag)
     "Return the number of unread elfeed entries with TAG."
     (let ((count 0))
       (with-elfeed-db-visit (entry _feed)
-        (when (and (memq 'unread (elfeed-entry-tags entry))
-                   (memq tag (elfeed-entry-tags entry)))
-          (cl-incf count)))
+                            (when (and (memq 'unread (elfeed-entry-tags entry))
+                                       (memq tag (elfeed-entry-tags entry)))
+                              (cl-incf count)))
       count))
 
   (defun my/elfeed-tag-filter ()

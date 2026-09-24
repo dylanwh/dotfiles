@@ -84,6 +84,7 @@ in
       python313Packages.pytest
       rage
       rclone
+      restic
       ripgrep
       (rizin.withPlugins (ps: with ps; [ rz-ghidra ]))
       rsync

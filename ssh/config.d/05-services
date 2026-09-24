@@ -10,3 +10,7 @@ Host heroku.com
     ControlMaster no
     ControlPersist no
     IdentityFile ~/.ssh/id_rsa
+
+Host rsync.net
+    User fm2400
+    Hostname fm2400.rsync.net
