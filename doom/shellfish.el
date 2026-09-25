@@ -189,12 +189,24 @@ If X-CALLBACK is non-nil, use x-callback-url to return results."
 
 ;;; Push notification support (widget & notify)
 
-(defun shellfish--push-credentials ()
-  "Return (USER . KEY) from auth-source for host \"shellfish\"."
-  (pcase-let ((`(,user ,key) (auth-source-user-and-password "shellfish")))
-    (unless (and user key)
-      (error "No auth-source entry found for host \"shellfish\""))
-    (cons user key)))
+(defvar shellfish--credentials-cache nil
+  "Cached (USER . KEY) from ~/.shellfishrc.")
+
+(defun shellfish--push-credentials (&optional refresh)
+  "Return (USER . KEY) from ~/.shellfishrc, cached after first read.
+With REFRESH non-nil, re-read the file."
+  (or (and (not refresh) shellfish--credentials-cache)
+      (setq shellfish--credentials-cache
+            (with-temp-buffer
+              (insert-file-contents (expand-file-name "~/.shellfishrc"))
+              (let (key user)
+                (goto-char (point-min))
+                (when (re-search-forward "^[ \t]*local key=\\(.*\\)$" nil t)
+                  (setq key (match-string-no-properties 1)))
+                (goto-char (point-min))
+                (when (re-search-forward "^[ \t]*local user=\\(.*\\)$" nil t)
+                  (setq user (match-string-no-properties 1)))
+                (cons user key))))))
 
 (defun shellfish--random-iv ()
   "Return 32 hex characters (16 random bytes)."
