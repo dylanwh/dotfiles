@@ -6,6 +6,11 @@
 
 ;;; Code:
 
+(require 'url)
+(require 'hex-util)
+
+(declare-function eshell-printn "esh-io")
+
 (defun shellfish--base64 (string)
   "Return base64 encoding of STRING with no newlines."
   (base64-encode-string (encode-coding-string string 'utf-8) t))
@@ -216,6 +221,7 @@ With REFRESH non-nil, re-read the file."
 
 (defun shellfish--upload-encrypted-image (image-path key iv user)
   "Encrypt IMAGE-PATH with KEY and image IV derived from IV, upload to ShellFish.
+USER is the ShellFish user token passed as the attach query parameter.
 Returns the attachment ID string."
   (let ((image-iv (with-temp-buffer
                     (call-process "sh" nil t nil "-c"
@@ -273,9 +279,7 @@ If IMAGE-PATH is non-nil, encrypt and upload the image first."
                         "-out" enc-file)
           (let* ((payload (with-temp-buffer
                             (set-buffer-multibyte nil)
-                            (let ((coding-system-for-read 'binary))
-                              (call-process "sh" nil t nil "-c"
-                                            (format "printf '%s' | xxd -r -p" iv)))
+                            (insert (decode-hex-string iv))
                             (let ((coding-system-for-read 'binary))
                               (insert-file-contents-literally enc-file))
                             (base64-encode-string (buffer-string) t)))
@@ -286,7 +290,7 @@ If IMAGE-PATH is non-nil, encrypt and upload the image first."
                   (url-request-data payload))
               (url-retrieve url
                             (lambda (status)
-                              (when-let ((err (plist-get status :error)))
+                              (when-let* ((err (plist-get status :error)))
                                 (message "ShellFish push error: %s" err))
                               (kill-buffer))
                             nil t t))))
@@ -382,7 +386,8 @@ Example: (shellfish-widget :target \"todos\" :icon \"checklist\" :progress \"3/1
 
 (defun eshell/widget (&rest args)
   "Update a ShellFish widget from eshell.
-Translates --options to keyword args for `shellfish-widget'.
+ARGS are the command-line arguments; translates --options to keyword
+args for `shellfish-widget'.
 Example: widget --target todos --icon globe --progress 3/10 hello"
   (if (member "--help" args)
       (eshell-printn "Usage: widget [OPTIONS] [CONTENT]...
@@ -412,7 +417,10 @@ icon, url, or color based on their format.")
       (apply #'shellfish-widget (nreverse result)))))
 
 (defun shellfish--ios-file-handler (operation &rest args)
-  "File name handler for /ios/clipboard virtual file."
+  "File name handler for /ios/clipboard virtual file.
+Handles OPERATION (one of `insert-file-contents', `file-exists-p',
+`file-readable-p', `file-regular-p', `file-attributes'); passes
+all others through.  ARGS are the operation's arguments."
   (cond
    ((eq operation 'insert-file-contents)
     (let ((text (shellfish--paste-sync)))
