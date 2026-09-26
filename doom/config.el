@@ -424,6 +424,7 @@
   :config
   (setq agent-shell-show-welcome-message nil)
   (setq agent-shell-header-style nil)
+  (setq agent-shell-inhibit-system-sleep nil)
 
   (setq agent-shell-anthropic-claude-environment
         (agent-shell-make-environment-variables :inherit-env t))
