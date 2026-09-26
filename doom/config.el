@@ -394,6 +394,10 @@
   (evil-ex-define-cmd "q" 'bury-buffer)
   (evil-ex-define-cmd "wq" 'doom/save-and-kill-buffer))
 
+(use-package pinentry
+  :config
+  (pinentry-start))
+
 (use-package age
   :custom
   (age-program "rage")
@@ -403,7 +407,7 @@
   (age-default-recipient
    '("~/.ssh/authorized_keys"))
   :config
-  (setenv "PINENTRY_PROGRAM" "")
+  (setenv "PINENTRY_PROGRAM" "pinentry-emacs")
   (age-file-enable))
 
 (setq shell-file-name (executable-find "bash"))

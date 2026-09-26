@@ -69,6 +69,7 @@
 ;; solaire-mode package:
 (package! solaire-mode :disable t)
 (package! jq-ts-mode)
+(package! pinentry)
 
 ;; Load local packages if file exists
 (let ((local-packages (expand-file-name "local-packages.el" doom-user-dir)))

@@ -74,6 +74,7 @@ in
       opener
       pandoc
       (perl.withPackages perlModules)
+      pinentry-emacs
       pipenv
       pstree
       pv
