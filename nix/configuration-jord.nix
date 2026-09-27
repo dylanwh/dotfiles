@@ -14,6 +14,7 @@
     <home-manager/nixos>
     /etc/nixos/hardware-configuration.nix
     ./packages.nix
+    ./system/desktop.nix
     ./system/locale.nix
     ./system/nfs.nix
     ./system/nosleep.nix

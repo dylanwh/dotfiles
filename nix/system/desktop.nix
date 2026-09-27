@@ -7,7 +7,6 @@
 
 let
   tuigreet = "${pkgs.tuigreet}/bin/tuigreet";
-  niri-session = "${pkgs.niri}/share/wayland-sessions";
 in
 
 {
@@ -66,30 +65,36 @@ in
     polkitPolicyOwners = [ "dylan" ];
   };
 
-  services.greetd = {
-    enable = true;
-    settings = {
-      default_session = {
-        command = "${tuigreet} --time --remember --remember-user-session --sessions ${niri-session},startplasma-wayland";
-        user = "greeter";
-      };
-    };
+  # services.greetd = {
+  #   enable = true;
+  #   settings = {
+  #     default_session = {
+  #       command = "${tuigreet} --time --remember --remember-user-session --cmd niri-session";
+  #       user = "greeter";
+  #     };
+  #   };
+  # };
+  services.displayManager.ly.enable = true;
+
+  # Optional settings (e.g., enabling the big ASCII clock)
+  services.displayManager.ly.settings = {
+    bigclock = true;
   };
 
   # this is a life saver.
   # literally no documentation about this anywhere.
   # might be good to write about this...
   # https://www.reddit.com/r/NixOS/comments/u0cdpi/tuigreet_with_xmonad_how/
-  systemd.services.greetd.serviceConfig = {
-    Type = "idle";
-    StandardInput = "tty";
-    StandardOutput = "tty";
-    StandardError = "journal"; # Without this errors will spam on screen
-    # Without these bootlogs will spam on screen
-    TTYReset = true;
-    TTYVHangup = true;
-    TTYVTDisallocate = true;
-  };
+  # systemd.services.greetd.serviceConfig = {
+  #   Type = "idle";
+  #   StandardInput = "tty";
+  #   StandardOutput = "tty";
+  #   StandardError = "journal"; # Without this errors will spam on screen
+  #   # Without these bootlogs will spam on screen
+  #   TTYReset = true;
+  #   TTYVHangup = true;
+  #   TTYVTDisallocate = true;
+  # };
 
   services.udev = {
     packages = with pkgs; [
@@ -111,17 +116,5 @@ in
       "gtk"
     ];
   };
-
-  home-manager.users.dylan =
-    { pkgs, config, ... }:
-    {
-      imports = [
-        ../home/desktop.nix
-        ../home/qutebrowser.nix
-      ];
-
-      home.stateVersion = "25.05";
-
-    };
 
 }
