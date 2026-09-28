@@ -1,0 +1,136 @@
+{
+    "key_newNavigatorTab": {
+        "modifiers": "meta",
+        "key": "T"
+    },
+    "key_newNavigator": {
+        "modifiers": "meta",
+        "key": "N"
+    },
+    "key_privatebrowsing": {
+        "modifiers": "meta,shift",
+        "key": "N"
+    },
+    "focusURLBar": {
+        "modifiers": "meta",
+        "key": "L"
+    },
+    "key_selectTab1": {
+        "modifiers": "meta",
+        "key": "1"
+    },
+    "key_selectTab2": {
+        "modifiers": "meta",
+        "key": "2"
+    },
+    "key_selectTab3": {
+        "modifiers": "meta",
+        "key": "3"
+    },
+    "key_selectTab4": {
+        "modifiers": "meta",
+        "key": "4"
+    },
+    "key_selectTab5": {
+        "modifiers": "meta",
+        "key": "5"
+    },
+    "key_selectTab6": {
+        "modifiers": "meta",
+        "key": "6"
+    },
+    "key_selectTab7": {
+        "modifiers": "meta",
+        "key": "7"
+    },
+    "key_selectTab8": {
+        "modifiers": "meta",
+        "key": "8"
+    },
+    "key_selectLastTab": {
+        "modifiers": "meta",
+        "key": "9"
+    },
+    "goBackKb2": {
+        "modifiers": "meta",
+        "key": "["
+    },
+    "goForwardKb2": {
+        "modifiers": "meta",
+        "key": "]"
+    },
+    "key_reload_skip_cache2": {
+        "modifiers": "meta",
+        "keycode": "VK_F5"
+    },
+    "key_reload_skip_cache": {
+        "modifiers": "accel,meta",
+        "keycode": "VK_RETURN"
+    },
+    "key_quitApplication": {
+        "modifiers": "meta",
+        "key": "Q"
+    },
+    "printKb": {
+        "modifiers": "meta",
+        "key": "P"
+    },
+    "key_savePage": {
+        "modifiers": "meta",
+        "key": "S"
+    },
+    "openFileKb": {
+        "modifiers": "meta",
+        "key": "O"
+    },
+    "key_close": {
+        "modifiers": "meta",
+        "key": "W"
+    },
+    "focusURLBar2": {
+        "modifiers": "meta",
+        "key": "D"
+    },
+    "key_search": {
+        "modifiers": "meta",
+        "key": "K"
+    },
+    "key_search2": {
+        "modifiers": "meta",
+        "key": "J"
+    },
+    "key_find": {
+        "modifiers": "meta",
+        "key": "F"
+    },
+    "key_findAgain": {
+        "modifiers": "meta",
+        "key": "G"
+    },
+    "key_findPrevious": {
+        "modifiers": "meta,shift",
+        "key": "G"
+    },
+    "key_gotoHistory": {
+        "modifiers": "meta",
+        "key": "H"
+    },
+    "viewBookmarksSidebarKb": {
+        "modifiers": "meta",
+        "key": "B"
+    },
+    "viewGenaiChatSidebarKb": {},
+    "toggleSidebarKb": {},
+    "key_fullZoomEnlarge": {
+        "modifiers": "meta",
+        "key": "="
+    },
+    "key_fullZoomReduce": {
+        "modifiers": "meta",
+        "key": "-"
+    },
+    "key_fullZoomReset": {
+        "modifiers": "meta",
+        "key": "0"
+    }
+}

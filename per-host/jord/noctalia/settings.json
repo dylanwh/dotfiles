@@ -16,7 +16,7 @@
         "enableWindowsSearch": true,
         "iconMode": "tabler",
         "ignoreMouseInput": false,
-        "overviewLayer": false,
+        "overviewLayer": true,
         "pinnedApps": [
         ],
         "position": "center",
@@ -242,6 +242,9 @@
                         "terminalCommand": ""
                     },
                     "id": "plugin:tailscale"
+                },
+                {
+                    "id": "plugin:niri-auto-tile"
                 }
             ]
         }
@@ -353,36 +356,37 @@
         "backgroundOpacity": 1,
         "colorizeIcons": false,
         "deadOpacity": 0.6,
-        "displayMode": "auto_hide",
+        "displayMode": "always_visible",
         "dockType": "attached",
         "enabled": true,
         "floatingRatio": 1,
-        "groupApps": false,
-        "groupClickAction": "cycle",
+        "groupApps": true,
+        "groupClickAction": "list",
         "groupContextMenuMode": "extended",
         "groupIndicatorStyle": "dots",
         "inactiveIndicators": true,
         "indicatorColor": "primary",
         "indicatorOpacity": 0.6,
-        "indicatorThickness": 3,
+        "indicatorThickness": 6,
         "launcherIcon": "",
         "launcherIconColor": "none",
-        "launcherPosition": "end",
+        "launcherPosition": "start",
         "launcherUseDistroLogo": false,
         "monitors": [
-            "HDMI-A-1"
+            "HDMI-A-1",
+            "DP-2"
         ],
-        "onlySameOutput": false,
+        "onlySameOutput": true,
         "pinnedApps": [
             "kitty",
             "1password"
         ],
         "pinnedStatic": true,
         "position": "bottom",
-        "showDockIndicator": false,
-        "showLauncherIcon": false,
+        "showDockIndicator": true,
+        "showLauncherIcon": true,
         "sitOnFrame": false,
-        "size": 1.1500000000000001
+        "size": 1.9000000000000001
     },
     "general": {
         "allowPanelsOnScreenWithoutBar": true,
@@ -612,6 +616,20 @@
                 "countdownEnabled": true,
                 "enabled": true,
                 "keybind": "6"
+            },
+            {
+                "action": "userspaceReboot",
+                "command": "",
+                "countdownEnabled": true,
+                "enabled": false,
+                "keybind": ""
+            },
+            {
+                "action": "rebootToUefi",
+                "command": "",
+                "countdownEnabled": true,
+                "enabled": true,
+                "keybind": "7"
             }
         ],
         "showHeader": true,

@@ -51,7 +51,10 @@
   ];
   boot.kernel.sysctl."kernel.unprivileged_userns_clone" = 1;
   services.ddccontrol.enable = true;
-  users.users.dylan.extraGroups = [ "i2c" ];
+  users.users.dylan.extraGroups = [
+    "i2c"
+    "input"
+  ];
 
   networking.hostName = "jord";
   networking.networkmanager.enable = true;
@@ -68,24 +71,6 @@
   services.avahi.publish.enable = true;
   services.avahi.publish.userServices = true;
 
-  services.sunshine = {
-    enable = true;
-    autoStart = true;
-    capSysAdmin = true;
-    openFirewall = true;
-    package = pkgs.sunshine.override {
-      cudaSupport = true;
-      cudaPackages = pkgs.cudaPackages;
-    };
-  };
-
-  systemd.user.services.sunshine = {
-    environment = {
-      LD_LIBRARY_PATH = "/run/opengl-driver/lib:/run/opengl-driver-32/lib";
-      WAYLAND_DISPLAY = "wayland-1";
-      SUNSHINE_TYPE = "wayland";
-    };
-  };
   hardware.uinput.enable = true;
   services.openssh.enable = true;
 
@@ -134,16 +119,14 @@
   services.hardware.openrgb.motherboard = "amd";
   services.hardware.openrgb.package = pkgs.openrgb-with-all-plugins;
 
-  services.displayManager.lemurs.enable = false;
-
   home-manager.users.dylan =
     { pkgs, ... }:
     {
       imports = [
         ./home/common.nix
         ./home/desktop.nix
+        ./home/firefox.nix
         ./home/kitty.nix
-        ./home/wezterm.nix
       ];
 
       desktop.host = "jord";

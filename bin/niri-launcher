@@ -1,0 +1,49 @@
+#!/usr/bin/env bash
+
+action=$(
+  {
+    niri msg -j workspaces | jq -r '
+      sort_by(.idx)[] |
+      (if .name then "Workspace \(.idx): \(.name)" else "Workspace \(.idx)" end) as $label |
+      (  $label + "\t" + "focus-workspace \(.idx)",
+         "Move Window to " + $label + "\t" + "move-window-to-workspace \(.idx)"
+      )
+    '
+    cat <<'EOF'
+Close Window	close-window
+Fullscreen Window	fullscreen-window
+Float / Tile Window	toggle-window-floating
+Focus Previous Window	focus-window-previous
+Maximize Column	maximize-column
+Consume Window into Column	consume-window-into-column
+Expel Window from Column	expel-window-from-column
+Consume / Expel Left	consume-or-expel-window-left
+Consume / Expel Right	consume-or-expel-window-right
+Move Window Up in Column	move-window-up
+Move Window Down in Column	move-window-down
+Toggle Tabbed Column	toggle-column-tabbed-display
+Center Column	center-column
+Move Window to Workspace Up	move-window-to-workspace-up
+Move Window to Workspace Down	move-window-to-workspace-down
+EOF
+    if [[ $(niri msg -j outputs | jq 'length') -gt 1 ]]; then
+      cat <<'EOF'
+Move Workspace to Left Monitor	move-workspace-to-monitor-left
+Move Workspace to Right Monitor	move-workspace-to-monitor-right
+EOF
+    fi
+    cat <<'EOF'
+Screenshot	screenshot
+Screenshot Screen	screenshot-screen
+Screenshot Window	screenshot-window
+Power Off Monitors	power-off-monitors
+Toggle Overview	toggle-overview
+Reload Config	load-config-file
+Quit Niri	quit
+EOF
+  } | fuzzel --dmenu --width=40 --lines=20 --with-nth=1 --accept-nth=2
+)
+
+[[ -z "$action" ]] && exit 0
+read -ra parts <<< "$action"
+exec niri msg action "${parts[@]}"

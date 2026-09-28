@@ -5,18 +5,14 @@
   ...
 }:
 
-let
-  tuigreet = "${pkgs.tuigreet}/bin/tuigreet";
-in
-
 {
-
   fonts.packages = with pkgs; [
     nerd-fonts.sauce-code-pro
   ];
 
   environment.systemPackages = with pkgs; [
     brightnessctl
+    fuzzel
     i2c-tools
     liquidctl
     noctalia-shell
@@ -29,6 +25,7 @@ in
     wayland-utils
     wayvnc
     wlr-randr
+    xremap
     xwayland-satellite
   ];
 
@@ -57,6 +54,11 @@ in
   programs.firefox.enable = true;
   programs.niri.enable = true;
   programs.xwayland.enable = true;
+  #services.displayManager.sddm.enable = true;
+  services.desktopManager.plasma6.enable = true;
+  services.displayManager.plasma-login-manager.enable = true;
+  services.displayManager.defaultSession = lib.mkForce "plasma";
+  systemd.services.plasmalogin.environment.KWIN_FORCE_SW_CURSOR = "1";
 
   programs._1password-gui = {
     enable = true;
@@ -64,37 +66,6 @@ in
     # require enabling PolKit integration on some desktop environments (e.g. Plasma).
     polkitPolicyOwners = [ "dylan" ];
   };
-
-  # services.greetd = {
-  #   enable = true;
-  #   settings = {
-  #     default_session = {
-  #       command = "${tuigreet} --time --remember --remember-user-session --cmd niri-session";
-  #       user = "greeter";
-  #     };
-  #   };
-  # };
-  services.displayManager.ly.enable = true;
-
-  # Optional settings (e.g., enabling the big ASCII clock)
-  services.displayManager.ly.settings = {
-    bigclock = true;
-  };
-
-  # this is a life saver.
-  # literally no documentation about this anywhere.
-  # might be good to write about this...
-  # https://www.reddit.com/r/NixOS/comments/u0cdpi/tuigreet_with_xmonad_how/
-  # systemd.services.greetd.serviceConfig = {
-  #   Type = "idle";
-  #   StandardInput = "tty";
-  #   StandardOutput = "tty";
-  #   StandardError = "journal"; # Without this errors will spam on screen
-  #   # Without these bootlogs will spam on screen
-  #   TTYReset = true;
-  #   TTYVHangup = true;
-  #   TTYVTDisallocate = true;
-  # };
 
   services.udev = {
     packages = with pkgs; [
@@ -108,13 +79,4 @@ in
   }; # udev
 
   services.printing.enable = true;
-  xdg.portal = {
-    enable = true;
-    extraPortals = [ pkgs.xdg-desktop-portal-gnome ];
-    config.niri.default = [
-      "gnome"
-      "gtk"
-    ];
-  };
-
 }

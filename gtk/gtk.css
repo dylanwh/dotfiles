@@ -1,0 +1,15 @@
+@import url("noctalia.css");
+@import 'colors.css';
+
+@binding-set gtk-super-cut-copy-paste
+{
+        bind "<super>x" { "cut-clipboard" () };
+        bind "<super>c" { "copy-clipboard" () };
+        bind "<super>v" { "paste-clipboard" () };
+        bind "<super>a" { "select-all" (1) };
+        bind "<super>z" { "undo" () };
+}
+
+* {
+        -gtk-key-bindings: gtk-super-cut-copy-paste
+}

@@ -1,0 +1,42 @@
+keymap:
+  - name: macOS quit and close
+    application:
+      not: [firefox, kitty]
+    remap:
+      Super-w: { launch: ["niri", "msg", "action", "close-window"] }
+      Super-q: { launch: ["niri", "msg", "action", "close-window"] }
+
+  - name: Niri
+    remap:
+      F3: { launch: ["niri", "msg", "action", "toggle-overview"] }
+      F11: { launch: ["niri", "msg", "action", "toggle-overview"] }
+
+  # - name: Firefox
+  #   application:
+  #     only: [firefox]
+  #   remap:
+  #     # Tabs
+  #     Super-1: Alt-1
+  #     Super-2: Alt-2
+  #     Super-3: Alt-3
+  #     Super-4: Alt-4
+  #     Super-5: Alt-5
+  #     Super-6: Alt-6
+  #     Super-7: Alt-7
+  #     Super-8: Alt-8
+  #     Super-9: Alt-9
+  #     Super-t: Ctrl-t
+  #     Super-w: Ctrl-w
+  #     Super-Shift-t: Ctrl-Shift-t
+  #     Super-Shift-leftbrace: Ctrl-Shift-Tab
+  #     Super-Shift-rightbrace: Ctrl-Tab
+  #     # Navigation
+  #     Super-l: Ctrl-l
+  #     Super-r: Ctrl-r
+  #     Super-Shift-r: Ctrl-Shift-r
+  #     Super-leftbrace: Alt-Left
+  #     Super-rightbrace: Alt-Right
+  #     Super-f: Ctrl-f
+  #     # Windows
+  #     Super-n: Ctrl-n
+  #     Super-Shift-n: Ctrl-Shift-p

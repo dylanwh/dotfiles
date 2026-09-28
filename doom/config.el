@@ -34,7 +34,8 @@
 (defvar my/host-theme-alist
   '(("bragi" . doom-moonlight)
     ("frigg" . doom-old-hope)
-    ("odin" . doom-outrun-electric))
+    ("odin" . doom-outrun-electric)
+    ("jord" . modus-vivendi-tinted))
   "Alist mapping hostnames to theme names.") 
 
 (with-eval-after-load 'vterm

@@ -1,19 +1,21 @@
 {
   config,
   pkgs,
+  lib,
   ...
 }:
 
 let
+  isDarwin = pkgs.stdenv.hostPlatform.isDarwin;
   c = config.selenized.colors;
-  withNixEnv = "${config.home.homeDirectory}/.local/bin/with-nix-env";
+  withNixEnv = lib.optionalString isDarwin "${config.home.homeDirectory}/.local/bin/with-nix-env";
 in
 {
   programs.kitty = {
     enable = true;
-    package = if pkgs.stdenv.hostPlatform.isDarwin then pkgs.emptyDirectory else pkgs.kitty;
+    package = if isDarwin then pkgs.emptyDirectory else pkgs.kitty;
 
-    environment = {
+    environment = lib.optionalAttrs isDarwin {
       PATH = "/run/current-system/sw/bin:/nix/var/nix/profiles/default/bin:/usr/local/bin:/usr/bin:/usr/sbin:/bin:/sbin";
     };
 
@@ -71,6 +73,8 @@ in
       "cmd+minus" = "change_font_size all -2.0";
       "cmd+shift+escape" = "kitty_shell overlay";
       "cmd+return" = "toggle_fullscreen";
+      "cmd+w" = "close_tab";
+      "cmd+q" = "quit";
     };
 
     settings = {
