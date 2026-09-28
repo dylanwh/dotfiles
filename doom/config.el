@@ -90,7 +90,14 @@
 (with-eval-after-load 'org
   ;; Log timestamp when a task is marked DONE
   (setq org-log-done 'time)
-  (setq org-priority-lowest ?F))
+  (setq org-priority-lowest ?F)
+  (setq org-priority-faces
+        '((?A . error)
+          (?B . warning)
+          (?C . success)
+          (?D . font-lock-keyword-face)
+          (?E . font-lock-comment-face)
+          (?F . shadow))))
 
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
