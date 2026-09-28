@@ -89,7 +89,8 @@
 
 (with-eval-after-load 'org
   ;; Log timestamp when a task is marked DONE
-  (setq org-log-done 'time))
+  (setq org-log-done 'time)
+  (setq org-priority-lowest ?F))
 
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
@@ -546,18 +547,18 @@
     "Return all unique tags from the elfeed database, excluding `my/elfeed-ignored-tags'."
     (let ((tags (make-hash-table :test 'eq)))
       (with-elfeed-db-visit (entry _feed)
-                            (dolist (tag (elfeed-entry-tags entry))
-                              (unless (memq tag my/elfeed-ignored-tags)
-                                (puthash tag t tags))))
+        (dolist (tag (elfeed-entry-tags entry))
+          (unless (memq tag my/elfeed-ignored-tags)
+            (puthash tag t tags))))
       (hash-table-keys tags)))
 
   (defun my/elfeed-unread-count (tag)
     "Return the number of unread elfeed entries with TAG."
     (let ((count 0))
       (with-elfeed-db-visit (entry _feed)
-                            (when (and (memq 'unread (elfeed-entry-tags entry))
-                                       (memq tag (elfeed-entry-tags entry)))
-                              (cl-incf count)))
+        (when (and (memq 'unread (elfeed-entry-tags entry))
+                   (memq tag (elfeed-entry-tags entry)))
+          (cl-incf count)))
       count))
 
   (defun my/elfeed-tag-filter ()
