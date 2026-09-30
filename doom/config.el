@@ -68,7 +68,7 @@
 (setq org-directory "~/org/")
 
 ;; Org-mode configuration
-(load! "org-links.el")
+(load! "my-links.el")
 (load! "ssh-utils.el")
 (load! "shellfish.el")
 
@@ -82,11 +82,11 @@
   (add-to-list 'org-capture-templates
                '("l" "Link" entry
                  (file+headline "~/org/links.org" "Inbox")
-                 (function org-links-capture-template)) t)
+                 (function my-links-capture-template)) t)
   (add-to-list 'org-capture-templates
                '("L" "Link (protocol)" entry
                  (file+headline "~/org/links.org" "Inbox")
-                 (function org-links-protocol-capture-template)
+                 (function my-links-protocol-capture-template)
                  :immediate-finish t) t))
 
 (with-eval-after-load 'org
