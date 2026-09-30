@@ -19,6 +19,7 @@
         ./home/alacritty.nix
         ./home/common.nix
         ./home/karabiner.nix
+        ./home/ghostty.nix
         ./home/kitty.nix
         ./home/macos.nix
         ./home/mail.nix
