@@ -15,6 +15,7 @@ let
     if lib.versionOlder "25.11" pkgs.lib.version then pkgs.nixfmt else pkgs.nixfmt-rfc-style
   );
   pinned = import ./nixpkgs-pinned.nix;
+  ghostty = if pkgs.stdenv.hostPlatform.isDarwin then pkgs.ghostty-bin else pkgs.ghostty;
 in
 
 {
@@ -60,6 +61,7 @@ in
       jujutsu
       kdlfmt
       kitty.terminfo
+      ghostty.terminfo
       moreutils
       ncdu
       nh

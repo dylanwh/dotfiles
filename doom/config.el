@@ -57,6 +57,7 @@
 
 (setq doom-modeline-unicode-fallback nil)
 (setq xterm-extra-capabilities '(reportBackground))
+(xterm-mouse-mode t)
 
 ;; I like to have plenty of time to read a message
 (setq minibuffer-message-timeout 60)

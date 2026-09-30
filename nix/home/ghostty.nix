@@ -8,6 +8,7 @@
 let
   isDarwin = pkgs.stdenv.hostPlatform.isDarwin;
   withNixEnv = "${config.home.homeDirectory}/.local/bin/with-nix-env ";
+  ghostty = if isDarwin then pkgs.ghostty-bin else pkgs.ghostty;
 
   variants = builtins.fromJSON (builtins.readFile ../../selenized/variants.json);
 
@@ -46,8 +47,10 @@ in
 {
   programs.ghostty = {
     enable = true;
-    package = if isDarwin then pkgs.ghostty-bin else pkgs.ghostty;
-    enableFishIntegration = true;
+    package = ghostty;
+    enableFishIntegration = false;
+    enableBashIntegration = false;
+    enableZshIntegration = false;
     clearDefaultKeybinds = true;
 
     themes = {
@@ -65,14 +68,13 @@ in
       quit-after-last-window-closed = false;
       cursor-style-blink = false;
       mouse-hide-while-typing = true;
-      shell-integration-features = "cursor,sudo,ssh-env,ssh-terminfo";
       keybind = [ "global:super+semicolon=toggle_quick_terminal" ];
-      quick-terminal-size = "100%";
+      quick-terminal-position = "center";
     }
     // lib.optionalAttrs isDarwin {
       command = "${withNixEnv}eshell";
       macos-option-as-alt = true;
-      macos-titlebar-style = "hidden";
+      macos-titlebar-style = "native";
       macos-window-buttons = "hidden";
       window-colorspace = "display-p3";
     };
