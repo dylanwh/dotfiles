@@ -40,6 +40,8 @@
 
 (with-eval-after-load 'vterm
   (remove-hook 'vterm-mode-hook #'mode-line-invisible-mode))
+(with-eval-after-load 'ghostel
+  (remove-hook 'ghostel-mode-hook #'mode-line-invisible-mode))
 (with-eval-after-load 'eshell
   (remove-hook 'eshell-mode-hook #'mode-line-invisible-mode))
 (with-eval-after-load 'shell
@@ -422,6 +424,7 @@
 (setq shell-file-name (executable-find "bash"))
 
 (let ((fish (executable-find "fish")))
+  (setq-default ghostel-shell fish)
   (setq-default vterm-shell fish)
   (setq-default explicit-shell-file-name fish))
 
