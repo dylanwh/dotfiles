@@ -68,8 +68,17 @@ in
       quit-after-last-window-closed = false;
       cursor-style-blink = false;
       mouse-hide-while-typing = true;
-      keybind = [ "global:super+semicolon=toggle_quick_terminal" ];
+      keybind = [
+        "global:super+semicolon=toggle_quick_terminal"
+        "super+c=copy_to_clipboard:mixed"
+        "super+v=paste_from_clipboard"
+        "super+plus=increase_font_size:1"
+        "super+shift+plus=increase_font_size:1"
+        "super+minus=decrease_font_size:1"
+        "super+0=reset_font_size"
+      ];
       quick-terminal-position = "center";
+      quick-terminal-size = "25%";
     }
     // lib.optionalAttrs isDarwin {
       command = "${withNixEnv}eshell";
