@@ -8,7 +8,6 @@
 let
   emacsPackages = (
     ps: [
-      ps.vterm
       ps.mu4e
       (ps.treesit-grammars.with-grammars (
         g:
@@ -21,8 +20,7 @@ let
     ]
   );
   # emacsBase = if pkgs.stdenv.hostPlatform.isDarwin then pkgs.emacs-macport else pkgs.emacs-nox;
-  emacsBase = pkgs.emacs-nox;
-  emacs = (pkgs.emacsPackagesFor emacsBase).emacsWithPackages emacsPackages;
+  emacs = (pkgs.emacsPackagesFor pkgs.emacs-nox).emacsWithPackages emacsPackages;
 in
 {
   home.sessionVariables.DOOMLOCALDIR = "$HOME/.local/doom";
@@ -38,10 +36,10 @@ in
   home.file.".doom.d".source =
     config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/Git/dylanwh/dotfiles/doom";
   home.file.".emacs.d".source = pkgs.fetchFromGitHub {
-      owner = "doomemacs";
-      repo = "core";
-      rev = "01d68aaf6bd7db073365385cd82e1ad7e815295c";
-      fetchSubmodules = true;
-      hash = "sha256-+b0yNSXBTNroSuwH89Mp5wtJojaGfRgDn9G2ooorurM=";
+    owner = "doomemacs";
+    repo = "core";
+    rev = "01d68aaf6bd7db073365385cd82e1ad7e815295c";
+    fetchSubmodules = true;
+    hash = "sha256-+b0yNSXBTNroSuwH89Mp5wtJojaGfRgDn9G2ooorurM=";
   };
 }
