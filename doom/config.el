@@ -73,6 +73,22 @@
 (load! "ssh-utils.el")
 (load! "shellfish.el")
 
+(with-eval-after-load 'org
+  ;; Log timestamp when a task is marked DONE
+  (setq org-log-done 'time)
+  (setq org-priority-lowest ?F)
+  (setq org-priority-faces
+        '((?A . error)
+          (?B . warning)
+          (?C . success)
+          (?D . font-lock-keyword-face)
+          (?E . font-lock-comment-face)
+          (?F . shadow))))
+
+;; (with-eval-after-load 'orglink
+;;   (global-orglink-mode t)
+;;   (add-to-list 'org
+
 (with-eval-after-load 'org-capture
   (require 'org-protocol)
   ;; Remove before adding to avoid duplicates on re-eval.
@@ -89,18 +105,6 @@
                  (file+headline "~/org/links.org" "Inbox")
                  (function my-links-protocol-capture-template)
                  :immediate-finish t) t))
-
-(with-eval-after-load 'org
-  ;; Log timestamp when a task is marked DONE
-  (setq org-log-done 'time)
-  (setq org-priority-lowest ?F)
-  (setq org-priority-faces
-        '((?A . error)
-          (?B . warning)
-          (?C . success)
-          (?D . font-lock-keyword-face)
-          (?E . font-lock-comment-face)
-          (?F . shadow))))
 
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
@@ -317,6 +321,10 @@
 
 (use-package web-mode
   :mode ("\\.tt" . web-mode))
+
+(use-package ssh-config-mode
+  :mode (("/\\.?ssh/config\\(\\.d/.*\\)?\\'" . ssh-config-mode)
+         ("/sshd?_config\\'" . ssh-config-mode)))
 
 (add-to-list 'auto-mode-alist '("\\.t\\'" . cperl-mode))
 
@@ -558,18 +566,18 @@
     "Return all unique tags from the elfeed database, excluding `my/elfeed-ignored-tags'."
     (let ((tags (make-hash-table :test 'eq)))
       (with-elfeed-db-visit (entry _feed)
-                            (dolist (tag (elfeed-entry-tags entry))
-                              (unless (memq tag my/elfeed-ignored-tags)
-                                (puthash tag t tags))))
+        (dolist (tag (elfeed-entry-tags entry))
+          (unless (memq tag my/elfeed-ignored-tags)
+            (puthash tag t tags))))
       (hash-table-keys tags)))
 
   (defun my/elfeed-unread-count (tag)
     "Return the number of unread elfeed entries with TAG."
     (let ((count 0))
       (with-elfeed-db-visit (entry _feed)
-                            (when (and (memq 'unread (elfeed-entry-tags entry))
-                                       (memq tag (elfeed-entry-tags entry)))
-                              (cl-incf count)))
+        (when (and (memq 'unread (elfeed-entry-tags entry))
+                   (memq tag (elfeed-entry-tags entry)))
+          (cl-incf count)))
       count))
 
   (defun my/elfeed-tag-filter ()
