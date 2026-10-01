@@ -77,6 +77,7 @@
   ;; Log timestamp when a task is marked DONE
   (setq org-log-done 'time)
   (setq org-priority-lowest ?F)
+  (setq org-babel-tangle-use-relative-file-links nil)
   (setq org-priority-faces
         '((?A . error)
           (?B . warning)
@@ -85,9 +86,9 @@
           (?E . font-lock-comment-face)
           (?F . shadow))))
 
-;; (with-eval-after-load 'orglink
-;;   (global-orglink-mode t)
-;;   (add-to-list 'org
+(with-eval-after-load 'orglink
+  (global-orglink-mode t)
+  (add-to-list 'orglink-activate-in-modes 'ssh-config-mode))
 
 (with-eval-after-load 'org-capture
   (require 'org-protocol)
@@ -565,19 +566,21 @@
   (defun my/elfeed-db-tags ()
     "Return all unique tags from the elfeed database, excluding `my/elfeed-ignored-tags'."
     (let ((tags (make-hash-table :test 'eq)))
-      (with-elfeed-db-visit (entry _feed)
-        (dolist (tag (elfeed-entry-tags entry))
-          (unless (memq tag my/elfeed-ignored-tags)
-            (puthash tag t tags))))
+      (with-elfeed-db-visit
+       (entry _feed)
+       (dolist (tag (elfeed-entry-tags entry))
+         (unless (memq tag my/elfeed-ignored-tags)
+           (puthash tag t tags))))
       (hash-table-keys tags)))
 
   (defun my/elfeed-unread-count (tag)
     "Return the number of unread elfeed entries with TAG."
     (let ((count 0))
-      (with-elfeed-db-visit (entry _feed)
-        (when (and (memq 'unread (elfeed-entry-tags entry))
-                   (memq tag (elfeed-entry-tags entry)))
-          (cl-incf count)))
+      (with-elfeed-db-visit
+       (entry _feed)
+       (when (and (memq 'unread (elfeed-entry-tags entry))
+                  (memq tag (elfeed-entry-tags entry)))
+         (cl-incf count)))
       count))
 
   (defun my/elfeed-tag-filter ()
