@@ -26,18 +26,6 @@
 (setq doom-big-font (font-spec :family "SauceCodePro Nerd Font Mono" :style "Light" :size 28.0))
 (setq nerd-icons-font-family "SauceCodePro Nerd Font Mono")
 
-(setq doom-old-hope-brighter-comments t)
-(setq doom-old-hope-brighter-modeline t)
-(setq doom-outrun-electric-brighter-comments t)
-(setq doom-outrun-electric-brighter-modeline t)
-
-(defvar my/host-theme-alist
-  '(("bragi" . doom-moonlight)
-    ("frigg" . doom-old-hope)
-    ("odin" . doom-outrun-electric)
-    ("jord" . modus-vivendi-tinted))
-  "Alist mapping hostnames to theme names.") 
-
 (with-eval-after-load 'vterm
   (remove-hook 'vterm-mode-hook #'mode-line-invisible-mode))
 (with-eval-after-load 'ghostel
@@ -64,14 +52,13 @@
 
 (setq initial-buffer-choice (lambda () (doom/switch-to-project-scratch-buffer)))
 
+;; Org-mode configuration
+;; 
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
 (setq org-directory "~/org/")
 
-;; Org-mode configuration
 (load! "my-links.el")
-(load! "ssh-utils.el")
-(load! "shellfish.el")
 
 (with-eval-after-load 'org
   ;; Log timestamp when a task is marked DONE
@@ -111,7 +98,8 @@
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
 (setq display-line-numbers-type t)
 
-(load! "perltidy.el")
+(load! "ssh-utils.el")
+(load! "shellfish.el")
 
 ;; Whenever you reconfigure a package, make sure to wrap your config in an
 ;; `with-eval-after-load' block, otherwise Doom's defaults may override your
@@ -142,6 +130,8 @@
 ;; You can also try 'gd' (or 'C-c c d') to jump to their definition and see how
 ;; they are implemented.
 
+(load! "perltidy.el")
+
 (defalias 'perl-mode 'cperl-mode)
 
 (defun my-cperl-mode ()
@@ -157,7 +147,7 @@
 ;; in several languages. Modify those modes syntax entries to consider _ a word
 ;; character
 (let ((wordy-modes '(python-mode-hook cperl-mode-hook ruby-mode-hook
-                     js2-mode-hook c-mode-hook rust-mode))
+                     js2-mode-hook c-mode-hook rust-mode-hook lua-mode-hook))
       (hook #'(lambda () (modify-syntax-entry ?_ "w"))))
   (dolist (mode wordy-modes)
     (add-hook mode hook)))
@@ -207,9 +197,9 @@
 (map! :leader :desc "Magit worktree" :n "g %" #'magit-worktree)
 (map! :leader :desc "Magit push" :n "g P" #'magit-push-current-to-upstream)
 
-(autoload 'shelldon "shelldon" nil t)
-(autoload 'shelldon-async-command "shelldon" nil t)
-(autoload 'shelldon-output-history "shelldon" nil t)
+(use-package shelldon
+  :defer t
+  :commands (shelldon shelldon-async-command shelldon-output-history))
 
 (defun project-shelldon-async-command ()
   "Run `shelldon-async-command' in the current project's root directory."
@@ -267,7 +257,7 @@
 (defun my/doom-sync ()
   "Run doom sync with AOT compilation and GC."
   (interactive)
-  (shelldon-async-command "doom sync --aot -j 4 --gc"))
+  (shelldon-async-command "doom sync --aot -j 4 --gc --force"))
 
 (defun my/ssh-add ()
   "Add SSH keys to agent."
@@ -389,8 +379,6 @@
 
   )
 
-
-
 ;; for some reason, emacsformacosx has scratch buffer not being in lisp-interactive-mode?
 (defun fix-scratch-buffer (&rest _)
   (when (get-buffer "*scratch*")
@@ -463,11 +451,6 @@
   (map! :map agent-shell-mode-map
         :i "RET" #'newline
         :n "RET" #'comint-send-input))
-
-;; Load local configuration if it exists
-(let ((local-config (expand-file-name "local-config.el" doom-user-dir)))
-  (when (file-exists-p local-config)
-    (load local-config)))
 
 (setq code-review-auth-login-marker 'forge)
 
@@ -567,20 +550,20 @@
     "Return all unique tags from the elfeed database, excluding `my/elfeed-ignored-tags'."
     (let ((tags (make-hash-table :test 'eq)))
       (with-elfeed-db-visit
-       (entry _feed)
-       (dolist (tag (elfeed-entry-tags entry))
-         (unless (memq tag my/elfeed-ignored-tags)
-           (puthash tag t tags))))
+        (entry _feed)
+        (dolist (tag (elfeed-entry-tags entry))
+          (unless (memq tag my/elfeed-ignored-tags)
+            (puthash tag t tags))))
       (hash-table-keys tags)))
 
   (defun my/elfeed-unread-count (tag)
     "Return the number of unread elfeed entries with TAG."
     (let ((count 0))
       (with-elfeed-db-visit
-       (entry _feed)
-       (when (and (memq 'unread (elfeed-entry-tags entry))
-                  (memq tag (elfeed-entry-tags entry)))
-         (cl-incf count)))
+        (entry _feed)
+        (when (and (memq 'unread (elfeed-entry-tags entry))
+                   (memq tag (elfeed-entry-tags entry)))
+          (cl-incf count)))
       count))
 
   (defun my/elfeed-tag-filter ()
@@ -615,16 +598,30 @@
      (format "\e]777;notify;emacs;%s\e\\" buf)
      (frame-terminal))))
 
-(require 'server)
-(unless (server-running-p)
-  (server-start))
-
 (add-hook 'server-visit-hook #'my/notify-new-buffer)
 
-;; There are two ways to load a theme. Both assume the theme is installed and
-;; available. You can either set `doom-theme' or manually load a theme with the
-;; `load-theme' function. This is the default:
+(setq doom-old-hope-brighter-comments t)
+(setq doom-old-hope-brighter-modeline t)
+(setq doom-outrun-electric-brighter-comments t)
+(setq doom-outrun-electric-brighter-modeline t)
+
+(defvar my/host-theme-alist
+  '(("bragi" . doom-moonlight)
+    ("frigg" . doom-old-hope)
+    ("odin" . doom-outrun-electric)
+    ("jord" . modus-vivendi-tinted))
+  "Alist mapping hostnames to theme names.") 
+
+;; Load local configuration if it exists
+(let ((local-config (expand-file-name "local-config.el" doom-user-dir)))
+  (when (file-exists-p local-config)
+    (load local-config)))
+
 (let ((theme (or (alist-get (my/short-system-name)
                             my/host-theme-alist
                             nil nil #'string=) 'doom-dark+)))
   (load-theme theme t))
+
+(require 'server)
+(unless (server-running-p)
+  (server-start))
