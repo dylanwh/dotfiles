@@ -73,9 +73,8 @@
           (?E . font-lock-comment-face)
           (?F . shadow))))
 
-(with-eval-after-load 'orglink
-  (global-orglink-mode t)
-  (add-to-list 'orglink-activate-in-modes 'ssh-config-mode))
+(global-orglink-mode t)
+(add-to-list 'orglink-activate-in-modes 'ssh-config-mode)
 
 (with-eval-after-load 'org-capture
   (require 'org-protocol)
