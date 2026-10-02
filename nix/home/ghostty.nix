@@ -23,6 +23,7 @@ let
     {
       background = c.bg_0;
       foreground = c.fg_0;
+      selection-foreground = "cell-foreground";
       selection-background = c.bg_2;
       palette = [
         "0=${c.bg_1}"
@@ -68,6 +69,8 @@ in
       quit-after-last-window-closed = false;
       cursor-style-blink = false;
       mouse-hide-while-typing = true;
+      grapheme-width-method = "legacy";
+
       keybind = [
         "global:super+semicolon=toggle_quick_terminal"
         "super+c=copy_to_clipboard:mixed"
@@ -78,7 +81,7 @@ in
         "super+0=reset_font_size"
       ];
       quick-terminal-position = "center";
-      quick-terminal-size = "25%";
+      quick-terminal-size = "25%,100%";
     }
     // lib.optionalAttrs isDarwin {
       command = "${withNixEnv}eshell";

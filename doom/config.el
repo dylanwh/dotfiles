@@ -256,7 +256,7 @@
 (defun my/doom-sync ()
   "Run doom sync with AOT compilation and GC."
   (interactive)
-  (shelldon-async-command "doom sync --aot -j 4 --gc --force"))
+  (shelldon-async-command "smart-doom-sync"))
 
 (defun my/ssh-add ()
   "Add SSH keys to agent."
@@ -549,20 +549,20 @@
     "Return all unique tags from the elfeed database, excluding `my/elfeed-ignored-tags'."
     (let ((tags (make-hash-table :test 'eq)))
       (with-elfeed-db-visit
-       (entry _feed)
-       (dolist (tag (elfeed-entry-tags entry))
-         (unless (memq tag my/elfeed-ignored-tags)
-           (puthash tag t tags))))
+        (entry _feed)
+        (dolist (tag (elfeed-entry-tags entry))
+          (unless (memq tag my/elfeed-ignored-tags)
+            (puthash tag t tags))))
       (hash-table-keys tags)))
 
   (defun my/elfeed-unread-count (tag)
     "Return the number of unread elfeed entries with TAG."
     (let ((count 0))
       (with-elfeed-db-visit
-       (entry _feed)
-       (when (and (memq 'unread (elfeed-entry-tags entry))
-                  (memq tag (elfeed-entry-tags entry)))
-         (cl-incf count)))
+        (entry _feed)
+        (when (and (memq 'unread (elfeed-entry-tags entry))
+                   (memq tag (elfeed-entry-tags entry)))
+          (cl-incf count)))
       count))
 
   (defun my/elfeed-tag-filter ()

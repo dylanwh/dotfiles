@@ -38,8 +38,8 @@ in
   home.file.".emacs.d".source = pkgs.fetchFromGitHub {
     owner = "doomemacs";
     repo = "core";
-    rev = "01d68aaf6bd7db073365385cd82e1ad7e815295c";
+    rev = "59cdaa32ae933469bb6a1fb3cadee8a988c15968";
     fetchSubmodules = true;
-    hash = "sha256-+b0yNSXBTNroSuwH89Mp5wtJojaGfRgDn9G2ooorurM=";
+    hash = "sha256-Wu2Tztg+QibAewCBeI3UKxN2mheSU2aoXEtb19RuIPM=";
   };
 }

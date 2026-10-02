@@ -8,8 +8,8 @@ EMACS_NIX="$DOTFILES_DIR/nix/home/emacs.nix"
 old_rev=$(grep 'rev = ' "$EMACS_NIX" | grep -o '"[a-f0-9]*"' | tr -d '"')
 printf 'current rev: %s\n' "$old_rev"
 
-# Get latest commit from doom-emacs
-rev=$(git ls-remote https://github.com/hlissner/doom-emacs HEAD | cut -f1)
+# Get latest commit from doomemacs/core
+rev=$(git ls-remote https://github.com/doomemacs/core HEAD | cut -f1)
 printf 'new rev:     %s\n' "$rev"
 
 if [ "$old_rev" = "$rev" ]; then
@@ -18,12 +18,12 @@ if [ "$old_rev" = "$rev" ]; then
 fi
 
 # Show changelog
-printf '\nChangelog: https://github.com/hlissner/doom-emacs/compare/%s...%s\n\n' "$old_rev" "$rev"
+printf '\nChangelog: https://github.com/doomemacs/core/compare/%s...%s\n\n' "$old_rev" "$rev"
 
 if command -v curl > /dev/null 2>&1 && command -v jq > /dev/null 2>&1; then
     printf 'Recent commits:\n'
-    curl -s "https://api.github.com/repos/hlissner/doom-emacs/compare/${old_rev}...${rev}" \
-        | jq -r '.commits[] | "  \(.sha[0:7]) \(.commit.message | split("\n")[0])"' \
+    curl -s "https://api.github.com/repos/doomemacs/core/compare/${old_rev}...${rev}" \
+        | jq -r '.commits[]? | "  \(.sha[0:7]) \(.commit.message | split("\n")[0])"' \
         | tail -20
     printf '\n'
 fi
@@ -35,16 +35,18 @@ case "$answer" in
     *) printf 'Aborted.\n'; exit 0 ;;
 esac
 
-# Get sha256 hash for the new tarball
-printf 'Fetching sha256...\n'
-sha256=$(nix-prefetch-url --unpack \
-    "https://github.com/hlissner/doom-emacs/archive/${rev}.tar.gz" 2>/dev/null)
-printf 'sha256: %s\n' "$sha256"
+# Get SRI hash via nix-prefetch-git (fetchSubmodules requires git clone, not tarball)
+printf 'Fetching hash...\n'
+hash=$(nix-prefetch-git --fetch-submodules \
+    --url "https://github.com/doomemacs/core" \
+    --rev "$rev" 2>/dev/null \
+    | jq -r '.hash')
+printf 'hash: %s\n' "$hash"
 
 # Update nix/home/emacs.nix
 perl -pi -e \
     "s|rev = \"[a-f0-9]+\";|rev = \"${rev}\";|;
-     s|sha256 = \"[^\"]+\";|sha256 = \"${sha256}\";|" \
+     s|hash = \"sha256-[^\"]+\";|hash = \"${hash}\";|" \
     "$EMACS_NIX"
 
 printf 'Updated %s\n' "$EMACS_NIX"

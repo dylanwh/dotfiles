@@ -1,0 +1,6 @@
+#!/bin/sh
+set -eu
+
+doom sync --aot -j 4 --gc --force
+
+printf '\e]777;notify;smart-doom-sync;doom sync complete\e\\'

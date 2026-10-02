@@ -127,6 +127,7 @@
         ./home/desktop.nix
         ./home/firefox.nix
         ./home/kitty.nix
+        ./home/ghostty.nix
       ];
 
       desktop.host = "jord";
