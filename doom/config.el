@@ -400,6 +400,8 @@
         evil-vsplit-window-right t
         hscroll-margin 2
         hscroll-step 1)
+  (evil-ex-define-cmd "tangle" 'org-babel-tangle)
+  (evil-ex-define-cmd "scratch" 'scratch-buffer)
   (evil-ex-define-cmd "q" 'bury-buffer)
   (evil-ex-define-cmd "wq" 'doom/save-and-kill-buffer))
 
@@ -550,20 +552,20 @@
     "Return all unique tags from the elfeed database, excluding `my/elfeed-ignored-tags'."
     (let ((tags (make-hash-table :test 'eq)))
       (with-elfeed-db-visit
-       (entry _feed)
-       (dolist (tag (elfeed-entry-tags entry))
-         (unless (memq tag my/elfeed-ignored-tags)
-           (puthash tag t tags))))
+        (entry _feed)
+        (dolist (tag (elfeed-entry-tags entry))
+          (unless (memq tag my/elfeed-ignored-tags)
+            (puthash tag t tags))))
       (hash-table-keys tags)))
 
   (defun my/elfeed-unread-count (tag)
     "Return the number of unread elfeed entries with TAG."
     (let ((count 0))
       (with-elfeed-db-visit
-       (entry _feed)
-       (when (and (memq 'unread (elfeed-entry-tags entry))
-                  (memq tag (elfeed-entry-tags entry)))
-         (cl-incf count)))
+        (entry _feed)
+        (when (and (memq 'unread (elfeed-entry-tags entry))
+                   (memq tag (elfeed-entry-tags entry)))
+          (cl-incf count)))
       count))
 
   (defun my/elfeed-tag-filter ()
