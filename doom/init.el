@@ -23,8 +23,9 @@
        ;;helm                  ; the *other* search engine for love and life
        ;;ido                   ; the other *other* search engine...
        ;;ivy                   ; a search engine for love and life
-       (corfu +orderless)
-       vertico
+       (corfu +icons +orderless;
+              +dabbrev)
+       (vertico +icons)
 
        :ui
        ;;deft                  ; notational velocity for Emacs
@@ -45,7 +46,8 @@
        ;;unicode               ; extended unicode support for various languages
        vc-gutter               ; vcs diff in the fringe
        vi-tilde-fringe         ; fringe tildes to mark beyond EOB
-       window-select           ; visually switch windows
+       (window-select          ; visually switch windows
+        +switch-window) 
        workspaces              ; tab emulation, persistence & separate workspaces
        ;;zen                   ; distraction-free coding or writing
 
@@ -150,7 +152,7 @@
        ;;php                   ; perl's insecure younger brother
        ;;plantuml              ; diagrams for confusing people more
        ;;purescript            ; javascript, but functional
-       (python +lsp +uv
+       (python +lsp +uv        ; Beautiful is better than ugly
                +tree-sitter)       
        ;;qt                    ; the 'cutest' gui framework ever
        ;;racket                ; a DSL for DSLs
