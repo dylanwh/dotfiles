@@ -94,6 +94,7 @@
     iconv
     nerd-fonts.sauce-code-pro
     openssl
+    opener
     #qutebrowser
   ];
 

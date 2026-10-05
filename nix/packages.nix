@@ -73,7 +73,6 @@ in
       notcurses
       nq
       oha
-      opener
       pandoc
       (perl.withPackages perlModules)
       pinentry-emacs

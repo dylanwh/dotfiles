@@ -388,7 +388,6 @@
         ],
         "onlySameOutput": true,
         "pinnedApps": [
-            "ghostty"
         ],
         "pinnedStatic": true,
         "position": "bottom",

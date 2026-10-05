@@ -16,6 +16,7 @@
     i2c-tools
     liquidctl
     noctalia-shell
+    opener
     openrgb-with-all-plugins
     pywalfox-native
     quickshell
@@ -25,7 +26,6 @@
     wayland-utils
     wayvnc
     wlr-randr
-    xremap
     xwayland-satellite
   ];
 
@@ -59,6 +59,7 @@
   services.displayManager.plasma-login-manager.enable = true;
   services.displayManager.defaultSession = lib.mkForce "plasma";
   systemd.services.plasmalogin.environment.KWIN_FORCE_SW_CURSOR = "1";
+  xdg.portal.xdgOpenUsePortal = true;
 
   services.udev = {
     packages = with pkgs; [

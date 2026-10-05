@@ -253,7 +253,9 @@ layout {
 // This line starts waybar, a commonly used bar for Wayland compositors.
 // spawn-at-startup "waybar"
 spawn-at-startup "noctalia-shell"
-spawn-sh-at-startup "xremap --watch=config,device $HOME/Git/dylanwh/dotfiles/xremap/config.yml"
+// Not using this for now because sometimes it locks the keyboard on logout /
+// login and the only fix is to ssh in and reboot.
+// spawn-sh-at-startup "xremap --watch=config,device $HOME/Git/dylanwh/dotfiles/xremap/config.yml"
 spawn-at-startup "pywalfox" "start"
 // To run a shell command (with variables, pipes, etc.), use spawn-sh-at-startup:
 // spawn-sh-at-startup "qs -c ~/source/qs/MyAwesomeShell"
