@@ -388,8 +388,7 @@
         ],
         "onlySameOutput": true,
         "pinnedApps": [
-            "kitty",
-            "1password"
+            "ghostty"
         ],
         "pinnedStatic": true,
         "position": "bottom",

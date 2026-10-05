@@ -7,6 +7,7 @@
 
 let
   isDarwin = pkgs.stdenv.hostPlatform.isDarwin;
+  isLinux = pkgs.stdenv.hostPlatform.isLinux;
   withNixEnv = "${config.home.homeDirectory}/.local/bin/with-nix-env ";
   ghostty = if isDarwin then pkgs.ghostty-bin else pkgs.ghostty;
 
@@ -89,6 +90,9 @@ in
       macos-titlebar-style = "native";
       macos-window-buttons = "hidden";
       window-colorspace = "display-p3";
+    }
+    // lib.optionalAttrs isLinux {
+      command = "eshell";
     };
   };
 }

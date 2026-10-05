@@ -255,7 +255,6 @@ layout {
 spawn-at-startup "noctalia-shell"
 spawn-sh-at-startup "xremap --watch=config,device $HOME/Git/dylanwh/dotfiles/xremap/config.yml"
 spawn-at-startup "pywalfox" "start"
-spawn-at-startup "1password" "--silent"
 // To run a shell command (with variables, pipes, etc.), use spawn-sh-at-startup:
 // spawn-sh-at-startup "qs -c ~/source/qs/MyAwesomeShell"
 hotkey-overlay {
@@ -342,14 +341,11 @@ binds {
         show-hotkey-overlay
     }
     // Suggested binds for running programs: terminal, app launcher, screen locker.
-    Mod+F2 hotkey-overlay-title="Open a Terminal: kitty" {
-        spawn "kitty"
+    Mod+F2 hotkey-overlay-title="Open a Terminal" {
+        spawn "ghostty"
     }
     Mod+Space hotkey-overlay-title="Run an Application" {
         spawn "noctalia-shell" "ipc" "call" "launcher" "toggle"
-    }
-    Mod+Semicolon hotkey-overlay-title="Niri Command Palette" {
-        spawn "niri-launcher"
     }
     Super+Alt+L hotkey-overlay-title="Lock the Screen" {
         spawn "noctalia-shell" "ipc" "call" "lockScreen" "lock"

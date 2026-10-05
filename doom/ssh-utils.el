@@ -76,8 +76,6 @@ Wildcards and GitHub/Heroku hosts are excluded. Duplicates are removed."
                                    (cdr pair)))))))
     (mapcar #'car sorted)))
 
-(defvar ssh-auth-sock--op-agent (expand-file-name "~/.1password/agent.sock"))
-
 (defun ssh-auth-sock--socket-p (attributes)
   "Return t if mode of ATTRIBUTES indicates socket."
   (and (null (file-attribute-type attributes))
@@ -97,14 +95,9 @@ Wildcards and GitHub/Heroku hosts are excluded. Duplicates are removed."
         t))))
 
 (defun ssh-auth-sock ()
-  "Return the SSH_AUTH_SOCK path, or 1password auth socket, or nil."
+  "Return the SSH_AUTH_SOCK path or nil."
   (let ((sockets (ssh-auth-sock--discover)))
-    (if (and
-         (null sockets)
-         (ssh-auth-sock--socket-p (file-attributes ssh-auth-sock--op-agent))
-         (ssh-auth-sock--reachable-p ssh-auth-sock--op-agent))
-        ssh-auth-sock--op-agent
-      (car sockets))))
+    (car sockets)))
 
 (defun ssh-update-auth ()
   "Update the SSH_AUTH_SOCK environment variable.

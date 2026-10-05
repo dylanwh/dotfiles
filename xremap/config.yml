@@ -1,7 +1,7 @@
 keymap:
   - name: macOS quit and close
     application:
-      not: [firefox, kitty]
+      not: [firefox, kitty, ghostty]
     remap:
       Super-w: { launch: ["niri", "msg", "action", "close-window"] }
       Super-q: { launch: ["niri", "msg", "action", "close-window"] }

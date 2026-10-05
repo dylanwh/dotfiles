@@ -60,13 +60,6 @@
   services.displayManager.defaultSession = lib.mkForce "plasma";
   systemd.services.plasmalogin.environment.KWIN_FORCE_SW_CURSOR = "1";
 
-  programs._1password-gui = {
-    enable = true;
-    # Certain features, including CLI integration and system authentication support,
-    # require enabling PolKit integration on some desktop environments (e.g. Plasma).
-    polkitPolicyOwners = [ "dylan" ];
-  };
-
   services.udev = {
     packages = with pkgs; [
       #qmk
