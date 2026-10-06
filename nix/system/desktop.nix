@@ -11,6 +11,7 @@
   ];
 
   environment.systemPackages = with pkgs; [
+    bitwarden-desktop
     brightnessctl
     fuzzel
     i2c-tools
