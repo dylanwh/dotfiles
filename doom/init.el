@@ -98,8 +98,10 @@
        (eval +overlay)         ; run code, run (also, repls)
        ;;gist                  ; interacting with github gists
        llm                     ; When I said you needed friends, I didn't mean...
-       lookup                  ; navigate your code and its documentation
-       (lsp +eglot +booster)   ; M-x vscode
+       (lookup +dictionary     ; navigate your code and its documentation
+               +docsets
+               +offline)                  
+       (lsp +eglot +peek)      ; M-x vscode
        ;;macos                 ; MacOS-specific commands
        (magit +forge)          ; a git porcelain for Emacs
        make                    ; run make tasks from Emacs
