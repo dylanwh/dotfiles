@@ -60,8 +60,9 @@ Wildcards and GitHub/Heroku hosts are excluded. Duplicates are removed."
 (defun ssh-auth-sock--discover ()
   "Return the paths of owned sockets, newest first."
   (let* ((uid (user-uid))
+         (files (cons (expand-file-name "~/.bitwarden-ssh-agent.sock") (mapcan #'file-expand-wildcards ssh-auth-sock--patterns)))
          (pairs (mapcar (lambda (path) (cons path (file-attributes path)))
-                        (mapcan #'file-expand-wildcards ssh-auth-sock--patterns)))
+                        files))
          (socks (cl-remove-if-not
                  (lambda (pair)
                    (and (cdr pair)
