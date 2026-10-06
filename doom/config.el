@@ -98,7 +98,8 @@
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
 (setq display-line-numbers-type t)
 
-(load! "ssh-utils.el")
+(load! "ssh-auth-sock.el")
+(load! "ssh-hosts.el")
 (load! "shellfish.el")
 
 ;; Whenever you reconfigure a package, make sure to wrap your config in an
@@ -290,7 +291,7 @@
        :desc "nix rebuild" "n" #'my/smart-rebuild
        :desc "doom sync" "d" #'my/doom-sync
        :desc "add ssh keys" "k" #'my/ssh-add
-       :desc "refresh ssh auth socket" "a" #'ssh-update-auth)
+       :desc "refresh ssh auth socket" "a" #'ssh-auth-sock-update)
       :desc "shelldon output history" "h" #'shelldon-output-history
       :desc "dismiss shelldon" "d" #'my/shelldon-dismiss)
 
