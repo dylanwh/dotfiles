@@ -177,7 +177,7 @@
        ;;(wanderlust +gmail)
 
        :app
-       ;;calendar
+       calendar
        ;;irc                   ; how neckbeards socialize
        (rss +org +youtube)     ; emacs as an RSS reader
        ;;twitter               ; twitter client https://twitter.com/vnought

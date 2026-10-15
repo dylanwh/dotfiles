@@ -603,6 +603,14 @@
 
 (add-hook 'server-visit-hook #'my/notify-new-buffer)
 
+;; pretty proced
+(with-eval-after-load 'proced
+  (setq proced-enable-color-flag t
+        proced-format 'medium
+        proced-tree-flag t
+        proced-auto-update-flag 'visible
+        proced-auto-update-interval 5))
+
 (setq doom-old-hope-brighter-comments t)
 (setq doom-old-hope-brighter-modeline t)
 (setq doom-outrun-electric-brighter-comments t)
