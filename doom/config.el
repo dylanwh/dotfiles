@@ -393,6 +393,64 @@
     (setq tramp-use-ssh-controlmaster-options t)
   (setq tramp-use-connection-share t))
 
+;; Headscale SSH prints a login URL and waits for it to be visited before
+;; giving us a shell. TRAMP doesn't know that prompt, so it sits there silently
+;; until the connection times out. Teach it to show the URL (as text and as a
+;; QR code), open it, and wait for ssh to say something else.
+(with-eval-after-load 'tramp-sh
+  (defconst my/tramp-headscale-auth-regexp
+    (rx "To authenticate, visit: " (group "http" (+ (not space))) (* space)
+        ;; Headscale prints this right after the URL, *before* the check
+        ;; actually passes, so it is what ends the buffer.
+        (? "# Authentication checked" (* nonl) (* space))))
+
+  (defun my/tramp-action-headscale-auth (proc vec)
+    "Show the Headscale SSH login URL, then wait for new output from PROC."
+    (require 'qrencode)
+    (let ((url (with-current-buffer (process-buffer proc)
+                 (goto-char (point-min))
+                 (tramp-check-for-regexp proc my/tramp-headscale-auth-regexp)
+                 (match-string 1))))
+      (tramp-message vec 3 "Headscale SSH: authenticate at %s" url)
+      (browse-url url)
+      (with-current-buffer (get-buffer-create "*Headscale SSH*")
+        (let ((inhibit-read-only t))
+          (erase-buffer)
+          (insert url "\n\n"
+                  (propertize (qrencode-format (qrencode url nil nil 'return-raw))
+                              'face 'qrencode-face))
+          (special-mode)
+          (display-buffer (current-buffer))))
+      ;; `display-buffer' (via Doom's popup code) can change the current
+      ;; buffer, so re-enter the process buffer explicitly before narrowing.
+      (with-current-buffer (process-buffer proc)
+        (unwind-protect
+            ;; Suspend timers so `tramp-connection-timeout' can't fire while we
+            ;; wait on the user, as TRAMP itself does for security-key prompts.
+            (let (tramp-dont-suspend-timers)
+              (with-tramp-suspended-timers
+                (with-temp-message "Headscale SSH: waiting for you to authenticate (C-g to abort)"
+                  (redisplay 'force)
+                  ;; Hide the banner from later actions; wait for any new output.
+                  (narrow-to-region (point-max) (point-max))
+                  (tramp-wait-for-regexp proc nil (rx anychar)))))
+          (kill-buffer "*Headscale SSH*"))))
+    t)
+
+  (add-to-list 'tramp-actions-before-shell
+               '(my/tramp-headscale-auth-regexp my/tramp-action-headscale-auth)))
+
+;; The QR code is 41 columns by 22 lines; Doom's default popup is too short.
+(set-popup-rule! "^\\*Headscale SSH\\*" :side 'right :size 52 :select nil :quit t)
+
+;; With kkp active the terminal sends C-g as an escape sequence, which Emacs
+;; only understands as a key at the command loop, not as a quit while it's
+;; busy. Fall back to legacy key encoding while TRAMP waits for login prompts
+;; (passwords, the Headscale check above, ...) so C-g can abort a stuck
+;; connection.
+(with-eval-after-load 'kkp
+  (advice-add 'tramp-process-actions :around #'kkp-restore-legacy-keys))
+
 (with-eval-after-load 'evil
   (setq evil-move-beyond-eol nil
         evil-track-eol t

@@ -71,6 +71,7 @@
 (package! jq-ts-mode)
 (package! pinentry)
 (package! ssh-config-mode)
+(package! qrencode)
 
 ;; Load local packages if file exists
 (let ((local-packages (expand-file-name "local-packages.el" doom-user-dir)))
