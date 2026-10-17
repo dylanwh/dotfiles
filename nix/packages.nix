@@ -28,9 +28,9 @@ in
       claude-agent-acp
       cmake
       cmatrix
-      #codex-acp
       curl
       delta
+      dig
       eza
       fd
       ffmpeg
@@ -107,7 +107,6 @@ in
       vim
       vivid
       wget
-      xan
       zellij
       zstd
     ]

@@ -90,9 +90,9 @@ in
       macos-titlebar-style = "native";
       macos-window-buttons = "hidden";
       window-colorspace = "display-p3";
-    }
-    // lib.optionalAttrs isLinux {
-      command = "eshell";
     };
+    # // lib.optionalAttrs isLinux {
+    # command = "eshell";
+    # };
   };
 }

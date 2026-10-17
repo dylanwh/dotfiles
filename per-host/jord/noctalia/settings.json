@@ -388,6 +388,9 @@
         ],
         "onlySameOutput": true,
         "pinnedApps": [
+            "bitwarden",
+            "firefox",
+            "com.mitchellh.ghostty"
         ],
         "pinnedStatic": true,
         "position": "bottom",
