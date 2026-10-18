@@ -598,9 +598,11 @@ Falls back to ORIG when child frames are unavailable."
   (setq agent-shell-anthropic-claude-environment
         (agent-shell-make-environment-variables :inherit-env t))
 
-  (add-hook 'diff-mode-hook
-            (when (string-match-p "\\*agent-shell-diff\\*" (buffer-name))
-              (evil-emacs-state))))
+  (defun my/agent-shell-diff-emacs-state ()
+    "Use Emacs state in agent-shell diff buffers."
+    (when (string-match-p "\\*agent-shell-diff\\*" (buffer-name))
+      (evil-emacs-state)))
+  (add-hook 'diff-mode-hook #'my/agent-shell-diff-emacs-state))
 
 (with-eval-after-load 'agent-shell
   (map! :map agent-shell-mode-map
