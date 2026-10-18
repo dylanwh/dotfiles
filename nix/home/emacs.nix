@@ -21,6 +21,11 @@ let
   );
   # emacsBase = if pkgs.stdenv.hostPlatform.isDarwin then pkgs.emacs-macport else pkgs.emacs-nox;
   emacs = (pkgs.emacsPackagesFor pkgs.emacs-nox).emacsWithPackages emacsPackages;
+  # A zero timeout is documented as "wait forever", but read_from_emacs passed a
+  # zeroed timeval to select(), making it poll and time out immediately.
+  pinentry-emacs = pkgs.pinentry-emacs.overrideAttrs (old: {
+    patches = (old.patches or [ ]) ++ [ ../patches/pinentry-emacs-timeout.patch ];
+  });
 in
 {
   home.sessionVariables.DOOMLOCALDIR = "$HOME/.local/doom";
@@ -31,6 +36,7 @@ in
   ];
   home.packages = [
     emacs
+    pinentry-emacs
     pkgs.emacs-lsp-booster
   ];
   home.file.".doom.d".source =

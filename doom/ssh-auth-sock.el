@@ -8,17 +8,36 @@
 
 (require 'bookmark)
 
+(defun ssh-auth-sock--rbw ()
+  "Return the path of rbw's ssh-agent."
+  (if-let* ((runtime_dir (getenv "XDG_RUNTIME_DIR")))
+      (file-name-concat runtime_dir "rbw/ssh-agent-socket")
+    (file-name-concat (temporary-file-directory)
+                      (format "rbw-%d" (user-uid))
+                      "ssh-agent-socket")))
+
+(defun ssh-auth-sock--bitwarden ()
+  "Return the path of bitwarden's ssh-agent."
+  (expand-file-name "~/.bitwarden-ssh-agent.sock"))
+
+(defun ssh-auth-sock--launchd ()
+  "Return the paths of launchd's ssh-agent sockets."
+  (list (file-expand-wildcards "/var/run/com.apple.launchd.*/Listeners")
+        (file-expand-wildcards "/private/tmp/com.apple.launchd.*/Listeners")))
+
+(defun ssh-auth-sock--openssh ()
+  "Return the paths of OpenSSH agent sockets, local and forwarded."
+  (list (file-expand-wildcards (expand-file-name "~/.ssh/agent/s.*"))
+        (file-expand-wildcards "/tmp/ssh-*/agent.*")))
+
 (defun ssh-auth-sock--files ()
   "Return the paths of all ssh auth sockets."
-  (let ((files (list
-                (when (eq system-type 'darwin)
-                    (file-expand-wildcards "/private/tmp/com.apple.launchd.*/Listeners"))
-                (when-let* ((runtime_dir (getenv "XDG_RUNTIME_DIR")))
-                  (file-name-concat runtime_dir "rbw/ssh-agent-socket"))
-                (expand-file-name "~/.bitwarden-ssh-agent.sock")
-                (file-expand-wildcards "/tmp/ssh-*/agent.*")
-                (file-expand-wildcards (expand-file-name "~/.ssh/agent/s.*.sshd.*")))))
-    (flatten-tree files)))
+  (flatten-tree
+   (list (if (eq system-type 'darwin)
+             (ssh-auth-sock--launchd)
+           (list (ssh-auth-sock--rbw)
+                 (ssh-auth-sock--bitwarden)))
+         (ssh-auth-sock--openssh))))
 
 (defun ssh-auth-sock--usable-p (path-attrs)
   "Return t if PATH-ATTRS is a reachable socket owned by current user id."

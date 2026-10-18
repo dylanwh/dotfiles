@@ -1,0 +1,19 @@
+--- a/pinentry/pinentry-emacs.c
++++ b/pinentry/pinentry-emacs.c
+@@ -323,12 +323,15 @@ read_from_emacs (int s, int timeout, char *buffer, size_t capacity)
+   size_t read_offset = 0;
+   gpg_error_t result = 0;
+
++  /* A timeout of zero (or less) means "wait forever".  Passing a
++     zeroed timeval to select() would instead make it poll and report
++     a timeout immediately.  */
+   tv.tv_sec = timeout;
+   tv.tv_usec = 0;
+
+   FD_ZERO (&rfds);
+   FD_SET (s, &rfds);
+-  retval = select (s + 1, &rfds, NULL, NULL, &tv);
++  retval = select (s + 1, &rfds, NULL, NULL, timeout > 0 ? &tv : NULL);
+   if (retval == -1)
+     {
+       perror ("select");

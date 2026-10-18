@@ -74,7 +74,6 @@ in
       oha
       pandoc
       (perl.withPackages perlModules)
-      pinentry-emacs
       pipenv
       pstree
       pv
