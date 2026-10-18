@@ -629,6 +629,64 @@ Falls back to ORIG when child frames are unavailable."
 (with-eval-after-load 'browse-url
   (setq browse-url-browser-function 'my/browse-url-remote-opener))
 
+;; eww: identify as a real browser, route some hosts through the gothub/redlib
+;; frontends, and render Markdown responses (via pandoc) instead of raw text.
+(setq url-user-agent "Mozilla/5.0 (X11; Linux x86_64; rv:128.0) Gecko/20100101 Firefox/128.0")
+
+(with-eval-after-load 'eww
+  (defvar my/eww-host-rewrites
+    '(("github.com" . "github.on.default.horse")
+      ("reddit.com" . "reddit.on.default.horse")))
+
+  (defun my/eww-rewrite-host (url)
+    (let ((u (url-generic-parse-url url)))
+      (when-let ((new (cdr (assoc (url-host u) my/eww-host-rewrites))))
+        (setf (url-host u) new))
+      (url-recreate-url u)))
+
+  (defun my/eww-github-blob-to-raw (url)
+    "Rewrite GitHub/gothub blob URLs for Markdown files to their raw form."
+    (let ((u (url-generic-parse-url url)))
+      (when (and (member (url-host u) '("github.com" "github.on.default.horse"))
+                 (string-match
+                  "\\`/\\([^/]+/[^/]+\\)/blob/\\(.+\\.\\(?:md\\|markdown\\)\\)\\(\\?.*\\)?\\'"
+                  (url-filename u)))
+        (setf (url-host u) "github.on.default.horse")
+        (setf (url-filename u)
+              (replace-match "/raw/\\1/\\2\\3" t nil (url-filename u))))
+      (url-recreate-url u)))
+
+  (setq eww-url-transformers
+        (append (default-value 'eww-url-transformers)
+                (list #'my/eww-rewrite-host #'my/eww-github-blob-to-raw)))
+
+  (setq eww-readable-urls
+        '("\\`https?://[^/]*\\(medium\\.com\\|substack\\.com\\)/"
+          "\\`https?://support\\.apple\\.com"))
+
+  (defun my/eww-markdown-response-p ()
+    "Non-nil if the current url-retrieve buffer holds Markdown."
+    (let ((type (and (boundp 'url-http-content-type) url-http-content-type))
+          (path (and url-current-object (url-filename url-current-object))))
+      (or (and type (string-match-p "\\`text/\\(x-\\)?markdown" type))
+          (and path (string-match-p "\\.\\(md\\|markdown\\)\\(\\?.*\\)?\\'" path)))))
+
+  (defun my/eww-display-markdown (orig-fn buffer &optional encode)
+    (if (and url-current-object
+             (my/eww-markdown-response-p)
+             (executable-find "pandoc"))
+        (let ((url (url-recreate-url url-current-object))
+              (start (point))
+              (coding-system-for-read 'no-conversion)
+              (coding-system-for-write 'no-conversion))
+          (call-process-region start (point-max) "pandoc" t t nil
+                               "-f" "gfm" "-t" "html")
+          (goto-char start)
+          (eww-display-html 'utf-8 url nil nil buffer))
+      (funcall orig-fn buffer encode)))
+
+  (advice-add 'eww-display-raw :around #'my/eww-display-markdown))
+
 (setq
  mue4e-headers-skip-duplicates  t
  mu4e-view-show-images t
