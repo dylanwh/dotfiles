@@ -84,6 +84,7 @@ in
       python313Packages.pyflakes
       python313Packages.pytest
       rage
+      rbw
       rclone
       restic
       ripgrep

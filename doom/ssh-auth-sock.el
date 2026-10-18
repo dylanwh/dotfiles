@@ -8,17 +8,17 @@
 
 (require 'bookmark)
 
-(defvar ssh-auth-sock--patterns
-  (cond
-   ((eq system-type 'darwin)
-    (list "/private/tmp/com.apple.launchd.*/Listeners"))
-   (t
-    (list "/tmp/ssh-*/agent.*" (expand-file-name "~/.ssh/agent/s.*.sshd.*")))))
-
 (defun ssh-auth-sock--files ()
   "Return the paths of all ssh auth sockets."
-  (cons (expand-file-name "~/.bitwarden-ssh-agent.sock")
-        (mapcan #'file-expand-wildcards ssh-auth-sock--patterns)))
+  (let ((files (list
+                (when (eq system-type 'darwin)
+                    (file-expand-wildcards "/private/tmp/com.apple.launchd.*/Listeners"))
+                (when-let* ((runtime_dir (getenv "XDG_RUNTIME_DIR")))
+                  (file-name-concat runtime_dir "rbw/ssh-agent-socket"))
+                (expand-file-name "~/.bitwarden-ssh-agent.sock")
+                (file-expand-wildcards "/tmp/ssh-*/agent.*")
+                (file-expand-wildcards (expand-file-name "~/.ssh/agent/s.*.sshd.*")))))
+    (flatten-tree files)))
 
 (defun ssh-auth-sock--usable-p (path-attrs)
   "Return t if PATH-ATTRS is a reachable socket owned by current user id."
