@@ -412,7 +412,6 @@
                  (tramp-check-for-regexp proc my/tramp-headscale-auth-regexp)
                  (match-string 1))))
       (tramp-message vec 3 "Headscale SSH: authenticate at %s" url)
-      (browse-url url)
       (with-current-buffer (get-buffer-create "*Headscale SSH*")
         (let ((inhibit-read-only t))
           (erase-buffer)
