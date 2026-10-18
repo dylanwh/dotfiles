@@ -495,8 +495,8 @@ Falls back to ORIG when child frames are unavailable."
       (let* ((lines (if desc (split-string desc "\n") nil))
              (max-width (max 20 (- (frame-width parent) 4)))
              (width (min max-width
-                         (max 40
-                              (+ (length prompt) 24)
+                         (max 46
+                              (+ (length prompt) 30)
                               (apply #'max 0 (mapcar #'string-width lines)))))
              (height (1+ (length lines)))
              (left (max 0 (/ (- (frame-width parent) width) 2)))
@@ -543,15 +543,18 @@ Falls back to ORIG when child frames are unavailable."
         ;; `pinentry--process-filter' keeps running in its process buffer after
         ;; we return, and `select-frame' switches the current buffer; restore
         ;; it, as `save-window-excursion' does in the original.
+        ;; The description window is one line tall; without this, exiting the
+        ;; first minibuffer of a repeat prompt grows it to `window-min-height'.
         (save-current-buffer
-          (unwind-protect
-              (progn
-                (select-frame-set-input-focus frame)
-                (apply query-function prompt query-args))
-            (when (frame-live-p frame)
-              (delete-frame frame t))
-            (when (frame-live-p orig-frame)
-              (select-frame-set-input-focus orig-frame))))))))
+          (let ((window-min-height 1))
+            (unwind-protect
+                (progn
+                  (select-frame-set-input-focus frame)
+                  (apply query-function prompt query-args))
+              (when (frame-live-p frame)
+                (delete-frame frame t))
+              (when (frame-live-p orig-frame)
+                (select-frame-set-input-focus orig-frame)))))))))
 
 (use-package pinentry
   :config
