@@ -463,8 +463,95 @@
   (evil-ex-define-cmd "q" 'bury-buffer)
   (evil-ex-define-cmd "wq" 'doom/save-and-kill-buffer))
 
+(defun my/pinentry--root-frame (frame)
+  "Return the top-level ancestor of FRAME."
+  (while (frame-parent frame)
+    (setq frame (frame-parent frame)))
+  frame)
+
+(defun my/pinentry--child-frame-prompt (orig labels query-function &rest query-args)
+  "Show the pinentry prompt in a centered child frame with its own minibuffer.
+Falls back to ORIG when child frames are unavailable."
+  (if (not (or (display-graphic-p) (featurep 'tty-child-frames)))
+      (apply orig labels query-function query-args)
+    (let* ((title (cdr (assq 'title labels)))
+           (desc (cdr (assq 'desc labels)))
+           (err (cdr (assq 'error labels)))
+           (prompt (cdr (assq 'prompt labels)))
+           (parent (my/pinentry--root-frame (selected-frame)))
+           (orig-frame (selected-frame))
+           frame)
+      (when (and title desc)
+        (setq desc (concat title "\n" desc)))
+      (when err
+        (setq desc (concat "Error: " (propertize err 'face 'error)
+                           (if desc (concat "\n" desc) ""))))
+      (when (and prompt (string-match "[ \n]*\\'" prompt))
+        (setq prompt (concat (substring prompt 0 (match-beginning 0)) " ")))
+      (let* ((lines (if desc (split-string desc "\n") nil))
+             (max-width (max 20 (- (frame-width parent) 4)))
+             (width (min max-width
+                         (max 40
+                              (+ (length prompt) 24)
+                              (apply #'max 0 (mapcar #'string-width lines)))))
+             (height (1+ (length lines)))
+             (left (max 0 (/ (- (frame-width parent) width) 2)))
+             (top (max 0 (/ (- (frame-height parent) height) 2)))
+             (after-make-frame-functions nil))
+        (unless (and pinentry--prompt-buffer
+                     (buffer-live-p pinentry--prompt-buffer))
+          (setq pinentry--prompt-buffer (generate-new-buffer "*Pinentry*")))
+        (when desc
+          (with-current-buffer pinentry--prompt-buffer
+            (let ((inhibit-read-only t))
+              (erase-buffer)
+              (insert desc))
+            (pinentry-prompt-mode)
+            (setq-local cursor-type nil)
+            (goto-char (point-min))))
+        (setq frame
+              (make-frame
+               `((parent-frame . ,parent)
+                 (minibuffer . ,(if desc t 'only))
+                 ;; On a tty an undecorated child frame has no border.
+                 (undecorated . ,(display-graphic-p))
+                 (child-frame-border-width . 1)
+                 (internal-border-width . 1)
+                 (left . ,(* left (frame-char-width parent)))
+                 (top . ,(* top (frame-char-height parent)))
+                 (width . ,width)
+                 (height . ,height)
+                 (no-other-frame . t)
+                 (unsplittable . t)
+                 (menu-bar-lines . 0)
+                 (tool-bar-lines . 0)
+                 (tab-bar-lines . 0)
+                 (vertical-scroll-bars . nil)
+                 (left-fringe . 0)
+                 (right-fringe . 0)
+                 (desktop-dont-save . t))))
+        (when desc
+          (let ((win (frame-root-window frame)))
+            (set-window-parameter win 'mode-line-format 'none)
+            (set-window-parameter win 'header-line-format 'none)
+            (set-window-buffer win pinentry--prompt-buffer)
+            (set-window-dedicated-p win t)))
+        ;; `pinentry--process-filter' keeps running in its process buffer after
+        ;; we return, and `select-frame' switches the current buffer; restore
+        ;; it, as `save-window-excursion' does in the original.
+        (save-current-buffer
+          (unwind-protect
+              (progn
+                (select-frame-set-input-focus frame)
+                (apply query-function prompt query-args))
+            (when (frame-live-p frame)
+              (delete-frame frame t))
+            (when (frame-live-p orig-frame)
+              (select-frame-set-input-focus orig-frame))))))))
+
 (use-package pinentry
   :config
+  (advice-add 'pinentry--prompt :around #'my/pinentry--child-frame-prompt)
   (pinentry-start))
 
 (use-package age
@@ -679,6 +766,8 @@
     ("odin" . doom-outrun-electric)
     ("jord" . modus-vivendi-tinted))
   "Alist mapping hostnames to theme names.") 
+
+(standard-display-unicode-special-glyphs)
 
 ;; Load local configuration if it exists
 (let ((local-config (expand-file-name "local-config.el" doom-user-dir)))

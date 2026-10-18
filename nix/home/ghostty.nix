@@ -69,6 +69,7 @@ in
       initial-window = true;
       quit-after-last-window-closed = false;
       cursor-style-blink = false;
+      adjust-cursor-thickness = "300%";
       mouse-hide-while-typing = true;
       grapheme-width-method = "legacy";
 
