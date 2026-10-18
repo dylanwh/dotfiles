@@ -29,6 +29,7 @@
   hardware.i2c.enable = true;
 
   services.seatd.enable = true;
+  services.flatpak.enable = true;
 
   boot.blacklistedKernelModules = [
     "amdgpu"
