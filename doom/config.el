@@ -41,6 +41,10 @@
   (set-popup-rule! "^\\*doom:\\(?:v?term\\|e?shell\\)-popup"
     :vslot -5 :size 0.20 :select t :modeline t :quit nil :ttl nil))
 
+(add-hook 'eshell-load-hook #'ghostel-eshell-visual-command-mode)
+(add-hook 'doom-first-buffer-hook #'ghostel-compile-global-mode)
+(add-hook 'doom-first-buffer-hook #'ghostel-comint-global-mode)
+
 (setq +doom-dashboard-ascii-banner-fn (lambda () ))
 
 (setq doom-modeline-unicode-fallback nil)
@@ -590,9 +594,9 @@ Falls back to ORIG when child frames are unavailable."
   (setq agent-shell-anthropic-claude-environment
         (agent-shell-make-environment-variables :inherit-env t))
 
-  (add-hook! 'diff-mode-hook
-    (when (string-match-p "\\*agent-shell-diff\\*" (buffer-name))
-      (evil-emacs-state))))
+  (add-hook 'diff-mode-hook
+            (when (string-match-p "\\*agent-shell-diff\\*" (buffer-name))
+              (evil-emacs-state))))
 
 (with-eval-after-load 'agent-shell
   (map! :map agent-shell-mode-map
@@ -697,20 +701,20 @@ Falls back to ORIG when child frames are unavailable."
     "Return all unique tags from the elfeed database, excluding `my/elfeed-ignored-tags'."
     (let ((tags (make-hash-table :test 'eq)))
       (with-elfeed-db-visit
-        (entry _feed)
-        (dolist (tag (elfeed-entry-tags entry))
-          (unless (memq tag my/elfeed-ignored-tags)
-            (puthash tag t tags))))
+       (entry _feed)
+       (dolist (tag (elfeed-entry-tags entry))
+         (unless (memq tag my/elfeed-ignored-tags)
+           (puthash tag t tags))))
       (hash-table-keys tags)))
 
   (defun my/elfeed-unread-count (tag)
     "Return the number of unread elfeed entries with TAG."
     (let ((count 0))
       (with-elfeed-db-visit
-        (entry _feed)
-        (when (and (memq 'unread (elfeed-entry-tags entry))
-                   (memq tag (elfeed-entry-tags entry)))
-          (cl-incf count)))
+       (entry _feed)
+       (when (and (memq 'unread (elfeed-entry-tags entry))
+                  (memq tag (elfeed-entry-tags entry)))
+         (cl-incf count)))
       count))
 
   (defun my/elfeed-tag-filter ()
@@ -768,6 +772,18 @@ Falls back to ORIG when child frames are unavailable."
   "Alist mapping hostnames to theme names.") 
 
 (standard-display-unicode-special-glyphs)
+
+(defun my/syntax-init-popups-tty ()
+  "Prefer flycheck-posframe wherever posframe works, including tty child frames."
+  (unless (and (bound-and-true-p lsp-ui-mode) lsp-ui-sideline-enable)
+    (if (and (fboundp 'flycheck-posframe-mode) (posframe-workable-p))
+        (flycheck-posframe-mode +1)
+      (flycheck-popup-tip-mode +1))))
+
+(advice-add '+syntax-init-popups-h :override #'my/syntax-init-popups-tty)
+
+(with-eval-after-load 'flycheck-posframe
+  (setq flycheck-posframe-border-width 1))
 
 ;; Load local configuration if it exists
 (let ((local-config (expand-file-name "local-config.el" doom-user-dir)))
