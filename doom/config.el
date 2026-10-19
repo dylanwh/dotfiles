@@ -169,32 +169,36 @@
       eglot-x-graph-type 'boxart)
 
 (with-eval-after-load 'eldoc
-  (setq eldoc-echo-area-prefer-doc-buffer nil
+  ;; When the *eldoc* buffer is visible, skip the echo area entirely.
+  (setq eldoc-echo-area-prefer-doc-buffer t
         eldoc-echo-area-use-multiline-p nil
         eldoc-documentation-strategy 'eldoc-documentation-enthusiast))
 
-(use-package eglot-x
-  :after eglot
-  :config
+(set-popup-rule! "^\\*eldoc"
+  :side 'right :slot 1 :size 0.40 :select nil :quit nil :ttl nil)
 
-  ;; Enhanced reference finding (supports ccls, rust-analyzer extended methods)
-  (map! :leader
-        :desc "Find references (extended)" "c ." #'eglot-x-find-refs)
+;; (use-package eglot-x
+;;   :after eglot
+;;   :config
 
-  ;; Rust-analyzer keybindings
-  (map! :map rustic-mode-map
-        :localleader
-        (:prefix ("r" . "rust")
-         :desc "Expand macro"             "e" #'eglot-x-expand-macro
-         :desc "View memory layout"       "m" #'eglot-x-view-recursive-memory-layout
-         :desc "Related tests"            "t" #'eglot-x-ask-related-tests
-         :desc "Reload workspace"         "r" #'eglot-x-reload-workspace
-         :desc "View crate graph"         "g" #'eglot-x-view-crate-graph
-         :desc "Find crate"               "f" #'eglot-x-find-crate
-         :desc "Analyzer status"          "s" #'eglot-x-analyzer-status
-         :desc "View syntax tree"         "S" #'eglot-x-view-syntax-tree))
+;;   ;; Enhanced reference finding (supports ccls, rust-analyzer extended methods)
+;;   (map! :leader
+;;         :desc "Find references (extended)" "c ." #'eglot-x-find-refs)
 
-  (eglot-x-setup))
+;;   ;; Rust-analyzer keybindings
+;;   (map! :map rustic-mode-map
+;;         :localleader
+;;         (:prefix ("r" . "rust")
+;;          :desc "Expand macro"             "e" #'eglot-x-expand-macro
+;;          :desc "View memory layout"       "m" #'eglot-x-view-recursive-memory-layout
+;;          :desc "Related tests"            "t" #'eglot-x-ask-related-tests
+;;          :desc "Reload workspace"         "r" #'eglot-x-reload-workspace
+;;          :desc "View crate graph"         "g" #'eglot-x-view-crate-graph
+;;          :desc "Find crate"               "f" #'eglot-x-find-crate
+;;          :desc "Analyzer status"          "s" #'eglot-x-analyzer-status
+;;          :desc "View syntax tree"         "S" #'eglot-x-view-syntax-tree))
+
+;;   (eglot-x-setup))
 
 (setq confirm-kill-emacs #'yes-or-no-p)
 
@@ -220,19 +224,8 @@
   (let ((default-directory (project-root (project-current t))))
     (call-interactively #'shelldon)))
 
-(setq display-buffer-alist
-      (cons '("*shelldon:"
-              (display-buffer-in-side-window display-buffer-reuse-window display-buffer-in-previous-window)
-              (side . right)
-              (slot . 3)
-              (reusable-frames . visible)
-              (window-width . 0.34)
-              (inhibit-switch-frame . t)
-              (window-parameters (modeline . t)))
-            (cl-remove-if (lambda (entry)
-                            (and (stringp (car entry))
-                                 (string-match-p "shelldon" (car entry))))
-                          display-buffer-alist)))
+(set-popup-rule! "^\\*shelldon:"
+  :side 'right :slot 3 :size 0.34 :select nil :modeline t :quit nil :ttl nil)
 
 (defun my/shelldon-dismiss ()
   "Quit all shelldon windows, restoring previous window state."
