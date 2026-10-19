@@ -842,6 +842,12 @@ Falls back to ORIG when child frames are unavailable."
 (with-eval-after-load 'flycheck-posframe
   (setq flycheck-posframe-border-width 1))
 
+(with-eval-after-load 'files
+  (dolist (dir '("~/Git/dylanwh/" "~/org/"))
+    (add-to-list 'trusted-content (file-name-as-directory (expand-file-name dir))))
+  (define-advice trusted-content-p (:before-until (&rest _) scratch)
+    (equal (buffer-name) "*scratch*")))
+
 ;; Load local configuration if it exists
 (let ((local-config (expand-file-name "local-config.el" doom-user-dir)))
   (when (file-exists-p local-config)
