@@ -829,6 +829,7 @@ Falls back to ORIG when child frames are unavailable."
   "Alist mapping hostnames to theme names.") 
 
 (standard-display-unicode-special-glyphs)
+(prettify-special-glyphs-mode 1)
 
 (defun my/syntax-init-popups-tty ()
   "Prefer flycheck-posframe wherever posframe works, including tty child frames."
