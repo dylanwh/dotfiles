@@ -62,8 +62,8 @@
 (package! agent-shell :pin "1cfb5697e8410485f317967c3c67a05d0eb0645f")
 (package! orglink)
 (package! shelldon)
-(package! eglot-x
-  :recipe (:host github :repo "dylanwh/eglot-x"))
+;; (package! eglot-x
+;;   :recipe (:host github :repo "dylanwh/eglot-x"))
 
 ;; If you only use Emacs in the terminal, your best bet is to disable the
 ;; solaire-mode package:
