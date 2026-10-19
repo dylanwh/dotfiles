@@ -686,6 +686,25 @@ Falls back to ORIG when child frames are unavailable."
 
   (advice-add 'eww-display-raw :around #'my/eww-display-markdown))
 
+;; Doom's `+eww/quit' iterates `doom-buffer-list', which the workspaces module
+;; restricts to buffers registered in the current workspace. Eww buffers are
+;; "unreal" (non-file, `*'-prefixed) and never get registered, so the loop
+;; finds nothing and nothing is killed. Scan every buffer instead.
+(defun my/eww-quit (&rest _)
+  "Quit eww and kill all its buffers, regardless of workspace."
+  (interactive nil 'eww-mode)
+  (when (yes-or-no-p "Are you sure you want to quit eww?")
+    (save-match-data
+      (cl-loop with case-fold-search = t
+               for buf in (buffer-list)
+               if (with-current-buffer buf
+                    (or (eq major-mode 'eww-mode)
+                        (and (derived-mode-p 'special-mode)
+                             (string-match "\\*.*eww.*\\*" (buffer-name)))))
+               do (kill-buffer buf)))))
+
+(advice-add '+eww/quit :override #'my/eww-quit)
+
 (setq
  mue4e-headers-skip-duplicates  t
  mu4e-view-show-images t
