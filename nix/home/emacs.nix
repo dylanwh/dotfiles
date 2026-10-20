@@ -19,7 +19,6 @@ let
       ))
     ]
   );
-  # emacsBase = if pkgs.stdenv.hostPlatform.isDarwin then pkgs.emacs-macport else pkgs.emacs-nox;
   emacs = (pkgs.emacsPackagesFor pkgs.emacs-nox).emacsWithPackages emacsPackages;
   # A zero timeout is documented as "wait forever", but read_from_emacs passed a
   # zeroed timeval to select(), making it poll and time out immediately.

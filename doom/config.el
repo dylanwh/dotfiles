@@ -32,6 +32,8 @@
   (remove-hook 'ghostel-mode-hook #'mode-line-invisible-mode))
 (with-eval-after-load 'eshell
   (remove-hook 'eshell-mode-hook #'mode-line-invisible-mode))
+(with-eval-after-load 'em-term
+  (add-to-list 'eshell-visual-subcommands '("git" "log" "diff" "show")))
 (with-eval-after-load 'shell
   (remove-hook 'shell-mode-hook #'mode-line-invisible-mode))
 (with-eval-after-load 'term
@@ -369,6 +371,7 @@
     (find-file file))
 
   (set-eshell-alias!
+   "git" "git $*"
    "home" "cd ~/Git/dylanwh/dotfiles"
    "pull" "git pull"
    "push" "git push"
