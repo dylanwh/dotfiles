@@ -80,6 +80,11 @@
   :type 'integer
   :group 'jenkins-plus)
 
+(defcustom jenkins-plus-job-view-page-size 25
+  "Number of builds the job view fetches at a time."
+  :type 'integer
+  :group 'jenkins-plus)
+
 (defcustom jenkins-plus-colwidth-last-status 20
   "Status column's width on main view."
   :type 'integer
@@ -158,15 +163,18 @@
            )
           (jenkins-plus--url) jenkins-plus-viewname))
 
-(defun jenkins-plus--job-url (jobname)
-  "Jenkins API URL for JOBNAME's build history."
+(defun jenkins-plus--job-url (start end)
+  "Jenkins API URL for builds START to END (0-based, exclusive) of the current job."
   (format (concat
            "%s"
            (mapconcat (lambda (a) (concat "job/" a)) (reverse jenkins-plus-breadcrumbs) "/")
-           "/api/json?depth=1&tree=builds"
+           ;; `builds' stops at the newest 100; `allBuilds' has them all
+           "/api/json?depth=1&tree=allBuilds"
            "[number,timestamp,duration,result,url,building,"
-           "culprits[fullName]]")
-          (jenkins-plus--url) jobname))
+           "culprits[fullName]]"
+           ;; {start,end} slices the builds; braces are URL-encoded
+           "%%7B%d,%d%%7D")
+          (jenkins-plus--url) start end))
 
 (defun jenkins-plus--setup-variables ()
   "Ask for any connection settings that are not set yet.
@@ -338,11 +346,12 @@ Each job includes its `_class', used to tell folders from other jobs."
    ("Time" 16 nil)]
   "Column format for the jenkins-plus job-view's build table.")
 
-(defvar-local jenkins-plus--job-view-details nil
-  "Cached `jenkins-plus--fetch-job-details' plist for this job-view buffer.")
+;; jenkins-plus--job-view-builds is an alist of (NUMBER . PLIST), newest first
+(defvar-local jenkins-plus--job-view-builds nil
+  "Builds loaded into this job-view buffer, newest first.")
 
 (defun jenkins-plus--job-view-entries ()
-  "Build `tabulated-list-entries' from `jenkins-plus--job-view-details'."
+  "Build `tabulated-list-entries' from `jenkins-plus--job-view-builds'."
   (--map
    (let ((build (cdr it)))
      (list
@@ -356,26 +365,30 @@ Each job includes its `_class', used to tell folders from other jobs."
        (or (plist-get build :author) "---")
        (jenkins-plus--duration-to-text (plist-get build :duration))
        (or (plist-get build :timestring) ""))))
-   (plist-get jenkins-plus--job-view-details :builds)))
+   jenkins-plus--job-view-builds))
 
 (defun jenkins-plus--job-view-update-header-line ()
-  "Show the latest result in the mode-name."
-  (let* ((builds (plist-get jenkins-plus--job-view-details :builds))
-         (latest (cdr (assoc (plist-get jenkins-plus--job-view-details :latestFinished) builds)))
-         (result (plist-get latest :result)))
+  "Show the result of the newest finished build in the mode-name."
+  (let ((result (plist-get (cdr (--first (eq (plist-get (cdr it) :building) :json-false)
+                                         jenkins-plus--job-view-builds))
+                           :result)))
     (setq mode-name
           (concat "Jenkins Job: "
                   (propertize (or result "?")
                               'face (jenkins-plus--face-for-result result))))))
 
 (defun jenkins-plus--job-view-refresh ()
-  "Refetch build details for the current job and redraw the table."
-  (setq jenkins-plus--job-view-details (jenkins-plus--fetch-job-details jenkins-plus-local-jobname))
+  "Refetch the builds loaded in this job view and redraw the table.
+Refetches as many builds as are loaded, and at least one batch."
+  (setq jenkins-plus--job-view-builds
+        (jenkins-plus--fetch-builds
+         0 (max (length jenkins-plus--job-view-builds)
+                jenkins-plus-job-view-page-size)))
   (jenkins-plus--job-view-update-header-line)
   (tabulated-list-print t))
 
-(defun jenkins-plus--fetch-job-details (jobname)
-  "Make to particular JOBNAME call."
+(defun jenkins-plus--fetch-builds (start end)
+  "Fetch builds START to END (0-based, exclusive) of the current job, newest first."
   (cl-labels ((retrieve (attr item)
                 (cdr (assoc attr item)))
               (convert-item (item)
@@ -388,28 +401,10 @@ Each job includes its `_class', used to tell folders from other jobs."
                  :timestring (jenkins-plus--time-since-to-text (/ (retrieve 'timestamp item) 1000))
                  :duration (retrieve 'duration item)
                  :building (retrieve 'building item)
-                 :result (retrieve 'result item)))
-              (vector-take (N vec)
-                (--map
-                 (aref vec it)
-                 (number-sequence 0 (1- (min  N (length vec)))))))
-    (let* (
-           (job-url (jenkins-plus--job-url jobname))
-           (raw-data (jenkins-plus--get-json job-url))
-           (builds (-map #'convert-item (vector-take 25 (alist-get 'builds raw-data))))
-           (latestSuccessful
-            (caar (--filter (equal (plist-get (cdr it) :result) "SUCCESS") builds)))
-           (latestFailed
-            (caar (--filter (equal (plist-get (cdr it) :result) "FAILURE") builds)))
-           (latestFinished
-            (caar (--filter (equal (plist-get (cdr it) :building) :json-false) builds)))
-           )
-      (list :name jobname
-            :builds builds
-            :latestSuccessful latestSuccessful
-            :latestFailed latestFailed
-            :latestFinished latestFinished
-            ))))
+                 :result (retrieve 'result item))))
+    (-map #'convert-item
+          (alist-get 'allBuilds
+                     (jenkins-plus--get-json (jenkins-plus--job-url start end))))))
 
 ;; helpers
 (defun jenkins-plus-visit-jenkins-web-page ()
@@ -495,7 +490,8 @@ Each job includes its `_class', used to tell folders from other jobs."
   "l"   #'jenkins-plus-latest-build-console
   "b"   #'jenkins-plus--build-from-job-screen
   "r"   #'jenkins-plus--rebuild-from-job-screen
-  "v"   #'jenkins-plus--visit-job-from-job-screen)
+  "v"   #'jenkins-plus--visit-job-from-job-screen
+  "+"   #'jenkins-plus-job-view-load-more)
 
 (define-derived-mode jenkins-plus-mode tabulated-list-mode "Jenkins"
   "Major mode for the Jenkins job list."
@@ -583,14 +579,24 @@ Each job includes its `_class', used to tell folders from other jobs."
   (interactive)
   (jenkins-plus--job-view-refresh))
 
+(defun jenkins-plus-job-view-load-more ()
+  "Add the next `jenkins-plus-job-view-page-size' older builds to the table."
+  (interactive)
+  (let* ((loaded (length jenkins-plus--job-view-builds))
+         (more (jenkins-plus--fetch-builds
+                loaded (+ loaded jenkins-plus-job-view-page-size))))
+    (unless more
+      (user-error "No older builds"))
+    (setq jenkins-plus--job-view-builds (append jenkins-plus--job-view-builds more))
+    (tabulated-list-print t)
+    (message "Showing %d builds" (length jenkins-plus--job-view-builds))))
+
 (defun jenkins-plus-latest-build-console ()
   "Open console output for the most recent build of the current job."
   (interactive)
-  (save-excursion
-    (goto-char (point-min))
-    (if-let ((build (tabulated-list-get-id)))
-        (jenkins-plus-get-console-output jenkins-plus-local-jobname build)
-      (user-error "No builds listed"))))
+  (if-let ((build (caar jenkins-plus--job-view-builds)))
+      (jenkins-plus-get-console-output jenkins-plus-local-jobname (format "%s" build))
+    (user-error "No builds listed")))
 
 (defun jenkins-plus-login ()
   "Read Jenkins credentials from auth-source."
