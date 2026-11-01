@@ -364,7 +364,7 @@
     "dock": {
         "animationSpeed": 1.9600000000000002,
         "backgroundOpacity": 1,
-        "colorizeIcons": false,
+        "colorizeIcons": true,
         "deadOpacity": 0.6,
         "displayMode": "always_visible",
         "dockType": "attached",
@@ -379,16 +379,15 @@
         "indicatorOpacity": 0.6,
         "indicatorThickness": 6,
         "launcherIcon": "",
-        "launcherIconColor": "none",
+        "launcherIconColor": "primary",
         "launcherPosition": "start",
-        "launcherUseDistroLogo": false,
+        "launcherUseDistroLogo": true,
         "monitors": [
             "HDMI-A-1",
             "DP-2"
         ],
-        "onlySameOutput": true,
+        "onlySameOutput": false,
         "pinnedApps": [
-            "bitwarden",
             "firefox",
             "com.mitchellh.ghostty"
         ],
@@ -397,7 +396,7 @@
         "showDockIndicator": true,
         "showLauncherIcon": true,
         "sitOnFrame": false,
-        "size": 1.9000000000000001
+        "size": 1.2
     },
     "general": {
         "allowPanelsOnScreenWithoutBar": true,
@@ -478,7 +477,7 @@
     },
     "idle": {
         "customCommands": "[]",
-        "enabled": false,
+        "enabled": true,
         "fadeDuration": 5,
         "lockCommand": "",
         "lockTimeout": 660,
@@ -570,7 +569,7 @@
             1,
             2
         ],
-        "location": "top_right",
+        "location": "top",
         "monitors": [
         ],
         "overlayLayer": true
