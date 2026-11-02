@@ -1,4 +1,9 @@
-{ lib, ... }:
+{
+  lib,
+  config,
+  pkgs,
+  ...
+}:
 
 let
   configDir = ../../ssh/config.d;
@@ -15,7 +20,6 @@ let
       }
     else
       null;
-
 in
 {
   home.file =
@@ -26,5 +30,9 @@ in
     ]
     // {
       ".ssh/config".text = "Include config.d/*\n";
+    }
+    // lib.optionalAttrs pkgs.stdenv.hostPlatform.isDarwin {
+      ".ssh/config.d/91-secretive".text =
+        "  IdentityAgent ${config.home.homeDirectory}/Library/Containers/com.maxgoedjen.Secretive.SecretAgent/Data/socket.ssh";
     };
 }

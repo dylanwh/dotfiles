@@ -21,6 +21,8 @@ in
   environment.systemPackages =
     with pkgs;
     [
+      antigravity-cli
+      antigravity-acp
       bat
       black
       clang-tools
@@ -92,7 +94,6 @@ in
       ruby
       ruff
       rustup
-      semgrep
       shellcheck
       shfmt
       skim

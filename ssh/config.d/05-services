@@ -1,16 +1,19 @@
 Host github.com
-    User git
-    ForwardAgent no
-    ForwardX11 no
-    ControlMaster no
-    ControlPersist no
+  User git
+  ForwardAgent no
+  ForwardX11 no
+  ControlMaster no
+  ControlPersist no
 
-Host heroku.com
-    User git
-    ControlMaster no
-    ControlPersist no
-    IdentityFile ~/.ssh/id_rsa
+Host git.on.default.horse
+  User git
+  ForwardAgent no  
+  ControlMaster no
+  ControlPersist no
 
 Host rsync.net
-    User fm2400
-    Hostname fm2400.rsync.net
+  User fm2400
+  Hostname fm2400.rsync.net
+  ForwardAgent no  
+  ControlMaster no
+  ControlPersist no

@@ -1,24 +1,24 @@
 # short aliases, to work around new ssh versions re-reading configuration values.
 # vim: set ft=sshconfig:
 Host bragi frigg heimdall jord kvasir loki syn sjofn urd yggdrasil
-    ControlPersist yes
-    StrictHostKeyChecking yes
-    ForwardAgent yes
-    AddressFamily inet
+  ControlPersist yes
+  StrictHostKeyChecking yes
+  ForwardAgent yes
+  AddressFamily inet
 
 Host cafe-ap lab-ap den-ap
-    CanonicalizeHostname always
-    CanonicalDomains home.arpa
-    ControlPersist yes
-    StrictHostKeyChecking yes
-    ForwardAgent yes
-    AddressFamily inet
-    User spidermin
-    Port 2222
+  CanonicalizeHostname always
+  CanonicalDomains home.arpa
+  ControlPersist yes
+  StrictHostKeyChecking yes
+  ForwardAgent yes
+  AddressFamily inet
+  User spidermin
+  Port 2222
 
-Host *.home.arpa *.hardison.net
-    ControlPersist yes
-    StrictHostKeyChecking yes
-    ForwardAgent yes
-    AddressFamily inet
-    RemoteForward ~/.opener.sock ~/.opener.sock
+Host *.home.arpa *.hardison.net *.on.default.horse *.default.horse
+  ControlPersist yes
+  StrictHostKeyChecking yes
+  ForwardAgent yes
+  AddressFamily inet
+  RemoteForward ~/.opener.sock ~/.opener.sock
