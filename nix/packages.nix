@@ -85,7 +85,6 @@ in
       python313Packages.pyflakes
       python313Packages.pytest
       rage
-      rbw
       rclone
       restic
       ripgrep
@@ -113,7 +112,7 @@ in
     ]
     ++ (lib.optionals pkgs.stdenv.hostPlatform.isLinux [
       psmisc
-      shpool
+      rbw
       trash-cli
     ]);
 }

@@ -33,7 +33,6 @@ in
 {
   imports = [
     ./home/common.nix
-    ./home/wezterm-headless.nix
   ];
 
   home.packages = deduplicatedPackages;
