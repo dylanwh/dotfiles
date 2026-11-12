@@ -57,10 +57,10 @@
 (package! kdl-mode)
 (package! jjdescription)
 (package! vc-jj)
-(package! shell-maker :pin "fc5fd0ef732f816c38fa4840e988eaa6707839e7")
+(package! shell-maker :pin "b28ee61a2533e408ed180662f83bb84fc8f84ba6")
 (package! acp :pin "73940c8905b930b2386c1d2e355cf44c0feabfb2")
 
-(package! agent-shell :pin "1cfb5697e8410485f317967c3c67a05d0eb0645f")
+(package! agent-shell :pin "468ef219668a086eb19e374eb477106825734797")
 (package! orglink)
 (package! shelldon)
 ;; (package! eglot-x
