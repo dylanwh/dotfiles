@@ -15,19 +15,27 @@ let
     if lib.versionOlder "25.11" pkgs.lib.version then pkgs.nixfmt else pkgs.nixfmt-rfc-style
   );
   ghostty = if pkgs.stdenv.hostPlatform.isDarwin then pkgs.ghostty-bin else pkgs.ghostty;
+  oha = pkgs.oha.overrideAttrs (old: {
+    buildInputs = (old.buildInputs or [ ]) ++ [
+      pkgs.aws-lc
+      pkgs.sqlite
+      pkgs.zstd
+    ];
+  });
+  pi-acp = pkgs.callPackage ./packages/pi-acp.nix { };
 in
 
 {
   environment.systemPackages =
     with pkgs;
     [
-      antigravity-cli
       antigravity-acp
+      antigravity-cli
       bat
       black
       clang-tools
-      claude-code
       claude-agent-acp
+      claude-code
       cmake
       cmatrix
       curl
@@ -39,7 +47,9 @@ in
       file
       gcc
       gh
+      ghostty.terminfo
       git
+      github-copilot-cli
       glslang
       gnumake
       go
@@ -58,24 +68,25 @@ in
       iperf
       isort
       jq
+      js-beautify
       jsonnet
       jujutsu
       kdlfmt
       kitty.terminfo
-      ghostty.terminfo
       moreutils
       ncdu
       nh
       nil
       nix-fmt
       nmap
-      js-beautify
       nodejs_24
       notcurses
       nq
       oha
       pandoc
       (perl.withPackages perlModules)
+      pi-acp
+      pi-coding-agent
       pipenv
       pstree
       pv

@@ -376,9 +376,7 @@
    "pull" "git pull"
    "push" "git push"
    "full-disk-access-p" "plutil -lint /Library/Preferences/com.apple.TimeMachine.plist"
-   "eza" "eza -F -h --group-directories-first -b --smart-group -soldest -r $*")
-
-  )
+   "eza" "eza -F -h --group-directories-first -b --smart-group -soldest -r $*"))
 
 ;; for some reason, emacsformacosx has scratch buffer not being in lisp-interactive-mode?
 (defun fix-scratch-buffer (&rest _)
