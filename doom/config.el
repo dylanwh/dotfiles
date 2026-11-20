@@ -210,7 +210,20 @@
 
 (use-package shelldon
   :defer t
-  :commands (shelldon shelldon-async-command shelldon-output-history))
+  :commands (shelldon shelldon-async-command shelldon-output-history)
+  :config
+  ;; `shelldon-async-command' calls `display-buffer' and then `rename-buffer'
+  ;; inside `with-current-buffer'.  Doom's `+popup-buffer' (via `:select nil`)
+  ;; calls `select-window' on the origin window, which switches `current-buffer'
+  ;; back to the origin buffer right before `rename-buffer' runs, renaming the
+  ;; origin buffer to " *shelldon:..." instead of the shelldon output buffer.
+  (define-advice shelldon-async-command (:around (fn &rest args) preserve-buffer-around-display)
+    (let ((orig-display-buffer (symbol-function 'display-buffer)))
+      (cl-letf (((symbol-function 'display-buffer)
+                 (lambda (&rest dargs)
+                   (save-current-buffer
+                     (apply orig-display-buffer dargs)))))
+        (apply fn args)))))
 
 (defun project-shelldon-async-command ()
   "Run `shelldon-async-command' in the current project's root directory."
